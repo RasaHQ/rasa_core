@@ -30,8 +30,9 @@ def extract_stories_from_file(filename,
                               domain,
                               remove_duplicates=True,
                               interpreter=RegexInterpreter(),
-                              max_number_of_trackers=2000):
-    graph = extract_story_graph_from_file(filename, domain)
+                              max_number_of_trackers=2000,
+                              exclusion_probability=1.0):
+    graph = extract_story_graph_from_file(filename, domain, exclusion_probability)
     return graph.build_stories(domain,
                                interpreter,
                                remove_duplicates,

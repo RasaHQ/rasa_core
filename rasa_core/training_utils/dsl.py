@@ -304,7 +304,7 @@ class StoryFileReader(object):
 
     def _get_non_excluded_intents(self, excluded):
         intents = self.domain.intents
-        not_excluded = [x for x in intents if x != excluded]
+        not_excluded = ['_{}'.format(x) for x in intents if x != excluded]
         return random.sample(not_excluded, int(self.exclusion_probability * len(not_excluded)))
 
     def process_lines(self, lines):
@@ -328,7 +328,7 @@ class StoryFileReader(object):
                     event_name, parameters = self._parse_event_line(line[1:])
                     self.add_event(event_name, parameters)
                 elif line.startswith("* NOT"):  # reached a user message with NOT exclusions
-                    excluded = line[4:].strip()
+                    excluded = line[4:].strip("_ ")
                     not_excluded = self._get_non_excluded_intents(excluded)
                     self.add_user_messages(not_excluded)
                 elif line.startswith("*"):  # reached a user message
