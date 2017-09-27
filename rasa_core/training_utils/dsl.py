@@ -265,7 +265,7 @@ class StoryFileReader(object):
         self.exclusion_probability = exclusion_probability
 
     @staticmethod
-    def read_from_file(file_name, domain, exclusion_probability, template_variables=None):
+    def read_from_file(file_name, domain, exclusion_probability=1.0, template_variables=None):
         """Given a json file reads the contained stories."""
 
         try:
