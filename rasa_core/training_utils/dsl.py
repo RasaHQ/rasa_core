@@ -257,20 +257,21 @@ class Story(object):
 class StoryFileReader(object):
     """Helper class to read a story file."""
 
-    def __init__(self, domain, template_vars=None):
+    def __init__(self, domain, exclusion_probability, template_vars=None):
         self.story_steps = []
         self.current_step_builder = None  # type: Optional[StoryStepBuilder]
         self.domain = domain
         self.template_variables = template_vars if template_vars else {}
+        self.exclusion_probability = exclusion_probability
 
     @staticmethod
-    def read_from_file(file_name, domain, template_variables=None):
+    def read_from_file(file_name, domain, exclusion_probability, template_variables=None):
         """Given a json file reads the contained stories."""
 
         try:
             with io.open(file_name, "r") as f:
                 lines = f.readlines()
-            return StoryFileReader(domain, template_variables).process_lines(
+            return StoryFileReader(domain, exclusion_probability, template_variables).process_lines(
                     lines)
         except Exception as e:
             raise Exception("Failed to parse '{}'. {}".format(
@@ -301,6 +302,11 @@ class StoryFileReader(object):
             logger.debug("Failed to parse action line '{}'. ".format(line))
             return "", {}
 
+    def _get_non_excluded_intents(self, excluded):
+        intents = self.domain.intents
+        not_excluded = [x for x in intents if x != excluded]
+        return random.sample(not_excluded, int(self.exclusion_probability * len(not_excluded)))
+
     def process_lines(self, lines):
         # type: (List[Text]) -> List[StoryStep]
 
@@ -321,6 +327,10 @@ class StoryFileReader(object):
                         "-"):  # reached a slot, event, or executed action
                     event_name, parameters = self._parse_event_line(line[1:])
                     self.add_event(event_name, parameters)
+                elif line.startswith("* NOT"):  # reached a user message with NOT exclusions
+                    excluded = line[4:].strip()
+                    not_excluded = self._get_non_excluded_intents(excluded)
+                    self.add_user_messages(not_excluded)
                 elif line.startswith("*"):  # reached a user message
                     user_messages = [el.strip() for el in
                                      line[1:].split(" OR ")]
