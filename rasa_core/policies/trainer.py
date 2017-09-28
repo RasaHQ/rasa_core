@@ -22,7 +22,7 @@ class PolicyTrainer(object):
 
     def train(self, filename=None, max_history=3,
               augmentation_factor=20, max_training_samples=None,
-              max_number_of_trackers=2000, exclusion_probability=1.0, **kwargs):
+              max_number_of_trackers=2000, **kwargs):
         """Trains a policy on a domain using training data from a file.
 
         :param augmentation_factor: how many stories should be created by
@@ -45,15 +45,13 @@ class PolicyTrainer(object):
         X, y = self._prepare_training_data(filename, max_history,
                                            augmentation_factor,
                                            max_training_samples,
-                                           max_number_of_trackers,
-                                           exclusion_probability)
+                                           max_number_of_trackers)
 
         self.ensemble.train(X, y, self.domain, self.featurizer, **kwargs)
 
     def _prepare_training_data(self, filename, max_history, augmentation_factor,
                                max_training_samples=None,
-                               max_number_of_trackers=2000,
-                               exclusion_probability=1.0):
+                               max_number_of_trackers=2000):
         """Reads training data from file and prepares it for the training."""
 
         from rasa_core.training_utils import extract_training_data_from_file
@@ -67,8 +65,7 @@ class PolicyTrainer(object):
                     domain=self.domain,
                     featurizer=self.featurizer,
                     interpreter=RegexInterpreter(),
-                    max_number_of_trackers=max_number_of_trackers,
-                    exclusion_probability=exclusion_probability)
+                    max_number_of_trackers=max_number_of_trackers)
             if max_training_samples is not None:
                 X = X[:max_training_samples, :]
                 y = y[:max_training_samples]

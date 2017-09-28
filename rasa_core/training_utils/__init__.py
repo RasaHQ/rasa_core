@@ -16,9 +16,8 @@ def extract_training_data_from_file(filename,
                                     domain=None,
                                     featurizer=None,
                                     interpreter=RegexInterpreter(),
-                                    max_number_of_trackers=2000,
-                                    exclusion_probability=1.0):
-    graph = extract_story_graph_from_file(filename, domain, exclusion_probability)
+                                    max_number_of_trackers=2000):
+    graph = extract_story_graph_from_file(filename, domain)
     extractor = TrainingsDataExtractor(graph, domain, featurizer, interpreter)
     return extractor.extract_trainings_data(remove_duplicates,
                                             augmentation_factor,
@@ -30,15 +29,14 @@ def extract_stories_from_file(filename,
                               domain,
                               remove_duplicates=True,
                               interpreter=RegexInterpreter(),
-                              max_number_of_trackers=2000,
-                              exclusion_probability=1.0):
-    graph = extract_story_graph_from_file(filename, domain, exclusion_probability)
+                              max_number_of_trackers=2000):
+    graph = extract_story_graph_from_file(filename, domain)
     return graph.build_stories(domain,
                                interpreter,
                                remove_duplicates,
                                max_number_of_trackers)
 
 
-def extract_story_graph_from_file(filename, domain, exclusion_probability):
-    story_steps = StoryFileReader.read_from_file(filename, domain, exclusion_probability)
+def extract_story_graph_from_file(filename, domain):
+    story_steps = StoryFileReader.read_from_file(filename, domain)
     return StoryGraph(story_steps)

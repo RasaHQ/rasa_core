@@ -31,8 +31,7 @@ def test_can_read_test_story(default_domain):
 
 def test_persist_and_read_test_story(tmpdir, default_domain):
     graph = extract_story_graph_from_file("data/dsl_stories/stories.md",
-                                          default_domain,
-                                          exclusion_probability=1.0)
+                                          default_domain)
     out_path = tmpdir.join("persisted_story.md")
     with io.open(out_path.strpath, "w") as f:
         f.write(graph.as_story_string())
