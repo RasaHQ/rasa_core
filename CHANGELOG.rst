@@ -21,6 +21,13 @@ Removed
 Fixed
 -----
 
+[0.8.3] - 2018-02-28
+^^^^^^^^^^^^^^^^^^^^
+
+Fixed
+-----
+- pin ``fbmessenger`` version to avoid major update
+
 [0.8.2] - 2018-02-13
 ^^^^^^^^^^^^^^^^^^^^
 
