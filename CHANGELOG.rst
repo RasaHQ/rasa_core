@@ -21,6 +21,13 @@ Removed
 Fixed
 -----
 
+[0.8.4] - 2018-03-14
+^^^^^^^^^^^^^^^^^^^^
+
+Fixed
+-----
+- pin ``pykwalify<=1.6.0`` as update to ``1.6.1`` breaks compatibility
+
 [0.8.3] - 2018-02-28
 ^^^^^^^^^^^^^^^^^^^^
 
