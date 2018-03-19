@@ -21,6 +21,14 @@ Removed
 Fixed
 -----
 
+[0.8.5] - 2018-03-19
+^^^^^^^^^^^^^^^^^^^^
+
+Fixed
+-----
+- updated google analytics docs survey code
+
+
 [0.8.4] - 2018-03-14
 ^^^^^^^^^^^^^^^^^^^^
 
