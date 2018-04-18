@@ -266,28 +266,35 @@ of this tracker exactly.</p>
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.current_state">
 <code class="descname">current_state</code><span class="sig-paren">(</span><em>should_include_events=False</em>, <em>only_events_after_latest_restart=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.current_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the current tracker state as an object.</p>
+<dd><p>Return the current tracker state as an object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.events_after_latest_restart">
 <code class="descname">events_after_latest_restart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.events_after_latest_restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.events_after_latest_restart" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a list of events after the most recent restart.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.export_stories">
 <code class="descname">export_stories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.export_stories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.export_stories" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Dump the tracker as a story in the Rasa Core story format.</p>
+<p>Returns the dumped tracker as a string.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.export_stories_to_file">
 <code class="descname">export_stories_to_file</code><span class="sig-paren">(</span><em>export_path=u'debug.md'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.export_stories_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.export_stories_to_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Dump the tracker as a story to a file.</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="rasa_core.trackers.DialogueStateTracker.from_dict">
 <em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>sender_id</em>, <em>dump_as_dict</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.from_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a tracker from dump.</p>
+<p>The dump should be an array of dumped events. When restoring
+the tracker, these events will be replayed to recreate the state.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.generate_all_prior_states">
@@ -314,12 +321,14 @@ If no entity is found <cite>None</cite> is the default result.</p>
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.idx_after_latest_restart">
 <code class="descname">idx_after_latest_restart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.idx_after_latest_restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.idx_after_latest_restart" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the idx of the most recent restart in the list of events.</p>
+<p>If the conversation has not been restarted, <code class="docutils literal"><span class="pre">0</span></code> is returned.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.is_paused">
 <code class="descname">is_paused</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.is_paused"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.is_paused" title="Permalink to this definition">¶</a></dt>
-<dd><p>States whether the tracker is currently paused.</p>
+<dd><p>State whether the tracker is currently paused.</p>
 </dd></dl>
 
 <dl class="attribute">
