@@ -21,6 +21,13 @@ Removed
 Fixed
 -----
 
+[0.8.6] - 2018-04-18
+^^^^^^^^^^^^^^^^^^^^
+
+Fixed
+-----
+- pin rasa nlu version to 0.11.4 (0.12.x only works with master)
+
 [0.8.5] - 2018-03-19
 ^^^^^^^^^^^^^^^^^^^^
 
