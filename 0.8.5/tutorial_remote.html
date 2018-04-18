@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Rasa Core without Python &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="index.html"/>
+        <link rel="next" title="Domain, Slots, and Actions" href="domains.html"/>
+        <link rel="prev" title="Interactive Learning" href="tutorial_interactive_learning.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Rasa Core without Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#goal">Goal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#define-a-domain">1. Define a Domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#define-an-interpreter">2. Define an interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#define-stories">3. Define stories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-server">4. Running the server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-server">5. Using the server</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Rasa Core without Python</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tutorial_remote.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="rasa-core-without-python">
+<span id="tutorial-remote"></span><h1>Rasa Core without Python<a class="headerlink" href="#rasa-core-without-python" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>In this tutorial we will build a demo app using Rasa Core as a HTTP server.
+Although, you do not need to write any python code - you still need to
+understand basic concepts like domains, stories, and actions.</p>
+<p class="last"><a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/master/examples/remotebot">Example Code on GitHub</a></p>
+</div>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>We will create a simple bot that doesn&#8217;t require you to write your custom action
+code in python, but rather any other language. To enable that, the process is
+a bit different for handling a message - as Rasa Core can not execute the
+actions internally but needs to wait for you to execute them.</p>
+<p>Let&#8217;s start by creating a project folder:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir remotebot <span class="o">&amp;&amp;</span> <span class="nb">cd</span> remotebot
+</pre></div>
+</div>
+<p>After this tutorial, the folder structure should look like this:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>remotebot/
+├── data/
+│   ├── stories.md              # dialogue training data
+│   └── concert_messages.md     # nlu training data
+├── concert_domain_remote.yml   # dialogue configuration
+└── nlu_model_config.json       # nlu configuration
+</pre></div>
+</div>
+<p>The first steps of creating a bot are very similar to other Rasa Core bots.
+But let&#8217;s go through each of them anyway - we will get to the HTTP
+interface at the end!</p>
+</div>
+<div class="section" id="define-a-domain">
+<h2>1. Define a Domain<a class="headerlink" href="#define-a-domain" title="Permalink to this headline">¶</a></h2>
+<p>The domain is similar to other examples, but does not contain utter templates.
+This is because you need to handle the connection to the input and output
+yourself (e.g. sending and receiving messages from facebook).</p>
+<p>Here is an example domain for our remotebot, <code class="docutils literal"><span class="pre">concert_domain_remote.yml</span></code>:</p>
+<div class="highlight-yaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">concerts</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">list</span>
+  <span class="l l-Scalar l-Scalar-Plain">venues</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">list</span>
+
+<span class="l l-Scalar l-Scalar-Plain">intents</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">greet</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">thankyou</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">goodbye</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">search_concerts</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">search_venues</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">compare_reviews</span>
+
+<span class="l l-Scalar l-Scalar-Plain">entities</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+
+<span class="l l-Scalar l-Scalar-Plain">action_factory</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remote</span>
+
+<span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">greet</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">goodbye</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">youarewelcome</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">search_concerts</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">search_venues</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">show_concert_reviews</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">show_venue_reviews</span>
+</pre></div>
+</td></tr></table></div>
+<p>One important difference is <code class="docutils literal"><span class="pre">action_factory:</span> <span class="pre">remote</span></code>. This tells Rasa that
+it is not supposed to run the actions on its own.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can <strong>choose whatever action names you like</strong>. Rasa Core will not (and for
+that matter, can not) check their validity. Rasa will use these names to
+notify you about which action needs to be executed. So you need to be able
+to know what to do given an action name.</p>
+</div>
+</div>
+<div class="section" id="define-an-interpreter">
+<h2>2. Define an interpreter<a class="headerlink" href="#define-an-interpreter" title="Permalink to this headline">¶</a></h2>
+<p>We are going to use Rasa NLU as an interpreter, so let&#8217;s create
+some intent examples in <code class="docutils literal"><span class="pre">data/concert_messages.md</span></code>:</p>
+<div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gu">##</span> intent:goodbye
+<span class="k">-</span> bye
+<span class="k">-</span> goodbye
+<span class="k">-</span> good bye
+<span class="k">-</span> stop
+<span class="k">-</span> end
+<span class="k">-</span> farewell
+<span class="k">-</span> Bye bye
+<span class="k">-</span> have a good one
+
+<span class="gu">##</span> intent:thankyou
+<span class="k">-</span> thanks
+<span class="k">-</span> thank you
+<span class="k">-</span> thank you very much
+<span class="k">-</span> nice
+
+<span class="gu">##</span> intent:search_concerts
+<span class="k">-</span> I am looking for a concert
+<span class="k">-</span> where can I find a concert
+<span class="k">-</span> Whats the next event
+
+<span class="gu">##</span> intent:search_venues
+<span class="k">-</span> what is a good venue
+<span class="k">-</span> where is the best venue
+<span class="k">-</span> show me a nice venue
+<span class="k">-</span> how about a venue
+
+<span class="gu">##</span> intent:compare_reviews
+<span class="k">-</span> how do these compare
+<span class="k">-</span> what are the reviews
+<span class="k">-</span> what do people say about them
+<span class="k">-</span> which one is better
+
+<span class="gu">##</span> intent:greet
+<span class="k">-</span> hey
+<span class="k">-</span> howdy
+<span class="k">-</span> hey there
+<span class="k">-</span> hello
+<span class="k">-</span> hi
+<span class="k">-</span> good morning
+<span class="k">-</span> good evening
+<span class="k">-</span> dear sir
+</pre></div>
+</td></tr></table></div>
+<p>Furthermore, we need a configuration file <code class="docutils literal"><span class="pre">nlu_model_config.json</span></code> for the
+NLU model:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="s2">&quot;spacy_sklearn&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;path&quot;</span> <span class="p">:</span> <span class="s2">&quot;./models&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;nlu&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;data&quot;</span> <span class="p">:</span> <span class="s2">&quot;./data/concert_messages.md&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>We can now train a NLU model using our examples (make sure to
+<a class="reference external" href="http://nlu.rasa.ai/installation.html#setting-up-rasa-nlu">install Rasa NLU</a>
+first as well as
+<a class="reference external" href="http://nlu.rasa.ai/installation.html#best-for-most-spacy-sklearn">spaCy</a>).</p>
+<p>Let&#8217;s run</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_nlu.train -c nlu_model_config.json --fixed_model_name current
+</pre></div>
+</div>
+<p>to train our NLU model. A new directory <code class="docutils literal"><span class="pre">models/nlu/current</span></code> should have been
+created containing the NLU model.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To gather more insights about the above configuration and Rasa NLU features
+head over to the <a class="reference external" href="https://nlu.rasa.ai">Rasa NLU documentation</a>.</p>
+</div>
+</div>
+<div class="section" id="define-stories">
+<h2>3. Define stories<a class="headerlink" href="#define-stories" title="Permalink to this headline">¶</a></h2>
+<p>We need to add couple of stories as well to define the flow (so we can finally
+get to the interesting part of running in remote mode). Let&#8217;s put them into
+<code class="docutils literal"><span class="pre">data/stories.md</span></code>:</p>
+<div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gu">##</span> greet
+<span class="k">*</span> greet
+    <span class="k">-</span> greet
+
+<span class="gu">##</span> happy
+<span class="k">*</span> thankyou
+    <span class="k">-</span> youarewelcome
+
+<span class="gu">##</span> goodbye
+<span class="k">*</span> goodbye
+    <span class="k">-</span> goodbye
+
+<span class="gu">##</span> venue_search
+<span class="k">*</span> search_venues
+    <span class="k">-</span> search_venues
+    <span class="k">-</span> slot{&quot;venues&quot;: [{&quot;name&quot;: &quot;Big Arena&quot;, &quot;reviews&quot;: 4.5}]}
+
+<span class="gu">##</span> concert_search
+<span class="k">*</span> search_concerts
+    <span class="k">-</span> search_concerts
+    <span class="k">-</span> slot{&quot;concerts&quot;: [{&quot;artist&quot;: &quot;Foo Fighters&quot;, &quot;reviews&quot;: 4.5}]}
+
+<span class="gu">##</span> compare_reviews_venues
+<span class="k">*</span> compare_reviews
+    <span class="k">-</span> show_venue_reviews
+
+<span class="gu">##</span> compare_reviews_concerts
+<span class="k">*</span> compare_reviews
+    <span class="k">-</span> show_concert_reviews
+</pre></div>
+</td></tr></table></div>
+<p>To train the dialogue model, run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.train -s data/stories.md -d concert_domain_remote.yml -o models/dialogue
+</pre></div>
+</div>
+<p>This will train the model and store it into <code class="docutils literal"><span class="pre">models/dialogue</span></code>.</p>
+</div>
+<div class="section" id="running-the-server">
+<h2>4. Running the server<a class="headerlink" href="#running-the-server" title="Permalink to this headline">¶</a></h2>
+<p>Now we can use our trained dialogue model and the previously created NLU model
+to run our bot in server mode:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.server -d models/dialogue -u models/nlu/current -o out.log
+</pre></div>
+</div>
+<p>And there we have it! The bot is running and waiting for your HTTP requests.</p>
+</div>
+<div class="section" id="using-the-server">
+<h2>5. Using the server<a class="headerlink" href="#using-the-server" title="Permalink to this headline">¶</a></h2>
+<p>All communication is going to happen over a HTTP interface. You need to send
+a request to that interface to start a conversation as well as for the actions
+you have run on your end.</p>
+<p>A detailed explanation including examples you can use with your running server
+can be found in <a class="reference internal" href="http.html#http-start-conversation"><span class="std std-ref">Starting a conversation</span></a>.</p>
+<div class="rating-container">
+    <div class="rating-text">
+      <p> How was the tutorial? Click to Vote </p>
+    </div>
+      <form class="rating-form">
+        <label for="great" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'great'} );">
+            <input type="radio" name="rating" class="great" id="great" value="great" />
+            <svg viewBox="0 0 24 24"><path d="M12,17.5C14.33,17.5 16.3,16.04 17.11,14H6.89C7.69,16.04 9.67,17.5 12,17.5M8.5,11A1.5,1.5 0 0,0 10,9.5A1.5,1.5 0 0,0 8.5,8A1.5,1.5 0 0,0 7,9.5A1.5,1.5 0 0,0 8.5,11M15.5,11A1.5,1.5 0 0,0 17,9.5A1.5,1.5 0 0,0 15.5,8A1.5,1.5 0 0,0 14,9.5A1.5,1.5 0 0,0 15.5,11M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
+            <p> Great! </p>
+
+        </label>
+
+        <label for="didnt-work" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-work'} );">
+            <input type="radio" name="rating" class="didnt-work" id="didnt-work" value="didnt-work" />
+            <svg viewBox="0 0 24 24"><path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M16.18,7.76L15.12,8.82L14.06,7.76L13,8.82L14.06,9.88L13,10.94L14.06,12L15.12,10.94L16.18,12L17.24,10.94L16.18,9.88L17.24,8.82L16.18,7.76M7.82,12L8.88,10.94L9.94,12L11,10.94L9.94,9.88L11,8.82L9.94,7.76L8.88,8.82L7.82,7.76L6.76,8.82L7.82,9.88L6.76,10.94L7.82,12M12,14C9.67,14 7.69,15.46 6.89,17.5H17.11C16.31,15.46 14.33,14 12,14Z" /></svg>
+            <p> Didn't Work </p>
+        </label>
+
+        <label for="didnt-finish" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-finish'} );">
+            <input type="radio" name="rating" class="didnt-finish" id="didnt-finish" value="didnt-finish" />
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%" viewBox="0 0 24 24"><path d="M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11M15.5,11A1.5,1.5 0 0,1 14,9.5A1.5,1.5 0 0,1 15.5,8A1.5,1.5 0 0,1 17,9.5A1.5,1.5 0 0,1 15.5,11M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M9,14H15A1,1 0 0,1 16,15A1,1 0 0,1 15,16H9A1,1 0 0,1 8,15A1,1 0 0,1 9,14Z" /></svg>
+            <p> Didn't Finish </p>
+        </label>
+
+      </form>
+    </div>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="domains.html" class="btn btn-neutral float-right" title="Domain, Slots, and Actions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial_interactive_learning.html" class="btn btn-neutral" title="Interactive Learning" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="tutorial_remote.html">0.8.5</a></dd>
+            <dd><a href="../0.8.4/tutorial_remote.html">0.8.4</a></dd>
+            <dd><a href="../0.8.3/tutorial_remote.html">0.8.3</a></dd>
+            <dd><a href="../0.8.2/tutorial_remote.html">0.8.2</a></dd>
+            <dd><a href="../0.8.1/tutorial_remote.html">0.8.1</a></dd>
+            <dd><a href="../0.8.0/tutorial_remote.html">0.8.0</a></dd>
+            <dd><a href="../0.7.9/tutorial_remote.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/index.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/tutorial_remote.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

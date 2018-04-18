@@ -1,0 +1,584 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Connecting to messaging &amp; voice platforms &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="index.html"/>
+        <link rel="next" title="Scheduling Reminders" href="scheduling.html"/>
+        <link rel="prev" title="HTTP server" href="http.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Connecting to messaging &amp; voice platforms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#facebook-messenger-setup">Facebook Messenger Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-run-script">Using run script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#directly-using-python">Directly using python</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#slack-setup">Slack Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Using run script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Directly using python</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#telegram-setup">Telegram Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Using run script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Directly using python</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Connecting to messaging &amp; voice platforms</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/connectors.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="connecting-to-messaging-voice-platforms">
+<span id="connectors"></span><h1>Connecting to messaging &amp; voice platforms<a class="headerlink" href="#connecting-to-messaging-voice-platforms" title="Permalink to this headline">¶</a></h1>
+<p>Here&#8217;s how to connect your conversational AI to the outside world.</p>
+<p>Input channels are defined in the <code class="docutils literal"><span class="pre">rasa_core.channels</span></code> module.
+Currently, there is an implementation for the command line as well as
+connection to facebook, slack and telegram.</p>
+<div class="section" id="facebook-messenger-setup">
+<span id="facebook-connector"></span><h2>Facebook Messenger Setup<a class="headerlink" href="#facebook-messenger-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="using-run-script">
+<h3>Using run script<a class="headerlink" href="#using-run-script" title="Permalink to this headline">¶</a></h3>
+<p>If you want to connect to facebook using the run script, e.g. using</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+    --port <span class="m">5002</span> --connector facebook --credentials fb_credentials.yml
+</pre></div>
+</div>
+<p>you need to supply a <code class="docutils literal"><span class="pre">fb_credentials.yml</span></code> with the following content:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">verify</span><span class="p">:</span> <span class="s2">&quot;rasa-bot&quot;</span>
+<span class="n">secret</span><span class="p">:</span> <span class="s2">&quot;3e34709d01ea89032asdebfe5a74518&quot;</span>
+<span class="n">page</span><span class="o">-</span><span class="n">access</span><span class="o">-</span><span class="n">token</span><span class="p">:</span> <span class="s2">&quot;EAAbHPa7H9rEBAAuFk4Q3gPKbDedQnx4djJJ1JmQ7CAqO4iJKrQcNT0wtD&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="directly-using-python">
+<h3>Directly using python<a class="headerlink" href="#directly-using-python" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="docutils literal"><span class="pre">FacebookInput</span></code> instance provides a flask blueprint for creating
+a webserver. This lets you separate the exact endpoints and implementation
+from your webserver creation logic.</p>
+<p>Code to create a Messenger-compatible webserver looks like this:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="kn">import</span> <span class="n">HttpInputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.channels.facebook</span> <span class="kn">import</span> <span class="n">FacebookInput</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="kn">import</span> <span class="n">RegexInterpreter</span>
+
+<span class="c1"># load your trained agent</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;dialogue&quot;</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
+
+<span class="n">input_channel</span> <span class="o">=</span> <span class="n">FacebookInput</span><span class="p">(</span>
+   <span class="n">fb_verify</span><span class="o">=</span><span class="s2">&quot;YOUR_FB_VERIFY&quot;</span><span class="p">,</span>  <span class="c1"># you need tell facebook this token, to confirm your URL</span>
+   <span class="n">fb_secret</span><span class="o">=</span><span class="s2">&quot;YOUR_FB_SECRET&quot;</span><span class="p">,</span>  <span class="c1"># your app secret</span>
+   <span class="n">fb_access_token</span><span class="o">=</span><span class="s2">&quot;YOUR_FB_PAGE_ACCESS_TOKEN&quot;</span>   <span class="c1"># token for the page you subscribed to</span>
+<span class="p">)</span>
+
+<span class="n">agent</span><span class="o">.</span><span class="n">handle_channel</span><span class="p">(</span><span class="n">HttpInputChannel</span><span class="p">(</span><span class="mi">5004</span><span class="p">,</span> <span class="s2">&quot;/app&quot;</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<p>The arguments for the <code class="docutils literal"><span class="pre">HttpInputChannel</span></code> are the port, the url prefix, and the input channel.
+The default endpoint for receiving facebook messenger messages is <code class="docutils literal"><span class="pre">/webhook</span></code>, so the example
+above would listen for messages on <code class="docutils literal"><span class="pre">/app/webhook</span></code>. This is the url you should add in the
+facebook developer portal.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>How to get the FB credentials:</strong> You need to set up a Facebook app and a page.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>To create the app go to: <a class="reference external" href="https://developers.facebook.com/">https://developers.facebook.com/</a> and click on <em>&#8220;Add a new app&#8221;</em>.</li>
+<li>go onto the dashboard for the app and under <em>Products</em>, click <em>Add Product</em> and <em>add Messenger</em>. Under the settings for Messenger, scroll down to <em>Token Generation</em> and click on the link to create a new page for your app.</li>
+<li>Use the collected <code class="docutils literal"><span class="pre">verify</span></code>, <code class="docutils literal"><span class="pre">secret</span></code> and <code class="docutils literal"><span class="pre">access</span> <span class="pre">token</span></code> to connect your bot to facebook.</li>
+</ol>
+</div></blockquote>
+<p class="last">For more detailed steps, visit the
+<a class="reference external" href="https://developers.facebook.com/docs/graph-api/webhooks">messenger docs</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="slack-setup">
+<span id="slack-connector"></span><h2>Slack Setup<a class="headerlink" href="#slack-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Using run script<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>If you want to connect to the slack input channel using the run script, e.g. using</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+    --port <span class="m">5002</span> --connector slack --credentials slack_credentials.yml
+</pre></div>
+</div>
+<p>you need to supply a <code class="docutils literal"><span class="pre">slack_credentials.yml</span></code> with the following content:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">slack_token</span><span class="p">:</span> <span class="s2">&quot;xoxb-286425452756-safjasdf7sl38KLls&quot;</span>
+<span class="n">slack_channel</span><span class="p">:</span> <span class="s2">&quot;@my_channel&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="id2">
+<h3>Directly using python<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="docutils literal"><span class="pre">SlackInput</span></code> instance provides a flask blueprint for creating
+a webserver. This lets you separate the exact endpoints and implementation
+from your webserver creation logic.</p>
+<p>Code to create a Messenger-compatible webserver looks like this:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="kn">import</span> <span class="n">HttpInputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.channels.slack</span> <span class="kn">import</span> <span class="n">SlackInput</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="kn">import</span> <span class="n">RegexInterpreter</span>
+
+<span class="c1"># load your trained agent</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;dialogue&quot;</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
+
+<span class="n">input_channel</span> <span class="o">=</span> <span class="n">SlackInput</span><span class="p">(</span>
+   <span class="n">slack_token</span><span class="o">=</span><span class="s2">&quot;YOUR_SLACK_TOKEN&quot;</span><span class="p">,</span>  <span class="c1"># this is the `bot_user_o_auth_access_token`</span>
+   <span class="n">slack_channel</span><span class="o">=</span><span class="s2">&quot;YOUR_SLACK_CHANNEL&quot;</span>  <span class="c1"># the name of your channel to which the bot posts</span>
+<span class="p">)</span>
+
+<span class="n">agent</span><span class="o">.</span><span class="n">handle_channel</span><span class="p">(</span><span class="n">HttpInputChannel</span><span class="p">(</span><span class="mi">5004</span><span class="p">,</span> <span class="s2">&quot;/app&quot;</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<p>The arguments for the <code class="docutils literal"><span class="pre">HttpInputChannel</span></code> are the port, the url prefix, and the input channel.
+The default endpoint for receiving facebook messenger messages is <code class="docutils literal"><span class="pre">/webhook</span></code>, so the example
+above would listen for messages on <code class="docutils literal"><span class="pre">/app/webhook</span></code>. This is the url you should add in the
+facebook developer portal.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>How to get the Slack credentials:</strong> You need to set up a Slack app.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>To create the app go to: <a class="reference external" href="https://api.slack.com/apps">https://api.slack.com/apps</a> and click on <em>&#8220;Create New App&#8221;</em>.</li>
+<li>Activate the following features: interactive components, event subscriptions, bot users,
+permissions (for basic functionality you should subscribe to the <code class="docutils literal"><span class="pre">message.channel</span></code>,
+<code class="docutils literal"><span class="pre">message.groups</span></code>, <code class="docutils literal"><span class="pre">message.im</span></code> and <code class="docutils literal"><span class="pre">message.mpim</span></code> events)</li>
+<li>The <code class="docutils literal"><span class="pre">slack_channel</span></code> is the target your bot posts to. This can be a channel,
+an app or an individual person</li>
+<li>Use the entry for <code class="docutils literal"><span class="pre">Bot</span> <span class="pre">User</span> <span class="pre">OAuth</span> <span class="pre">Access</span> <span class="pre">Token</span></code> in the &#8220;OAuth &amp; Permissions&#8221; tab
+as your <code class="docutils literal"><span class="pre">slack_token</span></code></li>
+</ol>
+</div></blockquote>
+<p class="last">For more detailed steps, visit the
+<a class="reference external" href="https://api.slack.com/incoming-webhooks">slack api docs</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="telegram-setup">
+<span id="telegram-connector"></span><h2>Telegram Setup<a class="headerlink" href="#telegram-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>Using run script<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>If you want to connect to the slack input channel using the run script, e.g. using</p>
+<p>you need to supply a <code class="docutils literal"><span class="pre">telegram_credentials.yml</span></code> with the following content:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">access_token</span><span class="p">:</span> <span class="s2">&quot;490161424:AAGlRxinBRtKGb21_rlOEMtDFZMXBl6EC0o&quot;</span>
+<span class="n">verify</span><span class="p">:</span> <span class="s2">&quot;your_bot&quot;</span>
+<span class="n">webhook_url</span><span class="p">:</span> <span class="s2">&quot;your_url.com/webhook&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="id4">
+<h3>Directly using python<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="docutils literal"><span class="pre">TelegramInput</span></code> instance provides a flask blueprint for creating
+a webserver. This lets you seperate the exact endpoints and implementation
+from your webserver creation logic.</p>
+<p>Code to create a Messenger-compatible webserver looks like this:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="kn">import</span> <span class="n">HttpInputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.channels.telegram</span> <span class="kn">import</span> <span class="n">TelegramInput</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="kn">import</span> <span class="n">RegexInterpreter</span>
+
+<span class="c1"># load your trained agent</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;dialogue&quot;</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
+
+<span class="n">input_channel</span> <span class="o">=</span> <span class="n">TelegramInput</span><span class="p">(</span>
+  <span class="n">access_token</span><span class="o">=</span><span class="s2">&quot;YOUR_ACCESS_TOKEN&quot;</span><span class="p">,</span> <span class="c1"># you get this when setting up a bot</span>
+  <span class="n">verify</span><span class="o">=</span><span class="s2">&quot;YOUR_TELEGRAM_BOT&quot;</span><span class="p">,</span> <span class="c1"># this is your bots username</span>
+  <span class="n">webhook_url</span><span class="o">=</span><span class="s2">&quot;YOUR_WEBHOOK_URL&quot;</span> <span class="c1"># the url your bot should listen for messages</span>
+<span class="p">)</span>
+
+<span class="n">agent</span><span class="o">.</span><span class="n">handle_channel</span><span class="p">(</span><span class="n">HttpInputChannel</span><span class="p">(</span><span class="mi">5004</span><span class="p">,</span> <span class="s2">&quot;/app&quot;</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<p>The arguments for the <code class="docutils literal"><span class="pre">HttpInputChannel</span></code> are the port, the url prefix, and the input channel.
+The default endpoint for receiving messages is <code class="docutils literal"><span class="pre">/webhook</span></code>, so the example above above would
+listen for messages on <code class="docutils literal"><span class="pre">/app/webhook</span></code>. This is the URL you should use as the <code class="docutils literal"><span class="pre">webhook_url</span></code>,
+so for example <code class="docutils literal"><span class="pre">webhook_url=myurl.com/app/webhook</span></code>. To get the bot to listen for messages at
+that URL, go to <code class="docutils literal"><span class="pre">myurl.com/app/set_webhook</span></code> first to set the webhook.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>How to get the Telegram credentials:</strong> You need to set up a Telegram bot.</p>
+<blockquote>
+<div>1. To create the bot, go to: <a class="reference external" href="https://web.telegram.org/#/im">https://web.telegram.org/#/im</a><a class="reference external" href="mailto:?p=&#37;&#52;&#48;BotFather">?p=<span>&#64;</span>BotFather</a>, enter
+<em>/newbot</em> and follow the instructions.
+2. At the end you should get your <code class="docutils literal"><span class="pre">access_token</span></code> and the username you set will
+be your <code class="docutils literal"><span class="pre">verify</span></code>.
+3. If you want to use your bot in a group setting, it&#8217;s advisable to turn on group privacy
+mode by entering <em>/setprivacy</em>. Then the bot will only listen when the message is started
+with <em>/bot</em></div></blockquote>
+<p class="last">For more information on the Telegram HTTP API, go to <a class="reference external" href="https://core.telegram.org/bots/api">https://core.telegram.org/bots/api</a></p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="scheduling.html" class="btn btn-neutral float-right" title="Scheduling Reminders" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="http.html" class="btn btn-neutral" title="HTTP server" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="connectors.html">0.8.5</a></dd>
+            <dd><a href="../0.8.4/connectors.html">0.8.4</a></dd>
+            <dd><a href="../0.8.3/connectors.html">0.8.3</a></dd>
+            <dd><a href="../0.8.2/connectors.html">0.8.2</a></dd>
+            <dd><a href="../0.8.1/connectors.html">0.8.1</a></dd>
+            <dd><a href="../0.8.0/connectors.html">0.8.0</a></dd>
+            <dd><a href="../0.7.9/connectors.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/connectors.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/connectors.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

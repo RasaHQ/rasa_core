@@ -1,0 +1,741 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Domain, Slots, and Actions &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="index.html"/>
+        <link rel="next" title="Stories - The Training Data" href="stories.html"/>
+        <link rel="prev" title="Rasa Core without Python" href="tutorial_remote.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Domain, Slots, and Actions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Domain</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#defining-custom-actions">Defining Custom Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#putting-it-all-together">Putting it all together</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#utterance-templates">Utterance templates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#images-and-buttons">Images and Buttons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variables">Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variations">Variations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#slots">Slots</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Domain, Slots, and Actions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/domains.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="domain-slots-and-actions">
+<span id="domain"></span><h1>Domain, Slots, and Actions<a class="headerlink" href="#domain-slots-and-actions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>Domain<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">Domain</span></code> defines the universe in which your bot operates. It specifies exactly:</p>
+<ul class="simple">
+<li>which <code class="docutils literal"><span class="pre">intents</span></code> you are expecting to respond to</li>
+<li>which <code class="docutils literal"><span class="pre">slots</span></code> you wish to track</li>
+<li>which <code class="docutils literal"><span class="pre">actions</span></code> your bot can take</li>
+</ul>
+<p>For example, the <code class="docutils literal"><span class="pre">DefaultDomain</span></code> has the following yaml definition:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="c1"># all hashtags are comments :)</span>
+<span class="l l-Scalar l-Scalar-Plain">intents</span><span class="p p-Indicator">:</span>
+ <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">greet</span>
+ <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+ <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">goodbye</span>
+
+<span class="l l-Scalar l-Scalar-Plain">entities</span><span class="p p-Indicator">:</span>
+ <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+
+<span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+
+<span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_greet</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;hey</span><span class="nv"> </span><span class="s">there</span><span class="nv"> </span><span class="s">{name}!&quot;</span>    <span class="c1"># variable will be filled by slot with the same name or by custom code</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_goodbye</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;goodbye</span><span class="nv"> </span><span class="s">:(&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;bye</span><span class="nv"> </span><span class="s">bye&quot;</span>              <span class="c1"># multiple templates will allow the bot to randomly pick from them</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_default</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;default</span><span class="nv"> </span><span class="s">message&quot;</span>
+
+<span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_default</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_greet</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_goodbye</span>
+</pre></div>
+</div>
+<p><strong>What does this mean?</strong></p>
+<p>An <code class="docutils literal"><span class="pre">intent</span></code> is a string like <code class="docutils literal"><span class="pre">&quot;greet&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;restaurant_search&quot;</span></code>.
+It describes what your user <em>probably meant to say</em>.
+For example, &#8220;show me Mexican restaurants&#8221;, and &#8220;I want to have lunch&#8221;
+could both be described as a <code class="docutils literal"><span class="pre">restaurant_search</span></code> intent.</p>
+<p><code class="docutils literal"><span class="pre">slots</span></code> are the things you want to keep track of during a conversation.
+For example, in the messages above you would want to store &#8220;Mexican&#8221; as a cuisine type.
+The tracker has an attribute like <code class="docutils literal"><span class="pre">tracker.get_slot(&quot;cuisine&quot;)</span></code> which will return <code class="docutils literal"><span class="pre">&quot;Mexican&quot;</span></code></p>
+<p><code class="docutils literal"><span class="pre">actions</span></code> are the things your bot can actually do.
+They are invoked by calling the <code class="docutils literal"><span class="pre">action.run()</span></code> method.
+For example, an <code class="docutils literal"><span class="pre">action</span></code> can:</p>
+<ul class="simple">
+<li>respond to a user</li>
+<li>make an external API call</li>
+<li>query a database</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For mor information about the utter template format (e.g. the use of
+variables like <code class="docutils literal"><span class="pre">{name}</span></code> or buttons) take a look at <a class="reference internal" href="#utter-templates"><span class="std std-ref">Utterance templates</span></a>.</p>
+</div>
+<div class="section" id="defining-custom-actions">
+<span id="custom-actions"></span><h3>Defining Custom Actions<a class="headerlink" href="#defining-custom-actions" title="Permalink to this headline">¶</a></h3>
+<p>The easiest are <code class="docutils literal"><span class="pre">UtterActions</span></code>, which just send a message to the user. You define them by adding an entry to the
+action list that is named after the utterance. E.g. if there should be an action that utters the template called
+<code class="docutils literal"><span class="pre">utter_greet</span></code> you need to add <code class="docutils literal"><span class="pre">utter_greet</span></code> to the list of defined actions. In the above example yaml you can see that
+all three of the defined actions are just named after utter templates and hence just respond with a message to
+the user.</p>
+<p><strong>What about more complicated actions?</strong>
+To continue with the restaurant example, if the user says &#8220;show me a Mexican restaurant&#8221;,
+your bot would execute the action <code class="docutils literal"><span class="pre">ActionCheckRestaurants</span></code>, which might look like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="k">import</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">SlotSet</span>
+
+<span class="k">class</span> <span class="nc">ActionCheckRestaurants</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="c1"># type: () -&gt; Text</span>
+      <span class="k">return</span> <span class="s2">&quot;action_check_restaurants&quot;</span>
+
+   <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+      <span class="c1"># type: (Dispatcher, DialogueStateTracker, Domain) -&gt; List[Event]</span>
+
+      <span class="n">cuisine</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s1">&#39;cuisine&#39;</span><span class="p">)</span>
+      <span class="n">q</span> <span class="o">=</span> <span class="s2">&quot;select * from restaurants where cuisine=&#39;</span><span class="si">{0}</span><span class="s2">&#39; limit 1&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cuisine</span><span class="p">)</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+      <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;matches&quot;</span><span class="p">,</span> <span class="n">result</span> <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[])]</span>
+</pre></div>
+</div>
+<p>Note that actions <strong>do not mutate the tracker directly</strong>.
+Instead, an action can return <code class="docutils literal"><span class="pre">events</span></code> which are logged by the tracker and used to modify its
+own state.</p>
+</div>
+<div class="section" id="putting-it-all-together">
+<h3>Putting it all together<a class="headerlink" href="#putting-it-all-together" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s add just this one new action to a custom domain (assuming we stored the
+action in a module called <code class="docutils literal"><span class="pre">restaurant.actions</span></code>):</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_default</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_greet</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_goodbye</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">restaurant.actions.ActionCheckRestaurants</span>   <span class="c1"># custom action</span>
+</pre></div>
+</div>
+<p>We only show the changed action list here, you also need to include the other
+parts from the original domain! The point of this is just to show how the pieces
+fit together. As you can see, in the <code class="docutils literal"><span class="pre">actions</span></code> section
+of your domain, you can list utter actions (which respond an utter template to the user) as well as custom
+actions using their module path.</p>
+<p>For an example you can run, check the <a class="reference internal" href="tutorial_basics.html"><span class="doc">Building a Simple Bot</span></a>.</p>
+</div>
+</div>
+<div class="section" id="utterance-templates">
+<span id="utter-templates"></span><h2>Utterance templates<a class="headerlink" href="#utterance-templates" title="Permalink to this headline">¶</a></h2>
+<p>Utterance templates are messages the bot will send back to the user. Either
+automatically by an action with the same name as the utterance (e.g. in the
+above example the <cite>utter_default</cite> template and action) or by an action with
+custom code.</p>
+<div class="section" id="images-and-buttons">
+<h3>Images and Buttons<a class="headerlink" href="#images-and-buttons" title="Permalink to this headline">¶</a></h3>
+<p>Templates defined in a domains yaml file can contain images and buttons as well:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_greet</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Hey!</span><span class="nv"> </span><span class="s">How</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you?&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">buttons</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">title</span><span class="p p-Indicator">:</span> <span class="s">&quot;great&quot;</span>
+      <span class="l l-Scalar l-Scalar-Plain">payload</span><span class="p p-Indicator">:</span> <span class="s">&quot;great&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">title</span><span class="p p-Indicator">:</span> <span class="s">&quot;super</span><span class="nv"> </span><span class="s">sad&quot;</span>
+      <span class="l l-Scalar l-Scalar-Plain">payload</span><span class="p p-Indicator">:</span> <span class="s">&quot;super</span><span class="nv"> </span><span class="s">sad&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_cheer_up</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Here</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">something</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">cheer</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">up:&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="s">&quot;https://cdn77.eatliver.com/wp-content/uploads/2017/10/trump-frog.jpg&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Please keep in mind that it is up to the implementation of the output
+channel on how to display the defined buttons. E.g. the cmdline
+interface can not display buttons or images, but tries to mimic them in
+the command line.</p>
+</div>
+</div>
+<div class="section" id="variables">
+<h3>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h3>
+<p>You can also use <strong>variables</strong> in your templates to insert information
+collected during the dialogue. You can either do that in your custom python
+code or by using the automatic slot filling mechanism. E.g if you got a template
+like this:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_greet</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Hey,</span><span class="nv"> </span><span class="s">{name}.</span><span class="nv"> </span><span class="s">How</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you?&quot;</span>
+</pre></div>
+</div>
+<p>Rasa will automatically fill that variable with a value found in a slot called
+<code class="docutils literal"><span class="pre">name</span></code>.</p>
+<p>In custom code, you can retrieve a template by using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ActionCustom</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="s2">&quot;action_custom&quot;</span>
+
+   <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+      <span class="c1"># send utter default template to user</span>
+      <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">)</span>
+      <span class="c1"># ... other code</span>
+      <span class="k">return</span> <span class="p">[]</span>
+</pre></div>
+</div>
+<p>If the template contains variables denoted with <code class="docutils literal"><span class="pre">{my_variable}</span></code> you can supply
+values for the fields by passing them as key word arguments to <code class="docutils literal"><span class="pre">utter_template</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span> <span class="n">my_variable</span><span class="o">=</span><span class="s2">&quot;my text&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="variations">
+<h3>Variations<a class="headerlink" href="#variations" title="Permalink to this headline">¶</a></h3>
+<p>If you want to randomly vary the response send to the user, you can list
+multiple responses and the bot will randomly pick one of them, e.g.:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_greeting</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Hey,</span><span class="nv"> </span><span class="s">{name}.</span><span class="nv"> </span><span class="s">How</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you?&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Hey,</span><span class="nv"> </span><span class="s">{name}.</span><span class="nv"> </span><span class="s">How</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">day</span><span class="nv"> </span><span class="s">going?&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="slots">
+<span id="slot-types"></span><h2>Slots<a class="headerlink" href="#slots" title="Permalink to this headline">¶</a></h2>
+<p>Most slots influence the prediction of the next action the bot should run. For the
+prediction, the slots value is not used directly, but rather it is featurized.
+E.g. for a slot of type <code class="docutils literal"><span class="pre">text</span></code>, the value is irrelevant, for the featurization
+the only thing that matters is if a text is set or not. In a slot of
+type <code class="docutils literal"><span class="pre">unfeaturized</span></code> any value can be stored, the slot never influences the
+prediction.</p>
+<p>The <strong>choice of a slots type should be done with care</strong>. If a slots value should
+influence the dialogue flow (e.g. the users age influences which
+question follows next) you should choose a slot where the value influences
+the dialogue model.</p>
+<p>These are all of the predefined slot classes and what they&#8217;re useful for:</p>
+<dl class="option">
+<dt id="cmdoption-arg-text">
+<code class="descname">text</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-text" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">User preferences where you only care whether or not they&#8217;ve
+been specified.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+   <span class="l l-Scalar l-Scalar-Plain">cuisine</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">Results in the feature of the slot being set to <code class="docutils literal"><span class="pre">1</span></code> if any value is set.
+Otherwise the feature will be set to <code class="docutils literal"><span class="pre">0</span></code> (no value is set).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-arg-bool">
+<code class="descname">bool</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-bool" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">True or False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+   <span class="l l-Scalar l-Scalar-Plain">is_authenticated</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bool</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">Checks if slot is set and if True</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-arg-categorical">
+<code class="descname">categorical</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-categorical" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">Slots which can take one of N values</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+   <span class="l l-Scalar l-Scalar-Plain">risc_level</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical</span>
+      <span class="l l-Scalar l-Scalar-Plain">values</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">low</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">medium</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">high</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">Creates a one-hot encoding describing which of the <code class="docutils literal"><span class="pre">values</span></code> matched.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-arg-float">
+<code class="descname">float</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-float" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">Continuous values</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+   <span class="l l-Scalar l-Scalar-Plain">temperature</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">float</span>
+      <span class="l l-Scalar l-Scalar-Plain">min_value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">-100.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">max_value</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">100.0</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Defaults:</th><td class="field-body"><p class="first"><code class="docutils literal"><span class="pre">max_value=1.0</span></code>, <code class="docutils literal"><span class="pre">min_value=0.0</span></code></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">All values below <code class="docutils literal"><span class="pre">min_value</span></code> will be treated as <code class="docutils literal"><span class="pre">min_value</span></code>, the same
+happens for values above <code class="docutils literal"><span class="pre">max_value</span></code>. Hence, if <code class="docutils literal"><span class="pre">max_value</span></code> is set to
+<code class="docutils literal"><span class="pre">1</span></code>, there is no difference between the slot values <code class="docutils literal"><span class="pre">2</span></code> and <code class="docutils literal"><span class="pre">3.5</span></code> in
+terms of featurization (e.g. both values will influence the dialogue in
+the same way and the model can not learn to differentiate between them).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-arg-list">
+<code class="descname">list</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-list" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">Lists of values</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+   <span class="l l-Scalar l-Scalar-Plain">shopping_items</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">list</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">The feature of this slot is set to <code class="docutils literal"><span class="pre">1</span></code> if a value with a list is set,
+where the list is not empty. If no value is set, or the empty list is the
+set value, the feature will be <code class="docutils literal"><span class="pre">0</span></code>. The <strong>length of the list stored in
+the slot does not influence the dialogue</strong>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-arg-unfeaturized">
+<code class="descname">unfeaturized</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-unfeaturized" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">Data you want to store which shouldn&#8217;t influence the dialogue flow</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+   <span class="l l-Scalar l-Scalar-Plain">internal_user_id</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unfeaturized</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">There will not be any featurization of this slot, hence its value does
+not influence the dialogue flow and is ignored when predicting the next
+action the bot should run.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-arg-data">
+<code class="descname">data</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-data" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">Base class for creating own slots</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This type should not be used directly, but rather be subclassed.</p>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">User has to subclass this and define the <code class="docutils literal"><span class="pre">as_feature</span></code> method containing
+any custom logic.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="stories.html" class="btn btn-neutral float-right" title="Stories - The Training Data" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial_remote.html" class="btn btn-neutral" title="Rasa Core without Python" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="domains.html">0.8.5</a></dd>
+            <dd><a href="../0.8.4/domains.html">0.8.4</a></dd>
+            <dd><a href="../0.8.3/domains.html">0.8.3</a></dd>
+            <dd><a href="../0.8.2/domains.html">0.8.2</a></dd>
+            <dd><a href="../0.8.1/domains.html">0.8.1</a></dd>
+            <dd><a href="../0.8.0/domains.html">0.8.0</a></dd>
+            <dd><a href="../0.7.9/domains.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/domains.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/domains.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

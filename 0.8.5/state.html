@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tracking Conversation State &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="index.html"/>
+        <link rel="next" title="Migration Guide" href="migrations.html"/>
+        <link rel="prev" title="Custom Policies" href="policies.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tracking Conversation State</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#persisting-trackers">Persisting Trackers:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#serialisation">Serialisation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Tracking Conversation State</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/state.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="tracking-conversation-state">
+<span id="state"></span><h1>Tracking Conversation State<a class="headerlink" href="#tracking-conversation-state" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal"><span class="pre">DialogueStateTracker</span></code> is the stateful object which keeps track of a conversation.
+The only way the tracker should ever be updated is by passing <code class="docutils literal"><span class="pre">events</span></code> to the <code class="docutils literal"><span class="pre">update</span></code> method.
+For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rasa_core.slots</span> <span class="k">import</span> <span class="n">TextSlot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">SlotSet</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tracker</span> <span class="o">=</span> <span class="n">DialogueStateTracker</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="p">[</span><span class="n">TextSlot</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
+<span class="go">{u&#39;cuisine&#39;: &lt;TextSlot(cuisine: None)&gt;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">,</span><span class="s2">&quot;Mexican&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
+<span class="go">{u&#39;cuisine&#39;: &lt;TextSlot(cuisine: Mexican)&gt;}</span>
+</pre></div>
+</div>
+<p>The full set of events is documented in the <a class="reference internal" href="api/events.html"><span class="doc">Events API documentation</span></a>.</p>
+<div class="section" id="persisting-trackers">
+<span id="id1"></span><h2>Persisting Trackers:<a class="headerlink" href="#persisting-trackers" title="Permalink to this headline">¶</a></h2>
+<p>When you&#8217;re running your bot in production,
+you want your application to be stateless.
+For example, you wouldn&#8217;t want to lose track of every conversation
+each time you restart a running process.
+That&#8217;s why Rasa persists trackers in a key-value store.
+For testing, the <code class="docutils literal"><span class="pre">InMemoryTrackerStore</span></code> is sufficient,
+but in production you would want to use the <code class="docutils literal"><span class="pre">RedisTrackerStore</span></code> to restore
+after restarting the application. It&#8217;s straightforward to define a
+custom <code class="docutils literal"><span class="pre">TrackerStore</span></code> subclass for the persistence tool of your choice.</p>
+</div>
+<div class="section" id="serialisation">
+<h2>Serialisation<a class="headerlink" href="#serialisation" title="Permalink to this headline">¶</a></h2>
+<p>Rather than pickling the final state of the tracker object,
+Rasa creates a <code class="docutils literal"><span class="pre">dialogue</span></code> object to serialise.
+A dialogue is a full record of the previous <code class="docutils literal"><span class="pre">N</span></code> dialogue turns.
+To return to the current state of the conversation,
+we iterate over the turns and log the events in each.</p>
+<p>We use the <code class="docutils literal"><span class="pre">jsonpickle</span></code> library to serialise these Dialogues.
+Here&#8217;s a simple example of a dialogue as it would be stored in the TrackerStore:</p>
+<div class="highlight-json"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>  
+  <span class="nt">&quot;py/object&quot;</span><span class="p">:</span><span class="s2">&quot;rasa_core.conversation.Dialogue&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;events&quot;</span><span class="p">:[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;py/object&quot;</span><span class="p">:</span> <span class="s2">&quot;rasa_core.events.UserUttered&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="nt">&quot;intent&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;greet&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">1.0</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;/greet&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;py/object&quot;</span><span class="p">:</span> <span class="s2">&quot;rasa_core.events.ActionExecuted&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;action_name&quot;</span><span class="p">:</span> <span class="s2">&quot;utter_greet&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;unpredictable&quot;</span><span class="p">:</span> <span class="kc">false</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;hello_world&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="migrations.html" class="btn btn-neutral float-right" title="Migration Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="policies.html" class="btn btn-neutral" title="Custom Policies" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="state.html">0.8.5</a></dd>
+            <dd><a href="../0.8.4/state.html">0.8.4</a></dd>
+            <dd><a href="../0.8.3/state.html">0.8.3</a></dd>
+            <dd><a href="../0.8.2/state.html">0.8.2</a></dd>
+            <dd><a href="../0.8.1/state.html">0.8.1</a></dd>
+            <dd><a href="../0.8.0/state.html">0.8.0</a></dd>
+            <dd><a href="../0.7.9/state.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/state.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/state.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

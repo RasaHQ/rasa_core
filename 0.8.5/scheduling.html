@@ -1,0 +1,463 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Scheduling Reminders &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="index.html"/>
+        <link rel="next" title="Agent" href="api/agent.html"/>
+        <link rel="prev" title="Connecting to messaging &amp; voice platforms" href="connectors.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Scheduling Reminders</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#scheduling-the-reminder">Scheduling the reminder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-happens-when-the-reminder-is-triggered">What happens when the reminder is triggered</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Scheduling Reminders</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/scheduling.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="scheduling-reminders">
+<span id="scheduling"></span><h1>Scheduling Reminders<a class="headerlink" href="#scheduling-reminders" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is a python-only feature. For now, you can not use the scheduling
+feature if you are running the framework as a http server.</p>
+</div>
+<p>One of your users got halfway through a task and then stopped messaging your bot.
+Now you want to remind them to get back to you.
+Don&#8217;t worry! Rasa has you covered.</p>
+<p>To schedule an action for later execution, there is a special event called <code class="docutils literal"><span class="pre">Reminder</span></code>.
+Let&#8217;s make our example a bit more specific:
+We want a confirmation to book a restaurant table - without it the reservation won&#8217;t be made.</p>
+<div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gu">##</span> book a restaurant
+<span class="k">*</span> start_booking
+    <span class="k">-</span> action_suggest_restaurant
+<span class="k">*</span> select_restaurant{&quot;name&quot;: &quot;Papi&#39;s Pizza Place&quot;}
+    <span class="k">-</span> action_confirm_booking
+</pre></div>
+</td></tr></table></div>
+<p>The last action in this story, <code class="docutils literal"><span class="pre">action_confirm_booking</span></code>, will ask the user for a confirmation and usually
+the user would directly send a confirmation - but sometimes they might forget to do that.</p>
+<dl class="docutils">
+<dt>There are two things we need to do:</dt>
+<dd><ol class="first last arabic simple">
+<li>schedule a reminder for a specified time in the future</li>
+<li>define what happens when that reminder is triggered</li>
+</ol>
+</dd>
+</dl>
+<div class="section" id="scheduling-the-reminder">
+<h2>Scheduling the reminder<a class="headerlink" href="#scheduling-the-reminder" title="Permalink to this headline">¶</a></h2>
+<p>The reminder will be scheduled when it is returned as an event after executing an action.
+Here is an example implementation for our <code class="docutils literal"><span class="pre">action_confirm_booking</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="k">import</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Reminder</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+
+<span class="k">class</span> <span class="nc">ActionConfirmBooking</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;action_confirm_booking&quot;</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_message</span><span class="p">(</span><span class="s2">&quot;Do you want to confirm your booking at Papi&#39;s pizza?&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Reminder</span><span class="p">(</span><span class="s2">&quot;action_booking_reminder&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">5</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>This action schedules a reminder in 5 hours. The reminder will trigger the action <code class="docutils literal"><span class="pre">action_booking_reminder</span></code>.</p>
+</div>
+<div class="section" id="what-happens-when-the-reminder-is-triggered">
+<h2>What happens when the reminder is triggered<a class="headerlink" href="#what-happens-when-the-reminder-is-triggered" title="Permalink to this headline">¶</a></h2>
+<p>First of all, the action whose name was part of the reminder will get executed. An implementation for our
+example could look like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="k">import</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Reminder</span>
+
+
+<span class="k">class</span> <span class="nc">ActionBookingReminder</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;action_booking_reminder&quot;</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_message</span><span class="p">(</span><span class="s2">&quot;You have an unconfirmed booking at Papi&#39;s pizza, would you like to confirm it?&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[]</span>
+</pre></div>
+</div>
+<p>By default, reminders will be cancelled if the user sends <em>any</em> message to the bot before the scheduled reminder time.
+If you do not want that to happen you need so set the <code class="docutils literal"><span class="pre">kill_on_user_message</span></code> flag when creating the reminder:
+<code class="docutils literal"><span class="pre">Reminder(&quot;action_booking_reminder&quot;,</span> <span class="pre">datetime.now()</span> <span class="pre">+</span> <span class="pre">timedelta(hours=5),</span> <span class="pre">kill_on_user_message=False)</span></code></p>
+<p>After the action is triggered, the action execution continues as though the user had sent the bot an
+empty message.
+So in our stories we need to define what happens after the reminder was executed:</p>
+<div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gu">##</span> book a restaurant
+<span class="k">*</span> start_booking
+    <span class="k">-</span> action_suggest_restaurant
+<span class="k">*</span> select_restaurant{&quot;name&quot;: &quot;Papi&#39;s Pizza Place&quot;}
+    <span class="k">-</span> action_confirm_booking
+
+<span class="gu">##</span> reminder_confirm
+    <span class="k">-</span> action_booking_reminder
+<span class="k">*</span> agree
+    <span class="k">-</span> action_book_restaurant
+
+<span class="gu">##</span> reminder_cancel
+    <span class="k">-</span> action_booking_reminder
+<span class="k">*</span> deny
+    <span class="k">-</span> action_cancel_booking
+</pre></div>
+</td></tr></table></div>
+<p>We have added two stories: One where the user agrees to the message we sent in the reminder and one where they
+decide to cancel the booking.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">It is <strong>very important</strong> to specify what should happen after the reminder
+was triggered. Otherwise the bot won&#8217;t know what to do after running the action of the reminder and
+it will run a seemingly random action.
+So make sure to add a story into your training data that starts with the action of the reminder.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api/agent.html" class="btn btn-neutral float-right" title="Agent" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="connectors.html" class="btn btn-neutral" title="Connecting to messaging &amp; voice platforms" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="scheduling.html">0.8.5</a></dd>
+            <dd><a href="../0.8.4/scheduling.html">0.8.4</a></dd>
+            <dd><a href="../0.8.3/scheduling.html">0.8.3</a></dd>
+            <dd><a href="../0.8.2/scheduling.html">0.8.2</a></dd>
+            <dd><a href="../0.8.1/scheduling.html">0.8.1</a></dd>
+            <dd><a href="../0.8.0/scheduling.html">0.8.0</a></dd>
+            <dd><a href="../0.7.9/scheduling.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/scheduling.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/scheduling.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

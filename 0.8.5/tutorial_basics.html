@@ -1,0 +1,845 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Building a Simple Bot &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="index.html"/>
+        <link rel="next" title="Supervised Learning Tutorial" href="tutorial_supervised.html"/>
+        <link rel="prev" title="Installation" href="installation.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Building a Simple Bot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#goal">Goal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#define-a-domain">1. Define a Domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#define-an-interpreter">2. Define an interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#define-stories">3. Define stories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#put-the-pieces-together">4. Put the pieces together</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bonus-handle-messages-from-facebook">Bonus: Handle messages from Facebook</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Building a Simple Bot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tutorial_basics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="building-a-simple-bot">
+<span id="tutorial-basics"></span><h1>Building a Simple Bot<a class="headerlink" href="#building-a-simple-bot" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This tutorial will show you the different parts needed to build a bot. Be
+aware that this is a small example to get started quickly. It doesn&#8217;t
+include a lot of training data, so there is some room for improvement of
+the final bot performance.</p>
+<p class="last"><a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/master/examples/moodbot">Example Code on GitHub</a></p>
+</div>
+<p>Here we show how to create your first bot, adding all the pieces of a Rasa application.
+This might be easier to follow if you also look at <a class="reference internal" href="plumbing.html#plumbing"><span class="std std-ref">Plumbing - How it all fits together</span></a>.</p>
+<img alt="_images/mood_bot.png" src="_images/mood_bot.png" />
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>We will create a very simple bot that checks our current mood and tries to
+cheer us up if we are feeling sad. It will query our mood and based on our
+reply will respond with a funny image or a message.</p>
+<p>Let&#8217;s start by creating a project folder:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir moodbot <span class="o">&amp;&amp;</span> <span class="nb">cd</span> moodbot
+</pre></div>
+</div>
+<p>We need to create two data files (dialogue stories and NLU examples),
+as well as two configuration files (dialogue domain and NLU config). The
+final structure should look like this:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>moodbot/
+├── data/
+│   ├── stories.md            # dialogue training data
+│   └── nlu.md                # nlu training data
+├── domain.yml                # dialogue configuration
+└── nlu_model_config.json     # nlu configuration
+</pre></div>
+</div>
+<p>Let&#8217;s go through each of them!</p>
+</div>
+<div class="section" id="define-a-domain">
+<h2>1. Define a Domain<a class="headerlink" href="#define-a-domain" title="Permalink to this headline">¶</a></h2>
+<p>The first thing we need is a <code class="docutils literal"><span class="pre">Domain</span></code>.
+The domain defines the universe your bot lives in.</p>
+<p>Here is an example domain for our moodbot, <code class="docutils literal"><span class="pre">domain.yml</span></code>:</p>
+<div class="highlight-yaml" id="domain-yml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">intents</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">greet</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">goodbye</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">mood_affirm</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">mood_deny</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">mood_great</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">mood_unhappy</span>
+
+<span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_greet</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_cheer_up</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_did_that_help</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_happy</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">utter_goodbye</span>
+
+<span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_greet</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Hey!</span><span class="nv"> </span><span class="s">How</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you?&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">buttons</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">title</span><span class="p p-Indicator">:</span> <span class="s">&quot;great&quot;</span>
+      <span class="l l-Scalar l-Scalar-Plain">payload</span><span class="p p-Indicator">:</span> <span class="s">&quot;great&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">title</span><span class="p p-Indicator">:</span> <span class="s">&quot;super</span><span class="nv"> </span><span class="s">sad&quot;</span>
+      <span class="l l-Scalar l-Scalar-Plain">payload</span><span class="p p-Indicator">:</span> <span class="s">&quot;super</span><span class="nv"> </span><span class="s">sad&quot;</span>
+
+  <span class="l l-Scalar l-Scalar-Plain">utter_cheer_up</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Here</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">something</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">cheer</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">up:&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="s">&quot;https://i.imgur.com/nGF1K8f.jpg&quot;</span>
+
+  <span class="l l-Scalar l-Scalar-Plain">utter_did_that_help</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Did</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">help</span><span class="nv"> </span><span class="s">you?&quot;</span>
+
+  <span class="l l-Scalar l-Scalar-Plain">utter_happy</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Great</span><span class="nv"> </span><span class="s">carry</span><span class="nv"> </span><span class="s">on!&quot;</span>
+
+  <span class="l l-Scalar l-Scalar-Plain">utter_goodbye</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Bye&quot;</span>
+</pre></div>
+</td></tr></table></div>
+<p>So what do the different parts mean?</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">intents</span></code></td>
+<td>things you expect users to say. See Rasa NLU for details.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">entities</span></code></td>
+<td>pieces of info you want to extract from messages. See Rasa NLU for details.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">actions</span></code></td>
+<td>things your bot can do and say</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">slots</span></code></td>
+<td>information to keep track of during a conversation (e.g. a users age)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">templates</span></code></td>
+<td>template strings for the things your bot can say</td>
+</tr>
+</tbody>
+</table>
+<p>In our simple example we don&#8217;t need <code class="docutils literal"><span class="pre">slots</span></code> and <code class="docutils literal"><span class="pre">entities</span></code>, so these sections don&#8217;t appear
+in our definition.</p>
+<p><strong>How does this fit together?</strong>
+Rasa takes the <code class="docutils literal"><span class="pre">intent</span></code>, <code class="docutils literal"><span class="pre">entities</span></code>, and the internal state of the dialogue,
+and selects one of the <code class="docutils literal"><span class="pre">actions</span></code> that should be executed next.
+If the action is just to say something to the user, Rasa will look for a matching
+template in the domain (action name equals the utter template, as for
+<code class="docutils literal"><span class="pre">utter_greet</span></code> in the above example), fill in any variables,
+and respond. For actions
+which do more than just send a message, you can define them as
+python classes and reference them in the domain by their module path. See
+<a class="reference internal" href="domains.html#custom-actions"><span class="std std-ref">Defining Custom Actions</span></a> for more information about custom actions.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There is one additional special action, <code class="docutils literal"><span class="pre">ActionListen</span></code>, which means to stop taking
+further actions until the user says something else.
+It is not specified in the <code class="docutils literal"><span class="pre">domain.yml</span></code></p>
+</div>
+</div>
+<div class="section" id="define-an-interpreter">
+<h2>2. Define an interpreter<a class="headerlink" href="#define-an-interpreter" title="Permalink to this headline">¶</a></h2>
+<p>An interpreter is responsible for parsing messages. It performs the Natural
+Language Understanding (NLU) and transforms the message into structured output.
+In this example we are going to use Rasa NLU for this purpose.</p>
+<p>In Rasa NLU, we need to define the user messages our bot should be able to
+handle in the <a class="reference external" href="https://nlu.rasa.ai/dataformat.html">Rasa NLU training data format</a>.
+In this tutorial we are going to use Markdown Format for NLU training data.
+Let&#8217;s create some intent examples in <code class="docutils literal"><span class="pre">data/nlu.md</span></code>:</p>
+<div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gu">##</span> intent:greet
+<span class="k">-</span> hey
+<span class="k">-</span> hello
+<span class="k">-</span> hi
+<span class="k">-</span> hello there
+<span class="k">-</span> good morning
+<span class="k">-</span> good evening
+<span class="k">-</span> moin
+<span class="k">-</span> hey there
+<span class="k">-</span> let&#39;s go
+<span class="k">-</span> hey dude
+<span class="k">-</span> goodmorning
+<span class="k">-</span> goodevening
+<span class="k">-</span> good afternoon
+
+<span class="gu">##</span> intent:goodbye
+<span class="k">-</span> cu
+<span class="k">-</span> good by
+<span class="k">-</span> cee you later
+<span class="k">-</span> good night
+<span class="k">-</span> good afternoon
+<span class="k">-</span> bye
+<span class="k">-</span> goodbye
+<span class="k">-</span> have a nice day
+<span class="k">-</span> see you around
+<span class="k">-</span> bye bye
+<span class="k">-</span> see you later
+
+<span class="gu">##</span> intent:mood_affirm
+<span class="k">-</span> yes
+<span class="k">-</span> indeed
+<span class="k">-</span> of course
+<span class="k">-</span> that sounds good
+<span class="k">-</span> correct
+
+<span class="gu">##</span> intent:mood_deny
+<span class="k">-</span> no
+<span class="k">-</span> never
+<span class="k">-</span> I don&#39;t think so
+<span class="k">-</span> don&#39;t like that
+<span class="k">-</span> no way
+
+<span class="gu">##</span> intent:mood_great
+<span class="k">-</span> perfect
+<span class="k">-</span> very good
+<span class="k">-</span> great
+<span class="k">-</span> amazing
+<span class="k">-</span> feeling like a king
+<span class="k">-</span> wonderful
+<span class="k">-</span> I am feeling very good
+<span class="k">-</span> I am great
+<span class="k">-</span> I am amazing
+<span class="k">-</span> I am going to save the world
+<span class="k">-</span> super
+<span class="k">-</span> extremely good
+<span class="k">-</span> so so perfect
+<span class="k">-</span> so good
+<span class="k">-</span> so perfect
+
+<span class="gu">##</span> intent:mood_unhappy
+<span class="k">-</span> my day was horrible
+<span class="k">-</span> I am sad
+<span class="k">-</span> I don&#39;t feel very well
+<span class="k">-</span> I am disappointed
+<span class="k">-</span> super sad
+<span class="k">-</span> I&#39;m so sad
+<span class="k">-</span> sad
+<span class="k">-</span> very sad
+<span class="k">-</span> unhappy
+<span class="k">-</span> not so good
+<span class="k">-</span> not very good
+<span class="k">-</span> extremly sad
+<span class="k">-</span> so saad
+<span class="k">-</span> so sad
+</pre></div>
+</td></tr></table></div>
+<p>Furthermore, we need a configuration file, <code class="docutils literal"><span class="pre">nlu_model_config.json</span></code>, for the
+NLU model:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="s2">&quot;spacy_sklearn&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;path&quot;</span> <span class="p">:</span> <span class="s2">&quot;./models/nlu&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;data&quot;</span> <span class="p">:</span> <span class="s2">&quot;./data/nlu.md&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>We can now train an NLU model using our examples (make sure to
+<a class="reference external" href="http://nlu.rasa.ai/installation.html#setting-up-rasa-nlu">install Rasa NLU</a>
+first, as well as
+<a class="reference external" href="http://nlu.rasa.ai/installation.html#best-for-most-spacy-sklearn">spaCy</a>).</p>
+<p>Let&#8217;s run</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_nlu.train -c nlu_model_config.json --fixed_model_name current
+</pre></div>
+</div>
+<p>to train our NLU model. A new directory <code class="docutils literal"><span class="pre">models/nlu/default/current</span></code> should have been
+created containing the NLU model. Note that <code class="docutils literal"><span class="pre">default</span></code> stands for project name, since we did not
+specify it explicitly in <code class="docutils literal"><span class="pre">nlu_model_config.json</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To gather more insights about the above configuration and Rasa NLU features
+head over to the <a class="reference external" href="https://nlu.rasa.ai">Rasa NLU documentation</a>.</p>
+</div>
+</div>
+<div class="section" id="define-stories">
+<h2>3. Define stories<a class="headerlink" href="#define-stories" title="Permalink to this headline">¶</a></h2>
+<p>So far, we&#8217;ve got an NLU model, a domain defining the actions our bot can
+take, and inputs it should handle (intents &amp; entities). We are still
+missing the central piece, <strong>stories to tell our bot what to do at which
+point in the dialogue</strong>.</p>
+<p>A <strong>story</strong> is a training data sample for the dialogue system.
+There are two different ways to create stories (and
+you can mix them):</p>
+<ul class="simple">
+<li>create the stories by hand, writing them directly to a file</li>
+<li>create stories using interactive learning (see <a class="reference internal" href="tutorial_interactive_learning.html#tutorial-interactive-learning"><span class="std std-ref">Interactive Learning</span></a>).</li>
+</ul>
+<p>For this example, we are going to create the stories by writing them directly
+to <code class="docutils literal"><span class="pre">stories.md</span></code>.
+Stories begin with <code class="docutils literal"><span class="pre">##</span></code> and a string as an identifier. User actions start
+with an asterisk, and bot actions are specified by lines beginning with a
+dash. The end of a story is denoted by a newline. See <a class="reference internal" href="stories.html#stories"><span class="std std-ref">Stories - The Training Data</span></a> for
+more information about the data format.</p>
+<p>Enough talking, let&#8217;s head over to our stories:</p>
+<div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gu">##</span> happy path               &lt;!-- name of the story - just for debugging --&gt;
+<span class="k">*</span> greet              
+  <span class="k">-</span> utter_greet
+<span class="k">*</span> mood_great               &lt;!-- user utterance, in format _intent[entities] --&gt;
+  <span class="k">-</span> utter_happy
+
+<span class="gu">##</span> sad path 1               &lt;!-- this is already the start of the next story --&gt;
+<span class="k">*</span> greet
+  <span class="k">-</span> utter_greet             &lt;!-- action of the bot to execute --&gt;
+<span class="k">*</span> mood_unhappy
+  <span class="k">-</span> utter_cheer_up
+  <span class="k">-</span> utter_did_that_help
+<span class="k">*</span> mood_affirm
+  <span class="k">-</span> utter_happy
+
+<span class="gu">##</span> sad path 2
+<span class="k">*</span> greet
+  <span class="k">-</span> utter_greet
+<span class="k">*</span> mood_unhappy
+  <span class="k">-</span> utter_cheer_up
+  <span class="k">-</span> utter_did_that_help
+<span class="k">*</span> mood_deny
+  <span class="k">-</span> utter_goodbye
+
+<span class="gu">##</span> say goodbye
+<span class="k">*</span> goodbye
+  <span class="k">-</span> utter_goodbye
+</pre></div>
+</td></tr></table></div>
+<p>Be aware, although it is a bit faster to write
+stories directly by hand instead of using interactive learning, special
+care needs to be taken when using slots, as they need to be properly set in the
+stories.</p>
+</div>
+<div class="section" id="put-the-pieces-together">
+<h2>4. Put the pieces together<a class="headerlink" href="#put-the-pieces-together" title="Permalink to this headline">¶</a></h2>
+<p>There are two things we still need to do: train the dialogue model and run it.</p>
+<p>To train the dialogue model, run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.train -s data/stories.md -d domain.yml -o models/dialogue --epochs <span class="m">300</span>
+</pre></div>
+</div>
+<p>This will train the dialogue model for <code class="docutils literal"><span class="pre">300</span></code> epochs and store it
+into <code class="docutils literal"><span class="pre">models/dialogue</span></code>. Now we can use that trained dialogue model
+and the previously created NLU model to run our bot.
+Here we&#8217;ll just talk to the bot on the command line:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/default/current
+</pre></div>
+</div>
+<p>And there we have it! A minimal bot containing all the important pieces of
+Rasa Core.</p>
+<img alt="_images/facebook-run.png" src="_images/facebook-run.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Button emulation does not work in console output, you need to type words like &#8220;great&#8221; or &#8220;sad&#8221;
+instead of numbers 1 or 2.</p>
+</div>
+</div>
+<div class="section" id="bonus-handle-messages-from-facebook">
+<h2>Bonus: Handle messages from Facebook<a class="headerlink" href="#bonus-handle-messages-from-facebook" title="Permalink to this headline">¶</a></h2>
+<p>If you want to handle input from Facebook instead of the command line, you can
+specify that as part of the run command, after creating a credentials file
+containing the information to connect to facebook. Let&#8217;s put that
+into <code class="docutils literal"><span class="pre">fb_credentials.yml</span></code>:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">verify</span><span class="p">:</span> <span class="s2">&quot;rasa-bot&quot;</span>
+<span class="n">secret</span><span class="p">:</span> <span class="s2">&quot;3e34709d01ea89032asdebfe5a74518&quot;</span>
+<span class="n">page</span><span class="o">-</span><span class="n">access</span><span class="o">-</span><span class="n">token</span><span class="p">:</span> <span class="s2">&quot;EAAbHPa7H9rEBAAuFk4Q3gPKbDedQnx4djJJ1JmQ7CAqO4iJKrQcNT0wtD&quot;</span>
+</pre></div>
+</td></tr></table></div>
+<p>If you are new to Facebook Messenger bots, head over to
+<a class="reference internal" href="connectors.html#facebook-connector"><span class="std std-ref">Facebook Messenger Setup</span></a> for an explanation of the different values.</p>
+<p>After setting that up, we can now run the bot using</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+   --port <span class="m">5002</span> --connector facebook --credentials fb_credentials.yml
+</pre></div>
+</div>
+<p>and it will now handle messages users send to the Facebook page.</p>
+<div class="rating-container">
+    <div class="rating-text">
+      <p> How was the tutorial? Click to Vote </p>
+    </div>
+      <form class="rating-form">
+        <label for="great" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'great'} );">
+            <input type="radio" name="rating" class="great" id="great" value="great" />
+            <svg viewBox="0 0 24 24"><path d="M12,17.5C14.33,17.5 16.3,16.04 17.11,14H6.89C7.69,16.04 9.67,17.5 12,17.5M8.5,11A1.5,1.5 0 0,0 10,9.5A1.5,1.5 0 0,0 8.5,8A1.5,1.5 0 0,0 7,9.5A1.5,1.5 0 0,0 8.5,11M15.5,11A1.5,1.5 0 0,0 17,9.5A1.5,1.5 0 0,0 15.5,8A1.5,1.5 0 0,0 14,9.5A1.5,1.5 0 0,0 15.5,11M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
+            <p> Great! </p>
+
+        </label>
+
+        <label for="didnt-work" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-work'} );">
+            <input type="radio" name="rating" class="didnt-work" id="didnt-work" value="didnt-work" />
+            <svg viewBox="0 0 24 24"><path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M16.18,7.76L15.12,8.82L14.06,7.76L13,8.82L14.06,9.88L13,10.94L14.06,12L15.12,10.94L16.18,12L17.24,10.94L16.18,9.88L17.24,8.82L16.18,7.76M7.82,12L8.88,10.94L9.94,12L11,10.94L9.94,9.88L11,8.82L9.94,7.76L8.88,8.82L7.82,7.76L6.76,8.82L7.82,9.88L6.76,10.94L7.82,12M12,14C9.67,14 7.69,15.46 6.89,17.5H17.11C16.31,15.46 14.33,14 12,14Z" /></svg>
+            <p> Didn't Work </p>
+        </label>
+
+        <label for="didnt-finish" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-finish'} );">
+            <input type="radio" name="rating" class="didnt-finish" id="didnt-finish" value="didnt-finish" />
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%" viewBox="0 0 24 24"><path d="M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11M15.5,11A1.5,1.5 0 0,1 14,9.5A1.5,1.5 0 0,1 15.5,8A1.5,1.5 0 0,1 17,9.5A1.5,1.5 0 0,1 15.5,11M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M9,14H15A1,1 0 0,1 16,15A1,1 0 0,1 15,16H9A1,1 0 0,1 8,15A1,1 0 0,1 9,14Z" /></svg>
+            <p> Didn't Finish </p>
+        </label>
+
+      </form>
+    </div>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tutorial_supervised.html" class="btn btn-neutral float-right" title="Supervised Learning Tutorial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="tutorial_basics.html">0.8.5</a></dd>
+            <dd><a href="../0.8.4/tutorial_basics.html">0.8.4</a></dd>
+            <dd><a href="../0.8.3/tutorial_basics.html">0.8.3</a></dd>
+            <dd><a href="../0.8.2/tutorial_basics.html">0.8.2</a></dd>
+            <dd><a href="../0.8.1/tutorial_basics.html">0.8.1</a></dd>
+            <dd><a href="../0.8.0/tutorial_basics.html">0.8.0</a></dd>
+            <dd><a href="../0.7.9/tutorial_basics.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/index.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/tutorial_basics.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

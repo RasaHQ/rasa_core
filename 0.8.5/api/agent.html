@@ -1,0 +1,455 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Agent &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="../index.html"/>
+        <link rel="next" title="Events" href="events.html"/>
+        <link rel="prev" title="Scheduling Reminders" href="../scheduling.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Agent</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/agent.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="agent">
+<h1>Agent<a class="headerlink" href="#agent" title="Permalink to this headline">¶</a></h1>
+<p>The agent allows you to train a model, load, and use it. It is a facade to
+access most of Rasa Core&#8217;s functionality using a simple API.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not all functionality is exposed through methods on the
+agent. Sometimes you need to orchestrate the different components (domain,
+policy, interpreter, and the tracker store) on your own to customize them.</p>
+</div>
+<p>Here we go:</p>
+<span class="target" id="module-rasa_core.agent"></span><dl class="class">
+<dt id="rasa_core.agent.Agent">
+<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain</em>, <em>policies=None</em>, <em>featurizer=None</em>, <em>interpreter=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Public interface for common things to do.</p>
+<p>This includes e.g. train an assistant, or handle messages
+with an assistant.</p>
+<dl class="method">
+<dt id="rasa_core.agent.Agent.continue_message_handling">
+<code class="descname">continue_message_handling</code><span class="sig-paren">(</span><em>sender_id</em>, <em>executed_action</em>, <em>events</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.continue_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.continue_message_handling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="rasa_core.agent.Agent.create_tracker_store">
+<em class="property">classmethod </em><code class="descname">create_tracker_store</code><span class="sig-paren">(</span><em>store</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.create_tracker_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.create_tracker_store" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.handle_channel">
+<code class="descname">handle_channel</code><span class="sig-paren">(</span><em>input_channel</em>, <em>message_preprocessor=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.handle_channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle messages coming from the channel.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.handle_message">
+<code class="descname">handle_message</code><span class="sig-paren">(</span><em>text_message</em>, <em>message_preprocessor=None</em>, <em>output_channel=None</em>, <em>sender_id=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.handle_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a single message.</p>
+<p>If a message preprocessor is passed, the message will be passed to that
+function first and the return value is then used as the
+input for the dialogue engine.</p>
+<p>The return value of this function depends on the <cite>output_channel</cite>. If
+the output channel is not set, set to <cite>None</cite>, or set
+to <cite>CollectingOutputChannel</cite> this function will return the messages
+the bot wants to respond.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;examples/restaurantbot/models/dialogue&quot;</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">interpreter</span><span class="o">=</span><span class="s2">&quot;examples/restaurantbot/models/nlu/current&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="go">[u&#39;how can I help you?&#39;]</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="rasa_core.agent.Agent.load">
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>interpreter=None</em>, <em>tracker_store=None</em>, <em>action_factory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.persist">
+<code class="descname">persist</code><span class="sig-paren">(</span><em>model_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.persist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Persists this agent into a directory for later loading and usage.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.start_message_handling">
+<code class="descname">start_message_handling</code><span class="sig-paren">(</span><em>text_message</em>, <em>sender_id=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.start_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.start_message_handling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.toggle_memoization">
+<code class="descname">toggle_memoization</code><span class="sig-paren">(</span><em>activate</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.toggle_memoization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.toggle_memoization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles the memoization on and off.</p>
+<p>If a memoization policy is present in the ensemble, this will toggle
+the prediction of that policy. When set to <cite>false</cite> the Memoization
+policies present in the policy ensemble will not make any predictions.
+Hence, the prediction result from the ensemble always needs to come
+from a different policy (e.g. <cite>KerasPolicy</cite>). Useful to test prediction
+capabilities of an ensemble when ignoring memorized turns from the
+training data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>filename=None</em>, <em>model_path=None</em>, <em>remove_duplicates=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train the policies / policy ensemble using dialogue data from file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.train_online">
+<code class="descname">train_online</code><span class="sig-paren">(</span><em>filename=None</em>, <em>input_channel=None</em>, <em>model_path=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train_online"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train_online" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs an online training session on the set policies / ensemble.</p>
+<p>The policies will be pretrained using the data from <cite>filename</cite>.
+After that the model will get trained on dialogues from the input
+channel. During the dialogue the annotations and state of the agent
+can be changed to correct wrong behaviour.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.visualize">
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>filename</em>, <em>output_file</em>, <em>max_history</em>, <em>nlu_training_data=None</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="events.html" class="btn btn-neutral float-right" title="Events" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../scheduling.html" class="btn btn-neutral" title="Scheduling Reminders" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="agent.html">0.8.5</a></dd>
+            <dd><a href="../../0.8.4/api/agent.html">0.8.4</a></dd>
+            <dd><a href="../../0.8.3/api/agent.html">0.8.3</a></dd>
+            <dd><a href="../../0.8.2/api/agent.html">0.8.2</a></dd>
+            <dd><a href="../../0.8.1/api/agent.html">0.8.1</a></dd>
+            <dd><a href="../../0.8.0/api/agent.html">0.8.0</a></dd>
+            <dd><a href="../../0.7.9/api/agent.html">0.7.9</a></dd>
+            <dd><a href="../../0.6.9/api/agent.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../master/api/agent.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

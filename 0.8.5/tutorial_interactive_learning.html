@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Interactive Learning &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="index.html"/>
+        <link rel="next" title="Rasa Core without Python" href="tutorial_remote.html"/>
+        <link rel="prev" title="Supervised Learning Tutorial" href="tutorial_supervised.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interactive Learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-problem">The Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-bot">The Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-domain">The Domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stateless-stories">Stateless Stories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Interactive Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#motivation-why-interactive-learning">Motivation: Why Interactive Learning?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Interactive Learning</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tutorial_interactive_learning.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="interactive-learning">
+<span id="tutorial-interactive-learning"></span><h1>Interactive Learning<a class="headerlink" href="#interactive-learning" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This is the place to start if you have a great idea for a bot but you
+don&#8217;t have any conversations to use as training data. We will assume that
+you&#8217;ve already thought of what intents and entities you need (check out the
+<a class="reference external" href="http://nlu.rasa.ai/tutorial.html#tutorial-a-simple-restaurant-search-bot">Rasa NLU</a>
+docs if you don&#8217;t know what those are).</p>
+<p class="last">We&#8217;re using this <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/master/examples/concertbot">Example Code on GitHub</a>.</p>
+</div>
+<div class="section" id="the-problem">
+<h2>The Problem<a class="headerlink" href="#the-problem" title="Permalink to this headline">¶</a></h2>
+<p>Your bot usually has well-defined goals it should reach when talking to a
+user. There are often numerous different ways the conversation could
+develop before reaching this final stage. We&#8217;ll teach you how to use
+Rasa Core to bootstrap full-blown conversations from minimal to no training
+data.</p>
+</div>
+<div class="section" id="the-bot">
+<h2>The Bot<a class="headerlink" href="#the-bot" title="Permalink to this headline">¶</a></h2>
+<p>Say you want to  build a bot that recommends concerts to go to. There is one
+goal: you know that at the end of the conversation you want your bot to
+make a recommendation. We&#8217;ll show how to implement context-aware behaviour
+without writing a flow chart. For example, if our user asks the question:
+<em>which of those has better reviews?</em>, our bot should know whether they want
+to compare <em>musicians</em> or <em>venues</em>.</p>
+<p>Head over to <code class="docutils literal"><span class="pre">examples/concertbot</span></code> for this example. Let&#8217;s go!</p>
+</div>
+<div class="section" id="the-domain">
+<h2>The Domain<a class="headerlink" href="#the-domain" title="Permalink to this headline">¶</a></h2>
+<p>We will keep the concert domain simple, and won&#8217;t add any slots just yet.
+We&#8217;ll also only support these intents:
+<code class="docutils literal"><span class="pre">&quot;greet&quot;,</span> <span class="pre">&quot;thankyou&quot;,</span> <span class="pre">&quot;goodbye&quot;,</span> <span class="pre">&quot;search_concerts&quot;,</span> <span class="pre">&quot;search_venues&quot;,</span>
+<span class="pre">&quot;compare_reviews&quot;</span></code>. Here is the domain definition (<code class="docutils literal"><span class="pre">concert_domain.yml</span></code>):</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">slots</span><span class="p">:</span>
+  <span class="n">concerts</span><span class="p">:</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">list</span>
+  <span class="n">venues</span><span class="p">:</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">list</span>
+
+<span class="n">intents</span><span class="p">:</span>
+ <span class="o">-</span> <span class="n">greet</span>
+ <span class="o">-</span> <span class="n">thankyou</span>
+ <span class="o">-</span> <span class="n">goodbye</span>
+ <span class="o">-</span> <span class="n">search_concerts</span>
+ <span class="o">-</span> <span class="n">search_venues</span>
+ <span class="o">-</span> <span class="n">compare_reviews</span>
+
+<span class="n">entities</span><span class="p">:</span>
+ <span class="o">-</span> <span class="n">name</span>
+
+<span class="n">templates</span><span class="p">:</span>
+  <span class="n">utter_greet</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;hey there!&quot;</span>
+  <span class="n">utter_goodbye</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;goodbye :(&quot;</span>
+  <span class="n">utter_default</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;default message&quot;</span>
+  <span class="n">utter_youarewelcome</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;you&#39;re very welcome&quot;</span>
+
+<span class="n">actions</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">utter_default</span>
+  <span class="o">-</span> <span class="n">utter_greet</span>
+  <span class="o">-</span> <span class="n">utter_goodbye</span>
+  <span class="o">-</span> <span class="n">utter_youarewelcome</span>
+  <span class="o">-</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionSearchConcerts</span>
+  <span class="o">-</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionSearchVenues</span>
+  <span class="o">-</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionShowConcertReviews</span>
+  <span class="o">-</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionShowVenueReviews</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="stateless-stories">
+<h2>Stateless Stories<a class="headerlink" href="#stateless-stories" title="Permalink to this headline">¶</a></h2>
+<p>We start by training a stateless model on some simple dialogues in the
+Rasa story format. This means we define conversations with
+one user utterance and only a few (typically one) bot action in response. We
+will use these stateless stories as a starting point for interactive learning.</p>
+<p>In many cases, simple training &#8216;conversations&#8217; are just a single turn and
+response: &#8220;Hello&#8221; is always met with a greeting, &#8220;goodbye!&#8221; is always met
+with a sign-off, and the correct response to &#8220;thank you&#8221; is pretty much
+always &#8220;you&#8217;re welcome&#8221;.</p>
+<p>Below is an excerpt of the stories.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Notice that below, we&#8217;ve defined two stories, showing that
+<code class="docutils literal"><span class="pre">action_show_venue_reviews</span></code> and <code class="docutils literal"><span class="pre">action_show_concert_reviews</span></code>
+are both possible responses to the <code class="docutils literal"><span class="pre">compare_reviews</span></code> intent, but neither
+references any context. That comes later.</p>
+</div>
+<div class="highlight-md"><div class="highlight"><pre><span></span><span class="gu">##</span> greet
+<span class="k">*</span> greet
+    <span class="k">-</span> utter_greet
+
+<span class="gu">##</span> happy
+<span class="k">*</span> thankyou
+    <span class="k">-</span> utter_youarewelcome
+...
+
+<span class="gu">##</span> compare_reviews_venues
+<span class="k">*</span> compare_reviews
+    <span class="k">-</span> action_show_venue_reviews
+
+<span class="gu">##</span> compare_reviews_concerts
+<span class="k">*</span> compare_reviews
+    <span class="k">-</span> action_show_concert_reviews
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Interactive Learning<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Run the script <code class="docutils literal"><span class="pre">train_online.py</span></code>. This first creats a stateless policy by combining the stories
+we&#8217;ve provided into longer dialogues, and then trains the policy on that
+dataset.</p>
+<p>It then runs the bot so that you can provide feedback to train it (this is
+where the learning <em>becomes interactive</em>):</p>
+<p><strong>Happy paths</strong></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We haven&#8217;t connected an NLU tool here,
+so when you type messages to the bot you have to
+type the intent starting with a <code class="docutils literal"><span class="pre">/</span></code> (see <a class="reference internal" href="interpreters.html#fixed-intent-format"><span class="std std-ref">Fixed intent &amp; entity input</span></a>).
+If you want to use Rasa NLU / wit.ai / Lex you
+can just swap the <code class="docutils literal"><span class="pre">Interpreter</span></code> class in <code class="docutils literal"><span class="pre">run.py</span></code> and <code class="docutils literal"><span class="pre">train_online.py</span></code>.</p>
+</div>
+<p>We now start talking to the bot by directly entering the intents. For
+example, if we type <code class="docutils literal"><span class="pre">/greet</span></code>, we get the following prompt:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>/greet
+------
+Chat history:
+
+     bot did:    None
+     bot did:        action_listen
+     user said:      /greet
+
+             whose intent is:        greet
+
+we currently have slots: concerts: None, venues: None
+------
+The bot wants to [utter_greet] due to the intent. Is this correct?
+
+    1.       Yes
+    2.       No, intent is right but the action is wrong
+    3.       The intent is wrong
+    0.       Export current conversations as stories and quit
+</pre></div>
+</div>
+<p>This gives you all the info you should hopefully need to decide
+what the bot <em>should</em> have done. In this case, the bot chose the right
+action (&#8216;utter_greet&#8217;), so we type <code class="docutils literal"><span class="pre">1</span></code> and hit enter.
+Then we type <code class="docutils literal"><span class="pre">1</span></code> again, because &#8216;action_listen&#8217; is the correct action after greeting.
+We continue this loop until the bot chooses the wrong action.</p>
+<p><strong>Providing feedback on errors</strong></p>
+<p>If you ask <code class="docutils literal"><span class="pre">/search_concerts</span></code>, the bot should suggest <code class="docutils literal"><span class="pre">action_search_concerts</span></code> and then <code class="docutils literal"><span class="pre">action_listen</span></code>.
+Now let&#8217;s ask it to <code class="docutils literal"><span class="pre">/compare_reviews</span></code>. The bot happens to choose the wrong one out of the two
+possibilities we wrote in the stories:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>/compare_reviews
+------
+Chat history:
+
+     bot did:        action_search_concerts
+     bot did:        action_listen
+     user said:      /compare_reviews
+
+                whose intent is:     compare_reviews
+
+we currently have slots: concerts: [{&#39;artist&#39;: &#39;Foo Fighters&#39;, &#39;reviews&#39;: 4.5}, {&#39;artist&#39;: &#39;Katy Perry&#39;, &#39;reviews&#39;: 5.0}], venues: None
+------
+The bot wants to [action_show_venue_reviews] due to the intent. Is this correct?
+
+    1.       Yes
+    2.       No, intent is right but the action is wrong
+    3.       The intent is wrong
+    0.       Export current conversations as stories and quit
+</pre></div>
+</div>
+<p>Now we type <code class="docutils literal"><span class="pre">2</span></code>, because it chose the wrong action, and we get a new
+prompt asking for the correct one. This also shows the probabilities the
+model has assigned to each of the actions.</p>
+<p>In this case, the bot should <code class="docutils literal"><span class="pre">action_show_concert_reviews</span></code> (rather than venue
+reviews!) so we type <code class="docutils literal"><span class="pre">8</span></code> and hit enter.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The policy model will get updated <em>on-the-fly</em>,
+so that it&#8217;s less likely to make the same mistake again.
+You can also export all of the conversations you have with the bot so
+you can add these as training stories in the future.</p>
+</div>
+<p>Now we can keep talking to the bot for as long as we like to create a longer
+conversation. At any point you can type <code class="docutils literal"><span class="pre">0</span></code> and the bot will write the
+current conversation to a file and exit the conversation. Make sure to
+combine the dumped story with your original training data for the next
+training.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you run the bot with not enough training data, it might get <code class="docutils literal"><span class="pre">action_listen</span></code>
+as a most probable response to your input and therefore do nothing.
+If you continue to input something and get no answer, please head to
+interactive training and check if <code class="docutils literal"><span class="pre">action_listen</span></code> was chosen as a response.
+Correct the bot&#8217;s behaviour, add additional stories and run <code class="docutils literal"><span class="pre">train.py</span></code> then
+run the bot again.</p>
+</div>
+</div>
+<div class="section" id="motivation-why-interactive-learning">
+<h2>Motivation: Why Interactive Learning?<a class="headerlink" href="#motivation-why-interactive-learning" title="Permalink to this headline">¶</a></h2>
+<p>There are some complications to chatbot training which makes it more
+tricky than most machine learning problems.</p>
+<p>The first is that there are several ways of getting to the same goal, and
+they may all be equivalently good. Therefore it is wrong to say with
+certainty that given X, you should do Y, and if you do not do exactly Y then
+you are wrong. This is essentially what you do in a fully supervised
+learning case. We want the bot to be able to learn it can get to a
+successful state through a number of different means.</p>
+<p>Secondly, the utterances from users will be strongly affected by the
+actions of the bot. That means that a network trained on pre-collected
+data will suffer from <a class="reference external" href="https://arxiv.org/abs/1511.06732">exposure bias</a>.
+This is when a system is trained to make predictions but is never given the
+ability to train on its own predictions, instead being given the
+ground truth every time. This has been shown to have issues when trying
+to predict sequences of multiple steps into the future.</p>
+<p>Furthermore, from a practical perspective, Rasa Core developers should be
+able to train via the <a class="reference external" href="https://en.wikipedia.org/wiki/Wizard_of_Oz_experiment">Wizard of Oz</a> method. This means that if you want a
+bot to do a certain task, you can simply pretend to be a bot for a little
+while and at the end it will learn how to respond. This is a good way of
+learning how to make the conversation natural and flowing.</p>
+<div class="rating-container">
+    <div class="rating-text">
+      <p> How was the tutorial? Click to Vote </p>
+    </div>
+      <form class="rating-form">
+        <label for="great" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'great'} );">
+            <input type="radio" name="rating" class="great" id="great" value="great" />
+            <svg viewBox="0 0 24 24"><path d="M12,17.5C14.33,17.5 16.3,16.04 17.11,14H6.89C7.69,16.04 9.67,17.5 12,17.5M8.5,11A1.5,1.5 0 0,0 10,9.5A1.5,1.5 0 0,0 8.5,8A1.5,1.5 0 0,0 7,9.5A1.5,1.5 0 0,0 8.5,11M15.5,11A1.5,1.5 0 0,0 17,9.5A1.5,1.5 0 0,0 15.5,8A1.5,1.5 0 0,0 14,9.5A1.5,1.5 0 0,0 15.5,11M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
+            <p> Great! </p>
+
+        </label>
+
+        <label for="didnt-work" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-work'} );">
+            <input type="radio" name="rating" class="didnt-work" id="didnt-work" value="didnt-work" />
+            <svg viewBox="0 0 24 24"><path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M16.18,7.76L15.12,8.82L14.06,7.76L13,8.82L14.06,9.88L13,10.94L14.06,12L15.12,10.94L16.18,12L17.24,10.94L16.18,9.88L17.24,8.82L16.18,7.76M7.82,12L8.88,10.94L9.94,12L11,10.94L9.94,9.88L11,8.82L9.94,7.76L8.88,8.82L7.82,7.76L6.76,8.82L7.82,9.88L6.76,10.94L7.82,12M12,14C9.67,14 7.69,15.46 6.89,17.5H17.11C16.31,15.46 14.33,14 12,14Z" /></svg>
+            <p> Didn't Work </p>
+        </label>
+
+        <label for="didnt-finish" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-finish'} );">
+            <input type="radio" name="rating" class="didnt-finish" id="didnt-finish" value="didnt-finish" />
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%" viewBox="0 0 24 24"><path d="M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11M15.5,11A1.5,1.5 0 0,1 14,9.5A1.5,1.5 0 0,1 15.5,8A1.5,1.5 0 0,1 17,9.5A1.5,1.5 0 0,1 15.5,11M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M9,14H15A1,1 0 0,1 16,15A1,1 0 0,1 15,16H9A1,1 0 0,1 8,15A1,1 0 0,1 9,14Z" /></svg>
+            <p> Didn't Finish </p>
+        </label>
+
+      </form>
+    </div>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tutorial_remote.html" class="btn btn-neutral float-right" title="Rasa Core without Python" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial_supervised.html" class="btn btn-neutral" title="Supervised Learning Tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="tutorial_interactive_learning.html">0.8.5</a></dd>
+            <dd><a href="../0.8.4/tutorial_interactive_learning.html">0.8.4</a></dd>
+            <dd><a href="../0.8.3/tutorial_interactive_learning.html">0.8.3</a></dd>
+            <dd><a href="../0.8.2/tutorial_interactive_learning.html">0.8.2</a></dd>
+            <dd><a href="../0.8.1/tutorial_interactive_learning.html">0.8.1</a></dd>
+            <dd><a href="../0.8.0/tutorial_interactive_learning.html">0.8.0</a></dd>
+            <dd><a href="../0.7.9/tutorial_interactive_learning.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/index.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/tutorial_interactive_learning.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,746 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Events &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="../index.html"/>
+        <link rel="next" title="Featurization" href="../featurisation.html"/>
+        <link rel="prev" title="Agent" href="agent.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Events</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/events.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="events">
+<h1>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h1>
+<p>List of all the events the dialogue system is able to handle and supports.</p>
+<p>An event can be referenced by its <code class="docutils literal"><span class="pre">type_name</span></code> attribute (e.g. when returning
+events in an http callback).</p>
+<span class="target" id="module-rasa_core.events"></span><dl class="class">
+<dt id="rasa_core.events.ActionExecuted">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ActionExecuted</code><span class="sig-paren">(</span><em>action_name</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ActionExecuted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecuted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>An operation describes an action taken + its result.</p>
+<p>It comprises an action and a list of events. operations will be appended
+to the latest <code class="docutils literal"><span class="pre">Turn</span></code> in the <code class="docutils literal"><span class="pre">Tracker.turns</span></code>.</p>
+<dl class="method">
+<dt id="rasa_core.events.ActionExecuted.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ActionExecuted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecuted.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.ActionExecuted.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ActionExecuted.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecuted.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.ActionExecuted.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ActionExecuted.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecuted.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.ActionExecuted.type_name">
+<code class="descname">type_name</code><em class="property"> = u'action'</em><a class="headerlink" href="#rasa_core.events.ActionExecuted.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.ActionReverted">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ActionReverted</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ActionReverted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionReverted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Bot undoes its last action.</p>
+<p>Shouldn&#8217;t be used during actual user interactions, mostly for train.
+As a side effect the <code class="docutils literal"><span class="pre">Tracker</span></code>&#8216;s last turn is removed.</p>
+<dl class="method">
+<dt id="rasa_core.events.ActionReverted.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ActionReverted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionReverted.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.ActionReverted.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ActionReverted.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionReverted.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.ActionReverted.type_name">
+<code class="descname">type_name</code><em class="property"> = u'undo'</em><a class="headerlink" href="#rasa_core.events.ActionReverted.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.AllSlotsReset">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">AllSlotsReset</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#AllSlotsReset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AllSlotsReset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Conversation should start over &amp; history wiped.</p>
+<p>As a side effect the <code class="docutils literal"><span class="pre">Tracker</span></code> will be reinitialised.</p>
+<dl class="method">
+<dt id="rasa_core.events.AllSlotsReset.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#AllSlotsReset.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AllSlotsReset.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.AllSlotsReset.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#AllSlotsReset.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AllSlotsReset.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.AllSlotsReset.type_name">
+<code class="descname">type_name</code><em class="property"> = u'reset_slots'</em><a class="headerlink" href="#rasa_core.events.AllSlotsReset.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.BotUttered">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">BotUttered</code><span class="sig-paren">(</span><em>text=None</em>, <em>data=None</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#BotUttered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.BotUttered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>The bot has said something to the user.</p>
+<p>This class is not used in the story training as it is contained in the</p>
+<p><code class="docutils literal"><span class="pre">ActionExecuted</span></code> class. An entry is made in the <code class="docutils literal"><span class="pre">Tracker</span></code>.</p>
+<dl class="method">
+<dt id="rasa_core.events.BotUttered.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#BotUttered.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.BotUttered.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.BotUttered.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#BotUttered.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.BotUttered.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.BotUttered.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#BotUttered.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.BotUttered.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.events.BotUttered.empty">
+<em class="property">static </em><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#BotUttered.empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.BotUttered.empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.BotUttered.type_name">
+<code class="descname">type_name</code><em class="property"> = u'bot'</em><a class="headerlink" href="#rasa_core.events.BotUttered.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.ConversationPaused">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ConversationPaused</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ConversationPaused"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ConversationPaused" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Ignore messages from the user to let a human take over.</p>
+<p>As a side effect the <code class="docutils literal"><span class="pre">Tracker</span></code>&#8216;s <code class="docutils literal"><span class="pre">paused</span></code> attribute will
+be set to <code class="docutils literal"><span class="pre">True</span></code>.</p>
+<dl class="method">
+<dt id="rasa_core.events.ConversationPaused.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ConversationPaused.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ConversationPaused.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.ConversationPaused.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ConversationPaused.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ConversationPaused.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.ConversationPaused.type_name">
+<code class="descname">type_name</code><em class="property"> = u'pause'</em><a class="headerlink" href="#rasa_core.events.ConversationPaused.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.ConversationResumed">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ConversationResumed</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ConversationResumed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ConversationResumed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Bot takes over conversation.</p>
+<p>Inverse of <code class="docutils literal"><span class="pre">PauseConversation</span></code>. As a side effect the <code class="docutils literal"><span class="pre">Tracker</span></code>&#8216;s
+<code class="docutils literal"><span class="pre">paused</span></code> attribute will be set to <code class="docutils literal"><span class="pre">False</span></code>.</p>
+<dl class="method">
+<dt id="rasa_core.events.ConversationResumed.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ConversationResumed.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ConversationResumed.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.ConversationResumed.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ConversationResumed.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ConversationResumed.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.ConversationResumed.type_name">
+<code class="descname">type_name</code><em class="property"> = u'resume'</em><a class="headerlink" href="#rasa_core.events.ConversationResumed.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.Event">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">Event</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>An event is one of the following:
+- something the user has said to the bot (starts a new turn)
+- the topic has been set
+- the bot has taken an action</p>
+<p>Events are logged by the Tracker&#8217;s update method.
+This updates the list of turns so that the current state
+can be recovered by consuming the list of turns.</p>
+<dl class="method">
+<dt id="rasa_core.events.Event.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.Event.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.Event.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.events.Event.from_parameters">
+<em class="property">static </em><code class="descname">from_parameters</code><span class="sig-paren">(</span><em>event_name</em>, <em>parameters</em>, <em>domain</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.from_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.events.Event.from_story_string">
+<em class="property">static </em><code class="descname">from_story_string</code><span class="sig-paren">(</span><em>event_name</em>, <em>parameters</em>, <em>domain</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.from_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.events.Event.resolve_by_type">
+<em class="property">static </em><code class="descname">resolve_by_type</code><span class="sig-paren">(</span><em>type_name</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.resolve_by_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.resolve_by_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a slots class by its type name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.Event.type_name">
+<code class="descname">type_name</code><em class="property"> = u'event'</em><a class="headerlink" href="#rasa_core.events.Event.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.ReminderScheduled">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ReminderScheduled</code><span class="sig-paren">(</span><em>action_name</em>, <em>trigger_date_time</em>, <em>name=None</em>, <em>kill_on_user_message=True</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ReminderScheduled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ReminderScheduled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Allows asynchronous scheduling of action execution.</p>
+<p>As a side effect the message processor will schedule an action to be run
+at the trigger date.</p>
+<dl class="method">
+<dt id="rasa_core.events.ReminderScheduled.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ReminderScheduled.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ReminderScheduled.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.ReminderScheduled.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#ReminderScheduled.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ReminderScheduled.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.ReminderScheduled.type_name">
+<code class="descname">type_name</code><em class="property"> = u'reminder'</em><a class="headerlink" href="#rasa_core.events.ReminderScheduled.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.Restarted">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">Restarted</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Restarted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Restarted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Conversation should start over &amp; history wiped.</p>
+<p>As a side effect the <code class="docutils literal"><span class="pre">Tracker</span></code> will be reinitialised.</p>
+<dl class="method">
+<dt id="rasa_core.events.Restarted.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Restarted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Restarted.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.Restarted.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Restarted.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Restarted.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.Restarted.type_name">
+<code class="descname">type_name</code><em class="property"> = u'restart'</em><a class="headerlink" href="#rasa_core.events.Restarted.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.SlotSet">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">SlotSet</code><span class="sig-paren">(</span><em>key</em>, <em>value=None</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#SlotSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.SlotSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>The user has specified their preference for the value of a <code class="docutils literal"><span class="pre">slot</span></code>.</p>
+<p>As a side effect the <code class="docutils literal"><span class="pre">Tracker</span></code>&#8216;s slots will be updated so
+that <code class="docutils literal"><span class="pre">tracker.slots[key]=value</span></code>.</p>
+<dl class="method">
+<dt id="rasa_core.events.SlotSet.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#SlotSet.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.SlotSet.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.SlotSet.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#SlotSet.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.SlotSet.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.SlotSet.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#SlotSet.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.SlotSet.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.SlotSet.type_name">
+<code class="descname">type_name</code><em class="property"> = u'slot'</em><a class="headerlink" href="#rasa_core.events.SlotSet.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.StoryExported">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">StoryExported</code><span class="sig-paren">(</span><em>path=None</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#StoryExported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.StoryExported" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Story should get dumped to a file.</p>
+<dl class="method">
+<dt id="rasa_core.events.StoryExported.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#StoryExported.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.StoryExported.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.StoryExported.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#StoryExported.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.StoryExported.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.StoryExported.type_name">
+<code class="descname">type_name</code><em class="property"> = u'export'</em><a class="headerlink" href="#rasa_core.events.StoryExported.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.TopicSet">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">TopicSet</code><span class="sig-paren">(</span><em>topic</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#TopicSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.TopicSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>The topic of conversation has changed.</p>
+<p>As a side effect self.topic will be pushed on to <code class="docutils literal"><span class="pre">Tracker.topic_stack</span></code>.</p>
+<dl class="method">
+<dt id="rasa_core.events.TopicSet.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#TopicSet.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.TopicSet.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.TopicSet.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#TopicSet.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.TopicSet.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.TopicSet.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#TopicSet.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.TopicSet.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.TopicSet.type_name">
+<code class="descname">type_name</code><em class="property"> = u'topic'</em><a class="headerlink" href="#rasa_core.events.TopicSet.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.UserUtteranceReverted">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">UserUtteranceReverted</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#UserUtteranceReverted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUtteranceReverted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Bot undoes its last action.</p>
+<p>Shouldn&#8217;t be used during actual user interactions, mostly for train.
+As a side effect the <code class="docutils literal"><span class="pre">Tracker</span></code>&#8216;s last turn is removed.</p>
+<dl class="method">
+<dt id="rasa_core.events.UserUtteranceReverted.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#UserUtteranceReverted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUtteranceReverted.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.UserUtteranceReverted.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#UserUtteranceReverted.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUtteranceReverted.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.UserUtteranceReverted.type_name">
+<code class="descname">type_name</code><em class="property"> = u'rewind'</em><a class="headerlink" href="#rasa_core.events.UserUtteranceReverted.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.events.UserUttered">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">UserUttered</code><span class="sig-paren">(</span><em>text</em>, <em>intent=None</em>, <em>entities=None</em>, <em>parse_data=None</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#UserUttered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUttered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>The user has said something to the bot.</p>
+<p>As a side effect a new <code class="docutils literal"><span class="pre">Turn</span></code> will be created in the <code class="docutils literal"><span class="pre">Tracker</span></code>.</p>
+<dl class="method">
+<dt id="rasa_core.events.UserUttered.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#UserUttered.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUttered.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.UserUttered.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#UserUttered.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUttered.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.UserUttered.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#UserUttered.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUttered.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.events.UserUttered.empty">
+<em class="property">static </em><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#UserUttered.empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUttered.empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.UserUttered.type_name">
+<code class="descname">type_name</code><em class="property"> = u'user'</em><a class="headerlink" href="#rasa_core.events.UserUttered.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.events.deserialise_events">
+<code class="descclassname">rasa_core.events.</code><code class="descname">deserialise_events</code><span class="sig-paren">(</span><em>serialized_events</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#deserialise_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.deserialise_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a list of dictionaries to a list of corresponding events.</p>
+<dl class="docutils">
+<dt>Example format:</dt>
+<dd>[{&#8220;event&#8221;: &#8220;set_slot&#8221;, &#8220;value&#8221;: 5, &#8220;name&#8221;: &#8220;my_slot&#8221;}]</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../featurisation.html" class="btn btn-neutral float-right" title="Featurization" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="agent.html" class="btn btn-neutral" title="Agent" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="events.html">0.8.5</a></dd>
+            <dd><a href="../../0.8.4/api/events.html">0.8.4</a></dd>
+            <dd><a href="../../0.8.3/api/events.html">0.8.3</a></dd>
+            <dd><a href="../../0.8.2/api/events.html">0.8.2</a></dd>
+            <dd><a href="../../0.8.1/api/events.html">0.8.1</a></dd>
+            <dd><a href="../../0.8.0/api/events.html">0.8.0</a></dd>
+            <dd><a href="../../0.7.9/api/events.html">0.7.9</a></dd>
+            <dd><a href="../../0.6.9/api/events.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../master/api/events.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

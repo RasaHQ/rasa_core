@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Motivation &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="index.html"/>
+        <link rel="next" title="But I don’t code in python!" href="no_python.html"/>
+        <link rel="prev" title="The Rasa dialogue engine" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Motivation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#where-rasa-core-fits-in">Where Rasa Core fits in</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#guiding-principles">Guiding Principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-wrong-way">The Wrong Way™</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-rasa-way">The Rasa Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-to-start">Where to Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#questions">Questions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Motivation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/motivation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="motivation">
+<span id="id1"></span><h1>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="where-rasa-core-fits-in">
+<h2>Where Rasa Core fits in<a class="headerlink" href="#where-rasa-core-fits-in" title="Permalink to this headline">¶</a></h2>
+<p>Rasa Core takes in structured input: <strong>intents</strong> and <strong>entities</strong>,
+<strong>button clicks</strong>, etc., and decides which <strong>action</strong> your bot should run next.
+If you want your system to handle free text, you need to also use Rasa NLU or
+another NLU tool.</p>
+<img alt="_images/rasa_system.png" src="_images/rasa_system.png" />
+</div>
+<div class="section" id="guiding-principles">
+<h2>Guiding Principles<a class="headerlink" href="#guiding-principles" title="Permalink to this headline">¶</a></h2>
+<p>The main idea behind Rasa Core is that thinking of conversations as a flowchart doesn&#8217;t scale.
+It&#8217;s very hard to reason about <em>all possible conversations</em> explicitly, but it&#8217;s
+very easy to tell, mid-conversation, if a response is right or wrong.</p>
+</div>
+<div class="section" id="the-wrong-way">
+<h2>The Wrong Way™<a class="headerlink" href="#the-wrong-way" title="Permalink to this headline">¶</a></h2>
+<p>The typical way to implement conversation flows is to use a state machine.
+For example, you might need to collect some data from a user to fulfill their order, and manually
+take them through the states <code class="docutils literal"><span class="pre">BROWSING</span></code>, <code class="docutils literal"><span class="pre">CHECKING_OUT</span></code>, <code class="docutils literal"><span class="pre">ADDING_PAYMENT</span></code>, <code class="docutils literal"><span class="pre">ORDER_COMPLETE</span></code>, etc.
+The complexity comes in when users stray from the &#8220;happy path&#8221; and you need to add code for handling
+questions, clarifications, comparisons, rejections, etc. Manually inserting these edge cases into your
+state machine is a big pain.</p>
+<p>A typical &#8216;simple&#8217; bot might have 5-10 states and a couple of hundred rules governing its behavior.
+When your bot doesn&#8217;t behave as you want it to, it can be very tricky to figure out what went wrong.</p>
+<p>Similarly, when you want to add some new functionality, you end up clashing with rules you wrote earlier,
+and it gets harder and harder to make progress.</p>
+<p>Our view is that taking flowcharts literally and implementing them as a state machine is not a good idea,
+but that <strong>flowcharts are still useful for describing happy paths and for
+visualising dialogues</strong>.</p>
+</div>
+<div class="section" id="the-rasa-way">
+<h2>The Rasa Way<a class="headerlink" href="#the-rasa-way" title="Permalink to this headline">¶</a></h2>
+<p>Rather than writing a bunch of <code class="docutils literal"><span class="pre">if/else</span></code> statements, a Rasa bot learns from real conversations.
+A probabilistic model chooses which action to take, and this can be trained using
+supervised, reinforcement, or interactive learning.</p>
+<p>The advantages of this approach are that:</p>
+<blockquote>
+<div><ul class="simple">
+<li>debugging is easier</li>
+<li>your bot can be more flexible</li>
+<li>your bot can improve from experience without writing more code</li>
+<li>you can add new functionality to your bot without debugging hundreds of rules.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="where-to-start">
+<h2>Where to Start<a class="headerlink" href="#where-to-start" title="Permalink to this headline">¶</a></h2>
+<p>After going through the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">Installation</span></a>, most users should start with
+<a class="reference internal" href="tutorial_basics.html#tutorial-basics"><span class="std std-ref">Building a Simple Bot</span></a>. However, if you already have a bunch of conversations
+you&#8217;d like to use as a training set, check the <a class="reference internal" href="tutorial_supervised.html#tutorial-supervised"><span class="std std-ref">Supervised Learning Tutorial</span></a>.</p>
+</div>
+<div class="section" id="questions">
+<h2>Questions<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h2>
+<p><em>Why python?</em></p>
+<blockquote>
+<div>Because of its ecosystem of machine learning tools.
+Head over to <a class="reference internal" href="no_python.html#no-python"><span class="std std-ref">But I don&#8217;t code in python!</span></a> for details.</div></blockquote>
+<p><em>Is this only for ML experts?</em></p>
+<blockquote>
+<div>You can use Rasa if you don&#8217;t know anything about machine learning, but if
+you do it&#8217;s easy to experiment.</div></blockquote>
+<p><em>How much training data do I need?</em></p>
+<blockquote>
+<div>You can bootstrap from zero training data by using interactive learning.
+Try the tutorials!</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="no_python.html" class="btn btn-neutral float-right" title="But I don’t code in python!" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="The Rasa dialogue engine" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="motivation.html">0.8.5</a></dd>
+            <dd><a href="../0.8.4/motivation.html">0.8.4</a></dd>
+            <dd><a href="../0.8.3/motivation.html">0.8.3</a></dd>
+            <dd><a href="../0.8.2/motivation.html">0.8.2</a></dd>
+            <dd><a href="../0.8.1/motivation.html">0.8.1</a></dd>
+            <dd><a href="../0.8.0/motivation.html">0.8.0</a></dd>
+            <dd><a href="../0.7.9/motivation.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/index.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/motivation.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

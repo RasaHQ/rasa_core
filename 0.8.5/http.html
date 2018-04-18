@@ -1,0 +1,868 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>HTTP server &mdash; Rasa Core 0.8.5 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.5 documentation" href="index.html"/>
+        <link rel="next" title="Connecting to messaging &amp; voice platforms" href="connectors.html"/>
+        <link rel="prev" title="Plumbing - How it all fits together" href="plumbing.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">HTTP server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-server">Running the server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#starting-a-conversation">Starting a conversation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#events">Events</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#set-a-slot">Set a slot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#restart">Restart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reset-slots">Reset Slots</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#endpoints">Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security-considerations">Security Considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>HTTP server</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/http.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="http-server">
+<span id="section-http"></span><h1>HTTP server<a class="headerlink" href="#http-server" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Before you can use the server, you need to define a domain, create training
+data, and train a model. You can then use the trained model for remote code
+execution! See <a class="reference internal" href="tutorial_basics.html#tutorial-basics"><span class="std std-ref">Building a Simple Bot</span></a> for an introduction.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The HTTP API is still experimental and we&#8217;d appreciate your feedback (e.g.
+via <a class="reference external" href="https://gitter.im/RasaHQ/rasa_core">Gitter</a>).</p>
+</div>
+<p>The HTTP api exists to make it easy for non-python projects to use Rasa Core.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The general idea is to run the actions within your code (arbitrary language),
+instead of python. To do this, Rasa Core will start up a web server where you
+need to pass the user messages to. Rasa Core on the other side will tell you
+which actions you need to run. After running these actions, you need to notify
+the framework that you executed them and tell the model about any update of the
+internal dialogue state for that user. All of these interactions are done using
+a HTTP REST interface.</p>
+<p>To activate the remote mode, include</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">action_factory</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remote</span>
+</pre></div>
+</div>
+<p>within your <code class="docutils literal"><span class="pre">domain.yml</span></code> (you can find an example in
+<code class="docutils literal"><span class="pre">examples/remote/concert_domain_remote.yml</span></code>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If started as a HTTP server, Rasa Core will not handle output or input
+channels for you. That means you need to retrieve messages from the input
+channel (e.g. facebook messenger) and send messages to the user on your end.</p>
+<p class="last">Hence, you also do not need to define any utterances in your domain yaml.
+Just list all the actions you need.</p>
+</div>
+</div>
+<div class="section" id="running-the-server">
+<h2>Running the server<a class="headerlink" href="#running-the-server" title="Permalink to this headline">¶</a></h2>
+<p>You can run a simple http server that handles requests using your
+models with</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ python -m rasa_core.server -d examples/babi/models/policy/current -u examples/babi/models/nlu/current_py2 -o out.log
+</pre></div>
+</div>
+<p>The different parameters are:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">-d</span></code>, which is the path to the Rasa Core model.</li>
+<li><code class="docutils literal"><span class="pre">-u</span></code>, which is the path to the Rasa NLU model.</li>
+<li><code class="docutils literal"><span class="pre">-o</span></code>, which is the path to the log file.</li>
+</ul>
+</div>
+<div class="section" id="starting-a-conversation">
+<span id="http-start-conversation"></span><h2>Starting a conversation<a class="headerlink" href="#starting-a-conversation" title="Permalink to this headline">¶</a></h2>
+<p>You need to do a <code class="docutils literal"><span class="pre">POST</span></code> to the <code class="docutils literal"><span class="pre">/conversation/&lt;sender_id&gt;/parse</span></code> endpoint.
+<code class="docutils literal"><span class="pre">&lt;sender_id&gt;</span></code> is the conversation id (e.g. <code class="docutils literal"><span class="pre">default</span></code> if you just have one
+user, or the facebook user id or any other identifier).</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ curl -XPOST localhost:5005/conversations/default/parse -d <span class="s1">&#39;{&quot;query&quot;:&quot;hello there&quot;}&#39;</span>
+</pre></div>
+</div>
+<p>The server will respond with the next action you should take:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;next_action&quot;</span><span class="o">:</span> <span class="s2">&quot;utter_ask_howcanhelp&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;tracker&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="p">...</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You now need to execute the action <code class="docutils literal"><span class="pre">utter_ask_howcanhelp</span></code> on your end. This
+might include sending a message to the output channel (e.g. back to facebook).</p>
+<p>After you finished running the mentioned action, you need to notify Rasa Core
+about that:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ curl -XPOST http://localhost:5005/conversations/default/continue -d <span class="se">\</span>
+    <span class="s1">&#39;{&quot;executed_action&quot;: &quot;utter_ask_howcanhelp&quot;, &quot;events&quot;: []}&#39;</span>
+</pre></div>
+</div>
+<p>Here the API should respond with:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;next_action&quot;</span><span class="o">:</span><span class="s2">&quot;action_listen&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;tracker&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="p">...</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This response tells you to wait for the next user message. You should not call
+the continue endpoint after you received a response containing <code class="docutils literal"><span class="pre">action_listen</span></code>
+as the next action. Instead, wait for the next user message and call
+<code class="docutils literal"><span class="pre">/conversations/default/parse</span></code> again followed by subsequent
+calls to <code class="docutils literal"><span class="pre">/conversations/default/continue</span></code> until you get <code class="docutils literal"><span class="pre">action_listen</span></code>
+again.</p>
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>Events allow you to modify the internal state of the dialogue. This information
+will be used to predict the next action. E.g. you can set slots (to store
+information about the user) or restart the conversation.</p>
+<p>You can return multiple events as part of your query, e.g.:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ curl -XPOST http://localhost:5005/conversations/default/continue -d <span class="se">\</span>
+    <span class="s1">&#39;{&quot;executed_action&quot;: &quot;search_restaurants&quot;, &quot;events&quot;: [{&quot;event&quot;: &quot;slot&quot;, &quot;name&quot;: &quot;cuisine&quot;, &quot;value&quot;: &quot;mexican&quot;}, {&quot;event&quot;: &quot;slot&quot;, &quot;name&quot;: &quot;people&quot;, &quot;value&quot;: 5}]}&#39;</span>
+</pre></div>
+</div>
+<p>Here is a list of all available events you can append to the <code class="docutils literal"><span class="pre">events</span></code> array in
+your call to <code class="docutils literal"><span class="pre">/conversation/&lt;sender_id&gt;/continue</span></code>.</p>
+<div class="section" id="set-a-slot">
+<h3>Set a slot<a class="headerlink" href="#set-a-slot" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">name:</th><td class="field-body"><code class="docutils literal"><span class="pre">slot</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Examples:</th><td class="field-body"><code class="docutils literal"><span class="pre">&quot;events&quot;:</span> <span class="pre">[{&quot;event&quot;:</span> <span class="pre">&quot;slot&quot;,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;cuisine&quot;,</span> <span class="pre">&quot;value&quot;:</span> <span class="pre">&quot;mexican&quot;}]</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body">Will set the value of the slot to the passed one. The value you set should
+be reasonable given the <a class="reference internal" href="domains.html#slot-types"><span class="std std-ref">slots type</span></a>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="restart">
+<h3>Restart<a class="headerlink" href="#restart" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">name:</th><td class="field-body"><code class="docutils literal"><span class="pre">restart</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Examples:</th><td class="field-body"><code class="docutils literal"><span class="pre">&quot;events&quot;:</span> <span class="pre">[{&quot;event&quot;:</span> <span class="pre">&quot;restart&quot;}]</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body">Restarts the conversation and resets all slots and past actions.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="reset-slots">
+<h3>Reset Slots<a class="headerlink" href="#reset-slots" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">name:</th><td class="field-body"><code class="docutils literal"><span class="pre">reset_slots</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Examples:</th><td class="field-body"><code class="docutils literal"><span class="pre">&quot;events&quot;:</span> <span class="pre">[{&quot;event&quot;:</span> <span class="pre">&quot;reset_slots&quot;}]</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body">Resets all slots to their initial value.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="endpoints">
+<h2>Endpoints<a class="headerlink" href="#endpoints" title="Permalink to this headline">¶</a></h2>
+<dl class="post">
+<dt id="post--conversations-(str-sender_id)-parse">
+<code class="descname">POST </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/parse</code><a class="headerlink" href="#post--conversations-(str-sender_id)-parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Notify the dialogue engine that the user posted a new message. You must
+<code class="docutils literal"><span class="pre">POST</span></code> data in this format <code class="docutils literal"><span class="pre">'{&quot;query&quot;:&quot;&lt;your</span> <span class="pre">text</span> <span class="pre">to</span> <span class="pre">parse&gt;&quot;}'</span></code>,
+you can do this with</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl -XPOST localhost:5005/conversations/default/parse -d <span class="se">\</span>
+  <span class="s1">&#39;{&quot;query&quot;:&quot;hello there&quot;}&#39;</span> <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">{</span>
+    <span class="s2">&quot;next_action&quot;</span><span class="o">:</span> <span class="s2">&quot;utter_ask_howcanhelp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tracker&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="p">...</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--conversations-(str-sender_id)-continue">
+<code class="descname">POST </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/continue</code><a class="headerlink" href="#post--conversations-(str-sender_id)-continue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continue the prediction loop for the conversation with id <cite>user_id</cite>. Should
+be called until the endpoint returns <code class="docutils literal"><span class="pre">action_listen</span></code> as the next action.
+Between the calls to this endpoint, your code should execute the mentioned
+next action. If you receive <code class="docutils literal"><span class="pre">action_listen</span></code> as the next action, you should
+wait for the next user input.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl -XPOST http://localhost:5005/conversations/default/continue -d <span class="se">\</span>
+  <span class="s1">&#39;{&quot;executed_action&quot;: &quot;utter_ask_howcanhelp&quot;, &quot;events&quot;: []}&#39;</span> <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">{</span>
+    <span class="s2">&quot;next_action&quot;</span><span class="o">:</span> <span class="s2">&quot;utter_ask_cuisine&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tracker&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="p">...</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--conversations-(str-sender_id)-tracker">
+<code class="descname">GET </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/tracker</code><a class="headerlink" href="#get--conversations-(str-sender_id)-tracker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the current tracker state for the conversation with <code class="docutils literal"><span class="pre">sender_id</span></code>.
+This includes the set slots as well as the latest message and all previous
+events.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl http://localhost:5005/conversations/default/tracker <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">{</span>
+    <span class="s2">&quot;events&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="s2">&quot;action&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;action_listen&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;parse_data&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;entities&quot;</span><span class="o">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;intent&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;confidence&quot;</span><span class="o">:</span> <span class="mf">0.7561643619088745</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;affirm&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;intent_ranking&quot;</span><span class="o">:</span> <span class="p">[</span>
+                    <span class="p">...</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;hello there&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;hello there&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;entities&quot;</span><span class="o">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;intent&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;confidence&quot;</span><span class="o">:</span> <span class="mf">0.7561643619088745</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;affirm&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;intent_ranking&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">...</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;hello there&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="put">
+<dt id="put--conversations-(str-sender_id)-tracker">
+<code class="descname">PUT </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/tracker</code><a class="headerlink" href="#put--conversations-(str-sender_id)-tracker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the tracker state using events. Any existing tracker for
+<code class="docutils literal"><span class="pre">sender_id</span></code> will be discarded. A new tracker will be created and the
+passed events will be applied to create a new state.</p>
+<p>The format of the passed events is the same as for the <code class="docutils literal"><span class="pre">/continue</span></code>
+endpoint.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl -XPUT http://localhost:5005/conversations/default/tracker -d <span class="se">\</span>
+  <span class="s1">&#39;[{&quot;event&quot;: &quot;slot&quot;, &quot;name&quot;: &quot;cuisine&quot;, &quot;value&quot;: &quot;mexican&quot;},{&quot;event&quot;: &quot;action&quot;, &quot;name&quot;: &quot;action_listen&quot;}]&#39;</span> <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">{</span>
+    <span class="s2">&quot;events&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="s2">&quot;slot&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;cuisine&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="s2">&quot;mexican&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="s2">&quot;action&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;action_listen&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;entities&quot;</span><span class="o">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;intent&quot;</span><span class="o">:</span> <span class="p">{},</span>
+        <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="s2">&quot;mexican&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--conversations-(str-sender_id)-tracker-events">
+<code class="descname">POST </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/tracker/events</code><a class="headerlink" href="#post--conversations-(str-sender_id)-tracker-events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append the tracker state of the conversation with events. Any existing
+events will be kept and the new events will be appended, updating the
+existing state.</p>
+<p>The format of the passed events is the same as for the <code class="docutils literal"><span class="pre">/continue</span></code>
+endpoint.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl -XPOST http://localhost:5005/conversations/default/tracker/events -d <span class="se">\</span>
+  <span class="s1">&#39;[{&quot;event&quot;: &quot;slot&quot;, &quot;name&quot;: &quot;cuisine&quot;, &quot;value&quot;: &quot;mexican&quot;},{&quot;event&quot;: &quot;action&quot;, &quot;name&quot;: &quot;action_listen&quot;}]&#39;</span> <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">{</span>
+    <span class="s2">&quot;events&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;entities&quot;</span><span class="o">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;intent&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;confidence&quot;</span><span class="o">:</span> <span class="mf">0.7561643619088745</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;affirm&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;intent_ranking&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">...</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;hello there&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="s2">&quot;mexican&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--version">
+<code class="descname">GET </code><code class="descname">/version</code><a class="headerlink" href="#get--version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Version of Rasa Core that is currently running.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl http://localhost:5005/version <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span> <span class="o">:</span> <span class="s2">&quot;0.7.0&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="security-considerations">
+<h2>Security Considerations<a class="headerlink" href="#security-considerations" title="Permalink to this headline">¶</a></h2>
+<p>We recommend to not expose the Rasa Core server to the outside world but
+rather connect to it from your backend over a private connection (e.g.
+between docker containers).</p>
+<p>Nevertheless, there is build in token authentication. If you specify a token
+when starting the server, that token needs to be passed with every request:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ python -m rasa_core.server --auth_token thisismysecret -d examples/babi/models/policy/current -u examples/babi/models/nlu/current_py2 -o out.log
+</pre></div>
+</div>
+<p>Your requests should pass the token, in our case <code class="docutils literal"><span class="pre">thisismysecret</span></code>,
+as a parameter:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ curl -XPOST localhost:5005/conversations/default/parse?token<span class="o">=</span>thisismysecret -d <span class="s1">&#39;{&quot;query&quot;:&quot;hello there&quot;}&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="connectors.html" class="btn btn-neutral float-right" title="Connecting to messaging &amp; voice platforms" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="plumbing.html" class="btn btn-neutral" title="Plumbing - How it all fits together" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.8.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="http.html">0.8.5</a></dd>
+            <dd><a href="../0.8.4/http.html">0.8.4</a></dd>
+            <dd><a href="../0.8.3/http.html">0.8.3</a></dd>
+            <dd><a href="../0.8.2/http.html">0.8.2</a></dd>
+            <dd><a href="../0.8.1/http.html">0.8.1</a></dd>
+            <dd><a href="../0.8.0/http.html">0.8.0</a></dd>
+            <dd><a href="../0.7.9/http.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/http.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/http.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.5',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>
