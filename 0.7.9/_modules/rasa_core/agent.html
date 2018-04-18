@@ -204,7 +204,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">string_types</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span><span class="p">,</span> <span class="n">InputChannel</span><span class="p">,</span> <span class="n">OutputChannel</span>
@@ -269,11 +269,7 @@
             <span class="n">sender_id</span><span class="o">=</span><span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span>  <span class="c1"># type: Optional[Text]</span>
     <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; Optional[List[Text]]</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-
-
-
-<span class="sd">        Handle a single message.</span>
+        <span class="sd">&quot;&quot;&quot;Handle a single message.</span>
 
 <span class="sd">        If a message preprocessor is passed, the message will be passed to that</span>
 <span class="sd">        function first and the return value is then used as the</span>
@@ -340,20 +336,21 @@
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="n">MemoizationPolicy</span><span class="p">:</span>
                 <span class="n">p</span><span class="o">.</span><span class="n">toggle</span><span class="p">(</span><span class="n">activate</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Agent.train"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<div class="viewcode-block" id="Agent.train"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># type: (Optional[Text], Optional[Text], **Any) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Train the policies / policy ensemble using dialogue data from file&quot;&quot;&quot;</span>
 
         <span class="n">trainer</span> <span class="o">=</span> <span class="n">PolicyTrainer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="p">)</span>
-        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="n">remove_duplicates</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="n">remove_duplicates</span><span class="p">,</span>
+                      <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">model_path</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.train_online"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.train_online">[docs]</a>    <span class="k">def</span> <span class="nf">train_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                     <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
+                     <span class="n">resource_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
                      <span class="n">input_channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[InputChannel]</span>
                      <span class="n">model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
                      <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
@@ -372,7 +369,7 @@
                     <span class="s2">&quot;an interpreter for the agent to use.&quot;</span><span class="p">)</span>
         <span class="n">trainer</span> <span class="o">=</span> <span class="n">OnlinePolicyTrainer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
                                       <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="p">)</span>
-        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">model_path</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span></div>
@@ -390,7 +387,7 @@
                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_path</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="Agent.visualize"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.visualize">[docs]</a>    <span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                  <span class="n">filename</span><span class="p">,</span>
+                  <span class="n">resource_name</span><span class="p">,</span>
                   <span class="n">output_file</span><span class="p">,</span>
                   <span class="n">max_history</span><span class="p">,</span>
                   <span class="n">nlu_training_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -399,7 +396,8 @@
         <span class="kn">from</span> <span class="nn">rasa_core.training.visualization</span> <span class="k">import</span> <span class="n">visualize_stories</span>
         <span class="kn">from</span> <span class="nn">rasa_core.training</span> <span class="k">import</span> <span class="n">StoryFileReader</span>
 
-        <span class="n">story_steps</span> <span class="o">=</span> <span class="n">StoryFileReader</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
+        <span class="n">story_steps</span> <span class="o">=</span> <span class="n">StoryFileReader</span><span class="o">.</span><span class="n">read_from_folder</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
         <span class="n">visualize_stories</span><span class="p">(</span><span class="n">story_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">max_history</span><span class="p">,</span>
                           <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">nlu_training_data</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span></div>
 
@@ -431,7 +429,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_create_domain</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">TemplateDomain</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">Domain</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">domain</span>
@@ -444,7 +442,11 @@
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="Agent.create_tracker_store"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.create_tracker_store">[docs]</a>    <span class="k">def</span> <span class="nf">create_tracker_store</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
         <span class="c1"># type: (Optional[TrackerStore], Domain) -&gt; TrackerStore</span>
-        <span class="k">return</span> <span class="n">store</span> <span class="k">if</span> <span class="n">store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">InMemoryTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span>
+            <span class="k">return</span> <span class="n">store</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">InMemoryTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span></div>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_interpreter</span><span class="p">(</span>
@@ -502,6 +504,7 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
             <dd><a href="../../../0.8.5/index.html">0.8.5</a></dd>
             <dd><a href="../../../0.8.4/index.html">0.8.4</a></dd>
             <dd><a href="../../../0.8.3/index.html">0.8.3</a></dd>

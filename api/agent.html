@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Agent &mdash; Rasa Core 0.8.5 documentation</title>
+  <title>Agent &mdash; Rasa Core 0.8.6 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Rasa Core 0.8.5 documentation" href="../index.html"/>
+    <link rel="top" title="Rasa Core 0.8.6 documentation" href="../index.html"/>
         <link rel="next" title="Events" href="events.html"/>
         <link rel="prev" title="Scheduling Reminders" href="../scheduling.html"/> 
 
@@ -321,13 +321,13 @@ training data.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>filename=None</em>, <em>model_path=None</em>, <em>remove_duplicates=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
+<code class="descname">train</code><span class="sig-paren">(</span><em>resource_name=None</em>, <em>model_path=None</em>, <em>remove_duplicates=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the policies / policy ensemble using dialogue data from file</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.train_online">
-<code class="descname">train_online</code><span class="sig-paren">(</span><em>filename=None</em>, <em>input_channel=None</em>, <em>model_path=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train_online"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train_online" title="Permalink to this definition">¶</a></dt>
+<code class="descname">train_online</code><span class="sig-paren">(</span><em>resource_name=None</em>, <em>input_channel=None</em>, <em>model_path=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train_online"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train_online" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs an online training session on the set policies / ensemble.</p>
 <p>The policies will be pretrained using the data from <cite>filename</cite>.
 After that the model will get trained on dialogues from the input
@@ -337,7 +337,7 @@ can be changed to correct wrong behaviour.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>filename</em>, <em>output_file</em>, <em>max_history</em>, <em>nlu_training_data=None</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>resource_name</em>, <em>output_file</em>, <em>max_history</em>, <em>nlu_training_data=None</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -382,12 +382,13 @@ can be changed to correct wrong behaviour.</p>
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.5
+        v: 0.8.6
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../0.8.6/api/agent.html">0.8.6</a></dd>
             <dd><a href="../0.8.5/api/agent.html">0.8.5</a></dd>
             <dd><a href="../0.8.4/api/agent.html">0.8.4</a></dd>
             <dd><a href="../0.8.3/api/agent.html">0.8.3</a></dd>
@@ -410,7 +411,7 @@ can be changed to correct wrong behaviour.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.8.5',
+            VERSION:'0.8.6',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -441,6 +442,7 @@ can be changed to correct wrong behaviour.</p>
   
  
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0074/3851.js" async="async"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
