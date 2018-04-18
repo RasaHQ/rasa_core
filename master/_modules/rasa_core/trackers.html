@@ -230,13 +230,7 @@
 
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="DialogueStateTracker.from_dict"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">dump_as_dict</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="c1"># type: (Text, List[Dict[Text, Any]]) -&gt; DialogueStateTracker</span>
-        <span class="sd">&quot;&quot;&quot;Create a tracker from dump.</span>
-
-<span class="sd">        The dump should be an array of dumped events. When restoring</span>
-<span class="sd">        the tracker, these events will be replayed to recreate the state.&quot;&quot;&quot;</span>
-
-        <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">dump_as_dict</span><span class="p">)</span>
+        <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">dump_as_dict</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
         <span class="n">tracker</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">slots</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">topics</span><span class="p">,</span>
                       <span class="n">domain</span><span class="o">.</span><span class="n">default_topic</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evts</span><span class="p">:</span>
@@ -289,7 +283,7 @@
                       <span class="n">should_include_events</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                       <span class="n">only_events_after_latest_restart</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># type: (bool, bool) -&gt; Dict[Text, Any]</span>
-        <span class="sd">&quot;&quot;&quot;Return the current tracker state as an object.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the current tracker state as an object.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">should_include_events</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">only_events_after_latest_restart</span><span class="p">:</span>
@@ -314,7 +308,6 @@
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.current_slot_values"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.current_slot_values">[docs]</a>    <span class="k">def</span> <span class="nf">current_slot_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; Dict[Text, Any]</span>
         <span class="sd">&quot;&quot;&quot;Return the currently set values of the slots&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">slot</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
 
@@ -342,15 +335,10 @@
 
 <div class="viewcode-block" id="DialogueStateTracker.is_paused"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.is_paused">[docs]</a>    <span class="k">def</span> <span class="nf">is_paused</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; bool</span>
-        <span class="sd">&quot;&quot;&quot;State whether the tracker is currently paused.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;States whether the tracker is currently paused.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paused</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.idx_after_latest_restart"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.idx_after_latest_restart">[docs]</a>    <span class="k">def</span> <span class="nf">idx_after_latest_restart</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; int</span>
-        <span class="sd">&quot;&quot;&quot;Return the idx of the most recent restart in the list of events.</span>
-
-<span class="sd">        If the conversation has not been restarted, ``0`` is returned.&quot;&quot;&quot;</span>
-
         <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Restarted</span><span class="p">):</span>
@@ -358,8 +346,6 @@
         <span class="k">return</span> <span class="n">idx</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.events_after_latest_restart"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.events_after_latest_restart">[docs]</a>    <span class="k">def</span> <span class="nf">events_after_latest_restart</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; List[Event]</span>
-        <span class="sd">&quot;&quot;&quot;Return a list of events after the most recent restart.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx_after_latest_restart</span><span class="p">():]</span></div>
 
     <span class="nd">@property</span>
@@ -380,7 +366,6 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_topic_stack</span><span class="o">.</span><span class="n">top</span>
 
     <span class="k">def</span> <span class="nf">_init_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; DialogueStateTracker</span>
         <span class="sd">&quot;&quot;&quot;Creates a new state tracker with the same initial values.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span>
 
@@ -466,7 +451,7 @@
 
         <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_copy</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_applied_events</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&lt;=</span> <span class="n">target_time</span><span class="p">:</span>
                 <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -495,19 +480,15 @@
         <span class="n">event</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.export_stories"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.export_stories">[docs]</a>    <span class="k">def</span> <span class="nf">export_stories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; Text</span>
-        <span class="sd">&quot;&quot;&quot;Dump the tracker as a story in the Rasa Core story format.</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.training.structures</span> <span class="k">import</span> <span class="n">StoryStep</span><span class="p">,</span> <span class="n">Story</span>
 
-<span class="sd">        Returns the dumped tracker as a string.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.training.structures</span> <span class="k">import</span> <span class="n">Story</span>
-
-        <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_applied_events</span><span class="p">())</span>
+        <span class="n">story_step</span> <span class="o">=</span> <span class="n">StoryStep</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_applied_events</span><span class="p">():</span>
+            <span class="n">story_step</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="p">([</span><span class="n">story_step</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">story</span><span class="o">.</span><span class="n">as_story_string</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.export_stories_to_file"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.export_stories_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">export_stories_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="s2">&quot;debug.md&quot;</span><span class="p">):</span>
-        <span class="c1"># type: (Text) -&gt; None</span>
-        <span class="sd">&quot;&quot;&quot;Dump the tracker as a story to a file.&quot;&quot;&quot;</span>
-
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">export_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_stories</span><span class="p">())</span></div>
 
@@ -530,16 +511,10 @@
                                              <span class="bp">self</span><span class="o">.</span><span class="n">default_topic</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_reset_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; None</span>
-        <span class="sd">&quot;&quot;&quot;Set all the slots to their initial value.&quot;&quot;&quot;</span>
-
         <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">slot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_set_slot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="c1"># type: (Text, Any) -&gt; None</span>
-        <span class="sd">&quot;&quot;&quot;Set the value of a slot if that slot exists.&quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
@@ -579,12 +554,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">_merge_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># type: (Optional[List[Dict[Text, Any]]]) -&gt; List[SlotSet]</span>
-        <span class="sd">&quot;&quot;&quot;Take a list of entities and create tracker slot set events.</span>
-
-<span class="sd">        If an entity type matches a slots name, the entities value is set</span>
-<span class="sd">        as the slots value by creating a ``SlotSet`` event.&quot;&quot;&quot;</span>
-
         <span class="n">entities</span> <span class="o">=</span> <span class="n">entities</span> <span class="k">if</span> <span class="n">entities</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">entities</span>
         <span class="n">new_slots</span> <span class="o">=</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;entity&quot;</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entities</span> <span class="k">if</span>
                      <span class="n">e</span><span class="p">[</span><span class="s2">&quot;entity&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>

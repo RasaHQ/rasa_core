@@ -418,12 +418,12 @@ can be recovered by consuming the list of turns.</p>
 
 <dl class="staticmethod">
 <dt id="rasa_core.events.Event.from_parameters">
-<em class="property">static </em><code class="descname">from_parameters</code><span class="sig-paren">(</span><em>parameters</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.from_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_parameters" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">from_parameters</code><span class="sig-paren">(</span><em>event_name</em>, <em>parameters</em>, <em>domain</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.from_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_parameters" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
 <dt id="rasa_core.events.Event.from_story_string">
-<em class="property">static </em><code class="descname">from_story_string</code><span class="sig-paren">(</span><em>event_name</em>, <em>parameters</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.from_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_story_string" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">from_story_string</code><span class="sig-paren">(</span><em>event_name</em>, <em>parameters</em>, <em>domain</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.from_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_story_string" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
@@ -624,7 +624,7 @@ As a side effect the <code class="docutils literal"><span class="pre">Tracker</s
 
 <dl class="function">
 <dt id="rasa_core.events.deserialise_events">
-<code class="descclassname">rasa_core.events.</code><code class="descname">deserialise_events</code><span class="sig-paren">(</span><em>serialized_events</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#deserialise_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.deserialise_events" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">rasa_core.events.</code><code class="descname">deserialise_events</code><span class="sig-paren">(</span><em>serialized_events</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#deserialise_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.deserialise_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a list of dictionaries to a list of corresponding events.</p>
 <dl class="docutils">
 <dt>Example format:</dt>
