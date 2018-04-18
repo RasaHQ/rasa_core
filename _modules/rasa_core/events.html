@@ -202,15 +202,14 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">import</span> <span class="nn">jsonpickle</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span>
 
-<span class="kn">import</span> <span class="nn">rasa_core</span>
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -219,22 +218,17 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="deserialise_events"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.deserialise_events">[docs]</a><span class="k">def</span> <span class="nf">deserialise_events</span><span class="p">(</span><span class="n">serialized_events</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-    <span class="c1"># type: (List[Dict[Text, Any]], rasa_core.domain.Domain) -&gt; List[Event]</span>
+<div class="viewcode-block" id="deserialise_events"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.deserialise_events">[docs]</a><span class="k">def</span> <span class="nf">deserialise_events</span><span class="p">(</span><span class="n">serialized_events</span><span class="p">):</span>
+    <span class="c1"># type: (List[Dict[Text, Any]]) -&gt; List[Event]</span>
     <span class="sd">&quot;&quot;&quot;Convert a list of dictionaries to a list of corresponding events.</span>
 
 <span class="sd">    Example format:</span>
 <span class="sd">        [{&quot;event&quot;: &quot;set_slot&quot;, &quot;value&quot;: 5, &quot;name&quot;: &quot;my_slot&quot;}]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">deserialized</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">serialized_events</span><span class="p">:</span>
-        <span class="n">etype</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;event&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">etype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">copied</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            <span class="k">del</span> <span class="n">copied</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">]</span>
-            <span class="n">deserialized</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">from_parameters</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">copied</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">deserialized</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">Event</span><span class="o">.</span><span class="n">from_parameters</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">serialized_events</span>
+            <span class="k">if</span> <span class="s2">&quot;event&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="p">]</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -262,17 +256,23 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="Event.from_story_string"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.Event.from_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">from_story_string</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Event.from_story_string"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.Event.from_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">from_story_string</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">resolve_by_type</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span></div>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="Event.from_parameters"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.Event.from_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">from_parameters</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">resolve_by_type</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_parameters</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Event.from_parameters"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.Event.from_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">from_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">event_name</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;event&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">event_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">copied</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">copied</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">]</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">resolve_by_type</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called to convert a parsed story line into an event.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
 
@@ -283,7 +283,7 @@
         <span class="p">}</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called to convert a dictionary of parameters to an event.</span>
 
 <span class="sd">        By default uses the same implementation as the story line</span>
@@ -291,7 +291,7 @@
 <span class="sd">        decide to handle parameters differently if the parsed parameters</span>
 <span class="sd">        don&#39;t origin from a story file.&quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="Event.resolve_by_type"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.Event.resolve_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_by_type</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -374,7 +374,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_parse_data</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">),</span>
                                         <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parse_data&quot;</span><span class="p">),</span>
@@ -452,7 +452,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">BotUttered</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">),</span>
                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">),</span>
@@ -489,7 +489,7 @@
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}</span><span class="s2">[</span><span class="si">{props}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">)</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="n">topic</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">parameters</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="k">return</span> <span class="n">TopicSet</span><span class="p">(</span><span class="n">topic</span><span class="p">)</span>
 
@@ -499,7 +499,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TopicSet</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;topic&quot;</span><span class="p">),</span>
                             <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
@@ -541,7 +541,7 @@
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}{props}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="n">props</span><span class="p">)</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="n">slot_key</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">parameters</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">slot_key</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">SlotSet</span><span class="p">(</span><span class="n">slot_key</span><span class="p">,</span> <span class="n">parameters</span><span class="p">[</span><span class="n">slot_key</span><span class="p">])</span>
@@ -557,7 +557,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">SlotSet</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
                            <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">),</span>
@@ -711,7 +711,7 @@
         <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_time</span><span class="p">[:</span><span class="mi">19</span><span class="p">],</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S&#39;</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reminders will be ignored during training, &quot;</span>
                     <span class="s2">&quot;which should be ok.&quot;</span><span class="p">)</span>
         <span class="n">trigger_date_time</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_trigger_time</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;date_time&quot;</span><span class="p">))</span>
@@ -858,14 +858,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">event_name</span> <span class="ow">in</span> <span class="n">domain</span><span class="o">.</span><span class="n">action_names</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ActionExecuted</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">ActionExecuted</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
 
