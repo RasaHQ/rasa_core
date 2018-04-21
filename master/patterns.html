@@ -372,6 +372,16 @@ In this case the restaurant is booked out so we want to apologize to the custome
 </div>
 <p>This second story details the flow when the restaurant is available. We will tell the customer we have booked
 the restaurant and ask if any further help is required.</p>
+<div class="highlight-md"><div class="highlight"><pre><span></span><span class="gh">#</span> restaurant available
+<span class="k">*</span> _make_booking{&quot;people&quot;:&quot;5&quot;, &quot;date&quot;:&quot;2018-08-22T19:30:00+00:00&quot;, &quot;restaurant_id&quot;:&quot;145&quot;}
+<span class="k">-</span> slot{&quot;restaurant_availability&quot;: &quot;available&quot;}
+<span class="k">-</span> action_make_booking
+<span class="k">-</span> utter_restaurant_booked
+<span class="k">-</span> utter_anything_more
+<span class="k">*</span> _bye
+<span class="k">-</span> utter_thank_you
+</pre></div>
+</div>
 <p>In this last example, the intent <code class="docutils literal"><span class="pre">make_booking</span></code> was found but either Rasa Core failed to parse a date or the
 date was not provided. In this case we would need to ask for more information.</p>
 <p><strong>Note:</strong> this last story is using the fact that <code class="docutils literal"><span class="pre">date</span></code> is a <code class="docutils literal"><span class="pre">TextSlot</span></code> and therefore has a single feature that
