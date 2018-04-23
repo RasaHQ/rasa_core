@@ -287,40 +287,6 @@ As a side effect the <code class="docutils literal"><span class="pre">Tracker</s
 </dd></dl>
 
 <dl class="class">
-<dt id="rasa_core.events.AgentUttered">
-<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">AgentUttered</code><span class="sig-paren">(</span><em>text=None</em>, <em>data=None</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#AgentUttered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AgentUttered" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
-<p>The agent has said something to the user.</p>
-<p>This class is not used in the story training as it is contained in the
-<code class="docutils literal"><span class="pre">ActionExecuted</span></code> class. An entry is made in the <code class="docutils literal"><span class="pre">Tracker</span></code>.</p>
-<dl class="method">
-<dt id="rasa_core.events.AgentUttered.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#AgentUttered.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AgentUttered.apply_to" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.events.AgentUttered.as_dict">
-<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#AgentUttered.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AgentUttered.as_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.events.AgentUttered.as_story_string">
-<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#AgentUttered.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AgentUttered.as_story_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="rasa_core.events.AgentUttered.empty">
-<em class="property">static </em><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#AgentUttered.empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AgentUttered.empty" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="rasa_core.events.AgentUttered.type_name">
-<code class="descname">type_name</code><em class="property"> = u'agent'</em><a class="headerlink" href="#rasa_core.events.AgentUttered.type_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="rasa_core.events.AllSlotsReset">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">AllSlotsReset</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#AllSlotsReset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AllSlotsReset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.events.Event</span></code></a></p>
