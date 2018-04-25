@@ -205,6 +205,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
+<span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">string_types</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -214,7 +215,6 @@
 <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">Policy</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">online_trainer</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.ensemble</span> <span class="k">import</span> <span class="n">SimplePolicyEnsemble</span><span class="p">,</span> <span class="n">PolicyEnsemble</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.processor</span> <span class="k">import</span> <span class="n">MessageProcessor</span>
@@ -222,6 +222,9 @@
 <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span> <span class="k">as</span> <span class="n">NLI</span>
 
 
 <div class="viewcode-block" id="Agent"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent">[docs]</a><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -234,7 +237,7 @@
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Union[Text, Domain]</span>
             <span class="n">policies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[PolicyEnsemble, List[Policy], None]</span>
-            <span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[NaturalLanguageInterpreter]</span>
+            <span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[NLI, Text, None]</span>
             <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[TrackerStore]</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
@@ -244,9 +247,14 @@
                 <span class="n">tracker_store</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="Agent.load"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-             <span class="n">action_factory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Agent.load"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
+             <span class="n">path</span><span class="p">,</span>  <span class="c1"># type: Text</span>
+             <span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[NLI, Text, None]</span>
+             <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[TrackerStore]</span>
+             <span class="n">action_factory</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Text]</span>
+             <span class="p">):</span>
         <span class="c1"># type: (Text, Any, Optional[TrackerStore]) -&gt; Agent</span>
+        <span class="sd">&quot;&quot;&quot;Load a persisted model from the passed path.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No domain path specified.&quot;</span><span class="p">)</span>
@@ -297,6 +305,7 @@
                                <span class="n">text_message</span><span class="p">,</span>
                                <span class="n">sender_id</span><span class="o">=</span><span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span><span class="p">):</span>
         <span class="c1"># type: (Text, Optional[Text]) -&gt; Dict[Text, Any]</span>
+        <span class="sd">&quot;&quot;&quot;Start to process a messages, returning the next action to take. &quot;&quot;&quot;</span>
 
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">start_message_handling</span><span class="p">(</span>
@@ -304,6 +313,9 @@
 
 <div class="viewcode-block" id="Agent.continue_message_handling"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.continue_message_handling">[docs]</a>    <span class="k">def</span> <span class="nf">continue_message_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">executed_action</span><span class="p">,</span> <span class="n">events</span><span class="p">):</span>
         <span class="c1"># type: (Text, Text, List[Event]) -&gt; Dict[Text, Any]</span>
+        <span class="sd">&quot;&quot;&quot;Continue to process a messages.</span>
+
+<span class="sd">        Predicts the next action to take by the caller&quot;&quot;&quot;</span>
 
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">continue_message_handling</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span>
@@ -344,6 +356,7 @@
                   <span class="n">use_story_concatenation</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># type: bool</span>
                   <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; List[DialogueStateTracker]</span>
+        <span class="sd">&quot;&quot;&quot;Load training data from a resource.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">training</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="p">,</span>
                                   <span class="n">augmentation_factor</span><span class="p">,</span> <span class="n">max_number_of_trackers</span><span class="p">,</span>
@@ -392,6 +405,7 @@
                      <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; None</span>
         <span class="kn">from</span> <span class="nn">rasa_core.policies.online_trainer</span> <span class="k">import</span> <span class="n">OnlinePolicyEnsemble</span>
+        <span class="sd">&quot;&quot;&quot;Train a policy ensemble in online learning mode.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -420,25 +434,35 @@
         <span class="n">ensemble</span><span class="o">.</span><span class="n">run_online_training</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span>
                                      <span class="n">input_channel</span><span class="p">)</span></div>
 
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_clear_model_directory</span><span class="p">(</span><span class="n">model_path</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Remove existing files from model directory.</span>
+
+<span class="sd">        Only removes files if the directory seems to contain a previously</span>
+<span class="sd">        persisted model. Otherwise does nothing to avoid deleting</span>
+<span class="sd">        `/` by accident.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">model_path</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="n">domain_spec_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="s1">&#39;policy_metadata.json&#39;</span><span class="p">)</span>
+        <span class="c1"># check if there were a model before</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">domain_spec_path</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Model directory </span><span class="si">{}</span><span class="s2"> exists and contains old &quot;</span>
+                        <span class="s2">&quot;model files. All files will be overwritten.&quot;</span>
+                        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model directory </span><span class="si">{}</span><span class="s2"> exists, but does not contain &quot;</span>
+                         <span class="s2">&quot;all old model files. Some files might be &quot;</span>
+                         <span class="s2">&quot;overwritten.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
+
 <div class="viewcode-block" id="Agent.persist"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_path</span><span class="p">):</span>
         <span class="c1"># type: (Text) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Persists this agent into a directory for later loading and usage.&quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">model_path</span><span class="p">):</span>
-            <span class="n">domain_spec_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span>
-                                            <span class="s1">&#39;policy_metadata.json&#39;</span><span class="p">)</span>
-            <span class="c1"># check if there were a model before</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">domain_spec_path</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model directory </span><span class="si">{}</span><span class="s2"> exists and &quot;</span>
-                             <span class="s2">&quot;contains old model files. &quot;</span>
-                             <span class="s2">&quot;All files will be overwritten.&quot;</span>
-                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
-                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model directory </span><span class="si">{}</span><span class="s2"> exists, but does &quot;</span>
-                             <span class="s2">&quot;not contain all old model files. &quot;</span>
-                             <span class="s2">&quot;Some files might be overwritten.&quot;</span>
-                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_model_directory</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="s2">&quot;domain.yml&quot;</span><span class="p">))</span>
@@ -448,15 +472,17 @@
                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_path</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="Agent.visualize"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.visualize">[docs]</a>    <span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                  <span class="n">resource_name</span><span class="p">,</span>
-                  <span class="n">output_file</span><span class="p">,</span>
-                  <span class="n">max_history</span><span class="p">,</span>
-                  <span class="n">nlu_training_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">should_merge_nodes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                  <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span>
+                  <span class="n">resource_name</span><span class="p">,</span>  <span class="c1"># type: Text</span>
+                  <span class="n">output_file</span><span class="p">,</span>  <span class="c1"># type: Text</span>
+                  <span class="n">max_history</span><span class="p">,</span>  <span class="c1"># type: int</span>
+                  <span class="n">nlu_training_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
+                  <span class="n">should_merge_nodes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># type: bool</span>
+                  <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span>  <span class="c1"># type: int</span>
                   <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
         <span class="kn">from</span> <span class="nn">rasa_core.training.visualization</span> <span class="k">import</span> <span class="n">visualize_stories</span>
         <span class="kn">from</span> <span class="nn">rasa_core.training.dsl</span> <span class="k">import</span> <span class="n">StoryFileReader</span>
+        <span class="sd">&quot;&quot;&quot;Visualize the loaded training data from the resource.&quot;&quot;&quot;</span>
 
         <span class="n">story_steps</span> <span class="o">=</span> <span class="n">StoryFileReader</span><span class="o">.</span><span class="n">read_from_folder</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span>
                                                        <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
@@ -472,13 +498,12 @@
 <span class="sd">        Raises an exception if any argument is missing.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                    <span class="s2">&quot;Agent needs to be prepared before usage. &quot;</span>
-                    <span class="s2">&quot;You need to set an interpreter as well &quot;</span>
-                    <span class="s2">&quot;as a tracker store.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Agent needs to be prepared before usage. &quot;</span>
+                            <span class="s2">&quot;You need to set an interpreter as well &quot;</span>
+                            <span class="s2">&quot;as a tracker store.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preprocessor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># type: (Callable[[Text], Text]) -&gt; MessageProcessor</span>
+        <span class="c1"># type: (Optional[Callable[[Text], Text]]) -&gt; MessageProcessor</span>
         <span class="sd">&quot;&quot;&quot;Instantiates a processor based on the set state of the agent.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_agent_is_prepared</span><span class="p">()</span>
@@ -488,6 +513,8 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Union[Domain, Text]) -&gt; Domain</span>
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">TemplateDomain</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">Domain</span><span class="p">):</span>
@@ -516,6 +543,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_ensemble</span><span class="p">(</span><span class="n">policies</span><span class="p">):</span>
+        <span class="c1"># type: (Union[List[Policy], PolicyEnsemble, None]) -&gt; PolicyEnsemble</span>
         <span class="k">if</span> <span class="n">policies</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">SimplePolicyEnsemble</span><span class="p">([])</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">policies</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>

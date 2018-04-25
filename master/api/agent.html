@@ -253,7 +253,9 @@ with an assistant.</p>
 <dl class="method">
 <dt id="rasa_core.agent.Agent.continue_message_handling">
 <code class="descname">continue_message_handling</code><span class="sig-paren">(</span><em>sender_id</em>, <em>executed_action</em>, <em>events</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.continue_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.continue_message_handling" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Continue to process a messages.</p>
+<p>Predicts the next action to take by the caller</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="rasa_core.agent.Agent.create_tracker_store">
@@ -297,12 +299,14 @@ the bot wants to respond.</p>
 <dl class="classmethod">
 <dt id="rasa_core.agent.Agent.load">
 <em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>interpreter=None</em>, <em>tracker_store=None</em>, <em>action_factory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Load a persisted model from the passed path.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.load_data">
 <code class="descname">load_data</code><span class="sig-paren">(</span><em>resource_name</em>, <em>remove_duplicates=True</em>, <em>augmentation_factor=20</em>, <em>max_number_of_trackers=2000</em>, <em>tracker_limit=None</em>, <em>use_story_concatenation=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Load training data from a resource.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.persist">
@@ -313,7 +317,8 @@ the bot wants to respond.</p>
 <dl class="method">
 <dt id="rasa_core.agent.Agent.start_message_handling">
 <code class="descname">start_message_handling</code><span class="sig-paren">(</span><em>text_message</em>, <em>sender_id=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.start_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.start_message_handling" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Start to process a messages, returning the next action to take.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.toggle_memoization">
