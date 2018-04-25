@@ -202,24 +202,25 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">string_types</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">training</span>
 <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span><span class="p">,</span> <span class="n">InputChannel</span><span class="p">,</span> <span class="n">OutputChannel</span>
-<span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">TemplateDomain</span><span class="p">,</span> <span class="n">Domain</span>
+<span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">TemplateDomain</span><span class="p">,</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">check_domain_sanity</span>
 <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Event</span>
-<span class="kn">from</span> <span class="nn">rasa_core.featurizers</span> <span class="k">import</span> <span class="n">Featurizer</span><span class="p">,</span> <span class="n">BinaryFeaturizer</span>
 <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">PolicyTrainer</span><span class="p">,</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">online_trainer</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.ensemble</span> <span class="k">import</span> <span class="n">SimplePolicyEnsemble</span><span class="p">,</span> <span class="n">PolicyEnsemble</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies.online_policy_trainer</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">OnlinePolicyTrainer</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">rasa_core.processor</span> <span class="k">import</span> <span class="n">MessageProcessor</span>
 <span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">InMemoryTrackerStore</span><span class="p">,</span> <span class="n">TrackerStore</span>
+<span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -233,13 +234,11 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Union[Text, Domain]</span>
-            <span class="n">policies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Union[PolicyEnsemble, List[Policy]]</span>
-            <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Featurizer]</span>
+            <span class="n">policies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[PolicyEnsemble, List[Policy], None]</span>
             <span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[NaturalLanguageInterpreter]</span>
             <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[TrackerStore]</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_featurizer</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_ensemble</span><span class="p">(</span><span class="n">policies</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="o">=</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interpreter</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_tracker_store</span><span class="p">(</span>
@@ -256,11 +255,11 @@
                                      <span class="n">action_factory</span><span class="p">)</span>
         <span class="c1"># ensures the domain hasn&#39;t changed between test and train</span>
         <span class="n">domain</span><span class="o">.</span><span class="n">compare_with_specification</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="n">featurizer</span> <span class="o">=</span> <span class="n">Featurizer</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="n">ensemble</span> <span class="o">=</span> <span class="n">PolicyEnsemble</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">)</span>
+        <span class="n">ensemble</span> <span class="o">=</span> <span class="n">PolicyEnsemble</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">_interpreter</span> <span class="o">=</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interpreter</span><span class="p">)</span>
         <span class="n">_tracker_store</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">create_tracker_store</span><span class="p">(</span><span class="n">tracker_store</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">,</span> <span class="n">_interpreter</span><span class="p">,</span> <span class="n">_tracker_store</span><span class="p">)</span></div>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">_interpreter</span><span class="p">,</span> <span class="n">_tracker_store</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.handle_message"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.handle_message">[docs]</a>    <span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -333,56 +332,118 @@
 <span class="sd">        training data.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
-            <span class="c1"># explicitly ignore inheritance (e.g. scoring policy)</span>
+            <span class="c1"># explicitly ignore inheritance (e.g. augmented memoization policy)</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="n">MemoizationPolicy</span><span class="p">:</span>
                 <span class="n">p</span><span class="o">.</span><span class="n">toggle</span><span class="p">(</span><span class="n">activate</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Agent.train"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># type: (Optional[Text], Optional[Text], **Any) -&gt; None</span>
-        <span class="sd">&quot;&quot;&quot;Train the policies / policy ensemble using dialogue data from file&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Agent.load_data"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">resource_name</span><span class="p">,</span>  <span class="c1"># type: Text</span>
+                  <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># type: bool</span>
+                  <span class="n">augmentation_factor</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>  <span class="c1"># type: int</span>
+                  <span class="n">max_number_of_trackers</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>  <span class="c1"># type: int</span>
+                  <span class="n">tracker_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[int]</span>
+                  <span class="n">use_story_concatenation</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># type: bool</span>
+                  <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; List[DialogueStateTracker]</span>
 
-        <span class="n">trainer</span> <span class="o">=</span> <span class="n">PolicyTrainer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="p">)</span>
-        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="n">remove_duplicates</span><span class="p">,</span>
-                      <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">training</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="p">,</span>
+                                  <span class="n">augmentation_factor</span><span class="p">,</span> <span class="n">max_number_of_trackers</span><span class="p">,</span>
+                                  <span class="n">tracker_limit</span><span class="p">,</span> <span class="n">use_story_concatenation</span><span class="p">)</span></div>
 
-        <span class="k">if</span> <span class="n">model_path</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Agent.train"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+              <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
+              <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Train the policies / policy ensemble using dialogue data from file.</span>
+
+<span class="sd">            :param training_trackers: trackers to train on</span>
+<span class="sd">            :param kwargs: additional arguments passed to the underlying ML</span>
+<span class="sd">                           trainer (e.g. keras parameters)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># deprecation tests</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;featurizer&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_history&#39;</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Passing `featurizer` and `max_history` &quot;</span>
+                           <span class="s2">&quot;to `agent.train(...)` is deprecated. &quot;</span>
+                           <span class="s2">&quot;Pass appropriate featurizer &quot;</span>
+                           <span class="s2">&quot;directly to the policy instead.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># TODO: deprecated - remove in version 0.10</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
+            <span class="c1"># the user most likely passed in a file name to load training</span>
+            <span class="c1"># data from</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Passing a file name to `agent.train(...)` is &quot;</span>
+                           <span class="s2">&quot;deprecated. Rather load the data with &quot;</span>
+                           <span class="s2">&quot;`data = agent.load_data(file_name)` and pass it &quot;</span>
+                           <span class="s2">&quot;to `agent.train(data)`.&quot;</span><span class="p">)</span>
+            <span class="n">training_trackers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Agent trainer got kwargs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="n">check_domain_sanity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
+                                   <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.train_online"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.train_online">[docs]</a>    <span class="k">def</span> <span class="nf">train_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                     <span class="n">resource_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
+                     <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
                      <span class="n">input_channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[InputChannel]</span>
-                     <span class="n">model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
+                     <span class="n">max_visual_history</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># type: int</span>
                      <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
                      <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; None</span>
-        <span class="sd">&quot;&quot;&quot;Runs an online training session on the set policies / ensemble.</span>
-
-<span class="sd">        The policies will be pretrained using the data from `filename`.</span>
-<span class="sd">        After that the model will get trained on dialogues from the input</span>
-<span class="sd">        channel. During the dialogue the annotations and state of the agent</span>
-<span class="sd">        can be changed to correct wrong behaviour.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.policies.online_trainer</span> <span class="k">import</span> <span class="n">OnlinePolicyEnsemble</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;When using online learning, you need to specify &quot;</span>
                     <span class="s2">&quot;an interpreter for the agent to use.&quot;</span><span class="p">)</span>
-        <span class="n">trainer</span> <span class="o">=</span> <span class="n">OnlinePolicyTrainer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
-                                      <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="p">)</span>
-        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">model_path</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span></div>
+        <span class="c1"># TODO: deprecated - remove in version 0.10</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
+            <span class="c1"># the user most likely passed in a file name to load training</span>
+            <span class="c1"># data from</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Passing a file name to `agent.train_online(...)` &quot;</span>
+                           <span class="s2">&quot;is deprecated. Rather load the data with &quot;</span>
+                           <span class="s2">&quot;`data = agent.load_data(file_name)` and pass it &quot;</span>
+                           <span class="s2">&quot;to `agent.train_online(data)`.&quot;</span><span class="p">)</span>
+            <span class="n">training_trackers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Agent online trainer got kwargs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="n">check_domain_sanity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">ensemble</span> <span class="o">=</span> <span class="n">OnlinePolicyEnsemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span>
+                                        <span class="n">training_trackers</span><span class="p">,</span>
+                                        <span class="n">max_visual_history</span><span class="p">)</span>
+
+        <span class="n">ensemble</span><span class="o">.</span><span class="n">run_online_training</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span>
+                                     <span class="n">input_channel</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.persist"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_path</span><span class="p">):</span>
         <span class="c1"># type: (Text) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Persists this agent into a directory for later loading and usage.&quot;&quot;&quot;</span>
 
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">model_path</span><span class="p">):</span>
+            <span class="n">domain_spec_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span>
+                                            <span class="s1">&#39;policy_metadata.json&#39;</span><span class="p">)</span>
+            <span class="c1"># check if there were a model before</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">domain_spec_path</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model directory </span><span class="si">{}</span><span class="s2"> exists and &quot;</span>
+                             <span class="s2">&quot;contains old model files. &quot;</span>
+                             <span class="s2">&quot;All files will be overwritten.&quot;</span>
+                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model directory </span><span class="si">{}</span><span class="s2"> exists, but does &quot;</span>
+                             <span class="s2">&quot;not contain all old model files. &quot;</span>
+                             <span class="s2">&quot;Some files might be overwritten.&quot;</span>
+                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="s2">&quot;domain.yml&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">persist_specification</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Persisted model to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_path</span><span class="p">)))</span></div>
@@ -392,15 +453,17 @@
                   <span class="n">output_file</span><span class="p">,</span>
                   <span class="n">max_history</span><span class="p">,</span>
                   <span class="n">nlu_training_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">should_merge_nodes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                   <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span>
                   <span class="p">):</span>
         <span class="kn">from</span> <span class="nn">rasa_core.training.visualization</span> <span class="k">import</span> <span class="n">visualize_stories</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.training</span> <span class="k">import</span> <span class="n">StoryFileReader</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.training.dsl</span> <span class="k">import</span> <span class="n">StoryFileReader</span>
 
         <span class="n">story_steps</span> <span class="o">=</span> <span class="n">StoryFileReader</span><span class="o">.</span><span class="n">read_from_folder</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span>
                                                        <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
         <span class="n">visualize_stories</span><span class="p">(</span><span class="n">story_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">max_history</span><span class="p">,</span>
-                          <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">nlu_training_data</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span></div>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">nlu_training_data</span><span class="p">,</span>
+                          <span class="n">should_merge_nodes</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_ensure_agent_is_prepared</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; None</span>
@@ -424,12 +487,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span><span class="p">,</span> <span class="n">message_preprocessor</span><span class="o">=</span><span class="n">preprocessor</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_create_featurizer</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">featurizer</span> <span class="k">if</span> <span class="n">featurizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">BinaryFeaturizer</span><span class="p">()</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_create_domain</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">TemplateDomain</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">Domain</span><span class="p">):</span>
@@ -440,8 +499,8 @@
                     <span class="s2">&quot;specification or a domain instance. But got &quot;</span>
                     <span class="s2">&quot;type &#39;</span><span class="si">{}</span><span class="s2">&#39; with value &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">domain</span><span class="p">),</span> <span class="n">domain</span><span class="p">))</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="Agent.create_tracker_store"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.create_tracker_store">[docs]</a>    <span class="k">def</span> <span class="nf">create_tracker_store</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Agent.create_tracker_store"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.create_tracker_store">[docs]</a>    <span class="k">def</span> <span class="nf">create_tracker_store</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
         <span class="c1"># type: (Optional[TrackerStore], Domain) -&gt; TrackerStore</span>
         <span class="k">if</span> <span class="n">store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">store</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span>
@@ -451,7 +510,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_interpreter</span><span class="p">(</span>
-            <span class="n">interp</span>  <span class="c1"># Optional[Union[Text, NaturalLanguageInterpreter]]</span>
+            <span class="n">interp</span>  <span class="c1"># type: Union[Text, NaturalLanguageInterpreter, None]</span>
     <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; NaturalLanguageInterpreter</span>
         <span class="k">return</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interp</span><span class="p">)</span>
@@ -459,7 +518,7 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_ensemble</span><span class="p">(</span><span class="n">policies</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">policies</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SimplePolicyEnsemble</span><span class="p">([</span><span class="n">MemoizationPolicy</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">SimplePolicyEnsemble</span><span class="p">([])</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">policies</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">SimplePolicyEnsemble</span><span class="p">(</span><span class="n">policies</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">policies</span><span class="p">,</span> <span class="n">PolicyEnsemble</span><span class="p">):</span>
