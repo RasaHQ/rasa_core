@@ -256,11 +256,12 @@
 
         <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No domain path specified.&quot;</span><span class="p">)</span>
+
+        <span class="n">ensemble</span> <span class="o">=</span> <span class="n">PolicyEnsemble</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">domain</span> <span class="o">=</span> <span class="n">TemplateDomain</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;domain.yml&quot;</span><span class="p">),</span>
                                      <span class="n">action_factory</span><span class="p">)</span>
         <span class="c1"># ensures the domain hasn&#39;t changed between test and train</span>
         <span class="n">domain</span><span class="o">.</span><span class="n">compare_with_specification</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="n">ensemble</span> <span class="o">=</span> <span class="n">PolicyEnsemble</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">_interpreter</span> <span class="o">=</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interpreter</span><span class="p">)</span>
         <span class="n">_tracker_store</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">create_tracker_store</span><span class="p">(</span><span class="n">tracker_store</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
 
