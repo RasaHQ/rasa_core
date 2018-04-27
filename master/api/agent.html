@@ -245,7 +245,7 @@ policy, interpreter, and the tracker store) on your own to customize them.</p>
 <p>Here we go:</p>
 <span class="target" id="module-rasa_core.agent"></span><dl class="class">
 <dt id="rasa_core.agent.Agent">
-<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain</em>, <em>policies=None</em>, <em>interpreter=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain</em>, <em>policies=None</em>, <em>featurizer=None</em>, <em>interpreter=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Public interface for common things to do.</p>
 <p>This includes e.g. train an assistant, or handle messages
@@ -253,13 +253,11 @@ with an assistant.</p>
 <dl class="method">
 <dt id="rasa_core.agent.Agent.continue_message_handling">
 <code class="descname">continue_message_handling</code><span class="sig-paren">(</span><em>sender_id</em>, <em>executed_action</em>, <em>events</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.continue_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.continue_message_handling" title="Permalink to this definition">¶</a></dt>
-<dd><p>Continue to process a messages.</p>
-<p>Predicts the next action to take by the caller</p>
-</dd></dl>
+<dd></dd></dl>
 
-<dl class="staticmethod">
+<dl class="classmethod">
 <dt id="rasa_core.agent.Agent.create_tracker_store">
-<em class="property">static </em><code class="descname">create_tracker_store</code><span class="sig-paren">(</span><em>store</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.create_tracker_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.create_tracker_store" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">create_tracker_store</code><span class="sig-paren">(</span><em>store</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.create_tracker_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.create_tracker_store" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -299,14 +297,7 @@ the bot wants to respond.</p>
 <dl class="classmethod">
 <dt id="rasa_core.agent.Agent.load">
 <em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>interpreter=None</em>, <em>tracker_store=None</em>, <em>action_factory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a persisted model from the passed path.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.agent.Agent.load_data">
-<code class="descname">load_data</code><span class="sig-paren">(</span><em>resource_name</em>, <em>remove_duplicates=True</em>, <em>augmentation_factor=20</em>, <em>max_number_of_trackers=2000</em>, <em>tracker_limit=None</em>, <em>use_story_concatenation=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load training data from a resource.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.persist">
@@ -317,8 +308,7 @@ the bot wants to respond.</p>
 <dl class="method">
 <dt id="rasa_core.agent.Agent.start_message_handling">
 <code class="descname">start_message_handling</code><span class="sig-paren">(</span><em>text_message</em>, <em>sender_id=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.start_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.start_message_handling" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start to process a messages, returning the next action to take.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.toggle_memoization">
@@ -335,31 +325,23 @@ training data.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>training_trackers</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train the policies / policy ensemble using dialogue data from file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>training_trackers</strong> &#8211; trackers to train on</li>
-<li><strong>kwargs</strong> &#8211; additional arguments passed to the underlying ML
-trainer (e.g. keras parameters)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<code class="descname">train</code><span class="sig-paren">(</span><em>resource_name=None</em>, <em>model_path=None</em>, <em>remove_duplicates=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train the policies / policy ensemble using dialogue data from file</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.train_online">
-<code class="descname">train_online</code><span class="sig-paren">(</span><em>training_trackers</em>, <em>input_channel=None</em>, <em>max_visual_history=3</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train_online"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train_online" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">train_online</code><span class="sig-paren">(</span><em>resource_name=None</em>, <em>input_channel=None</em>, <em>model_path=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.train_online"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train_online" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs an online training session on the set policies / ensemble.</p>
+<p>The policies will be pretrained using the data from <cite>filename</cite>.
+After that the model will get trained on dialogues from the input
+channel. During the dialogue the annotations and state of the agent
+can be changed to correct wrong behaviour.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>resource_name</em>, <em>output_file</em>, <em>max_history</em>, <em>nlu_training_data=None</em>, <em>should_merge_nodes=True</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>resource_name</em>, <em>output_file</em>, <em>max_history</em>, <em>nlu_training_data=None</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
