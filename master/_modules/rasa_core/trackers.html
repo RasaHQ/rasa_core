@@ -456,6 +456,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dialogue</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">replay_events</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="DialogueStateTracker.copy"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a duplicate of this tracker&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">travel_back_in_time</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="DialogueStateTracker.travel_back_in_time"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.travel_back_in_time">[docs]</a>    <span class="k">def</span> <span class="nf">travel_back_in_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_time</span><span class="p">):</span>
         <span class="c1"># type: (float) -&gt; DialogueStateTracker</span>
         <span class="sd">&quot;&quot;&quot;Creates a new tracker with a state at a specific timestamp.</span>
