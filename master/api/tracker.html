@@ -110,6 +110,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
@@ -244,12 +245,6 @@ conversation are received and updated after actions have been executed</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Maintains the state of a conversation.</p>
 <dl class="method">
-<dt id="rasa_core.trackers.DialogueStateTracker.applied_events">
-<code class="descname">applied_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.applied_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.applied_events" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all actions that should be applied - w/o reverted events.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.as_dialogue">
 <code class="descname">as_dialogue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.as_dialogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.as_dialogue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a <code class="docutils literal"><span class="pre">Dialogue</span></code> object containing all of the turns.</p>
@@ -309,11 +304,10 @@ the tracker, these events will be replayed to recreate the state.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers">
-<code class="descname">generate_all_prior_trackers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.generate_all_prior_trackers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a generator of the previous trackers of this tracker.</p>
-<p>The resulting array is representing
-the trackers before each action.</p>
+<dt id="rasa_core.trackers.DialogueStateTracker.generate_all_prior_states">
+<code class="descname">generate_all_prior_states</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.generate_all_prior_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.generate_all_prior_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator of the previous states of this tracker.</p>
+<p>The resulting array is representing the state before each action.</p>
 </dd></dl>
 
 <dl class="method">
@@ -336,12 +330,6 @@ If no entity is found <cite>None</cite> is the default result.</p>
 <code class="descname">idx_after_latest_restart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.idx_after_latest_restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.idx_after_latest_restart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the idx of the most recent restart in the list of events.</p>
 <p>If the conversation has not been restarted, <code class="docutils literal"><span class="pre">0</span></code> is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.trackers.DialogueStateTracker.init_copy">
-<code class="descname">init_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.init_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.init_copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new state tracker with the same initial values.</p>
 </dd></dl>
 
 <dl class="method">

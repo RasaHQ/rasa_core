@@ -109,6 +109,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
@@ -379,7 +380,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_topic_stack</span><span class="o">.</span><span class="n">top</span>
 
-<div class="viewcode-block" id="DialogueStateTracker.init_copy"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.init_copy">[docs]</a>    <span class="k">def</span> <span class="nf">init_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_init_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; DialogueStateTracker</span>
         <span class="sd">&quot;&quot;&quot;Creates a new state tracker with the same initial values.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span>
@@ -387,25 +388,24 @@
         <span class="k">return</span> <span class="n">DialogueStateTracker</span><span class="p">(</span><span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span><span class="p">,</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">topics</span><span class="p">,</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">default_topic</span><span class="p">)</span></div>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">default_topic</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DialogueStateTracker.generate_all_prior_trackers"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers">[docs]</a>    <span class="k">def</span> <span class="nf">generate_all_prior_trackers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DialogueStateTracker.generate_all_prior_states"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.generate_all_prior_states">[docs]</a>    <span class="k">def</span> <span class="nf">generate_all_prior_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; Generator[DialogueStateTracker, None, None]</span>
-        <span class="sd">&quot;&quot;&quot;Returns a generator of the previous trackers of this tracker.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a generator of the previous states of this tracker.</span>
 
-<span class="sd">        The resulting array is representing</span>
-<span class="sd">        the trackers before each action.&quot;&quot;&quot;</span>
+<span class="sd">        The resulting array is representing the state before each action.&quot;&quot;&quot;</span>
 
-        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_copy</span><span class="p">()</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_copy</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_applied_events</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">tracker</span>
             <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
         <span class="k">yield</span> <span class="n">tracker</span>  <span class="c1"># yields the final state</span></div>
 
-<div class="viewcode-block" id="DialogueStateTracker.applied_events"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.applied_events">[docs]</a>    <span class="k">def</span> <span class="nf">applied_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_applied_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; List[Event]</span>
         <span class="sd">&quot;&quot;&quot;Returns all actions that should be applied - w/o reverted events.&quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">undo_till_previous</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="n">done_events</span><span class="p">):</span>
@@ -431,13 +431,13 @@
                 <span class="n">undo_till_previous</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">applied_events</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">applied_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">applied_events</span></div>
+        <span class="k">return</span> <span class="n">applied_events</span>
 
 <div class="viewcode-block" id="DialogueStateTracker.replay_events"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.replay_events">[docs]</a>    <span class="k">def</span> <span class="nf">replay_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Update the tracker based on a list of events.&quot;&quot;&quot;</span>
 
-        <span class="n">applied_events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">()</span>
+        <span class="n">applied_events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_applied_events</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">applied_events</span><span class="p">:</span>
             <span class="n">event</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -469,7 +469,7 @@
 <span class="sd">        passed time stamp will be replayed. Events that occur exactly</span>
 <span class="sd">        at the target time will be included.&quot;&quot;&quot;</span>
 
-        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_copy</span><span class="p">()</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_copy</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&lt;=</span> <span class="n">target_time</span><span class="p">:</span>
@@ -506,7 +506,7 @@
 <span class="sd">        Returns the dumped tracker as a string.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">rasa_core.training.structures</span> <span class="k">import</span> <span class="n">Story</span>
 
-        <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">())</span>
+        <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_applied_events</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">story</span><span class="o">.</span><span class="n">as_story_string</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.export_stories_to_file"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.export_stories_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">export_stories_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="s2">&quot;debug.md&quot;</span><span class="p">):</span>
@@ -514,7 +514,7 @@
         <span class="sd">&quot;&quot;&quot;Dump the tracker as a story to a file.&quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">export_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_stories</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_stories</span><span class="p">())</span></div>
 
     <span class="c1">###</span>
     <span class="c1"># Internal methods for the modification of the trackers state. Should</span>
@@ -561,7 +561,9 @@
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">events</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="ow">and</span>
+            <span class="n">other_encoded</span> <span class="o">=</span> <span class="n">jsonpickle</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">as_dialogue</span><span class="p">())</span>
+            <span class="n">encoded</span> <span class="o">=</span> <span class="n">jsonpickle</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">as_dialogue</span><span class="p">())</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">other_encoded</span> <span class="o">==</span> <span class="n">encoded</span> <span class="ow">and</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">sender_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
