@@ -94,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">But I don&#8217;t code in python!</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#rasa-core-with-minimal-python">Rasa Core with minimal Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rasa-core-with-docker">Rasa Core with Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rasa-core-with-zero-python">Rasa Core with ZERO Python</a></li>
 </ul>
 </li>
@@ -269,6 +270,32 @@ something like this:</p>
         <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;api_result&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)]</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="rasa-core-with-docker">
+<h2>Rasa Core with Docker<a class="headerlink" href="#rasa-core-with-docker" title="Permalink to this headline">¶</a></h2>
+<p>We provide a Dockerfile which allows you to build an image of Rasa Core
+with a simple command: <code class="docutils literal"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">rasa_core</span> <span class="pre">.</span></code></p>
+<p>The default command of the resulting container starts the Rasa Core server
+with the <code class="docutils literal"><span class="pre">--core</span></code> and <code class="docutils literal"><span class="pre">--nlu</span></code> options. At this stage the container does not
+yet contain any models, so you have to mount them from a local folder into
+the container&#8217;s <code class="docutils literal"><span class="pre">/app/model/dialogue</span></code> and <code class="docutils literal"><span class="pre">app/model/nlu</span></code> directories.
+The full run command looks like this:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker run <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_DIALOGUE_MODEL_DIR&gt;,target<span class="o">=</span>/app/dialogue <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_NLU_MODEL_DIR&gt;,target<span class="o">=</span>/app/nlu <span class="se">\</span>
+   rasa_core
+</pre></div>
+</div>
+<p>You also have the option to use the container to train a model with</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker run <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_STORIES_FILE&gt;/stories.md,target<span class="o">=</span>/app/stories.md <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_DOMAIN_FILE&gt;/domain.yml,target<span class="o">=</span>/app/domain.yml <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;OUT_PATH&gt;,target<span class="o">=</span>/app/out <span class="se">\</span>
+   rasa_core train
+</pre></div>
+</div>
+<p>You may in addition run any Rasa Core command inside the container with
+<code class="docutils literal"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">rasa_core</span> <span class="pre">run</span> <span class="pre">[COMMAND]</span></code>.</p>
 </div>
 <div class="section" id="rasa-core-with-zero-python">
 <h2>Rasa Core with ZERO Python<a class="headerlink" href="#rasa-core-with-zero-python" title="Permalink to this headline">¶</a></h2>
