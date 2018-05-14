@@ -375,10 +375,11 @@
 
         <span class="c1"># deprecation tests</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;featurizer&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_history&#39;</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Passing `featurizer` and `max_history` &quot;</span>
-                           <span class="s2">&quot;to `agent.train(...)` is deprecated. &quot;</span>
-                           <span class="s2">&quot;Pass appropriate featurizer &quot;</span>
-                           <span class="s2">&quot;directly to the policy instead.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Passing `featurizer` and `max_history` &quot;</span>
+                            <span class="s2">&quot;to `agent.train(...)` is not supported anymore. &quot;</span>
+                            <span class="s2">&quot;Pass appropriate featurizer &quot;</span>
+                            <span class="s2">&quot;directly to the policy instead. More info &quot;</span>
+                            <span class="s2">&quot;https://core.rasa.com/migrations.html#x-to-0-9-0&quot;</span><span class="p">)</span>
 
         <span class="c1"># TODO: DEPRECATED - remove in version 0.10</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
