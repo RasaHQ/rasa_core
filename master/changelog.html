@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Change Log &mdash; Rasa Core 0.9.0a3 documentation</title>
+  <title>Change Log &mdash; Rasa Core 0.9.0a5 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.9.0a3 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0a5 documentation" href="index.html"/>
         <link rel="prev" title="Migration Guide" href="migrations.html"/> 
 
   
@@ -325,6 +325,8 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 <p class="first admonition-title">Note</p>
 <p class="last">This version is not yet released and is under active development.</p>
 </div>
+<p>This is a major new release with backward incompatible changes. Old trained
+models can not be read with the new version - you need to retrain your model.</p>
 <div class="section" id="added">
 <h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -354,6 +356,7 @@ all files in that directory</li>
 <h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Slack connector: <code class="docutils literal"><span class="pre">slack_channel</span></code> kwarg is used to send messages either back to the user or to a static channel</li>
+<li>properly log to a file when using the <code class="docutils literal"><span class="pre">run</span></code> script</li>
 </ul>
 </div>
 </div>
@@ -700,7 +703,7 @@ wrong predictions</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.9.0a3',
+            VERSION:'0.9.0a5',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

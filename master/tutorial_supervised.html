@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Supervised Learning Tutorial &mdash; Rasa Core 0.9.0a3 documentation</title>
+  <title>Supervised Learning Tutorial &mdash; Rasa Core 0.9.0a5 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.9.0a3 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0a5 documentation" href="index.html"/>
         <link rel="next" title="Interactive Learning" href="tutorial_interactive_learning.html"/>
         <link rel="prev" title="Building a Simple Bot" href="tutorial_basics.html"/> 
 
@@ -611,20 +611,76 @@ Check out the
 19
 20
 21
-22</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RestaurantPolicy</span><span class="p">(</span><span class="n">KerasPolicy</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">model_architecture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">,</span> <span class="n">max_history_len</span><span class="p">):</span>
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RestaurantPolicy</span><span class="p">(</span><span class="n">KerasPolicy</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">model_architecture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span> <span class="n">output_shape</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build a Keras model and return a compiled model.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Activation</span><span class="p">,</span> <span class="n">Masking</span><span class="p">,</span> <span class="n">Dense</span>
         <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
 
-        <span class="n">n_hidden</span> <span class="o">=</span> <span class="mi">32</span>  <span class="c1"># size of hidden layer in LSTM</span>
-        <span class="c1"># Build Model</span>
-        <span class="n">batch_shape</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_history_len</span><span class="p">,</span> <span class="n">num_features</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
+        <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> \
+            <span class="n">Masking</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">TimeDistributed</span><span class="p">,</span> <span class="n">Activation</span>
 
+        <span class="c1"># Build Model</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_input_shape</span><span class="o">=</span><span class="n">batch_shape</span><span class="p">))</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">batch_input_shape</span><span class="o">=</span><span class="n">batch_shape</span><span class="p">))</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="n">num_actions</span><span class="p">))</span>
+
+        <span class="c1"># the shape of the y vector of the labels,</span>
+        <span class="c1"># determines which output from rnn will be used</span>
+        <span class="c1"># to calculate the loss</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># y is (num examples, num features) so</span>
+            <span class="c1"># only the last output from the rnn is used to</span>
+            <span class="c1"># calculate the loss</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="n">mask_value</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">output_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># y is (num examples, max_dialogue_len, num features) so</span>
+            <span class="c1"># all the outputs from the rnn are used to</span>
+            <span class="c1"># calculate the loss, therefore a sequence is returned and</span>
+            <span class="c1"># time distributed layer is used</span>
+
+            <span class="c1"># the first value in input_shape is max dialogue_len,</span>
+            <span class="c1"># it is set to None, to allow dynamic_rnn creation</span>
+            <span class="c1"># during prediction</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="n">mask_value</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="n">output_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot construct the model because&quot;</span>
+                             <span class="s2">&quot;length of output_shape = </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                             <span class="s2">&quot;should be 1 or 2.&quot;</span>
+                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)))</span>
+
         <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;softmax&#39;</span><span class="p">))</span>
 
         <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span>
@@ -665,15 +721,17 @@ Nevertheless, you can always fine tune them for your use case. Read
 13
 14
 15
-16</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_dialogue</span><span class="p">(</span><span class="n">domain_file</span><span class="o">=</span><span class="s2">&quot;restaurant_domain.yml&quot;</span><span class="p">,</span>
+16
+17</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_dialogue</span><span class="p">(</span><span class="n">domain_file</span><span class="o">=</span><span class="s2">&quot;restaurant_domain.yml&quot;</span><span class="p">,</span>
                    <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;models/dialogue&quot;</span><span class="p">,</span>
                    <span class="n">training_data_file</span><span class="o">=</span><span class="s2">&quot;data/babi_stories.md&quot;</span><span class="p">):</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">domain_file</span><span class="p">,</span>
-                  <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">RestaurantPolicy</span><span class="p">()])</span>
+                  <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(</span><span class="n">max_history</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+                            <span class="n">RestaurantPolicy</span><span class="p">()])</span>
 
+    <span class="n">training_data</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">training_data_file</span><span class="p">)</span>
     <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
-            <span class="n">training_data_file</span><span class="p">,</span>
-            <span class="n">max_history</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">training_data</span><span class="p">,</span>
             <span class="n">epochs</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
             <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
             <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span>
@@ -867,7 +925,7 @@ not enough data for handling reservation. To learn how to build this chart go to
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.9.0a3',
+            VERSION:'0.9.0a5',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

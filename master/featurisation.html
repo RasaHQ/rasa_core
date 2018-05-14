@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Featurization &mdash; Rasa Core 0.9.0a3 documentation</title>
+  <title>Featurization &mdash; Rasa Core 0.9.0a5 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.9.0a3 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0a5 documentation" href="index.html"/>
         <link rel="next" title="Interpreters" href="interpreters.html"/>
         <link rel="prev" title="Dialogue State Tracker" href="api/tracker.html"/> 
 
@@ -122,7 +122,12 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Featurization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#history">History</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#state-featurizers">State Featurizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tracker-featurizers">Tracker Featurizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#full-dialogue">1. Full Dialogue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#max-history">2. Max History</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
@@ -238,31 +243,108 @@
 </style>
 <div class="section" id="featurization">
 <span id="id1"></span><h1>Featurization<a class="headerlink" href="#featurization" title="Permalink to this headline">¶</a></h1>
-<p>In order to apply machine learning algorithms to conversational AI, we need to build up vector representations of conversations.</p>
-<p>We use the <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> notation that&#8217;s common for supervised learning, where <code class="docutils literal"><span class="pre">X</span></code> is a matrix of shape <code class="docutils literal"><span class="pre">(num_data_points,</span> <span class="pre">data_dimension)</span></code>, and <code class="docutils literal"><span class="pre">y</span></code> is a 1D array of length <code class="docutils literal"><span class="pre">num_data_points</span></code> containing the target class labels.</p>
-<p>The target labels correspond to actions taken by the bot.
-If the domain defines the possible <code class="docutils literal"><span class="pre">actions</span></code> <code class="docutils literal"><span class="pre">[ActionGreet,</span> <span class="pre">ActionListen]</span></code> then a label 0 indicates a greeting and 1 indicates a listen.</p>
-<p>The rows in <code class="docutils literal"><span class="pre">X</span></code> correspond to the state of the conversation just before the action was taken.</p>
-<p>Featurising a single state works like this:
-the tracker provides a bag of <code class="docutils literal"><span class="pre">active_features</span></code> comprising:</p>
-<ul class="simple">
-<li>what the last action was (e.g. <code class="docutils literal"><span class="pre">prev_action_listen</span></code>)</li>
-<li>features indicating intents and entities, if this is the first state in a turn, e.g. it&#8217;s the first action we will take after parsing the user&#8217;s message. (e.g. <code class="docutils literal"><span class="pre">[intent_restaurant_search,</span> <span class="pre">entity_cuisine]</span></code> )</li>
-<li>features indicating which slots are currently defined, e.g. <code class="docutils literal"><span class="pre">slot_location</span></code> if the user previously mentioned the area they&#8217;re searching for restaurants.</li>
-<li>features indicating the results of any API calls stored in slots, e.g. <code class="docutils literal"><span class="pre">slot_matches</span></code></li>
+<p>In order to apply machine learning algorithms to conversational AI, we need
+to build up vector representations of conversations.</p>
+<p>Each story corresponds to a tracker which consists of the states of the
+conversation just before each action was taken.</p>
+<div class="section" id="state-featurizers">
+<h2>State Featurizers<a class="headerlink" href="#state-featurizers" title="Permalink to this headline">¶</a></h2>
+<p>Every event in a trackers history creates a new state (e.g. running a bot
+action, receiving a user message, setting slots). Featurizing a single state
+of the tracker has a couple steps:</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt><strong>Tracker provides a bag of active features</strong>:</dt>
+<dd><ul class="first last simple">
+<li>features indicating intents and entities, if this is the first
+state in a turn, e.g. it&#8217;s the first action we will take after
+parsing the user&#8217;s message. (e.g.
+<code class="docutils literal"><span class="pre">[intent_restaurant_search,</span> <span class="pre">entity_cuisine]</span></code> )</li>
+<li>features indicating which slots are currently defined, e.g.
+<code class="docutils literal"><span class="pre">slot_location</span></code> if the user previously mentioned the area
+they&#8217;re searching for restaurants.</li>
+<li>features indicating the results of any API calls stored in
+slots, e.g. <code class="docutils literal"><span class="pre">slot_matches</span></code></li>
+<li>features indicating what the last action was (e.g.
+<code class="docutils literal"><span class="pre">prev_action_listen</span></code>)</li>
 </ul>
-<dl class="docutils">
-<dt>All of these features are represented in a binary vector which just indicates if they&#8217;re present.</dt>
-<dd>e.g. <code class="docutils literal"><span class="pre">[0</span> <span class="pre">0</span> <span class="pre">1</span> <span class="pre">1</span> <span class="pre">0</span> <span class="pre">1</span> <span class="pre">...]</span></code></dd>
+</dd>
 </dl>
-<p>To recover the bag of features from a vector <code class="docutils literal"><span class="pre">vec</span></code>, you can call <code class="docutils literal"><span class="pre">domain.reverse_binary_encoded_features(vec)</span></code>.
-This is very useful for debugging.</p>
-<div class="section" id="history">
-<h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
-<p>It&#8217;s often useful to include a bit more history than just the current state in memory.
-The parameter <code class="docutils literal"><span class="pre">max_history</span></code> defines how many states go into defining each row in <code class="docutils literal"><span class="pre">X</span></code>.</p>
-<p>Hence the statement above that <code class="docutils literal"><span class="pre">X</span></code> is 2D is actually false, it has shape <code class="docutils literal"><span class="pre">(num_states,</span> <span class="pre">max_history,</span> <span class="pre">num_features)</span></code>.
-For most algorithms you want a flat feature vector, so you will have to reshape this to <code class="docutils literal"><span class="pre">(num_states,</span> <span class="pre">max_history</span> <span class="pre">*</span> <span class="pre">num_features)</span></code>.</p>
+</li>
+<li><p class="first"><strong>Convert all the features into numeric vectors</strong>:</p>
+<blockquote>
+<div><p>We use the <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> notation that&#8217;s common for supervised learning,
+where <code class="docutils literal"><span class="pre">X</span></code> is an array of shape
+<code class="docutils literal"><span class="pre">(num_data_points,</span> <span class="pre">time_dimension,</span> <span class="pre">num_input_features)</span></code>,
+and <code class="docutils literal"><span class="pre">y</span></code> is an array of shape <code class="docutils literal"><span class="pre">(num_data_points,</span> <span class="pre">num_bot_features)</span></code>
+or <code class="docutils literal"><span class="pre">(num_data_points,</span> <span class="pre">time_dimension,</span> <span class="pre">num_bot_features)</span></code>
+containing the target class labels encoded as one-hot vectors.</p>
+<p>The target labels correspond to actions taken by the bot.
+To convert the features into vector format, there are different
+feaurizers available:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">BinarySingleStateFeaturizer</span></code> creates a binary one-hot encoding:</dt>
+<dd><p class="first last">The vectors <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> indicate a presence of a certain intent,
+entity, previous action or slot e.g. <code class="docutils literal"><span class="pre">[0</span> <span class="pre">0</span> <span class="pre">1</span> <span class="pre">0</span> <span class="pre">0</span> <span class="pre">1</span> <span class="pre">...]</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">LabelTokenizerSingleStateFeaturizer</span></code> creates an vector based on the feature label:</dt>
+<dd><p class="first">All active feature labels (e.g. <code class="docutils literal"><span class="pre">prev_action_listen</span></code>) are split
+into tokens and represented as a bag-of-words. For example, actions
+<code class="docutils literal"><span class="pre">utter_explain_details_hotel</span></code> and
+<code class="docutils literal"><span class="pre">utter_explain_details_restaurant</span></code> will have 3 features in
+common, and differ by a single feature indicating a domain.</p>
+<p class="last">Labels for user inputs (intents, entities) and bot actions
+are featurized separately. Each label in the two categories
+is tokenized on a special character <code class="docutils literal"><span class="pre">split_symbol</span></code>
+(e.g. <code class="docutils literal"><span class="pre">action_search_restaurant</span> <span class="pre">=</span> <span class="pre">{action,</span> <span class="pre">search,</span> <span class="pre">restaurant}</span></code>),
+creating two vocabularies. A bag-of-words representation
+is then created for each label using the appropriate vocabulary.
+The slots are featurized as binary vectors, indicating
+their presence or absence at each step of the dialogue.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the domain defines the possible <code class="docutils literal"><span class="pre">actions</span></code>,
+<code class="docutils literal"><span class="pre">[ActionGreet,</span> <span class="pre">ActionGoodbye]</span></code>,
+two additional default actions are added:
+<code class="docutils literal"><span class="pre">[ActionListen,</span> <span class="pre">ActionRestart]</span></code>.
+Therefore, label <code class="docutils literal"><span class="pre">0</span></code> indicates default action listen, label <code class="docutils literal"><span class="pre">1</span></code>
+default restart, label <code class="docutils literal"><span class="pre">2</span></code> a greeting and <code class="docutils literal"><span class="pre">3</span></code> indicates goodbye.</p>
+</div>
+</div>
+<div class="section" id="tracker-featurizers">
+<h2>Tracker Featurizers<a class="headerlink" href="#tracker-featurizers" title="Permalink to this headline">¶</a></h2>
+<p>It&#8217;s often useful to include a bit more history than just the current state
+when predicting an action. The <code class="docutils literal"><span class="pre">TrackerFeaturizer</span></code> iterates over tracker
+states and calls a <code class="docutils literal"><span class="pre">SingleStateFeaturizer</span></code> for each state. There are two
+different tracker featurizers:</p>
+<div class="section" id="full-dialogue">
+<h3>1. Full Dialogue<a class="headerlink" href="#full-dialogue" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">FullDialogueTrackerFeaturizer</span></code> creates numerical representation of stories to feed to a recurrent neural network
+where the whole dialogue is fed to a network and the gradient is backpropagated from all time steps.
+Therefore, <code class="docutils literal"><span class="pre">X</span></code> is an array of shape <code class="docutils literal"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_input_features)</span></code> and
+<code class="docutils literal"><span class="pre">y</span></code> is an array of shape <code class="docutils literal"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_bot_features)</span></code>.
+The smaller dialogues are padded with <code class="docutils literal"><span class="pre">-1</span></code> for all features, indicating no values for a policy.</p>
+</div>
+<div class="section" id="max-history">
+<h3>2. Max History<a class="headerlink" href="#max-history" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> creates an array of previous tracker states for each bot action or utterance, with
+the parameter <code class="docutils literal"><span class="pre">max_history</span></code> defining how many states go into each row in <code class="docutils literal"><span class="pre">X</span></code>.
+Deduplication is performed to filter out duplicated turns (bot actions or bot utterances) in terms of their previous states.
+Hence <code class="docutils literal"><span class="pre">X</span></code> has shape <code class="docutils literal"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history,</span> <span class="pre">num_input_features)</span></code> and <code class="docutils literal"><span class="pre">y</span></code> is an array of shape <code class="docutils literal"><span class="pre">(num_unique_turns,</span> <span class="pre">num_bot_features)</span></code>.</p>
+<p>For some algorithms a flat feature vector is needed, so <code class="docutils literal"><span class="pre">X</span></code> should be reshaped to <code class="docutils literal"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history</span> <span class="pre">*</span> <span class="pre">num_input_features)</span></code>.
+If numeric target class labels are needed instead of one-hot vectors, use <code class="docutils literal"><span class="pre">y.argmax(axis=-1)</span></code>.</p>
+</div>
 </div>
 </div>
 
@@ -333,7 +415,7 @@ For most algorithms you want a flat feature vector, so you will have to reshape 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.9.0a3',
+            VERSION:'0.9.0a5',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
