@@ -259,6 +259,15 @@
         <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No domain path specified.&quot;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You are trying to load a MODEL from a file &quot;</span>
+                             <span class="s2">&quot;(&#39;</span><span class="si">{}</span><span class="s2">&#39;), which is not possible. </span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="s2">&quot;The persisted path should be a directory &quot;</span>
+                             <span class="s2">&quot;containing the various model files. </span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                             <span class="s2">&quot;If you want to load training data instead of &quot;</span>
+                             <span class="s2">&quot;a model, use `agent.load_data(...)` &quot;</span>
+                             <span class="s2">&quot;instead.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
         <span class="n">ensemble</span> <span class="o">=</span> <span class="n">PolicyEnsemble</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">domain</span> <span class="o">=</span> <span class="n">TemplateDomain</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;domain.yml&quot;</span><span class="p">),</span>
                                      <span class="n">action_factory</span><span class="p">)</span>
