@@ -314,18 +314,25 @@
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span>
                 <span class="n">UserMessage</span><span class="p">(</span><span class="n">text_message</span><span class="p">,</span> <span class="n">output_channel</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Agent.start_message_handling"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.start_message_handling">[docs]</a>    <span class="k">def</span> <span class="nf">start_message_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                               <span class="n">text_message</span><span class="p">,</span>
-                               <span class="n">sender_id</span><span class="o">=</span><span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span><span class="p">):</span>
-        <span class="c1"># type: (Text, Optional[Text]) -&gt; Dict[Text, Any]</span>
+<div class="viewcode-block" id="Agent.start_message_handling"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.start_message_handling">[docs]</a>    <span class="k">def</span> <span class="nf">start_message_handling</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">text_message</span><span class="p">,</span>   <span class="c1"># type: Text</span>
+            <span class="n">sender_id</span><span class="o">=</span><span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span>  <span class="c1"># type: Optional[Text]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text, Any]</span>
         <span class="sd">&quot;&quot;&quot;Start to process a messages, returning the next action to take. &quot;&quot;&quot;</span>
 
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">start_message_handling</span><span class="p">(</span>
                 <span class="n">UserMessage</span><span class="p">(</span><span class="n">text_message</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Agent.continue_message_handling"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.continue_message_handling">[docs]</a>    <span class="k">def</span> <span class="nf">continue_message_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">executed_action</span><span class="p">,</span> <span class="n">events</span><span class="p">):</span>
-        <span class="c1"># type: (Text, Text, List[Event]) -&gt; Dict[Text, Any]</span>
+<div class="viewcode-block" id="Agent.continue_message_handling"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.continue_message_handling">[docs]</a>    <span class="k">def</span> <span class="nf">continue_message_handling</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">sender_id</span><span class="p">,</span>  <span class="c1"># type: Text</span>
+            <span class="n">executed_action</span><span class="p">,</span>   <span class="c1"># type: Text</span>
+            <span class="n">events</span>   <span class="c1"># type: List[Event]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text, Any]</span>
         <span class="sd">&quot;&quot;&quot;Continue to process a messages.</span>
 
 <span class="sd">        Predicts the next action to take by the caller&quot;&quot;&quot;</span>
@@ -335,16 +342,22 @@
                                                    <span class="n">executed_action</span><span class="p">,</span>
                                                    <span class="n">events</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Agent.handle_channel"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.handle_channel">[docs]</a>    <span class="k">def</span> <span class="nf">handle_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">,</span>
-                       <span class="n">message_preprocessor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># type: (InputChannel, Optional[Callable[[Text], Text]]) -&gt; None</span>
+<div class="viewcode-block" id="Agent.handle_channel"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.handle_channel">[docs]</a>    <span class="k">def</span> <span class="nf">handle_channel</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">input_channel</span><span class="p">,</span>  <span class="c1"># type: InputChannel</span>
+            <span class="n">message_preprocessor</span><span class="o">=</span><span class="kc">None</span>   <span class="c1"># type: Optional[Callable[[Text], Text]]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Handle messages coming from the channel.&quot;&quot;&quot;</span>
 
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">(</span><span class="n">message_preprocessor</span><span class="p">)</span>
         <span class="n">processor</span><span class="o">.</span><span class="n">handle_channel</span><span class="p">(</span><span class="n">input_channel</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Agent.toggle_memoization"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.toggle_memoization">[docs]</a>    <span class="k">def</span> <span class="nf">toggle_memoization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activate</span><span class="p">):</span>
-        <span class="c1"># type: (bool) -&gt; None</span>
+<div class="viewcode-block" id="Agent.toggle_memoization"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.toggle_memoization">[docs]</a>    <span class="k">def</span> <span class="nf">toggle_memoization</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">activate</span>   <span class="c1"># type: bool</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Toggles the memoization on and off.</span>
 
 <span class="sd">        If a memoization policy is present in the ensemble, this will toggle</span>
