@@ -247,8 +247,8 @@ shows you how to define them and how to visualise them.</p>
 <div class="highlight-md"><div class="highlight"><pre><span></span><span class="gu">##</span> story_07715946                     &lt;!-- name of the story - just for debugging --&gt;
 <span class="k">*</span> greet
    <span class="k">-</span> action_ask_howcanhelp
-<span class="k">*</span> inform{&quot;location&quot;: &quot;rome&quot;, &quot;price&quot;: &quot;cheap&quot;}
-   <span class="k">-</span> action_on_it                     &lt;!-- user utterance, in format _intent[entities] --&gt;
+<span class="k">*</span> inform{&quot;location&quot;: &quot;rome&quot;, &quot;price&quot;: &quot;cheap&quot;}  &lt;!-- user utterance, in format intent{entities} --&gt;
+   <span class="k">-</span> action_on_it
    <span class="k">-</span> action_ask_cuisine
 <span class="k">*</span> inform{&quot;cuisine&quot;: &quot;spanish&quot;}
    <span class="k">-</span> action_ask_numpeople             &lt;!-- action of the bot to execute --&gt;
