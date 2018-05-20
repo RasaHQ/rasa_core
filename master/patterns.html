@@ -513,7 +513,7 @@ or if none of the dialogue policies predict an action with confidence higher tha
 <span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
 
 <span class="n">fallback</span> <span class="o">=</span> <span class="n">FallbackPolicy</span><span class="p">(</span><span class="n">fallback_action_name</span><span class="o">=</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span>
-                          <span class="n">core_threshold</span><span class="o">=</span><span class="mf">0.3</span>
+                          <span class="n">core_threshold</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
                           <span class="n">nlu_threshold</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span>
