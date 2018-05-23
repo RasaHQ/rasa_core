@@ -282,7 +282,15 @@ the relevant files as you go along.</p>
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>For this tutorial to work, you need to have <code class="docutils literal"><span class="pre">rasa_core</span></code> installed,
 <code class="docutils literal"><span class="pre">rasa_nlu</span></code>, as well as <code class="docutils literal"><span class="pre">spaCy</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install rasa_nlu<span class="o">[</span>spacy<span class="o">]</span>
+pip install rasa_core
+</pre></div>
+</div>
 <p>You&#8217;ll also need the english language model:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m spacy download en_core_web_md
+python -m spacy link en_core_web_md en
+</pre></div>
+</div>
 </div>
 <div class="section" id="define-a-domain">
 <h2>1. Define a Domain<a class="headerlink" href="#define-a-domain" title="Permalink to this headline">¶</a></h2>
