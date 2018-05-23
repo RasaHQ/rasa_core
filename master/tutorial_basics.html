@@ -411,7 +411,7 @@ It is not specified in the <code class="docutils literal"><span class="pre">doma
 Language Understanding (NLU) and transforms the message into structured output.
 In this example we are going to use Rasa NLU for this purpose.</p>
 <p>In Rasa NLU, we need to define the user messages our bot should be able to
-handle in the <a class="reference external" href="https://nlu.rasa.ai/dataformat.html">Rasa NLU training data format</a>.
+handle in the <a class="reference external" href="https://nlu.rasa.com/dataformat.html">Rasa NLU training data format</a>.
 In this tutorial we are going to use Markdown Format for NLU training data.
 Let&#8217;s create some intent examples in <code class="docutils literal"><span class="pre">data/nlu_data.md</span></code>:</p>
 <div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -569,9 +569,9 @@ NLU model:</p>
 </pre></div>
 </td></tr></table></div>
 <p>We can now train an NLU model using our examples (make sure to
-<a class="reference external" href="http://nlu.rasa.ai/installation.html#setting-up-rasa-nlu">install Rasa NLU</a>
+<a class="reference external" href="http://nlu.rasa.com/installation.html#setting-up-rasa-nlu">install Rasa NLU</a>
 first, as well as
-<a class="reference external" href="http://nlu.rasa.ai/installation.html#best-for-most-spacy-sklearn">spaCy</a>).</p>
+<a class="reference external" href="http://nlu.rasa.com/installation.html#best-for-most-spacy-sklearn">spaCy</a>).</p>
 <p>Let&#8217;s run</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_nlu.train -c nlu_config.yml --data data/nlu_data.md -o models
 --fixed_model_name nlu --project current --verbose
@@ -583,7 +583,7 @@ since this is specified in the train command.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">To gather more insights about the above configuration and Rasa NLU features
-head over to the <a class="reference external" href="https://nlu.rasa.ai">Rasa NLU documentation</a>.</p>
+head over to the <a class="reference external" href="https://nlu.rasa.com">Rasa NLU documentation</a>.</p>
 </div>
 </div>
 <div class="section" id="define-stories">
