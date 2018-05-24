@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Common Patterns &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>Slot Filling and Common Patterns &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,14 +30,14 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
         <link rel="next" title="Plumbing - How it all fits together" href="plumbing.html"/>
         <link rel="prev" title="Stories - The Training Data" href="stories.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -106,27 +106,34 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Common Patterns</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#collecting-information-to-complete-a-request">Collecting Information to Complete a Request</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Slot Filling and Common Patterns</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#collecting-information-to-complete-a-request-slot-filling">Collecting Information to Complete a Request (Slot Filling)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#validation-and-free-text-input">Validation and Free-text Input</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#collecting-information-using-slots">Collecting Information using Slots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-slot-values-to-influence-which-actions-are-predicted">Using Slot Values to Influence Which Actions are Predicted</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#storing-api-responses-in-the-tracker">Storing API responses in the tracker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fallback-default-actions">Fallback / Default Actions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
@@ -174,7 +181,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Common Patterns</li>
+      <li>Slot Filling and Common Patterns</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -233,8 +240,8 @@
     margin-right: 4px;  /* make room for the exclamation icon */
 }
 </style>
-<div class="section" id="common-patterns">
-<span id="patterns"></span><h1>Common Patterns<a class="headerlink" href="#common-patterns" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="slot-filling-and-common-patterns">
+<span id="patterns"></span><h1>Slot Filling and Common Patterns<a class="headerlink" href="#slot-filling-and-common-patterns" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Here we go through some typical conversation patterns and explain how to implement
@@ -245,8 +252,78 @@ information these models rely on to keep track of context and handle multi-turn 
 Slots are for storing information that&#8217;s relevant over multiple turns. For example, in
 our restaurant example, we would want to keep track of things like the cuisine and number of
 people for the duration of the conversation.</p>
-<div class="section" id="collecting-information-to-complete-a-request">
-<h2>Collecting Information to Complete a Request<a class="headerlink" href="#collecting-information-to-complete-a-request" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="collecting-information-to-complete-a-request-slot-filling">
+<h2>Collecting Information to Complete a Request (Slot Filling)<a class="headerlink" href="#collecting-information-to-complete-a-request-slot-filling" title="Permalink to this headline">¶</a></h2>
+<p>Probably the most common pattern of all is to collect a few pieces of information
+from a user in order to do something (book a restaurant, call an API, search a database, etc.).
+This is also called slot filling.</p>
+<p>To make this easier, Rasa has a special action class called <code class="docutils literal"><span class="pre">FormAction</span></code>.
+This lets you have a single action for this task, rather than separate actions for each question,
+e.g. <code class="docutils literal"><span class="pre">utter_ask_cuisine</span></code>, <code class="docutils literal"><span class="pre">utter_ask_numpeople</span></code>, etc.</p>
+<p>You don&#8217;t <em>have</em> to use <code class="docutils literal"><span class="pre">FormAction</span></code> s to do slot filling, but it can be easier.</p>
+<p>A form action has a set of required fields, which you define for the class:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ActionSearchRestaurants</span><span class="p">(</span><span class="n">FormAction</span><span class="p">):</span>
+
+    <span class="n">RANDOMIZE</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">required_fields</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">EntityFormField</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">,</span> <span class="s2">&quot;cuisine&quot;</span><span class="p">),</span>
+            <span class="n">EntityFormField</span><span class="p">(</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;people&quot;</span><span class="p">),</span>
+            <span class="n">BooleanFormField</span><span class="p">(</span><span class="s2">&quot;vegetarian&quot;</span><span class="p">,</span> <span class="s2">&quot;affirm&quot;</span><span class="p">,</span> <span class="s2">&quot;deny&quot;</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;action_search_restaurants&#39;</span>
+
+    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">RestaurantAPI</span><span class="p">()</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">),</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s2">&quot;people&quot;</span><span class="p">),</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s2">&quot;vegetarian&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;search_results&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>The way this works is that every time you call this action, it will pick one of the
+<code class="docutils literal"><span class="pre">REQUIRED_FIELDS</span></code> that&#8217;s still missing and ask the user for it. You can also ask a yes/no
+question with a <code class="docutils literal"><span class="pre">BooleanFormField</span></code>.</p>
+<p>The story will look something like this:</p>
+<div class="highlight-md"><div class="highlight"><pre><span></span><span class="k">*</span> request_restaurant
+     <span class="k">-</span> action_restaurant_form
+     <span class="k">-</span> slot{&quot;requested_slot&quot;: &quot;people&quot;}
+<span class="k">*</span> inform{&quot;number&quot;: 3}
+     <span class="k">-</span> action_restaurant_form
+     <span class="k">-</span> slot{&quot;people&quot;: 3}
+     <span class="k">-</span> slot{&quot;requested_slot&quot;: &quot;time&quot;}
+<span class="k">*</span> inform{&quot;time&quot;: &quot;8pm&quot;}
+   <span class="k">-</span> action_restaurant_form
+</pre></div>
+</div>
+<p>Some important things to consider:</p>
+<ul class="simple">
+<li>Your domain needs to have a slot called <code class="docutils literal"><span class="pre">requested_slot</span></code>. This can be unfeaturized, but if you want
+to support contextual questions like <em>&#8220;why do you need to know that information?&#8221;</em> it will help if you make this
+a categorical slot.</li>
+<li>You need to define utterances for asking for each slot in your domain, e.g. <code class="docutils literal"><span class="pre">utter_ask_{slot_name}</span></code>.</li>
+<li>We strongly recommend that you create these stories using interactive learning, because if you
+type these by hand you will probably forget to add all of the slots.</li>
+<li>Any slots that are already set won&#8217;t be asked for. E.g. if someone says &#8220;I&#8217;d like a Chinese restaurant for 8 people&#8221; the <code class="docutils literal"><span class="pre">submit</span></code> function should get called right away.</li>
+</ul>
+<div class="section" id="validation-and-free-text-input">
+<h3>Validation and Free-text Input<a class="headerlink" href="#validation-and-free-text-input" title="Permalink to this headline">¶</a></h3>
+<p>For any subclass of  <code class="docutils literal"><span class="pre">FormField</span></code>, it&#8217;s <code class="docutils literal"><span class="pre">validate()</span></code> method will be called before setting it
+as a slot. By default this just checks that the value isn&#8217;t <code class="docutils literal"><span class="pre">None</span></code>, but if you want to check
+the value against a DB, or check a pattern is matched, you can do so by defining your own class
+like <code class="docutils literal"><span class="pre">MyCustomFormField</span></code> and overriding the <code class="docutils literal"><span class="pre">validate()</span></code> method.</p>
+<p>There is also a <code class="docutils literal"><span class="pre">FreeTextFormField</span></code> class which will just extract the user message as a value.
+However, there is no way to write a &#8216;wildcard&#8217; intent in Rasa Core stories as of now. Typically
+your NLU model will assign this free-text input to 2-3 different intents.
+It&#8217;s easiest to add stories for each of these.</p>
+</div>
+</div>
+<div class="section" id="collecting-information-using-slots">
+<h2>Collecting Information using Slots<a class="headerlink" href="#collecting-information-using-slots" title="Permalink to this headline">¶</a></h2>
 <p>For collecting a set of preferences, you can use <code class="docutils literal"><span class="pre">TextSlot</span></code> s like in the restaurant example:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">cuisine</span><span class="p p-Indicator">:</span>
@@ -368,6 +445,16 @@ In this case the restaurant is booked out so we want to apologize to the custome
 </div>
 <p>This second story details the flow when the restaurant is available. We will tell the customer we have booked
 the restaurant and ask if any further help is required.</p>
+<div class="highlight-md"><div class="highlight"><pre><span></span><span class="gh">#</span> restaurant available
+<span class="k">*</span> _make_booking{&quot;people&quot;:&quot;5&quot;, &quot;date&quot;:&quot;2018-08-22T19:30:00+00:00&quot;, &quot;restaurant_id&quot;:&quot;145&quot;}
+<span class="k">-</span> slot{&quot;restaurant_availability&quot;: &quot;available&quot;}
+<span class="k">-</span> action_make_booking
+<span class="k">-</span> utter_restaurant_booked
+<span class="k">-</span> utter_anything_more
+<span class="k">*</span> _bye
+<span class="k">-</span> utter_thank_you
+</pre></div>
+</div>
 <p>In this last example, the intent <code class="docutils literal"><span class="pre">make_booking</span></code> was found but either Rasa Core failed to parse a date or the
 date was not provided. In this case we would need to ask for more information.</p>
 <p><strong>Note:</strong> this last story is using the fact that <code class="docutils literal"><span class="pre">date</span></code> is a <code class="docutils literal"><span class="pre">TextSlot</span></code> and therefore has a single feature that
@@ -412,6 +499,25 @@ not influence the course of a dialogue. An exaple <code class="docutils literal"
 </div>
 <p>This is especially useful when you are <a class="reference internal" href="state.html#persisting-trackers"><span class="std std-ref">persisting your tracker</span></a> in Redis or another data store. You could cache the API or database responses separately, but storing them in the tracker means they will be persisted automatically with the rest of the dialogue state, and will be restored along with the rest of the state should the system require a reboot.</p>
 </div>
+<div class="section" id="fallback-default-actions">
+<h2>Fallback / Default Actions<a class="headerlink" href="#fallback-default-actions" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes you want to fall back to a default action like saying &#8220;Sorry, I didn&#8217;t understand that&#8221;.
+To do this, add the <code class="docutils literal"><span class="pre">FallbackPolicy</span></code> to your policy ensemble.
+The default action will be executed if the intent recognition has a confidence below <code class="docutils literal"><span class="pre">nlu_threshold</span></code>
+or if none of the dialogue policies predict an action with confidence higher than <code class="docutils literal"><span class="pre">core_threshold</span></code></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.policies.fallback</span> <span class="kn">import</span> <span class="n">FallbackPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="kn">import</span> <span class="n">KerasPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+
+<span class="n">fallback</span> <span class="o">=</span> <span class="n">FallbackPolicy</span><span class="p">(</span><span class="n">fallback_action_name</span><span class="o">=</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span>
+                          <span class="n">core_threshold</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                          <span class="n">nlu_threshold</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span>
+               <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">KerasPolicy</span><span class="p">(),</span> <span class="n">fallback</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -452,12 +558,13 @@ not influence the course of a dialogue. An exaple <code class="docutils literal"
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/patterns.html">0.9.0</a></dd>
             <dd><a href="0.8.6/patterns.html">0.8.6</a></dd>
             <dd><a href="0.8.5/patterns.html">0.8.5</a></dd>
             <dd><a href="0.8.4/patterns.html">0.8.4</a></dd>
@@ -481,7 +588,7 @@ not influence the course of a dialogue. An exaple <code class="docutils literal"
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

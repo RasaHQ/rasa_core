@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>But I don’t code in python! &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>But I don’t code in python! &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,14 +30,14 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
         <link rel="next" title="Installation" href="installation.html"/>
         <link rel="prev" title="Motivation" href="motivation.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -94,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">But I don&#8217;t code in python!</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#rasa-core-with-minimal-python">Rasa Core with minimal Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rasa-core-with-docker">Rasa Core with Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rasa-core-with-zero-python">Rasa Core with ZERO Python</a></li>
 </ul>
 </li>
@@ -110,22 +111,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Slot Filling and Common Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
@@ -265,6 +268,32 @@ something like this:</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="rasa-core-with-docker">
+<h2>Rasa Core with Docker<a class="headerlink" href="#rasa-core-with-docker" title="Permalink to this headline">¶</a></h2>
+<p>We provide a Dockerfile which allows you to build an image of Rasa Core
+with a simple command: <code class="docutils literal"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">rasa_core</span> <span class="pre">.</span></code></p>
+<p>The default command of the resulting container starts the Rasa Core server
+with the <code class="docutils literal"><span class="pre">--core</span></code> and <code class="docutils literal"><span class="pre">--nlu</span></code> options. At this stage the container does not
+yet contain any models, so you have to mount them from a local folder into
+the container&#8217;s <code class="docutils literal"><span class="pre">/app/model/dialogue</span></code> and <code class="docutils literal"><span class="pre">app/model/nlu</span></code> directories.
+The full run command looks like this:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker run <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_DIALOGUE_MODEL_DIR&gt;,target<span class="o">=</span>/app/dialogue <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_NLU_MODEL_DIR&gt;,target<span class="o">=</span>/app/nlu <span class="se">\</span>
+   rasa_core
+</pre></div>
+</div>
+<p>You also have the option to use the container to train a model with</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker run <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_STORIES_FILE&gt;/stories.md,target<span class="o">=</span>/app/stories.md <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_DOMAIN_FILE&gt;/domain.yml,target<span class="o">=</span>/app/domain.yml <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;OUT_PATH&gt;,target<span class="o">=</span>/app/out <span class="se">\</span>
+   rasa_core train
+</pre></div>
+</div>
+<p>You may in addition run any Rasa Core command inside the container with
+<code class="docutils literal"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">rasa_core</span> <span class="pre">run</span> <span class="pre">[COMMAND]</span></code>.</p>
+</div>
 <div class="section" id="rasa-core-with-zero-python">
 <h2>Rasa Core with ZERO Python<a class="headerlink" href="#rasa-core-with-zero-python" title="Permalink to this headline">¶</a></h2>
 <p>If you are really constrained to not use any python, you can also use Rasa Core
@@ -310,12 +339,13 @@ through a <a class="reference internal" href="http.html#section-http"><span clas
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/no_python.html">0.9.0</a></dd>
             <dd><a href="0.8.6/no_python.html">0.8.6</a></dd>
             <dd><a href="0.8.5/no_python.html">0.8.5</a></dd>
             <dd><a href="0.8.4/no_python.html">0.8.4</a></dd>
@@ -339,7 +369,7 @@ through a <a class="reference internal" href="http.html#section-http"><span clas
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

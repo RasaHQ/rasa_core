@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Custom Policies &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>Policies &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,14 +30,14 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
         <link rel="next" title="Tracking Conversation State" href="state.html"/>
         <link rel="prev" title="Interpreters" href="interpreters.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -106,24 +106,33 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Slot Filling and Common Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Custom Policies</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#creating-policies-from-stories">Creating Policies from Stories</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#generalising-to-new-dialogues">Generalising to new Dialogues</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Policies</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-policies-from-stories">Creating Policies from Stories</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#memorising-the-training-data">Memorising the training data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#augmented-memoization">Augmented memoization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#generalising-to-new-dialogues">Generalising to new Dialogues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#keras-policy">Keras policy</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
@@ -173,7 +182,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Custom Policies</li>
+      <li>Policies</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -232,13 +241,18 @@
     margin-right: 4px;  /* make room for the exclamation icon */
 }
 </style>
-<div class="section" id="custom-policies">
-<span id="id1"></span><h1>Custom Policies<a class="headerlink" href="#custom-policies" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal"><span class="pre">Policy</span></code> is the core of your bot, and it really just has one important method:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_action_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-    <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; List[float]</span>
+<div class="section" id="policies">
+<span id="id1"></span><h1>Policies<a class="headerlink" href="#policies" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal"><span class="pre">Policy</span></code> is the core of your bot, with its most important method:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">predict_action_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; List[float]</span>
+        <span class="sd">&quot;&quot;&quot;Predicts the next action the bot should take</span>
+<span class="sd">        after seeing the tracker.</span>
 
-    <span class="k">return</span> <span class="p">[]</span>
+<span class="sd">        Returns the list of probabilities for the next actions&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
+                                  <span class="s2">&quot;to predict.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This uses the current state of the conversation (provided by the tracker) to choose the next action to take.
@@ -263,8 +277,9 @@ the probabilities for each action to be executed next. The action that is most l
 </pre></div>
 </div>
 <p><strong>How does this work?</strong>
-When the controller processes a message from a user, it will keep asking for the next most likely action using <code class="docutils literal"><span class="pre">predict_action_probabilities</span></code>.
-The bot then executes that action, until it receives an <code class="docutils literal"><span class="pre">ActionListen</span></code> instruction.
+When the controller processes a message from a user, it will keep asking for the next most likely action using
+<code class="docutils literal"><span class="pre">predict_action_probabilities</span></code>. The bot then executes that action, then call <code class="docutils literal"><span class="pre">predict_action_probabilities</span></code> again
+with a new <code class="docutils literal"><span class="pre">tracker</span></code>, until it receives an <code class="docutils literal"><span class="pre">ActionListen</span></code> instruction.
 This breaks the loop and makes the bot await further instructions.</p>
 <p>In pseudocode, what the <code class="docutils literal"><span class="pre">SimplePolicy</span></code> above does is:</p>
 <div class="highlight-md"><div class="highlight"><pre><span></span>-&gt; a new message has come in
@@ -272,101 +287,52 @@ This breaks the loop and makes the bot await further instructions.</p>
 if we were previously listening:
     return a canned response
 else:
-    we must have just said something, so let&#39;s Listen again
+    we must have just said something, so let&#39;s listen again
 </pre></div>
 </div>
 <p>Note that the policy itself is stateless, and all the state is carried by the <code class="docutils literal"><span class="pre">tracker</span></code> object.</p>
 <div class="section" id="creating-policies-from-stories">
 <h2>Creating Policies from Stories<a class="headerlink" href="#creating-policies-from-stories" title="Permalink to this headline">¶</a></h2>
 <p>Writing rules like in the SimplePolicy above is not a great way to build a bot, it gets messy fast &amp; is hard to debug.
-If you&#8217;ve found Rasa Core, it&#8217;s likely you&#8217;ve already tried this approach and were looking for something better.
-A good next step is to use our story framework to build a policy by giving it some example conversations.
-We won&#8217;t use machine learning yet, we will just create a policy which memorises these stories.</p>
-<p>We can use the <code class="docutils literal"><span class="pre">MemoizationPolicy</span></code> and the <code class="docutils literal"><span class="pre">PolicyTrainer</span></code> classes to do this.</p>
-<p>Here is the <code class="docutils literal"><span class="pre">PolicyTrainer</span></code> class:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PolicyTrainer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">=</span> <span class="n">ensemble</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span> <span class="o">=</span> <span class="n">featurizer</span>
+If you&#8217;ve found Rasa Core, it&#8217;s likely you&#8217;ve already tried this approach and were looking for something better.</p>
+<p>The second important method of any policy is <code class="docutils literal"><span class="pre">train(...)</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+              <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
+              <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
+              <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Trains the policy on given training trackers.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-              <span class="n">augmentation_factor</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_training_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-              <span class="n">max_number_of_trackers</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Trains a policy on a domain using training data from a file.</span>
-
-<span class="sd">        :param augmentation_factor: how many stories should be created by</span>
-<span class="sd">                                    randomly concatenating stories</span>
-<span class="sd">        :param filename: story file containing the training conversations</span>
-<span class="sd">        :param max_history: number of past actions to consider for the</span>
-<span class="sd">                            prediction of the next action</span>
-<span class="sd">        :param max_training_samples: specifies how many training samples to</span>
-<span class="sd">                                     train on - `None` to use all examples</span>
-<span class="sd">        :param max_number_of_trackers: limits the tracker generation during</span>
-<span class="sd">                                       story file parsing - `None` for unlimited</span>
-<span class="sd">        :param remove_duplicates: remove duplicates from the training set before</span>
-<span class="sd">                                  training</span>
-<span class="sd">        :param kwargs: additional arguments passed to the underlying ML trainer</span>
-<span class="sd">                       (e.g. keras parameters)</span>
-<span class="sd">        :return: trained policy</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Policy trainer got kwargs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="n">check_domain_sanity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
-
-        <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_training_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">max_history</span><span class="p">,</span>
-                                           <span class="n">augmentation_factor</span><span class="p">,</span>
-                                           <span class="n">max_training_samples</span><span class="p">,</span>
-                                           <span class="n">max_number_of_trackers</span><span class="p">,</span>
-                                           <span class="n">remove_duplicates</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_prepare_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">max_history</span><span class="p">,</span> <span class="n">augmentation_factor</span><span class="p">,</span>
-                               <span class="n">max_training_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                               <span class="n">max_number_of_trackers</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
-                               <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reads training data from file and prepares it for the training.&quot;&quot;&quot;</span>
-
-        <span class="kn">from</span> <span class="nn">rasa_core.training</span> <span class="k">import</span> <span class="n">extract_training_data_from_file</span>
-
-        <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
-            <span class="n">training_data</span> <span class="o">=</span> <span class="n">extract_training_data_from_file</span><span class="p">(</span>
-                    <span class="n">filename</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span>
-                    <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">(),</span>
-                    <span class="n">augmentation_factor</span><span class="o">=</span><span class="n">augmentation_factor</span><span class="p">,</span>
-                    <span class="n">max_history</span><span class="o">=</span><span class="n">max_history</span><span class="p">,</span>
-                    <span class="n">remove_duplicates</span><span class="o">=</span><span class="n">remove_duplicates</span><span class="p">,</span>
-                    <span class="n">max_number_of_trackers</span><span class="o">=</span><span class="n">max_number_of_trackers</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">max_training_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">training_data</span><span class="o">.</span><span class="n">limit_training_data_to</span><span class="p">(</span><span class="n">max_training_samples</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">training_data</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">DialogueTrainingData</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
+                                  <span class="s2">&quot;to train.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>What the <code class="docutils literal"><span class="pre">train()</span></code> method does is the following:</p>
-<ol class="arabic simple">
-<li>reads the stories from a file</li>
-<li>creates all possible dialogues from these stories</li>
-<li>creates the following variables:<ol class="loweralpha">
-<li><code class="docutils literal"><span class="pre">y</span></code> - a 1D array representing all of the actions taken in the dialogues</li>
-<li><code class="docutils literal"><span class="pre">X</span></code> - a 2D array where each row represents the state of the tracker when an action was taken</li>
-</ol>
-</li>
-<li>calls the policy&#8217;s <code class="docutils literal"><span class="pre">train()</span></code> method to create a policy from these <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code>
-state-action pairs (don&#8217;t mind the <code class="docutils literal"><span class="pre">ensemble</span></code> it is just a collection of
-policies - e.g. you can combine multiple policies and train them all at
-once using the ensemble)</li>
-</ol>
+<p>This method creates &#8220;some rules&#8221; for prediction depending on the training data.</p>
+<div class="section" id="memorising-the-training-data">
+<h3>Memorising the training data<a class="headerlink" href="#memorising-the-training-data" title="Permalink to this headline">¶</a></h3>
+<p>A good next step is to use our story framework to build a policy by giving it some example conversations.
+We won&#8217;t use machine learning yet, we will just create a policy which memorises these stories.</p>
+<p>We can use the <code class="docutils literal"><span class="pre">MemoizationPolicy</span></code> to do this.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In fact, the rows in <code class="docutils literal"><span class="pre">X</span></code> describe the state of the tracker when the previous <code class="docutils literal"><span class="pre">max_history</span></code> actions were taken. See <a class="reference internal" href="featurisation.html#featurization"><span class="std std-ref">Featurization</span></a> for more details.</p>
+<p class="last">For the <code class="docutils literal"><span class="pre">MemoizationPolicy</span></code>, the <code class="docutils literal"><span class="pre">train()</span></code> method just memorises
+the actions taken in the story of <code class="docutils literal"><span class="pre">max_history</span></code> turns, so that when your bot encounters an
+identical situation it will make the decision you intended.</p>
 </div>
-<p>For the <code class="docutils literal"><span class="pre">MemoizationPolicy</span></code>, the <code class="docutils literal"><span class="pre">train()</span></code> method just memorises the actions taken in the story,
-so that when your bot encounters an identical situation it will make the decision you intended.</p>
+</div>
+<div class="section" id="augmented-memoization">
+<h3>Augmented memoization<a class="headerlink" href="#augmented-memoization" title="Permalink to this headline">¶</a></h3>
+<p>If it is needed to recall turns from training dialogues
+where some <code class="docutils literal"><span class="pre">slots</span></code> might not be set during prediction time,
+add relevant stories without such <code class="docutils literal"><span class="pre">slots</span></code> to training data.
+E.g. reminder stories.</p>
+<p>Since <code class="docutils literal"><span class="pre">slots</span></code> that are set some time in the past are
+preserved in all future feature vectors until they are set
+to None, this policy has a capability to recall the turns
+up to <code class="docutils literal"><span class="pre">max_history</span></code> and less from training stories during prediction,
+even if additional slots were filled in the past for current dialogue.</p>
+</div>
 </div>
 <div class="section" id="generalising-to-new-dialogues">
 <h2>Generalising to new Dialogues<a class="headerlink" href="#generalising-to-new-dialogues" title="Permalink to this headline">¶</a></h2>
@@ -375,28 +341,84 @@ But humans are infinitely creative, and you could never hope to describe <em>eve
 Even if you could, it probably wouldn&#8217;t fit in memory :)</p>
 <p>So how do we create a policy which behaves well even in scenarios you haven&#8217;t thought of?
 We will try to achieve this generalisation by creating a policy based on Machine Learning.</p>
+<p>Any policy should be initialized with a featurizer.
+The policy&#8217;s <code class="docutils literal"><span class="pre">train</span></code> method calls this featurizer on provided <code class="docutils literal"><span class="pre">training_trackers</span></code> to create <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> data,
+suitable for ML algorithm (see <a class="reference internal" href="featurisation.html#featurization"><span class="std std-ref">Featurization</span></a> for details).</p>
+<p>The method to featurize trackers is defined here:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">featurize_for_training</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+            <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
+            <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; DialogueTrainingData</span>
+        <span class="sd">&quot;&quot;&quot;Transform training trackers into a vector representation.</span>
+<span class="sd">        The trackers, consisting of multiple turns, will be transformed</span>
+<span class="sd">        into a float vector which can be used by a ML model.&quot;&quot;&quot;</span>
+
+        <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">featurize_trackers</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span>
+                                                           <span class="n">domain</span><span class="p">)</span>
+
+        <span class="n">max_training_samples</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_training_samples&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_training_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Limit training data to </span><span class="si">{}</span><span class="s2"> training samples.&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_training_samples</span><span class="p">))</span>
+            <span class="n">training_data</span><span class="o">.</span><span class="n">limit_training_data_to</span><span class="p">(</span><span class="n">max_training_samples</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">training_data</span>
+</pre></div>
+</div>
+<div class="section" id="keras-policy">
+<h3>Keras policy<a class="headerlink" href="#keras-policy" title="Permalink to this headline">¶</a></h3>
 <p>You can use whichever machine learning library you like to train your policy.
 One implementation that ships with Rasa is the <code class="docutils literal"><span class="pre">KerasPolicy</span></code>,
 which uses Keras as a machine learning library to train your dialogue model.
-These base classes have already implemented the logic of persisting and reloading models.</p>
-<p>By default, each of these trains a linear model to fit the <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> data.</p>
+This class has already implemented the logic of persisting and reloading models.</p>
 <p>The model is defined here:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">model_architecture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">,</span> <span class="n">max_history_len</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Build a keras model and return a compiled model.</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">model_architecture</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">input_shape</span><span class="p">,</span>  <span class="c1"># type: Tuple[int, int]</span>
+            <span class="n">output_shape</span>  <span class="c1"># type: Tuple[int, Optional[int]]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; keras.models.Sequential</span>
+        <span class="sd">&quot;&quot;&quot;Build a keras model and return a compiled model.&quot;&quot;&quot;</span>
 
-<span class="sd">        :param max_history_len: The maximum number of historical</span>
-<span class="sd">                                turns used to decide on next action</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Activation</span><span class="p">,</span> <span class="n">Masking</span><span class="p">,</span> <span class="n">Dense</span>
         <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
+        <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> \
+            <span class="n">Masking</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">TimeDistributed</span><span class="p">,</span> <span class="n">Activation</span>
 
-        <span class="n">n_hidden</span> <span class="o">=</span> <span class="mi">32</span>  <span class="c1"># Neural Net and training params</span>
-        <span class="n">batch_shape</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_history_len</span><span class="p">,</span> <span class="n">num_features</span><span class="p">)</span>
         <span class="c1"># Build Model</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_input_shape</span><span class="o">=</span><span class="n">batch_shape</span><span class="p">))</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">batch_input_shape</span><span class="o">=</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">num_actions</span><span class="p">))</span>
+
+        <span class="c1"># the shape of the y vector of the labels,</span>
+        <span class="c1"># determines which output from rnn will be used</span>
+        <span class="c1"># to calculate the loss</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># y is (num examples, num features) so</span>
+            <span class="c1"># only the last output from the rnn is used to</span>
+            <span class="c1"># calculate the loss</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="n">mask_value</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">output_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># y is (num examples, max_dialogue_len, num features) so</span>
+            <span class="c1"># all the outputs from the rnn are used to</span>
+            <span class="c1"># calculate the loss, therefore a sequence is returned and</span>
+            <span class="c1"># time distributed layer is used</span>
+
+            <span class="c1"># the first value in input_shape is max dialogue_len,</span>
+            <span class="c1"># it is set to None, to allow dynamic_rnn creation</span>
+            <span class="c1"># during prediction</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="n">mask_value</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="n">output_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot construct the model because&quot;</span>
+                             <span class="s2">&quot;length of output_shape = </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                             <span class="s2">&quot;should be 1 or 2.&quot;</span>
+                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)))</span>
+
         <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;softmax&#39;</span><span class="p">))</span>
 
         <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span>
@@ -404,27 +426,49 @@ These base classes have already implemented the logic of persisting and reloadin
                       <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+
         <span class="k">return</span> <span class="n">model</span>
 </pre></div>
 </div>
 <p>and the training is run here:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_data</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># type: (DialogueTrainingData, Domain, **Any) -&gt; None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_architecture</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span>
-                                             <span class="n">domain</span><span class="o">.</span><span class="n">num_actions</span><span class="p">,</span>
-                                             <span class="n">training_data</span><span class="o">.</span><span class="n">max_history</span><span class="p">())</span>
-        <span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span> <span class="o">=</span> <span class="n">training_data</span><span class="o">.</span><span class="n">shuffled</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+              <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
+              <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
+              <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
+
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Parameter `rnn_size` is updated with </span><span class="si">{}</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)</span>
+
+        <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize_for_training</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span>
+                                                    <span class="n">domain</span><span class="p">,</span>
+                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span> <span class="o">=</span> <span class="n">training_data</span><span class="o">.</span><span class="n">shuffled_X_y</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_architecture</span><span class="p">(</span><span class="n">shuffled_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+                                                 <span class="n">shuffled_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
         <span class="n">validation_split</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;validation_split&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fitting model with </span><span class="si">{}</span><span class="s2"> total samples and a validation &quot;</span>
                     <span class="s2">&quot;split of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">training_data</span><span class="o">.</span><span class="n">num_examples</span><span class="p">(),</span>
                                          <span class="n">validation_split</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;epochs&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="c1"># filter out kwargs that cannot be passed to fit</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_valid_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="c1"># the default parameter for epochs in keras fit is 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;epochs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done fitting keras policy model&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You can implement the model of your choice by overriding these methods.</p>
+<p>You can implement the model of your choice by overriding these methods,
+or initialize <code class="docutils literal"><span class="pre">KerasPolicy</span></code> with already defined <code class="docutils literal"><span class="pre">keras</span> <span class="pre">model</span></code>.</p>
+</div>
 </div>
 </div>
 
@@ -466,12 +510,13 @@ These base classes have already implemented the logic of persisting and reloadin
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/policies.html">0.9.0</a></dd>
             <dd><a href="0.8.6/policies.html">0.8.6</a></dd>
             <dd><a href="0.8.5/policies.html">0.8.5</a></dd>
             <dd><a href="0.8.4/policies.html">0.8.4</a></dd>
@@ -495,7 +540,7 @@ These base classes have already implemented the logic of persisting and reloadin
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

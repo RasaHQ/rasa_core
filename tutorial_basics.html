@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Building a Simple Bot &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>Building a Simple Bot &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,14 +30,14 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
         <link rel="next" title="Supervised Learning Tutorial" href="tutorial_supervised.html"/>
         <link rel="prev" title="Installation" href="installation.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -99,6 +99,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Building a Simple Bot</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#goal">Goal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#define-a-domain">1. Define a Domain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#define-an-interpreter">2. Define an interpreter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#define-stories">3. Define stories</a></li>
@@ -114,22 +115,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Slot Filling and Common Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
@@ -254,22 +257,37 @@ This might be easier to follow if you also look at <a class="reference internal"
 <p>We will create a very simple bot that checks our current mood and tries to
 cheer us up if we are feeling sad. It will query our mood and based on our
 reply will respond with a funny image or a message.</p>
-<p>Let&#8217;s start by creating a project folder:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir moodbot <span class="o">&amp;&amp;</span> <span class="nb">cd</span> moodbot
+<p>We created a <a class="reference external" href="https://github.com/RasaHQ/starter-pack">starter pack</a> to help
+you get started with this tutorial (or any bot you&#8217;re building), so the first
+step is to clone this:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>git clone https://github.com/RasaHQ/starter-pack.git <span class="o">&amp;&amp;</span> <span class="nb">cd</span> starter-pack
 </pre></div>
 </div>
-<p>We need to create two data files (dialogue stories and NLU examples),
-as well as two configuration files (dialogue domain and NLU config). The
-final structure should look like this:</p>
-<div class="highlight-text"><div class="highlight"><pre><span></span>moodbot/
+<p>The files that are important for this tutorial are described below:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>starter-pack/
 ├── data/
 │   ├── stories.md            # dialogue training data
-│   └── nlu.md                # nlu training data
+│   └── nlu_data.md           # nlu training data
 ├── domain.yml                # dialogue configuration
-└── nlu_model_config.json     # nlu configuration
+└── nlu_config.yml            # nlu configuration
 </pre></div>
 </div>
-<p>Let&#8217;s go through each of them!</p>
+<p>Let&#8217;s go through each of them! Just copy the example code below into each of
+the relevant files as you go along.</p>
+</div>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p>For this tutorial to work, you need to have <code class="docutils literal"><span class="pre">rasa_core</span></code> installed,
+<code class="docutils literal"><span class="pre">rasa_nlu</span></code>, as well as <code class="docutils literal"><span class="pre">spaCy</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install rasa_nlu<span class="o">[</span>spacy<span class="o">]</span>
+pip install rasa_core
+</pre></div>
+</div>
+<p>You&#8217;ll also need the english language model:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m spacy download en_core_web_md
+python -m spacy link en_core_web_md en
+</pre></div>
+</div>
 </div>
 <div class="section" id="define-a-domain">
 <h2>1. Define a Domain<a class="headerlink" href="#define-a-domain" title="Permalink to this headline">¶</a></h2>
@@ -398,9 +416,9 @@ It is not specified in the <code class="docutils literal"><span class="pre">doma
 Language Understanding (NLU) and transforms the message into structured output.
 In this example we are going to use Rasa NLU for this purpose.</p>
 <p>In Rasa NLU, we need to define the user messages our bot should be able to
-handle in the <a class="reference external" href="https://nlu.rasa.ai/dataformat.html">Rasa NLU training data format</a>.
+handle in the <a class="reference external" href="https://nlu.rasa.com/dataformat.html">Rasa NLU training data format</a>.
 In this tutorial we are going to use Markdown Format for NLU training data.
-Let&#8217;s create some intent examples in <code class="docutils literal"><span class="pre">data/nlu.md</span></code>:</p>
+Let&#8217;s create some intent examples in <code class="docutils literal"><span class="pre">data/nlu_data.md</span></code>:</p>
 <div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -550,34 +568,27 @@ Let&#8217;s create some intent examples in <code class="docutils literal"><span 
 <span class="k">-</span> so sad
 </pre></div>
 </td></tr></table></div>
-<p>Furthermore, we need a configuration file, <code class="docutils literal"><span class="pre">nlu_model_config.json</span></code>, for the
+<p>Furthermore, we need a configuration file, <code class="docutils literal"><span class="pre">nlu_config.yml</span></code>, for the
 NLU model:</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="s2">&quot;spacy_sklearn&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;path&quot;</span> <span class="p">:</span> <span class="s2">&quot;./models/nlu&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;data&quot;</span> <span class="p">:</span> <span class="s2">&quot;./data/nlu.md&quot;</span>
-<span class="p">}</span>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="p">:</span> <span class="s2">&quot;spacy_sklearn&quot;</span>
 </pre></div>
 </td></tr></table></div>
 <p>We can now train an NLU model using our examples (make sure to
-<a class="reference external" href="http://nlu.rasa.ai/installation.html#setting-up-rasa-nlu">install Rasa NLU</a>
+<a class="reference external" href="http://nlu.rasa.com/installation.html#setting-up-rasa-nlu">install Rasa NLU</a>
 first, as well as
-<a class="reference external" href="http://nlu.rasa.ai/installation.html#best-for-most-spacy-sklearn">spaCy</a>).</p>
+<a class="reference external" href="http://nlu.rasa.com/installation.html#best-for-most-spacy-sklearn">spaCy</a>).</p>
 <p>Let&#8217;s run</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_nlu.train -c nlu_model_config.json --fixed_model_name current
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_nlu.train -c nlu_config.yml --data data/nlu_data.md -o models
+--fixed_model_name nlu --project current --verbose
 </pre></div>
 </div>
-<p>to train our NLU model. A new directory <code class="docutils literal"><span class="pre">models/nlu/default/current</span></code> should have been
-created containing the NLU model. Note that <code class="docutils literal"><span class="pre">default</span></code> stands for project name, since we did not
-specify it explicitly in <code class="docutils literal"><span class="pre">nlu_model_config.json</span></code>.</p>
+<p>to train our NLU model. A new directory <code class="docutils literal"><span class="pre">models/current/nlu</span></code> should have been
+created containing the NLU model. Note that <code class="docutils literal"><span class="pre">current</span></code> stands for project name,
+since this is specified in the train command.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">To gather more insights about the above configuration and Rasa NLU features
-head over to the <a class="reference external" href="https://nlu.rasa.ai">Rasa NLU documentation</a>.</p>
+head over to the <a class="reference external" href="https://nlu.rasa.com">Rasa NLU documentation</a>.</p>
 </div>
 </div>
 <div class="section" id="define-stories">
@@ -595,9 +606,9 @@ you can mix them):</p>
 </ul>
 <p>For this example, we are going to create the stories by writing them directly
 to <code class="docutils literal"><span class="pre">stories.md</span></code>.
-Stories begin with <code class="docutils literal"><span class="pre">##</span></code> and a string as an identifier. User actions start
-with an asterisk, and bot actions are specified by lines beginning with a
-dash. The end of a story is denoted by a newline. See <a class="reference internal" href="stories.html#stories"><span class="std std-ref">Stories - The Training Data</span></a> for
+Stories begin with <code class="docutils literal"><span class="pre">##</span></code> and a string as an identifier. User intents start
+with an asterisk <code class="docutils literal"><span class="pre">*</span></code>, and bot actions are specified by lines beginning with a
+dash <code class="docutils literal"><span class="pre">-</span></code>. The end of a story is denoted by a newline. See <a class="reference internal" href="stories.html#stories"><span class="std std-ref">Stories - The Training Data</span></a> for
 more information about the data format.</p>
 <p>Enough talking, let&#8217;s head over to our stories:</p>
 <div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -664,14 +675,16 @@ stories.</p>
 <h2>4. Put the pieces together<a class="headerlink" href="#put-the-pieces-together" title="Permalink to this headline">¶</a></h2>
 <p>There are two things we still need to do: train the dialogue model and run it.</p>
 <p>To train the dialogue model, run:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.train -s data/stories.md -d domain.yml -o models/dialogue --epochs <span class="m">300</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.train -d domain.yml -s data/stories.md -o models/current/dialogue --epochs <span class="m">200</span>
 </pre></div>
 </div>
-<p>This will train the dialogue model for <code class="docutils literal"><span class="pre">300</span></code> epochs and store it
-into <code class="docutils literal"><span class="pre">models/dialogue</span></code>. Now we can use that trained dialogue model
+<p>This will train the dialogue model for <code class="docutils literal"><span class="pre">200</span></code> epochs and store it
+into <code class="docutils literal"><span class="pre">models/current/dialogue</span></code>. Where <code class="docutils literal"><span class="pre">1</span></code> epoch corresponds to one pass of
+the algorithm through all the training examples, which in this case are the stories.</p>
+<p>Now we can use that trained dialogue model
 and the previously created NLU model to run our bot.
 Here we&#8217;ll just talk to the bot on the command line:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/default/current
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/current/dialogue -u models/current/nlu
 </pre></div>
 </div>
 <p>And there we have it! A minimal bot containing all the important pieces of
@@ -682,6 +695,7 @@ Rasa Core.</p>
 <p class="last">Button emulation does not work in console output, you need to type words like &#8220;great&#8221; or &#8220;sad&#8221;
 instead of numbers 1 or 2.</p>
 </div>
+<p>In order to restart the bot type <code class="docutils literal"><span class="pre">/restart</span></code> into the command line.</p>
 </div>
 <div class="section" id="bonus-handle-messages-from-facebook">
 <h2>Bonus: Handle messages from Facebook<a class="headerlink" href="#bonus-handle-messages-from-facebook" title="Permalink to this headline">¶</a></h2>
@@ -712,20 +726,19 @@ into <code class="docutils literal"><span class="pre">fb_credentials.yml</span><
         <label for="great" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'great'} );">
             <input type="radio" name="rating" class="great" id="great" value="great" />
             <svg viewBox="0 0 24 24"><path d="M12,17.5C14.33,17.5 16.3,16.04 17.11,14H6.89C7.69,16.04 9.67,17.5 12,17.5M8.5,11A1.5,1.5 0 0,0 10,9.5A1.5,1.5 0 0,0 8.5,8A1.5,1.5 0 0,0 7,9.5A1.5,1.5 0 0,0 8.5,11M15.5,11A1.5,1.5 0 0,0 17,9.5A1.5,1.5 0 0,0 15.5,8A1.5,1.5 0 0,0 14,9.5A1.5,1.5 0 0,0 15.5,11M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
-            <p> Great! </p>
-
+            <span style="display: block;"> Great! </span>
         </label>
 
         <label for="didnt-work" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-work'} );">
             <input type="radio" name="rating" class="didnt-work" id="didnt-work" value="didnt-work" />
             <svg viewBox="0 0 24 24"><path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M16.18,7.76L15.12,8.82L14.06,7.76L13,8.82L14.06,9.88L13,10.94L14.06,12L15.12,10.94L16.18,12L17.24,10.94L16.18,9.88L17.24,8.82L16.18,7.76M7.82,12L8.88,10.94L9.94,12L11,10.94L9.94,9.88L11,8.82L9.94,7.76L8.88,8.82L7.82,7.76L6.76,8.82L7.82,9.88L6.76,10.94L7.82,12M12,14C9.67,14 7.69,15.46 6.89,17.5H17.11C16.31,15.46 14.33,14 12,14Z" /></svg>
-            <p> Didn't Work </p>
+            <span style="display: block;"> Didn't Work </span>
         </label>
 
         <label for="didnt-finish" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-finish'} );">
             <input type="radio" name="rating" class="didnt-finish" id="didnt-finish" value="didnt-finish" />
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%" viewBox="0 0 24 24"><path d="M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11M15.5,11A1.5,1.5 0 0,1 14,9.5A1.5,1.5 0 0,1 15.5,8A1.5,1.5 0 0,1 17,9.5A1.5,1.5 0 0,1 15.5,11M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M9,14H15A1,1 0 0,1 16,15A1,1 0 0,1 15,16H9A1,1 0 0,1 8,15A1,1 0 0,1 9,14Z" /></svg>
-            <p> Didn't Finish </p>
+            <span style="display: block;"> Didn't Finish </span>
         </label>
 
       </form>
@@ -772,12 +785,13 @@ into <code class="docutils literal"><span class="pre">fb_credentials.yml</span><
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/tutorial_basics.html">0.9.0</a></dd>
             <dd><a href="0.8.6/tutorial_basics.html">0.8.6</a></dd>
             <dd><a href="0.8.5/tutorial_basics.html">0.8.5</a></dd>
             <dd><a href="0.8.4/tutorial_basics.html">0.8.4</a></dd>
@@ -801,7 +815,7 @@ into <code class="docutils literal"><span class="pre">fb_credentials.yml</span><
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

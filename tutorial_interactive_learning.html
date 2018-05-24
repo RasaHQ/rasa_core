@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Interactive Learning &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>Interactive Learning &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,14 +30,14 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
         <link rel="next" title="Rasa Core without Python" href="tutorial_remote.html"/>
         <link rel="prev" title="Supervised Learning Tutorial" href="tutorial_supervised.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -114,22 +114,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Slot Filling and Common Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
@@ -243,7 +245,7 @@
 <p>This is the place to start if you have a great idea for a bot but you
 don&#8217;t have any conversations to use as training data. We will assume that
 you&#8217;ve already thought of what intents and entities you need (check out the
-<a class="reference external" href="http://nlu.rasa.ai/tutorial.html#tutorial-a-simple-restaurant-search-bot">Rasa NLU</a>
+<a class="reference external" href="http://nlu.rasa.com/tutorial.html#tutorial-a-simple-restaurant-search-bot">Rasa NLU</a>
 docs if you don&#8217;t know what those are).</p>
 <p class="last">We&#8217;re using this <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/master/examples/concertbot">Example Code on GitHub</a>.</p>
 </div>
@@ -452,6 +454,20 @@ The bot wants to [action_show_venue_reviews] due to the intent. Is this correct?
 <p>Now we type <code class="docutils literal"><span class="pre">2</span></code>, because it chose the wrong action, and we get a new
 prompt asking for the correct one. This also shows the probabilities the
 model has assigned to each of the actions.</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>what is the next action for the bot?
+
+     0                           action_listen    0.19
+     1                          action_restart    0.00
+     2                           utter_default    0.00
+     3                             utter_greet    0.03
+     4                           utter_goodbye    0.03
+     5                     utter_youarewelcome    0.02
+     6                  action_search_concerts    0.09
+     7                    action_search_venues    0.02
+     8             action_show_concert_reviews    0.29
+     9               action_show_venue_reviews    0.33
+</pre></div>
+</div>
 <p>In this case, the bot should <code class="docutils literal"><span class="pre">action_show_concert_reviews</span></code> (rather than venue
 reviews!) so we type <code class="docutils literal"><span class="pre">8</span></code> and hit enter.</p>
 <div class="admonition note">
@@ -506,20 +522,19 @@ learning how to make the conversation natural and flowing.</p>
         <label for="great" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'great'} );">
             <input type="radio" name="rating" class="great" id="great" value="great" />
             <svg viewBox="0 0 24 24"><path d="M12,17.5C14.33,17.5 16.3,16.04 17.11,14H6.89C7.69,16.04 9.67,17.5 12,17.5M8.5,11A1.5,1.5 0 0,0 10,9.5A1.5,1.5 0 0,0 8.5,8A1.5,1.5 0 0,0 7,9.5A1.5,1.5 0 0,0 8.5,11M15.5,11A1.5,1.5 0 0,0 17,9.5A1.5,1.5 0 0,0 15.5,8A1.5,1.5 0 0,0 14,9.5A1.5,1.5 0 0,0 15.5,11M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
-            <p> Great! </p>
-
+            <span style="display: block;"> Great! </span>
         </label>
 
         <label for="didnt-work" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-work'} );">
             <input type="radio" name="rating" class="didnt-work" id="didnt-work" value="didnt-work" />
             <svg viewBox="0 0 24 24"><path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M16.18,7.76L15.12,8.82L14.06,7.76L13,8.82L14.06,9.88L13,10.94L14.06,12L15.12,10.94L16.18,12L17.24,10.94L16.18,9.88L17.24,8.82L16.18,7.76M7.82,12L8.88,10.94L9.94,12L11,10.94L9.94,9.88L11,8.82L9.94,7.76L8.88,8.82L7.82,7.76L6.76,8.82L7.82,9.88L6.76,10.94L7.82,12M12,14C9.67,14 7.69,15.46 6.89,17.5H17.11C16.31,15.46 14.33,14 12,14Z" /></svg>
-            <p> Didn't Work </p>
+            <span style="display: block;"> Didn't Work </span>
         </label>
 
         <label for="didnt-finish" onclick="gtag('event', 'docs_tutorial_satisfaction', { event_category: 'core_docs_satisfaction', event_action: 'click', event_label: 'didnt-finish'} );">
             <input type="radio" name="rating" class="didnt-finish" id="didnt-finish" value="didnt-finish" />
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%" viewBox="0 0 24 24"><path d="M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11M15.5,11A1.5,1.5 0 0,1 14,9.5A1.5,1.5 0 0,1 15.5,8A1.5,1.5 0 0,1 17,9.5A1.5,1.5 0 0,1 15.5,11M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M9,14H15A1,1 0 0,1 16,15A1,1 0 0,1 15,16H9A1,1 0 0,1 8,15A1,1 0 0,1 9,14Z" /></svg>
-            <p> Didn't Finish </p>
+            <span style="display: block;"> Didn't Finish </span>
         </label>
 
       </form>
@@ -566,12 +581,13 @@ learning how to make the conversation natural and flowing.</p>
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/tutorial_interactive_learning.html">0.9.0</a></dd>
             <dd><a href="0.8.6/tutorial_interactive_learning.html">0.8.6</a></dd>
             <dd><a href="0.8.5/tutorial_interactive_learning.html">0.8.5</a></dd>
             <dd><a href="0.8.4/tutorial_interactive_learning.html">0.8.4</a></dd>
@@ -595,7 +611,7 @@ learning how to make the conversation natural and flowing.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

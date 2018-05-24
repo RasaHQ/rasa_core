@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tracking Conversation State &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>Tracking Conversation State &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,16 +30,16 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
         <link rel="next" title="Migration Guide" href="migrations.html"/>
-        <link rel="prev" title="Custom Policies" href="policies.html"/> 
+        <link rel="prev" title="Policies" href="policies.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -106,22 +106,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Slot Filling and Common Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Policies</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tracking Conversation State</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#persisting-trackers">Persisting Trackers:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#serialisation">Serialisation</a></li>
@@ -290,15 +292,31 @@ Here&#8217;s a simple example of a dialogue as it would be stored in the Tracker
 17
 18
 19
-20</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>  
-  <span class="nt">&quot;py/object&quot;</span><span class="p">:</span><span class="s2">&quot;rasa_core.conversation.Dialogue&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;events&quot;</span><span class="p">:[</span>
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;py/object&quot;</span><span class="p">:</span> <span class="s2">&quot;rasa_core.conversation.Dialogue&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nt">&quot;py/object&quot;</span><span class="p">:</span> <span class="s2">&quot;rasa_core.events.UserUttered&quot;</span><span class="p">,</span>
       <span class="nt">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[],</span>
       <span class="nt">&quot;intent&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;greet&quot;</span><span class="p">,</span>
         <span class="nt">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">1.0</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;parse_data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;intent&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;greet&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">1.0</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;/greet&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[]</span>
       <span class="p">},</span>
       <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;/greet&quot;</span>
     <span class="p">},</span>
@@ -308,7 +326,7 @@ Here&#8217;s a simple example of a dialogue as it would be stored in the Tracker
       <span class="nt">&quot;unpredictable&quot;</span><span class="p">:</span> <span class="kc">false</span>
     <span class="p">}</span>
   <span class="p">],</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;hello_world&quot;</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;hello_world&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
@@ -326,7 +344,7 @@ Here&#8217;s a simple example of a dialogue as it would be stored in the Tracker
         <a href="migrations.html" class="btn btn-neutral float-right" title="Migration Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="policies.html" class="btn btn-neutral" title="Custom Policies" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="policies.html" class="btn btn-neutral" title="Policies" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -353,12 +371,13 @@ Here&#8217;s a simple example of a dialogue as it would be stored in the Tracker
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/state.html">0.9.0</a></dd>
             <dd><a href="0.8.6/state.html">0.8.6</a></dd>
             <dd><a href="0.8.5/state.html">0.8.5</a></dd>
             <dd><a href="0.8.4/state.html">0.8.4</a></dd>
@@ -382,7 +401,7 @@ Here&#8217;s a simple example of a dialogue as it would be stored in the Tracker
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

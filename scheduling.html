@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scheduling Reminders &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>Scheduling Reminders &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,14 +30,14 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
         <link rel="next" title="Agent" href="api/agent.html"/>
         <link rel="prev" title="Connecting to messaging &amp; voice platforms" href="connectors.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -106,10 +106,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Slot Filling and Common Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Scheduling Reminders</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#scheduling-the-reminder">Scheduling the reminder</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#what-happens-when-the-reminder-is-triggered">What happens when the reminder is triggered</a></li>
@@ -120,12 +121,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
@@ -242,7 +244,7 @@ feature if you are running the framework as a http server.</p>
 <p>One of your users got halfway through a task and then stopped messaging your bot.
 Now you want to remind them to get back to you.
 Don&#8217;t worry! Rasa has you covered.</p>
-<p>To schedule an action for later execution, there is a special event called <code class="docutils literal"><span class="pre">Reminder</span></code>.
+<p>To schedule an action for later execution, there is a special event called <code class="docutils literal"><span class="pre">ReminderScheduled</span></code>.
 Let&#8217;s make our example a bit more specific:
 We want a confirmation to book a restaurant table - without it the reservation won&#8217;t be made.</p>
 <div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -271,7 +273,7 @@ the user would directly send a confirmation - but sometimes they might forget to
 <p>The reminder will be scheduled when it is returned as an event after executing an action.
 Here is an example implementation for our <code class="docutils literal"><span class="pre">action_confirm_booking</span></code>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="k">import</span> <span class="n">Action</span>
-<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Reminder</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">ReminderScheduled</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 
@@ -281,7 +283,7 @@ Here is an example implementation for our <code class="docutils literal"><span c
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
         <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_message</span><span class="p">(</span><span class="s2">&quot;Do you want to confirm your booking at Papi&#39;s pizza?&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">Reminder</span><span class="p">(</span><span class="s2">&quot;action_booking_reminder&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">5</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">ReminderScheduled</span><span class="p">(</span><span class="s2">&quot;action_booking_reminder&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">5</span><span class="p">)]</span>
 </pre></div>
 </div>
 <p>This action schedules a reminder in 5 hours. The reminder will trigger the action <code class="docutils literal"><span class="pre">action_booking_reminder</span></code>.</p>
@@ -291,7 +293,7 @@ Here is an example implementation for our <code class="docutils literal"><span c
 <p>First of all, the action whose name was part of the reminder will get executed. An implementation for our
 example could look like this:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="k">import</span> <span class="n">Action</span>
-<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Reminder</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">ReminderScheduled</span>
 
 
 <span class="k">class</span> <span class="nc">ActionBookingReminder</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
@@ -305,7 +307,7 @@ example could look like this:</p>
 </div>
 <p>By default, reminders will be cancelled if the user sends <em>any</em> message to the bot before the scheduled reminder time.
 If you do not want that to happen you need so set the <code class="docutils literal"><span class="pre">kill_on_user_message</span></code> flag when creating the reminder:
-<code class="docutils literal"><span class="pre">Reminder(&quot;action_booking_reminder&quot;,</span> <span class="pre">datetime.now()</span> <span class="pre">+</span> <span class="pre">timedelta(hours=5),</span> <span class="pre">kill_on_user_message=False)</span></code></p>
+<code class="docutils literal"><span class="pre">ReminderScheduled(&quot;action_booking_reminder&quot;,</span> <span class="pre">datetime.now()</span> <span class="pre">+</span> <span class="pre">timedelta(hours=5),</span> <span class="pre">kill_on_user_message=False)</span></code></p>
 <p>After the action is triggered, the action execution continues as though the user had sent the bot an
 empty message.
 So in our stories we need to define what happens after the reminder was executed:</p>
@@ -390,12 +392,13 @@ So make sure to add a story into your training data that starts with the action 
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/scheduling.html">0.9.0</a></dd>
             <dd><a href="0.8.6/scheduling.html">0.8.6</a></dd>
             <dd><a href="0.8.5/scheduling.html">0.8.5</a></dd>
             <dd><a href="0.8.4/scheduling.html">0.8.4</a></dd>
@@ -419,7 +422,7 @@ So make sure to add a story into your training data that starts with the action 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Migration Guide &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>Migration Guide &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,14 +30,14 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
         <link rel="next" title="Change Log" href="changelog.html"/>
         <link rel="prev" title="Tracking Conversation State" href="state.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -106,24 +106,27 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Slot Filling and Common Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Migration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#x-to-0-9-0">0.8.x to 0.9.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#x-to-0-8-0">0.7.x to 0.8.0</a></li>
 </ul>
 </li>
@@ -235,6 +238,61 @@
 <span id="migration"></span><h1>Migration Guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h1>
 <p>This page contains information about changes between major versions and
 how you can migrate from one version to another.</p>
+<div class="section" id="x-to-0-9-0">
+<h2>0.8.x to 0.9.0<a class="headerlink" href="#x-to-0-9-0" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is a release <strong>breaking backwards compatibility</strong>.
+Unfortunately, it is not possible to load
+previously trained models (as the stored file formats have changed as
+well as the configuration and metadata). Please make sure to retrain
+a model before trying to use it with this improved version.</p>
+</div>
+<ul>
+<li><p class="first">loading data should be done either using</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core</span> <span class="kn">import</span> <span class="n">training</span>
+
+<span class="n">training_data</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or using an agent instance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">training_data</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is deprecated to pass the training data file directly to <code class="docutils literal"><span class="pre">agent.train</span></code>.
+Instead, the data should be loaded in one of the above ways and then passed
+to train.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">ScoringPolicy</span></code> got removed and replaced by <code class="docutils literal"><span class="pre">AugmentedMemoizationPolicy</span></code>
+which is similar, but is able to match more states to states it has seen
+during trainer (e.g. it is able to handle slots better)</p>
+</li>
+<li><p class="first">if you use custom featurizers, you need to
+<strong>pass them directly to the policy</strong> that should use them.
+This allows the policies to use different featurizers. Passing a featurizer
+is <strong>optional</strong>. Accordingly, the <code class="docutils literal"><span class="pre">max_history</span></code> parameter moved to that
+featurizer:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.featurizers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">MaxHistoryTrackerFeaturizer</span><span class="p">,</span>
+                                   <span class="n">BinarySingleStateFeaturizer</span><span class="p">)</span>
+
+<span class="n">featurizer</span> <span class="o">=</span> <span class="n">MaxHistoryTrackerFeaturizer</span><span class="p">(</span><span class="n">BinarySingleStateFeaturizer</span><span class="p">(),</span>
+                                         <span class="n">max_history</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">domain_file</span><span class="p">,</span>
+              <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(</span><span class="n">max_history</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+                        <span class="n">KerasPolicy</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>If no featurizer is passed during policy creation, the policies default
+featurizer will be used. The <cite>MemoizationPolicy</cite> allows passing in the
+<cite>max_history</cite> parameter directly, without creating a featurizer.</p>
+</li>
+<li><p class="first">the ListSlot now stores a list of entities (with the same name)
+present in an utterance</p>
+</li>
+</ul>
+</div>
 <div class="section" id="x-to-0-8-0">
 <h2>0.7.x to 0.8.0<a class="headerlink" href="#x-to-0-8-0" title="Permalink to this headline">¶</a></h2>
 <ul>
@@ -328,12 +386,13 @@ deprecated). Instead of writing</p>
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/migrations.html">0.9.0</a></dd>
             <dd><a href="0.8.6/migrations.html">0.8.6</a></dd>
             <dd><a href="0.8.5/migrations.html">0.8.5</a></dd>
             <dd><a href="0.8.4/migrations.html">0.8.4</a></dd>
@@ -357,7 +416,7 @@ deprecated). Instead of writing</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

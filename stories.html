@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Stories - The Training Data &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>Stories - The Training Data &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,15 +30,15 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
-        <link rel="next" title="Common Patterns" href="patterns.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
+        <link rel="next" title="Slot Filling and Common Patterns" href="patterns.html"/>
         <link rel="prev" title="Domain, Slots, and Actions" href="domains.html"/> 
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -110,22 +110,24 @@
 <li class="toctree-l2"><a class="reference internal" href="#visualization-of-stories">Visualization of Stories</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Slot Filling and Common Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
@@ -242,8 +244,8 @@ shows you how to define them and how to visualise them.</p>
 <div class="highlight-md"><div class="highlight"><pre><span></span><span class="gu">##</span> story_07715946                     &lt;!-- name of the story - just for debugging --&gt;
 <span class="k">*</span> greet
    <span class="k">-</span> action_ask_howcanhelp
-<span class="k">*</span> inform{&quot;location&quot;: &quot;rome&quot;, &quot;price&quot;: &quot;cheap&quot;}
-   <span class="k">-</span> action_on_it                     &lt;!-- user utterance, in format _intent[entities] --&gt;
+<span class="k">*</span> inform{&quot;location&quot;: &quot;rome&quot;, &quot;price&quot;: &quot;cheap&quot;}  &lt;!-- user utterance, in format intent{entities} --&gt;
+   <span class="k">-</span> action_on_it
    <span class="k">-</span> action_ask_cuisine
 <span class="k">*</span> inform{&quot;cuisine&quot;: &quot;spanish&quot;}
    <span class="k">-</span> action_ask_numpeople             &lt;!-- action of the bot to execute --&gt;
@@ -270,6 +272,13 @@ The end of a story is denoted by a newline, and then a new story starts again wi
 <span class="k">*</span> deny
   <span class="k">-</span> action_handle_denial
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can also <strong>spread your stories across multiple files</strong> and specify the
+folder containing the files for most of the scripts (e.g. training,
+visualization). The stories will be treated as if they would have
+been part of one large file.</p>
 </div>
 </div>
 <div class="section" id="visualization-of-stories">
@@ -340,7 +349,7 @@ given for the action in the domain (e.g. <code class="docutils literal"><span cl
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="patterns.html" class="btn btn-neutral float-right" title="Common Patterns" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="patterns.html" class="btn btn-neutral float-right" title="Slot Filling and Common Patterns" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="domains.html" class="btn btn-neutral" title="Domain, Slots, and Actions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -370,12 +379,13 @@ given for the action in the domain (e.g. <code class="docutils literal"><span cl
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/stories.html">0.9.0</a></dd>
             <dd><a href="0.8.6/stories.html">0.8.6</a></dd>
             <dd><a href="0.8.5/stories.html">0.8.5</a></dd>
             <dd><a href="0.8.4/stories.html">0.8.4</a></dd>
@@ -399,7 +409,7 @@ given for the action in the domain (e.g. <code class="docutils literal"><span cl
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

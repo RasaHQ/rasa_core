@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>HTTP server &mdash; Rasa Core 0.8.6 documentation</title>
+  <title>HTTP server &mdash; Rasa Core 0.9.0 documentation</title>
   
 
   
@@ -30,14 +30,14 @@
   
     <link rel="stylesheet" href="_static/banner.css" type="text/css" />
   
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.8.6 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.0 documentation" href="index.html"/>
         <link rel="next" title="Connecting to messaging &amp; voice platforms" href="connectors.html"/>
         <link rel="prev" title="Plumbing - How it all fits together" href="plumbing.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.8
+                0.9
               </div>
             
           
@@ -106,7 +106,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Slot Filling and Common Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">HTTP server</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
@@ -123,18 +123,20 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
@@ -249,11 +251,6 @@
 data, and train a model. You can then use the trained model for remote code
 execution! See <a class="reference internal" href="tutorial_basics.html#tutorial-basics"><span class="std std-ref">Building a Simple Bot</span></a> for an introduction.</p>
 </div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">The HTTP API is still experimental and we&#8217;d appreciate your feedback (e.g.
-via <a class="reference external" href="https://gitter.im/RasaHQ/rasa_core">Gitter</a>).</p>
-</div>
 <p>The HTTP api exists to make it easy for non-python projects to use Rasa Core.</p>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
@@ -264,6 +261,11 @@ which actions you need to run. After running these actions, you need to notify
 the framework that you executed them and tell the model about any update of the
 internal dialogue state for that user. All of these interactions are done using
 a HTTP REST interface.</p>
+<p>You can also use a single, simpler endpoint called <cite>/respond</cite>, which just returns
+all of the messages your bot should send back to the user. In general, this only
+works if all of your actions are simple utterances (messages sent to the user).
+It can make use of custom actions, but then these <em>have</em> to be implemented in
+python and executed on the machine that runs the server.</p>
 <p>To activate the remote mode, include</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">action_factory</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remote</span>
 </pre></div>
@@ -515,6 +517,44 @@ wait for the next user input.</p>
 </table>
 </dd></dl>
 
+<dl class="post">
+<dt id="post--conversations-(str-sender_id)-respond">
+<code class="descname">POST </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/respond</code><a class="headerlink" href="#post--conversations-(str-sender_id)-respond" title="Permalink to this definition">¶</a></dt>
+<dd><p>Notify the dialogue engine that the user posted a new message, and get
+a list of response messages the bot should send back.
+You must <code class="docutils literal"><span class="pre">POST</span></code> data in this format <code class="docutils literal"><span class="pre">'{&quot;query&quot;:&quot;&lt;your</span> <span class="pre">text</span> <span class="pre">to</span> <span class="pre">parse&gt;&quot;}'</span></code>,
+you can do this with</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl -XPOST localhost:5005/conversations/default/respond -d <span class="se">\</span>
+  <span class="s1">&#39;{&quot;query&quot;:&quot;hello there&quot;}&#39;</span> <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;Hi! welcome to the pizzabot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;order pizza&quot;</span><span class="p">,</span> <span class="s2">&quot;payload&quot;</span><span class="o">:</span> <span class="s2">&quot;/start_order&quot;</span><span class="p">},</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="get">
 <dt id="get--conversations-(str-sender_id)-tracker">
 <code class="descname">GET </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/tracker</code><a class="headerlink" href="#get--conversations-(str-sender_id)-tracker" title="Permalink to this definition">¶</a></dt>
@@ -708,6 +748,35 @@ endpoint.</p>
 </dd></dl>
 
 <dl class="get">
+<dt id="get--conversations">
+<code class="descname">GET </code><code class="descname">/conversations</code><a class="headerlink" href="#get--conversations" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the sender ids of all the running conversations.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl http://localhost:5005/conversations <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
 <dt id="get--version">
 <code class="descname">GET </code><code class="descname">/version</code><a class="headerlink" href="#get--version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Version of Rasa Core that is currently running.</p>
@@ -795,12 +864,13 @@ as a parameter:</p>
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: 0.8.6
+        v: 0.9.0
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="0.9.0/http.html">0.9.0</a></dd>
             <dd><a href="0.8.6/http.html">0.8.6</a></dd>
             <dd><a href="0.8.5/http.html">0.8.5</a></dd>
             <dd><a href="0.8.4/http.html">0.8.4</a></dd>
@@ -824,7 +894,7 @@ as a parameter:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6',
+            VERSION:'0.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
