@@ -358,6 +358,11 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 </div>
 <div class="section" id="fixed">
 <h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>persistence of training data collected during online learning if default
+file path is used</li>
+<li>the <code class="docutils literal"><span class="pre">agent()</span></code> method used in some <code class="docutils literal"><span class="pre">rasa_core.server</span></code> endpoints is re-run at every new call of the <code class="docutils literal"><span class="pre">ensure_loaded_agent</span></code> decorator</li>
+</ul>
 </div>
 </div>
 <div class="section" id="id1">
