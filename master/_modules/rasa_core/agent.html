@@ -377,16 +377,20 @@
                   <span class="n">resource_name</span><span class="p">,</span>  <span class="c1"># type: Text</span>
                   <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># type: bool</span>
                   <span class="n">augmentation_factor</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>  <span class="c1"># type: int</span>
-                  <span class="n">max_number_of_trackers</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>  <span class="c1"># type: Optional[int]</span>
+                  <span class="n">max_number_of_trackers</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>  <span class="c1"># type: int</span>
                   <span class="n">tracker_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[int]</span>
-                  <span class="n">use_story_concatenation</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># type: bool</span>
+                  <span class="n">use_story_concatenation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># type: bool</span>
+                  <span class="n">exclusion_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">exclusion_percentage</span><span class="o">=</span><span class="kc">None</span>
                   <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; List[DialogueStateTracker]</span>
         <span class="sd">&quot;&quot;&quot;Load training data from a resource.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">training</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="p">,</span>
                                   <span class="n">augmentation_factor</span><span class="p">,</span> <span class="n">max_number_of_trackers</span><span class="p">,</span>
-                                  <span class="n">tracker_limit</span><span class="p">,</span> <span class="n">use_story_concatenation</span><span class="p">)</span></div>
+                                  <span class="n">tracker_limit</span><span class="p">,</span> <span class="n">use_story_concatenation</span><span class="p">,</span>
+                                  <span class="n">exclusion_file</span><span class="o">=</span><span class="n">exclusion_file</span><span class="p">,</span>
+                                  <span class="n">exclusion_percentage</span><span class="o">=</span><span class="n">exclusion_percentage</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.train"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
               <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
