@@ -22,11 +22,69 @@ from rasa_core.policies.memoization import MemoizationPolicy
 from rasa_core.processor import MessageProcessor
 from rasa_core.tracker_store import InMemoryTrackerStore, TrackerStore
 from rasa_core.trackers import DialogueStateTracker
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import logging
+from threading import Thread
+
+from typing import Optional, Callable, Text, List
+
+from rasa_core import utils
+from rasa_core.agent import Agent
+from rasa_core.channels import InputChannel, UserMessage
+
+try:
+    # noinspection PyCompatibility
+    from Queue import Queue, Empty
+except ImportError:
+    # noinspection PyCompatibility
+    from queue import Queue, Empty
 
 logger = logging.getLogger(__name__)
 
 if typing.TYPE_CHECKING:
     from rasa_core.interpreter import NaturalLanguageInterpreter as NLI
+
+
+class MessageQueue(object):
+    def enqueue(self, message):
+        # type: (UserMessage) -> None
+        """Add a message to the queue."""
+        raise NotImplementedError
+
+    def dequeue(self):
+        # type: () -> Optional[UserMessage]
+        """Remove a message from the queue."""
+        raise NotImplementedError
+
+
+class InMemoryMessageQueue(MessageQueue):
+    def __init__(self):
+        self.queue = Queue()
+
+    def enqueue(self, message):
+        # type: (UserMessage) -> None
+        """Add a message to the queue to be handled."""
+        self.queue.put(message)
+
+    def dequeue(self):
+        # type: () -> Optional[UserMessage]
+        """Remove a message from the queue.
+
+        The one who removes it should also handle it!"""
+
+        try:
+            return self.queue.get(block=True)
+        except Empty:
+            return None
+
+    def join(self):
+        # type: () -> None
+        """Wait until all messages in the queue have been processed."""
+        self.queue.join()
 
 
 class Agent(object):
@@ -113,6 +171,40 @@ class Agent(object):
         return processor.handle_message(
                 UserMessage(text_message, output_channel, sender_id))
 
+    def _create_async_processors(
+            self,
+            input_channel,  # type: InputChannel
+            message_queue,  # type: Queue
+            num_processing_threads=1,  # type: int
+            preprocessor=None  # type: Optional[Callable[[Text], Text]]
+
+    ):
+        # type: (...) -> List[Thread]
+        """Handle the messages coming from the input channel asynchronously.
+
+        Spawns a number of threads to handle the messages that reach
+        the input channel."""
+
+        threads = []
+        # hook up input channel
+        listener_thread = Thread(target=input_channel.start_async_listening,
+                                 args=[message_queue])
+        listener_thread.daemon = True
+        listener_thread.start()
+        threads.append(listener_thread)
+
+        # create message processors
+        for i in range(0, num_processing_threads):
+            message_processor = self._create_processor(preprocessor)
+            processor_thread = Thread(
+                    target=message_processor.handle_channel_asynchronous,
+                    args=[message_queue])
+            processor_thread.daemon = True
+            processor_thread.start()
+            threads.append(processor_thread)
+
+            return threads
+
     def start_message_handling(
             self,
             text_message,   # type: Text
@@ -144,13 +236,31 @@ class Agent(object):
     def handle_channel(
             self,
             input_channel,  # type: InputChannel
-            message_preprocessor=None   # type: Optional[Callable[[Text], Text]]
+            message_queue=None,  # type: Queue
+            num_processing_threads=None,  # type: Optional[int]
+            message_preprocessor=None,  # type: Optional[Callable[[Text], Text]]
+            serve_forever=True  # type: bool
     ):
         # type: (...) -> None
-        """Handle messages coming from the channel."""
+        """Handle the messages coming from the input channel asynchronously.
 
-        processor = self._create_processor(message_preprocessor)
-        processor.handle_channel(input_channel)
+        Messages are handled in child threads. Spawns a number of threads to
+        handle the messages that reach the input channel."""
+
+        if not num_processing_threads:
+            # by default we use as many threads as we have cpus
+            import multiprocessing
+            num_processing_threads = multiprocessing.cpu_count()
+
+        if message_queue is None:
+            message_queue = InMemoryMessageQueue()
+
+        threads = self._create_async_processors(
+                input_channel, message_queue, num_processing_threads,
+                message_preprocessor)
+
+        if serve_forever:
+            utils.wait_for_threads(threads)
 
     def toggle_memoization(
             self,
