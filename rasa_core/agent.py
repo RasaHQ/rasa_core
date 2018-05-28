@@ -6,13 +6,17 @@ from __future__ import unicode_literals
 import logging
 import os
 import shutil
+from threading import Thread
 
 import typing
 from six import string_types
-from typing import Text, List, Optional, Callable, Any, Dict, Union
+from typing import Any, Dict, Union
+from typing import Optional, Callable, Text, List
 
 from rasa_core import training
-from rasa_core.channels import UserMessage, InputChannel, OutputChannel
+from rasa_core import utils
+from rasa_core.channels import InputChannel, UserMessage
+from rasa_core.channels import OutputChannel
 from rasa_core.domain import TemplateDomain, Domain, check_domain_sanity
 from rasa_core.events import Event
 from rasa_core.interpreter import NaturalLanguageInterpreter
@@ -22,19 +26,6 @@ from rasa_core.policies.memoization import MemoizationPolicy
 from rasa_core.processor import MessageProcessor
 from rasa_core.tracker_store import InMemoryTrackerStore, TrackerStore
 from rasa_core.trackers import DialogueStateTracker
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
-import logging
-from threading import Thread
-
-from typing import Optional, Callable, Text, List
-
-from rasa_core import utils
-from rasa_core.agent import Agent
-from rasa_core.channels import InputChannel, UserMessage
 
 try:
     # noinspection PyCompatibility
