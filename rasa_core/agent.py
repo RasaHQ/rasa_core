@@ -237,7 +237,7 @@ class Agent(object):
             self,
             input_channel,  # type: InputChannel
             message_queue=None,  # type: Queue
-            num_processing_threads=None,  # type: Optional[int]
+            num_processing_threads=10,  # type: Optional[int]
             message_preprocessor=None,  # type: Optional[Callable[[Text], Text]]
             serve_forever=True  # type: bool
     ):
