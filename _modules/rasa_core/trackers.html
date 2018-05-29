@@ -401,8 +401,8 @@
                 <span class="n">undo_till_previous</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">,</span> <span class="n">applied_events</span><span class="p">)</span>
                 <span class="n">undo_till_previous</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">applied_events</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">TopicSet</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The TopicSet events are no longer in use, and &quot;</span>
-                            <span class="s2">&quot;will be deprecated in future&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Topics are deprecated, therefore the TopicSet &quot;</span>
+                            <span class="s2">&quot;event will be ignored&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">applied_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">applied_events</span></div>
