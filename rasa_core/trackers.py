@@ -46,7 +46,8 @@ class DialogueStateTracker(object):
     def __init__(self, sender_id, slots,
                  topics=None,
                  default_topic=None,
-                 max_event_history=None):
+                 max_event_history=None,
+                 block_history={}):
         """Initialize the tracker.
 
         A set of events can be stored externally, and we will run through all
@@ -80,6 +81,7 @@ class DialogueStateTracker(object):
         self.latest_action_name = None
         self.latest_message = None
         self.latest_bot_utterance = None
+        self.block_history = block_history
         self._reset()
 
     ###
@@ -187,7 +189,8 @@ class DialogueStateTracker(object):
         return DialogueStateTracker(UserMessage.DEFAULT_SENDER_ID,
                                     self.slots.values(),
                                     self.topics,
-                                    self.default_topic)
+                                    self.default_topic,
+                                    block_history=copy.deepcopy(self.block_history))
 
     def generate_all_prior_trackers(self):
         # type: () -> Generator[DialogueStateTracker, None, None]

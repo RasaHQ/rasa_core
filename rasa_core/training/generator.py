@@ -138,10 +138,19 @@ class TrainingDataGenerator(object):
                     # that can now be used for further story steps
                     # that start with the checkpoint this step ended with
                     for end in step.end_checkpoints:
-                        active_trackers[end.name].extend(trackers)
-
+                        new_trackers = []
+                        for trac in trackers:
+                            track = trac.copy()
+                            track.block_history[len(track.events)] = step.block_name
+                            new_trackers.append(track)
+                        active_trackers[end.name].extend(new_trackers)
                     if not step.end_checkpoints:
-                        active_trackers[STORY_END].extend(trackers)
+                        new_trackers = []
+                        for trac in trackers:
+                            track = trac.copy()
+                            track.block_history[len(track.events)] = step.block_name
+                            new_trackers.append(track)
+                        active_trackers[STORY_END].extend(new_trackers)
 
             # trackers that reached the end of a story
             completed = [t for t in active_trackers[STORY_END]]
