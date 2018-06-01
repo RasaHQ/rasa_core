@@ -141,14 +141,14 @@ class TrainingDataGenerator(object):
                         new_trackers = []
                         for trac in trackers:
                             track = trac.copy()
-                            track.block_history[len(track.events)] = step.block_name
-                            new_trackers.append(track)
+                            track.block_history[len(track.applied_events())] = (end.name, step.block_name)
+we                            new_trackers.append(track)
                         active_trackers[end.name].extend(new_trackers)
                     if not step.end_checkpoints:
                         new_trackers = []
                         for trac in trackers:
                             track = trac.copy()
-                            track.block_history[len(track.events)] = step.block_name
+                            track.block_history[len(track.applied_events())] = (None, step.block_name)
                             new_trackers.append(track)
                         active_trackers[STORY_END].extend(new_trackers)
 

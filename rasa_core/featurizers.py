@@ -379,7 +379,8 @@ class TrackerFeaturizer(object):
         self.state_featurizer.prepare_from_domain(domain)
 
         (trackers_as_states,
-         trackers_as_actions) = self.training_states_and_actions(trackers,
+         trackers_as_actions,
+         trackers_hist) = self.training_states_and_actions(trackers,
                                                                  domain)
 
         X, true_lengths = self._featurize_states(trackers_as_states)
@@ -552,12 +553,14 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
 
         trackers_as_states = []
         trackers_as_actions = []
+        trackers_histories = []
 
         for tracker in trackers:
             states = self._create_states(tracker, domain)
 
+            sorted_history_keys = np.sort(list(tracker.block_history.keys()))
             idx = 0
-            for event in tracker.applied_events():
+            for evdx, event in enumerate(tracker.applied_events()):
                 if isinstance(event, ActionExecuted):
                     if not event.unpredictable:
                         # only actions which can be
@@ -566,19 +569,26 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
                             states[:idx + 1], self.max_history)
                         trackers_as_states.append(sliced_states)
                         trackers_as_actions.append([event.action_name])
+
+                        # keep only stories which have already happened/are in the process of happening
+                        relevant_hist_keys = sorted_history_keys[:np.sum(sorted_history_keys < evdx)+1]
+                        trackers_histories.append({key: tracker.block_history[key] for key in relevant_hist_keys})
+
                     idx += 1
 
         if self.remove_duplicates:
             logger.debug("Got {} action examples."
                          "".format(len(trackers_as_actions)))
             (trackers_as_states,
-             trackers_as_actions) = self._remove_duplicate_states(
+             trackers_as_actions,
+             trackers_histories) = self._remove_duplicate_states(
                                         trackers_as_states,
-                                        trackers_as_actions)
+                                        trackers_as_actions,
+                                        trackers_histories)
             logger.debug("Deduplicated to {} unique action examples."
                          "".format(len(trackers_as_actions)))
 
-        return trackers_as_states, trackers_as_actions
+        return trackers_as_states, trackers_as_actions, trackers_histories
 
     def prediction_states(self,
                           trackers,  # type: List[DialogueStateTracker]
@@ -598,6 +608,7 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
     def _remove_duplicate_states(
             trackers_as_states,  # type: List[List[Dict[Text, float]]]
             trackers_as_actions,  # type: List[List[Text]]
+            trackers_histories  #type: List[Dict[int, tuple[text,text]]]
     ):
         # type: (...) -> Tuple[List[List[Dict]], List[List[Dict]]]
         """Removes states that create equal featurizations.
@@ -605,15 +616,18 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
         From multiple states that create equal featurizations
         we only need to keep one."""
 
-        hashed_featurizations = set()
+        hashed_featurizations = []
 
         # collected trackers_as_states that created different featurizations
         unique_trackers_as_states = []
         unique_trackers_as_actions = []
+        unique_trackers_histories = []
 
         for (tracker_states,
-             tracker_actions) in zip(trackers_as_states,
-                                     trackers_as_actions):
+             tracker_actions,
+             tracker_histories) in zip(trackers_as_states,
+                                       trackers_as_actions,
+                                       trackers_histories):
 
             frozen_states = tuple((s if s is None else frozenset(s.items())
                                    for s in tracker_states))
@@ -623,8 +637,11 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
             # only continue with tracker_states that created a
             # hashed_featurization we haven't observed
             if hashed not in hashed_featurizations:
-                hashed_featurizations.add(hashed)
+                hashed_featurizations.append(hashed)
                 unique_trackers_as_states.append(tracker_states)
                 unique_trackers_as_actions.append(tracker_actions)
-
-        return unique_trackers_as_states, unique_trackers_as_actions
+                unique_trackers_histories.append([tracker_histories])
+            else:
+                same_idx = hashed_featurizations.index(hashed)
+                unique_trackers_histories[same_idx].append(trackers_histories)
+        return unique_trackers_as_states, unique_trackers_as_actions, unique_trackers_histories
