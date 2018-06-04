@@ -89,9 +89,11 @@ class Policy(object):
 
         return training_data
 
-    def _check_for_clashes(self, X, y, histories):
+    def _check_for_clashes(self, X, y, trackers):
         X_sub = []
         any_clashes = False
+        print(trackers)
+        exit(1)
         for idx, X_one in enumerate(X):
             copies = np.argwhere([(X_one == x).all() for x in X_sub])
             if len(copies == 0):

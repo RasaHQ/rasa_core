@@ -380,12 +380,13 @@ class TrackerFeaturizer(object):
 
         (trackers_as_states,
          trackers_as_actions,
-         trackers_hist) = self.training_states_and_actions(trackers,
+         trackers_hist,
+         trackers_full) = self.training_states_and_actions(trackers,
                                                                  domain)
         X, true_lengths = self._featurize_states(trackers_as_states)
         y = self._featurize_labels(trackers_as_actions, domain)
 
-        return DialogueTrainingData(X, y, true_lengths, histories=trackers_hist)
+        return DialogueTrainingData(X, y, true_lengths, histories=trackers_hist, trackers=trackers)
 
     def prediction_states(self,
                           trackers,  # type: List[DialogueStateTracker]
@@ -553,6 +554,7 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
         trackers_as_states = []
         trackers_as_actions = []
         trackers_histories = []
+        trackers_keep = []
 
         for tracker in trackers:
             states = self._create_states(tracker, domain)
@@ -575,21 +577,23 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
                         relevant_hist_keys = np.array(sorted_history_keys)[sorted_history_keys > earliest_event]
                         relevant_hist_keys = relevant_hist_keys[:np.sum(relevant_hist_keys < latest_event)+1]
                         trackers_histories.append({key: tracker.block_history[key] for key in relevant_hist_keys})
-
+                        trackers_keep.append(tracker)
                     idx += 1
         if self.remove_duplicates:
             logger.debug("Got {} action examples."
                          "".format(len(trackers_as_actions)))
             (trackers_as_states,
              trackers_as_actions,
-             trackers_histories) = self._remove_duplicate_states(
+             trackers_histories,
+             trackers_keep) = self._remove_duplicate_states(
                                         trackers_as_states,
                                         trackers_as_actions,
-                                        trackers_histories)
+                                        trackers_histories,
+                                        trackers_keep)
             logger.debug("Deduplicated to {} unique action examples."
                          "".format(len(trackers_as_actions)))
 
-        return trackers_as_states, trackers_as_actions, trackers_histories
+        return trackers_as_states, trackers_as_actions, trackers_histories, trackers_keep
 
     def prediction_states(self,
                           trackers,  # type: List[DialogueStateTracker]
@@ -609,7 +613,8 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
     def _remove_duplicate_states(
             trackers_as_states,  # type: List[List[Dict[Text, float]]]
             trackers_as_actions,  # type: List[List[Text]]
-            trackers_histories  #type: List[Dict[int, tuple[text,text]]]
+            trackers_histories,  #type: List[Dict[int, tuple[text,text]]]
+            trackers_keep
     ):
         # type: (...) -> Tuple[List[List[Dict]], List[List[Dict]]]
         """Removes states that create equal featurizations.
@@ -624,13 +629,16 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
         unique_trackers_as_states = []
         unique_trackers_as_actions = []
         unique_trackers_histories = []
+        unique_trackers = []
         idx = 0
         all = len(trackers_as_actions)
         for (tracker_states,
              tracker_actions,
-             tracker_histories) in zip(trackers_as_states,
+             tracker_histories,
+             tracker) in zip(trackers_as_states,
                                        trackers_as_actions,
-                                       trackers_histories):
+                                       trackers_histories,
+                                       trackers_keep):
             idx += 1
 
             frozen_states = tuple((s if s is None else frozenset(s.items())
@@ -646,10 +654,11 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
                 unique_trackers_as_states.append(tracker_states)
                 unique_trackers_as_actions.append(tracker_actions)
                 unique_trackers_histories.append([tracker_histories[max(tracker_histories.keys())]])
+                unique_trackers.append([tracker])
             else:
                 same_idx = hash2idx[hashed]
                 last_story_block = tracker_histories[max(tracker_histories.keys())]
                 if last_story_block not in unique_trackers_histories[same_idx]:
                     unique_trackers_histories[same_idx].append(last_story_block)
-
-        return unique_trackers_as_states, unique_trackers_as_actions, unique_trackers_histories
+                    unique_trackers[same_idx].append(tracker)
+        return unique_trackers_as_states, unique_trackers_as_actions, unique_trackers_histories, unique_trackers

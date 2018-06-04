@@ -7,17 +7,20 @@ import numpy as np
 
 
 class DialogueTrainingData(object):
-    def __init__(self, X, y, true_length=None, histories=None):
+    def __init__(self, X, y, true_length=None, histories=None, trackers=None):
         self.X = X
         self.y = y
         self.true_length = true_length
         self.histories = histories
-
+        self.trackers = trackers
+        print(self.trackers)
+        exit()
     def limit_training_data_to(self, max_samples):
         self.X = self.X[:max_samples]
         self.y = self.y[:max_samples]
         self.true_length = self.true_length[:max_samples]
         self.histories = self.histories[:max_samples]
+        self.trackers = self.trackers[:max_samples]
 
     def is_empty(self):
         """Check if the training matrix does contain training samples."""
@@ -38,7 +41,11 @@ class DialogueTrainingData(object):
             shuffled_hist = [self.histories[idx_k] for idx_k in idx]
         else:
             shuffled_hist = None
-        return shuffled_X, shuffled_y, shuffled_hist
+        if self.trackers is not None:
+            shuffled_trackers = [self.trackers[idx_k] for idx_k in idx]
+        else:
+            shuffled_trackers = None
+        return shuffled_X, shuffled_y, shuffled_hist, shuffled_trackers
 
     def random_samples(self, num_samples):
         padding_idx = np.random.choice(range(self.num_examples()),

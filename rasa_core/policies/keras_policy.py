@@ -139,9 +139,9 @@ class KerasPolicy(Policy):
                                                     domain,
                                                     **kwargs)
 
-        shuffled_X, shuffled_y, shuffled_histories = training_data.shuffled_X_y()
+        shuffled_X, shuffled_y, shuffled_histories, shuffled_trackers = training_data.shuffled_X_y()
 
-        self._check_for_clashes(shuffled_X, shuffled_y, shuffled_histories)
+        self._check_for_clashes(shuffled_X, shuffled_y, shuffled_trackers)
 
         if self.model is None:
             self.model = self.model_architecture(shuffled_X.shape[1:],
