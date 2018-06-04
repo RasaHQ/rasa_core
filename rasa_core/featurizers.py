@@ -645,7 +645,7 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
                 hash2idx[hashed] = len(unique_trackers_as_states)
                 unique_trackers_as_states.append(tracker_states)
                 unique_trackers_as_actions.append(tracker_actions)
-                unique_trackers_histories.append([tracker_histories])
+                unique_trackers_histories.append([tracker_histories[max(tracker_histories.keys())]])
             else:
                 same_idx = hash2idx[hashed]
                 last_story_block = tracker_histories[max(tracker_histories.keys())]
