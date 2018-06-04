@@ -382,10 +382,8 @@ class TrackerFeaturizer(object):
          trackers_as_actions,
          trackers_hist) = self.training_states_and_actions(trackers,
                                                                  domain)
-
         X, true_lengths = self._featurize_states(trackers_as_states)
         y = self._featurize_labels(trackers_as_actions, domain)
-        trackers_hist = np.array(trackers_hist)
 
         return DialogueTrainingData(X, y, true_lengths, histories=trackers_hist)
 
@@ -571,12 +569,14 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
                         trackers_as_states.append(sliced_states)
                         trackers_as_actions.append([event.action_name])
 
-                        # keep only stories which have already happened/are in the process of happening
-                        relevant_hist_keys = sorted_history_keys[:np.sum(sorted_history_keys < evdx)+1]
+                        earliest_event = evdx - self.max_history
+                        latest_event = evdx
+                        # keep only stories which happen within the previous max_history steps
+                        relevant_hist_keys = np.array(sorted_history_keys)[sorted_history_keys > earliest_event]
+                        relevant_hist_keys = relevant_hist_keys[:np.sum(relevant_hist_keys < latest_event)+1]
                         trackers_histories.append({key: tracker.block_history[key] for key in relevant_hist_keys})
 
                     idx += 1
-        print('remove_duplicates')
         if self.remove_duplicates:
             logger.debug("Got {} action examples."
                          "".format(len(trackers_as_actions)))
@@ -617,18 +617,21 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
         From multiple states that create equal featurizations
         we only need to keep one."""
 
-        hashed_featurizations = []
+        hashed_featurizations_set = set()
+        hash2idx = {}
 
         # collected trackers_as_states that created different featurizations
         unique_trackers_as_states = []
         unique_trackers_as_actions = []
         unique_trackers_histories = []
-
+        idx = 0
+        all = len(trackers_as_actions)
         for (tracker_states,
              tracker_actions,
              tracker_histories) in zip(trackers_as_states,
                                        trackers_as_actions,
                                        trackers_histories):
+            idx += 1
 
             frozen_states = tuple((s if s is None else frozenset(s.items())
                                    for s in tracker_states))
@@ -637,12 +640,18 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
 
             # only continue with tracker_states that created a
             # hashed_featurization we haven't observed
-            if hashed not in hashed_featurizations:
-                hashed_featurizations.append(hashed)
+            if hashed not in hashed_featurizations_set:
+                hashed_featurizations_set.add(hashed)
+                hash2idx[hashed] = len(unique_trackers_as_states)
                 unique_trackers_as_states.append(tracker_states)
                 unique_trackers_as_actions.append(tracker_actions)
                 unique_trackers_histories.append([tracker_histories])
             else:
-                same_idx = hashed_featurizations.index(hashed)
-                unique_trackers_histories[same_idx].append(trackers_histories)
+                same_idx = hash2idx[hashed]
+                last_story_block = tracker_histories[max(tracker_histories.keys())]
+                if last_story_block not in unique_trackers_histories[same_idx]:
+                    unique_trackers_histories[same_idx].append(last_story_block)
+                print(len(unique_trackers_histories[same_idx]))
+                print(idx * 1. / all)
+
         return unique_trackers_as_states, unique_trackers_as_actions, unique_trackers_histories

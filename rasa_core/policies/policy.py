@@ -14,6 +14,7 @@ import inspect
 import copy
 from rasa_core.featurizers import \
     MaxHistoryTrackerFeaturizer, BinarySingleStateFeaturizer
+import numpy as np
 
 if typing.TYPE_CHECKING:
     from rasa_core.domain import Domain
@@ -87,6 +88,21 @@ class Policy(object):
             training_data.limit_training_data_to(max_training_samples)
 
         return training_data
+
+    def _check_for_clashes(self, X, y, histories):
+        X_sub = []
+        print('got here')
+        for idx, X_one in enumerate(X):
+            copies = np.argwhere([(X_one == x).all() for x in X_sub])
+            if len(copies == 0):
+                for copy_idx in copies:
+                    if (y[copy_idx][0] != y[idx]).any():
+                        print("{}, {} clash!".format(idx, copy_idx[0]))
+                        first_wrong = histories[idx]
+                        second_wrong = histories[copy_idx[0]]
+                        standard, wrong = sorted([first_wrong, second_wrong], key=len)
+                        print('{}\n----\n{}'.format(standard, wrong))
+            X_sub.append(X_one)
 
     def train(self,
               training_trackers,  # type: List[DialogueStateTracker]

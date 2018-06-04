@@ -35,7 +35,7 @@ class DialogueTrainingData(object):
         shuffled_X = self.X[idx]
         shuffled_y = self.y[idx]
         if self.histories is not None:
-            shuffled_hist = self.histories[idx]
+            shuffled_hist = [self.histories[idx_k] for idx_k in idx]
         else:
             shuffled_hist = None
         return shuffled_X, shuffled_y, shuffled_hist
