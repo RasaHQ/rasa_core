@@ -173,7 +173,6 @@ class TrainingDataGenerator(object):
         self._issue_unused_checkpoint_notification(unused_checkpoints)
         logger.debug("Found {} training examples."
                      "".format(len(finished_trackers)))
-
         return finished_trackers
 
     @staticmethod

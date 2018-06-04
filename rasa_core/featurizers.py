@@ -385,8 +385,9 @@ class TrackerFeaturizer(object):
 
         X, true_lengths = self._featurize_states(trackers_as_states)
         y = self._featurize_labels(trackers_as_actions, domain)
+        trackers_hist = np.array(trackers_hist)
 
-        return DialogueTrainingData(X, y, true_lengths)
+        return DialogueTrainingData(X, y, true_lengths, histories=trackers_hist)
 
     def prediction_states(self,
                           trackers,  # type: List[DialogueStateTracker]
@@ -575,7 +576,7 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
                         trackers_histories.append({key: tracker.block_history[key] for key in relevant_hist_keys})
 
                     idx += 1
-
+        print('remove_duplicates')
         if self.remove_duplicates:
             logger.debug("Got {} action examples."
                          "".format(len(trackers_as_actions)))

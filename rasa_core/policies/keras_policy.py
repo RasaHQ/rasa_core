@@ -134,12 +134,14 @@ class KerasPolicy(Policy):
             logger.debug("Parameter `rnn_size` is updated with {}"
                          "".format(kwargs.get('rnn_size')))
             self.rnn_size = kwargs.get('rnn_size')
-
+        print('before_featurize', len(training_trackers))
         training_data = self.featurize_for_training(training_trackers,
                                                     domain,
                                                     **kwargs)
 
-        shuffled_X, shuffled_y = training_data.shuffled_X_y()
+        shuffled_X, shuffled_y, shuffled_histories = training_data.shuffled_X_y()
+
+        self._check_for_clashes(shuffled_X, shuffled_y, shuffled_histories)
 
         if self.model is None:
             self.model = self.model_architecture(shuffled_X.shape[1:],
@@ -156,6 +158,19 @@ class KerasPolicy(Policy):
         # the default parameter for epochs in keras fit is 1
         self.current_epoch = kwargs.get("epochs", 1)
         logger.info("Done fitting keras policy model")
+
+    def _check_for_clashes(self, X, y, histories):
+        X_sub = []
+        print('got here')
+        for idx, X_one in enumerate(X):
+            copies = np.argwhere([(X_one == x).all() for x in X_sub])
+            if len(copies == 0):
+                for copy_idx in copies:
+                    if (y[copy_idx][0] != y[idx]).any():
+                        print("{}, {} clash!".format(idx, copy_idx[0]))
+
+            X_sub.append(X_one)
+        exit()
 
     def continue_training(self, training_trackers, domain, **kwargs):
         # type: (List[DialogueStateTracker], Domain, **Any) -> None
