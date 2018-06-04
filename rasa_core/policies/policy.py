@@ -91,18 +91,24 @@ class Policy(object):
 
     def _check_for_clashes(self, X, y, histories):
         X_sub = []
+        any_clashes = False
         for idx, X_one in enumerate(X):
             copies = np.argwhere([(X_one == x).all() for x in X_sub])
             if len(copies == 0):
                 for copy_idx in copies:
                     if (y[copy_idx][0] != y[idx]).any():
-                        print("{}, {} clash!".format(idx, copy_idx[0]))
+                        if any_clashes is False:
+                            any_clashes = True
+                            print("====\nClashes:\n----")
                         first_wrong = histories[idx]
                         second_wrong = histories[copy_idx[0]]
-                        standard, wrong = sorted([first_wrong, second_wrong], key=len)
-                        print('Example of majority ({} stories) behaviour: {}\n----\nexample of minority ({} stories) behaviour: {}'.format(len(standard), standard[0], len(wrong), wrong[0]))
+                        wrong, standard = sorted([first_wrong, second_wrong], key=len)
+                        print('Example of majority ({} stories) behaviour: {}\nExample of minority ({} stories) behaviour: {}\n----'.format(len(standard), standard[0], len(wrong), wrong[0]))
             X_sub.append(X_one)
-
+        if any_clashes is False:
+            print("No clashes! Good job.")
+        else:
+            print("====")
     def train(self,
               training_trackers,  # type: List[DialogueStateTracker]
               domain,  # type: Domain
