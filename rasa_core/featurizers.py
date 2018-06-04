@@ -651,7 +651,5 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
                 last_story_block = tracker_histories[max(tracker_histories.keys())]
                 if last_story_block not in unique_trackers_histories[same_idx]:
                     unique_trackers_histories[same_idx].append(last_story_block)
-                print(len(unique_trackers_histories[same_idx]))
-                print(idx * 1. / all)
 
         return unique_trackers_as_states, unique_trackers_as_actions, unique_trackers_histories

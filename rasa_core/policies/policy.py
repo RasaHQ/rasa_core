@@ -91,7 +91,6 @@ class Policy(object):
 
     def _check_for_clashes(self, X, y, histories):
         X_sub = []
-        print('got here')
         for idx, X_one in enumerate(X):
             copies = np.argwhere([(X_one == x).all() for x in X_sub])
             if len(copies == 0):
@@ -101,7 +100,7 @@ class Policy(object):
                         first_wrong = histories[idx]
                         second_wrong = histories[copy_idx[0]]
                         standard, wrong = sorted([first_wrong, second_wrong], key=len)
-                        print('{}\n----\n{}'.format(standard, wrong))
+                        print('Example of majority ({} stories) behaviour: {}\n----\nexample of minority ({} stories) behaviour: {}'.format(len(standard), standard[0], len(wrong), wrong[0]))
             X_sub.append(X_one)
 
     def train(self,
