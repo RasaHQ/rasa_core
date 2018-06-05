@@ -13,8 +13,7 @@ class DialogueTrainingData(object):
         self.true_length = true_length
         self.histories = histories
         self.trackers = trackers
-        print(self.trackers)
-        exit()
+
     def limit_training_data_to(self, max_samples):
         self.X = self.X[:max_samples]
         self.y = self.y[:max_samples]

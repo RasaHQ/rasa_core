@@ -92,8 +92,6 @@ class Policy(object):
     def _check_for_clashes(self, X, y, trackers):
         X_sub = []
         any_clashes = False
-        print(trackers)
-        exit(1)
         for idx, X_one in enumerate(X):
             copies = np.argwhere([(X_one == x).all() for x in X_sub])
             if len(copies == 0):
@@ -102,10 +100,17 @@ class Policy(object):
                         if any_clashes is False:
                             any_clashes = True
                             print("====\nClashes:\n----")
-                        first_wrong = histories[idx]
-                        second_wrong = histories[copy_idx[0]]
-                        wrong, standard = sorted([first_wrong, second_wrong], key=len)
-                        print('Example of majority ({} stories) behaviour: {}\nExample of minority ({} stories) behaviour: {}\n----'.format(len(standard), standard[0], len(wrong), wrong[0]))
+                        first_wrong_tracker = trackers[idx]
+                        second_wrong_tracker = trackers[copy_idx[0]]
+                        wrong, standard = sorted([first_wrong_tracker, second_wrong_tracker], key=len)
+                        majority_tracker = standard[0]
+                        minority_tracker = wrong[0]
+                        print('Example of majority ({} stories) behaviour: {}'.format(len(standard), majority_tracker.block_history))
+                        print(majority_tracker.export_stories())
+
+                        print('Example of minority ({} stories) behaviour: {}\n----'.format(len(wrong), minority_tracker.block_history))
+                        print(minority_tracker.export_stories())
+                        print('----')
             X_sub.append(X_one)
         if any_clashes is False:
             print("No clashes! Good job.")
