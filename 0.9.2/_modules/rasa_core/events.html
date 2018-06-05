@@ -478,7 +478,6 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse bot uttered event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
 
-<span class="c1"># TODO: DEPRECATED - remove in version 0.10.0</span>
 <span class="c1"># noinspection PyProtectedMember</span>
 <div class="viewcode-block" id="TopicSet"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.TopicSet">[docs]</a><span class="k">class</span> <span class="nc">TopicSet</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The topic of conversation has changed.</span>
@@ -529,7 +528,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse set topic event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
 <div class="viewcode-block" id="TopicSet.apply_to"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.TopicSet.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">_topic_stack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -995,12 +994,6 @@
             <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
             <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
             <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
-            <dd><a href="../../../0.8.5/index.html">0.8.5</a></dd>
-            <dd><a href="../../../0.8.4/index.html">0.8.4</a></dd>
-            <dd><a href="../../../0.8.3/index.html">0.8.3</a></dd>
-            <dd><a href="../../../0.8.2/index.html">0.8.2</a></dd>
-            <dd><a href="../../../0.8.1/index.html">0.8.1</a></dd>
-            <dd><a href="../../../0.8.0/index.html">0.8.0</a></dd>
             <dd><a href="../../../0.7.9/index.html">0.7.9</a></dd>
             <dd><a href="../../../0.6.9/index.html">0.6.9</a></dd>
         </dl>
