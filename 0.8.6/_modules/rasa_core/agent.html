@@ -381,7 +381,7 @@
 <div class="viewcode-block" id="Agent.load_data"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                   <span class="n">resource_name</span><span class="p">,</span>  <span class="c1"># type: Text</span>
                   <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># type: bool</span>
-                  <span class="n">unique_last_num_states</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>  <span class="c1"># type: Optional[int]</span>
+                  <span class="n">unique_last_num_states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[int]</span>
                   <span class="n">augmentation_factor</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>  <span class="c1"># type: int</span>
                   <span class="n">max_number_of_trackers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># deprecated</span>
                   <span class="n">tracker_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[int]</span>
@@ -391,8 +391,8 @@
         <span class="c1"># type: (...) -&gt; List[DialogueStateTracker]</span>
         <span class="sd">&quot;&quot;&quot;Load training data from a resource.&quot;&quot;&quot;</span>
 
-        <span class="c1"># find maximum max_history and</span>
-        <span class="c1">#      if all featurizers are MaxHistoryTrackerFeaturizer</span>
+        <span class="c1"># find maximum max_history</span>
+        <span class="c1"># and if all featurizers are MaxHistoryTrackerFeaturizer</span>
         <span class="n">max_max_history</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">all_max_history_featurizers</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
@@ -402,21 +402,21 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">all_max_history_featurizers</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="n">unique_last_num_states</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">unique_last_num_states</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># for speed up of data generation</span>
             <span class="c1"># automatically detect unique_last_num_states</span>
             <span class="c1"># if it was not set and</span>
             <span class="c1"># if all featurizers are MaxHistoryTrackerFeaturizer</span>
             <span class="k">if</span> <span class="n">all_max_history_featurizers</span><span class="p">:</span>
                 <span class="n">unique_last_num_states</span> <span class="o">=</span> <span class="n">max_max_history</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">unique_last_num_states</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
-              <span class="n">unique_last_num_states</span> <span class="o">&lt;</span> <span class="n">max_max_history</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">unique_last_num_states</span> <span class="o">&lt;</span> <span class="n">max_max_history</span><span class="p">:</span>
             <span class="c1"># possibility of data loss</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;unique_last_num_states=</span><span class="si">{}</span><span class="s2"> but &quot;</span>
                            <span class="s2">&quot;maximum max_history=</span><span class="si">{}</span><span class="s2">.&quot;</span>
                            <span class="s2">&quot;Possibility of data loss. &quot;</span>
                            <span class="s2">&quot;It is recommended to set &quot;</span>
-                           <span class="s2">&quot;unique_last_num_states to maximum max_history.&quot;</span>
+                           <span class="s2">&quot;unique_last_num_states to &quot;</span>
+                           <span class="s2">&quot;at least maximum max_history.&quot;</span>
                            <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unique_last_num_states</span><span class="p">,</span> <span class="n">max_max_history</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">training</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
