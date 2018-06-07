@@ -224,7 +224,6 @@
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="k">import</span> <span class="n">Action</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
 
 
 <div class="viewcode-block" id="DialogueStateTracker"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker">[docs]</a><span class="k">class</span> <span class="nc">DialogueStateTracker</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -314,13 +313,6 @@
             <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span><span class="p">(),</span>
             <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">evts</span>
         <span class="p">}</span></div>
-
-<div class="viewcode-block" id="DialogueStateTracker.past_states"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.past_states">[docs]</a>    <span class="k">def</span> <span class="nf">past_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="c1"># type: (Domain) -&gt; deque</span>
-        <span class="sd">&quot;&quot;&quot;Generate the past states of this tracker based on the history.&quot;&quot;&quot;</span>
-
-        <span class="n">generated_states</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">states_for_tracker_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">deque</span><span class="p">((</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">generated_states</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.current_slot_values"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.current_slot_values">[docs]</a>    <span class="k">def</span> <span class="nf">current_slot_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; Dict[Text, Any]</span>
