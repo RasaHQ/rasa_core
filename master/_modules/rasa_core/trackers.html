@@ -386,9 +386,10 @@
         <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span>
 
         <span class="k">return</span> <span class="n">DialogueStateTracker</span><span class="p">(</span><span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span><span class="p">,</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">topics</span><span class="p">,</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">default_topic</span><span class="p">)</span></div>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">default_topic</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_max_event_history</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.generate_all_prior_trackers"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers">[docs]</a>    <span class="k">def</span> <span class="nf">generate_all_prior_trackers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; Generator[DialogueStateTracker, None, None]</span>
@@ -561,7 +562,7 @@
         <span class="k">return</span> <span class="n">deque</span><span class="p">(</span><span class="n">evts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_event_history</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)):</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">events</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="ow">and</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">sender_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -634,6 +635,12 @@
             <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
             <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
             <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../0.8.0/index.html">0.8.0</a></dd>
             <dd><a href="../../../0.7.9/index.html">0.7.9</a></dd>
             <dd><a href="../../../0.6.9/index.html">0.6.9</a></dd>
         </dl>
