@@ -227,9 +227,8 @@
 <div class="viewcode-block" id="Agent"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent">[docs]</a><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Public interface for common things to do.</span>
 
-<span class="sd">     This includes e.g. train an assistant (online or offline mode),</span>
-<span class="sd">     handle messages with an assistant, load a dialogue model,</span>
-<span class="sd">     get the next action, handle channel or toggle memoization&quot;&quot;&quot;</span>
+<span class="sd">     This includes e.g. train an assistant, or handle messages</span>
+<span class="sd">     with an assistant.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -238,7 +237,6 @@
             <span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[NLI, Text, None]</span>
             <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[TrackerStore]</span>
     <span class="p">):</span>
-        <span class="c1"># Initializing variables with the passed parameters.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_ensemble</span><span class="p">(</span><span class="n">policies</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="o">=</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interpreter</span><span class="p">)</span>
@@ -305,8 +303,7 @@
 <span class="sd">            [u&#39;how can I help you?&#39;]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Creates a new processor for the agent and handles</span>
-        <span class="c1"># the single message</span>
+
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">(</span><span class="n">message_preprocessor</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span>
                 <span class="n">UserMessage</span><span class="p">(</span><span class="n">text_message</span><span class="p">,</span> <span class="n">output_channel</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">))</span></div>
@@ -319,8 +316,6 @@
         <span class="c1"># type: (...) -&gt; Dict[Text, Any]</span>
         <span class="sd">&quot;&quot;&quot;Start to process a messages, returning the next action to take. &quot;&quot;&quot;</span>
 
-        <span class="c1"># Creates a new processor for the agent and starts the</span>
-        <span class="c1"># message handling</span>
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">start_message_handling</span><span class="p">(</span>
                 <span class="n">UserMessage</span><span class="p">(</span><span class="n">text_message</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">))</span></div>
@@ -336,8 +331,6 @@
 
 <span class="sd">        Predicts the next action to take by the caller&quot;&quot;&quot;</span>
 
-        <span class="c1"># Creates a new processor for the agent and countinues</span>
-        <span class="c1"># message handling</span>
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">continue_message_handling</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span>
                                                    <span class="n">executed_action</span><span class="p">,</span>
@@ -565,8 +558,7 @@
     <span class="k">def</span> <span class="nf">_create_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preprocessor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># type: (Optional[Callable[[Text], Text]]) -&gt; MessageProcessor</span>
         <span class="sd">&quot;&quot;&quot;Instantiates a processor based on the set state of the agent.&quot;&quot;&quot;</span>
-        <span class="c1"># Checks that the interpreter and tracker store are set and</span>
-        <span class="c1"># creates a processor</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_agent_is_prepared</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">MessageProcessor</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
@@ -597,9 +589,9 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_interpreter</span><span class="p">(</span>
-            <span class="n">interp</span>  <span class="c1"># type: Union[Text, NLI, None]</span>
+            <span class="n">interp</span>  <span class="c1"># type: Union[Text, NaturalLanguageInterpreter, None]</span>
     <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; NLI</span>
+        <span class="c1"># type: (...) -&gt; NaturalLanguageInterpreter</span>
         <span class="k">return</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interp</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
@@ -657,6 +649,12 @@
             <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
             <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
             <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../0.8.0/index.html">0.8.0</a></dd>
             <dd><a href="../../../0.7.9/index.html">0.7.9</a></dd>
             <dd><a href="agent.html">0.6.9</a></dd>
         </dl>
