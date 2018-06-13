@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core.policies.memoization &mdash; Rasa Core 0.7.0a3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a3 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../library.html">Library Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>rasa_core.policies.memoization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rasa_core.policies.memoization</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">zlib</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">bytes</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Text</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core.policies.policy</span> <span class="k">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">rasa_core.featurizers</span> <span class="k">import</span> \
+    <span class="n">TrackerFeaturizer</span><span class="p">,</span> <span class="n">MaxHistoryTrackerFeaturizer</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+
+
+<div class="viewcode-block" id="MemoizationPolicy"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.memoization.MemoizationPolicy">[docs]</a><span class="k">class</span> <span class="nc">MemoizationPolicy</span><span class="p">(</span><span class="n">Policy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The policy that remembers exact examples of</span>
+<span class="sd">        `max_history` turns from training stories.</span>
+
+<span class="sd">        Since `slots` that are set some time in the past are</span>
+<span class="sd">        preserved in all future feature vectors until they are set</span>
+<span class="sd">        to None, this policy implicitly remembers and most importantly</span>
+<span class="sd">        recalls examples in the context of the current dialogue</span>
+<span class="sd">        longer than `max_history`.</span>
+
+<span class="sd">        If it is needed to recall turns from training dialogues where</span>
+<span class="sd">        some slots might not be set during prediction time, and there are</span>
+<span class="sd">        training stories for this, use AugmentedMemoizationPolicy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ENABLE_FEATURE_STRING_COMPRESSION</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">SUPPORTS_ONLINE_TRAINING</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">USE_NLU_CONFIDENCE_AS_SCORE</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_standard_featurizer</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">max_history</span> <span class="o">=</span> <span class="n">max_history</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MAX_HISTORY_DEFAULT</span>
+        <span class="c1"># Memoization policy always uses MaxHistoryTrackerFeaturizer</span>
+        <span class="c1"># without state_featurizer</span>
+        <span class="k">return</span> <span class="n">MaxHistoryTrackerFeaturizer</span><span class="p">(</span><span class="n">state_featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                           <span class="n">max_history</span><span class="o">=</span><span class="n">max_history</span><span class="p">,</span>
+                                           <span class="n">use_intent_probabilities</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[TrackerFeaturizer]</span>
+                 <span class="n">max_history</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[int]</span>
+                 <span class="n">lookup</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Dict]</span>
+                 <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">featurizer</span><span class="p">:</span>
+            <span class="n">featurizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_standard_featurizer</span><span class="p">(</span><span class="n">max_history</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">MemoizationPolicy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">max_history</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="n">lookup</span> <span class="k">if</span> <span class="n">lookup</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_enabled</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="MemoizationPolicy.toggle"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.memoization.MemoizationPolicy.toggle">[docs]</a>    <span class="k">def</span> <span class="nf">toggle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activate</span><span class="p">):</span>
+        <span class="c1"># type: (bool) -&gt; None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_enabled</span> <span class="o">=</span> <span class="n">activate</span></div>
+
+    <span class="k">def</span> <span class="nf">_preprocess_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="c1"># type: (List[Dict[Text, float]]) -&gt; List[List[Dict[Text, float]]]</span>
+        <span class="sd">&quot;&quot;&quot;Helper method to preprocess tracker&#39;s states.</span>
+<span class="sd">            E.g., to a create list of states with deleted history</span>
+<span class="sd">            for augmented Memoization&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">states</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trackers_as_states</span><span class="p">,</span> <span class="n">trackers_as_actions</span><span class="p">,</span>
+             <span class="n">domain</span><span class="p">,</span> <span class="n">online</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">trackers_as_states</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">trackers_as_states</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_history</span><span class="p">,</span> \
+            <span class="p">(</span><span class="s2">&quot;Trying to mem featurized data with </span><span class="si">{}</span><span class="s2"> historic turns. Expected: &quot;</span>
+             <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trackers_as_states</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_history</span><span class="p">))</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">trackers_as_actions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> \
+            <span class="p">(</span><span class="s2">&quot;The second dimension of trackers_as_action should be 1, &quot;</span>
+             <span class="s2">&quot;instead of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trackers_as_actions</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+
+        <span class="n">ambiguous_feature_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">trackers_as_states</span><span class="p">,</span> <span class="n">trackers_as_actions</span><span class="p">),</span>
+                    <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Processed actions&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="n">online</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">states</span><span class="p">,</span> <span class="n">actions</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">actions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">states_aug</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_states</span><span class="p">(</span><span class="n">states</span><span class="p">)):</span>
+                <span class="n">feature_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_feature_key</span><span class="p">(</span><span class="n">states_aug</span><span class="p">)</span>
+                <span class="n">feature_item</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">index_for_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">feature_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ambiguous_feature_keys</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">feature_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">[</span><span class="n">feature_key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">feature_item</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">online</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Original stories are &quot;</span>
+                                            <span class="s2">&quot;different for </span><span class="si">{}</span><span class="s2"> -- </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                            <span class="s2">&quot;Memorized the new ones for &quot;</span>
+                                            <span class="s2">&quot;now. Delete contradicting &quot;</span>
+                                            <span class="s2">&quot;examples after exporting &quot;</span>
+                                            <span class="s2">&quot;the new stories.&quot;</span>
+                                            <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">states_aug</span><span class="p">,</span> <span class="n">action</span><span class="p">))</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">[</span><span class="n">feature_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_item</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="c1"># delete contradicting example created by</span>
+                                <span class="c1"># partial history augmentation from memory</span>
+                                <span class="n">ambiguous_feature_keys</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">feature_key</span><span class="p">)</span>
+                                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">[</span><span class="n">feature_key</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">[</span><span class="n">feature_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_item</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">({</span><span class="s2">&quot;# examples&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">))})</span>
+
+    <span class="k">def</span> <span class="nf">_create_feature_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="n">feature_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ENABLE_FEATURE_STRING_COMPRESSION</span><span class="p">:</span>
+            <span class="n">compressed</span> <span class="o">=</span> <span class="n">zlib</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">feature_str</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">compressed</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">feature_str</span>
+
+<div class="viewcode-block" id="MemoizationPolicy.train"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.memoization.MemoizationPolicy.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+              <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
+              <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
+              <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Trains the policy on given training trackers.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="p">(</span><span class="n">trackers_as_states</span><span class="p">,</span>
+         <span class="n">trackers_as_actions</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">training_states_and_actions</span><span class="p">(</span>
+                                    <span class="n">training_trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">trackers_as_states</span><span class="p">,</span> <span class="n">trackers_as_actions</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Memorized </span><span class="si">{}</span><span class="s2"> unique action examples.&quot;</span>
+                    <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="MemoizationPolicy.continue_training"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.memoization.MemoizationPolicy.continue_training">[docs]</a>    <span class="k">def</span> <span class="nf">continue_training</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (List[DialogueStateTracker], Domain, **Any) -&gt; None</span>
+
+        <span class="c1"># add only the last tracker, because it is the only new one</span>
+        <span class="p">(</span><span class="n">trackers_as_states</span><span class="p">,</span>
+         <span class="n">trackers_as_actions</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">training_states_and_actions</span><span class="p">(</span>
+                                    <span class="n">training_trackers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:],</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">trackers_as_states</span><span class="p">,</span> <span class="n">trackers_as_actions</span><span class="p">,</span>
+                  <span class="n">domain</span><span class="p">,</span> <span class="n">online</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_recall_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="c1"># type: (List[Dict[Text, float]]) -&gt; Optional[int]</span>
+
+        <span class="k">for</span> <span class="n">states_aug</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_states</span><span class="p">(</span><span class="n">states</span><span class="p">):</span>
+            <span class="n">memorised</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_create_feature_key</span><span class="p">(</span><span class="n">states_aug</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">memorised</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">memorised</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="MemoizationPolicy.recall"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.memoization.MemoizationPolicy.recall">[docs]</a>    <span class="k">def</span> <span class="nf">recall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+               <span class="n">states</span><span class="p">,</span>  <span class="c1"># type: List[Dict[Text, float]]</span>
+               <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: DialogueStateTracker</span>
+               <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+               <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Optional[int]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recall_states</span><span class="p">(</span><span class="n">states</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MemoizationPolicy.predict_action_probabilities"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.memoization.MemoizationPolicy.predict_action_probabilities">[docs]</a>    <span class="k">def</span> <span class="nf">predict_action_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; List[float]</span>
+        <span class="sd">&quot;&quot;&quot;Predicts the next action the bot should take</span>
+<span class="sd">            after seeing the tracker.</span>
+
+<span class="sd">            Returns the list of probabilities for the next actions.</span>
+<span class="sd">            If memorized action was found returns 1.0 for its index,</span>
+<span class="sd">            else returns 0.0 for all actions.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">domain</span><span class="o">.</span><span class="n">num_actions</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="n">tracker_as_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">prediction_states</span><span class="p">(</span>
+                                <span class="p">[</span><span class="n">tracker</span><span class="p">],</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="n">tracker_as_states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Current tracker state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">states</span><span class="p">))</span>
+        <span class="n">recalled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">recalled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;There is a memorised next action &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">recalled</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">USE_NLU_CONFIDENCE_AS_SCORE</span><span class="p">:</span>
+                <span class="c1"># the memoization will use the confidence of NLU on the latest</span>
+                <span class="c1"># user message to set the confidence of the action</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;confidence&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+            <span class="n">result</span><span class="p">[</span><span class="n">recalled</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;There is no memorised next action&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="MemoizationPolicy.persist"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.memoization.MemoizationPolicy.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="n">memorized_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;memorized_turns.json&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;max_history&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_history</span><span class="p">,</span>
+            <span class="s2">&quot;lookup&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span>
+        <span class="p">}</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">create_dir_for_file</span><span class="p">(</span><span class="n">memorized_file</span><span class="p">)</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">dump_obj_as_json_to_file</span><span class="p">(</span><span class="n">memorized_file</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="MemoizationPolicy.load"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.memoization.MemoizationPolicy.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; MemoizationPolicy</span>
+
+        <span class="n">featurizer</span> <span class="o">=</span> <span class="n">TrackerFeaturizer</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">memorized_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;memorized_turns.json&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">memorized_file</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">memorized_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">featurizer</span><span class="o">=</span><span class="n">featurizer</span><span class="p">,</span> <span class="n">lookup</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;lookup&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t load memoization for policy. &quot;</span>
+                        <span class="s2">&quot;File &#39;</span><span class="si">{}</span><span class="s2">&#39; doesn&#39;t exist. Falling back to empty &quot;</span>
+                        <span class="s2">&quot;turn memory.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">memorized_file</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.6.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="memoization.html">0.6.5</a></dd>
+            <dd><a href="../../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../../../../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../../../../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../../0.9.4/index.html">0.9.4</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../../async/index.html">async</a></dd>
+            <dd><a href="../../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../../fix/index.html">fix</a></dd>
+            <dd><a href="../../../../master/index.html">master</a></dd>
+            <dd><a href="../../../../memo_fix/index.html">memo_fix</a></dd>
+            <dd><a href="../../../../ruamel/index.html">ruamel</a></dd>
+            <dd><a href="../../../../script-docs/index.html">script-docs</a></dd>
+            <dd><a href="../../../../stories_dumping/index.html">stories_dumping</a></dd>
+            <dd><a href="../../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="../../../../wildcard/index.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.7.0a3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

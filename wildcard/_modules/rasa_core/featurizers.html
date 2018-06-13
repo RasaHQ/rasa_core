@@ -1,0 +1,954 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core.featurizers &mdash; Rasa Core 0.7.0a3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a3 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Library Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>rasa_core.featurizers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rasa_core.featurizers</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
+
+<span class="kn">import</span> <span class="nn">jsonpickle</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">ActionExecuted</span>
+<span class="kn">from</span> <span class="nn">rasa_core.training.data</span> <span class="k">import</span> <span class="n">DialogueTrainingData</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
+<span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">PREV_PREFIX</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+
+
+<div class="viewcode-block" id="SingleStateFeaturizer"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.SingleStateFeaturizer">[docs]</a><span class="k">class</span> <span class="nc">SingleStateFeaturizer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for mechanisms to transform the conversations state</span>
+<span class="sd">    into machine learning formats.</span>
+
+<span class="sd">    Subclasses of SingleStateFeaturizer decide how the bot will transform</span>
+<span class="sd">    the conversation state to a format which a classifier can read:</span>
+<span class="sd">    feature vector.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Declares instant variables.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_feature_len</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slot_feature_len</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SingleStateFeaturizer.prepare_from_domain"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.SingleStateFeaturizer.prepare_from_domain">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_from_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Domain) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Helper method to init based on domain&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="SingleStateFeaturizer.encode"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.SingleStateFeaturizer.encode">[docs]</a>    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, float]) -&gt; np.ndarray</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;SingleStateFeaturizer must have &quot;</span>
+                                  <span class="s2">&quot;the capacity to &quot;</span>
+                                  <span class="s2">&quot;encode states to a feature vector&quot;</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="SingleStateFeaturizer.action_as_one_hot"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.SingleStateFeaturizer.action_as_one_hot">[docs]</a>    <span class="k">def</span> <span class="nf">action_as_one_hot</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Domain) -&gt; np.ndarray</span>
+        <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">num_actions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">num_actions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">domain</span><span class="o">.</span><span class="n">index_for_action</span><span class="p">(</span><span class="n">action</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="SingleStateFeaturizer.create_encoded_all_actions"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.SingleStateFeaturizer.create_encoded_all_actions">[docs]</a>    <span class="k">def</span> <span class="nf">create_encoded_all_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Domain) -&gt; np.ndarray</span>
+        <span class="sd">&quot;&quot;&quot;Create matrix with all actions from domain</span>
+<span class="sd">            encoded in rows.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="BinarySingleStateFeaturizer"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.BinarySingleStateFeaturizer">[docs]</a><span class="k">class</span> <span class="nc">BinarySingleStateFeaturizer</span><span class="p">(</span><span class="n">SingleStateFeaturizer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assumes all features are binary.</span>
+
+<span class="sd">    All features should be either on or off, denoting them with 1 or 0.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Declares instant variables.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BinarySingleStateFeaturizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_state_map</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="BinarySingleStateFeaturizer.prepare_from_domain"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.BinarySingleStateFeaturizer.prepare_from_domain">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_from_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Domain) -&gt; None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">num_states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_state_map</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">input_state_map</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_feature_len</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">intent_states</span><span class="p">)</span> <span class="o">+</span>
+                                 <span class="nb">len</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">entity_states</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slot_feature_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">slot_states</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BinarySingleStateFeaturizer.encode"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.BinarySingleStateFeaturizer.encode">[docs]</a>    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, float]) -&gt; np.ndarray</span>
+        <span class="sd">&quot;&quot;&quot;Returns a binary vector indicating which features are active.</span>
+
+<span class="sd">            Given a dictionary of states (e.g. &#39;intent_greet&#39;,</span>
+<span class="sd">            &#39;prev_action_listen&#39;,...) return a binary vector indicating which</span>
+<span class="sd">            features of `self.input_features` are in the bag. NB it&#39;s a</span>
+<span class="sd">            regular double precision float array type.</span>
+
+<span class="sd">            For example with two active features out of five possible features</span>
+<span class="sd">            this would return a vector like `[0 0 1 0 1]`</span>
+
+<span class="sd">            If intent features are given with a probability, for example</span>
+<span class="sd">            with two active features and two uncertain intents out</span>
+<span class="sd">            of five possible features this would return a vector</span>
+<span class="sd">            like `[0.3, 0.7, 1.0, 0, 1.0]`.</span>
+
+<span class="sd">            If this is just a padding vector we set all values to `-1`.</span>
+<span class="sd">            padding vectors are specified by a `None` or `[None]`</span>
+<span class="sd">            value for states.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;BinarySingleStateFeaturizer &quot;</span>
+                            <span class="s2">&quot;was not prepared &quot;</span>
+                            <span class="s2">&quot;before encoding.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="c1"># we are going to use floats and convert to int later if possible</span>
+        <span class="n">used_features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">using_only_ints</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">state_name</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">state_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_state_map</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_state_map</span><span class="p">[</span><span class="n">state_name</span><span class="p">]</span>
+                <span class="n">used_features</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">prob</span>
+                <span class="n">using_only_ints</span> <span class="o">=</span> <span class="n">using_only_ints</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_int</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="s2">&quot;Feature &#39;</span><span class="si">{}</span><span class="s2">&#39; (value: &#39;</span><span class="si">{}</span><span class="s2">&#39;) could not be found in &quot;</span>
+                        <span class="s2">&quot;feature map. Make sure you added all intents and &quot;</span>
+                        <span class="s2">&quot;entities to the domain&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">prob</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">using_only_ints</span><span class="p">:</span>
+            <span class="c1"># this is an optimization - saves us a bit of memory</span>
+            <span class="k">return</span> <span class="n">used_features</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">used_features</span></div>
+
+<div class="viewcode-block" id="BinarySingleStateFeaturizer.create_encoded_all_actions"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.BinarySingleStateFeaturizer.create_encoded_all_actions">[docs]</a>    <span class="k">def</span> <span class="nf">create_encoded_all_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Domain) -&gt; np.ndarray</span>
+        <span class="sd">&quot;&quot;&quot;Create matrix with all actions from domain</span>
+<span class="sd">            encoded in rows as bag of words.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">num_actions</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LabelTokenizerSingleStateFeaturizer"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer">[docs]</a><span class="k">class</span> <span class="nc">LabelTokenizerSingleStateFeaturizer</span><span class="p">(</span><span class="n">SingleStateFeaturizer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;SingleStateFeaturizer that splits user intents and</span>
+<span class="sd">    bot action names into tokens and uses these tokens to</span>
+<span class="sd">    create bag-of-words feature vectors.</span>
+
+<span class="sd">    :param Text split_symbol:</span>
+<span class="sd">      The symbol that separates words in intets and action names.</span>
+
+<span class="sd">    :param bool use_shared_vocab:</span>
+<span class="sd">      The flag that specifies if to create the same vocabulary for</span>
+<span class="sd">      user intents and bot actions.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_shared_vocab</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">split_symbol</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+        <span class="c1"># type: (bool, Text) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;inits vocabulary for label bag of words representation&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LabelTokenizerSingleStateFeaturizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_shared_vocab</span> <span class="o">=</span> <span class="n">use_shared_vocab</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">split_symbol</span> <span class="o">=</span> <span class="n">split_symbol</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slot_labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bot_labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bot_vocab</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_vocab</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_create_label_token_dict</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">split_symbol</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Splits labels into tokens by using provided symbol.</span>
+<span class="sd">        Creates the lookup dictionary for this tokens.</span>
+<span class="sd">        Values in this dict are used for featurization.&quot;&quot;&quot;</span>
+
+        <span class="n">distinct_tokens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">token</span>
+                               <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span>
+                               <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">label</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">split_symbol</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">token</span><span class="p">:</span> <span class="n">idx</span>
+                <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">distinct_tokens</span><span class="p">))}</span>
+
+<div class="viewcode-block" id="LabelTokenizerSingleStateFeaturizer.prepare_from_domain"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer.prepare_from_domain">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_from_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Domain) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Creates internal vocabularies for user intents</span>
+<span class="sd">        and bot actions to use for featurization&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_labels</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">intent_states</span> <span class="o">+</span> <span class="n">domain</span><span class="o">.</span><span class="n">entity_states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slot_labels</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">slot_states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bot_labels</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">action_names</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_shared_vocab</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bot_vocab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_label_token_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bot_labels</span> <span class="o">+</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">user_labels</span><span class="p">,</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">split_symbol</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_vocab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot_vocab</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bot_vocab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_label_token_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bot_labels</span><span class="p">,</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">split_symbol</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_vocab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_label_token_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_labels</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">split_symbol</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_vocab</span><span class="p">)</span> <span class="o">+</span>
+                             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slot_labels</span><span class="p">)</span> <span class="o">+</span>
+                             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bot_vocab</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_feature_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_vocab</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slot_feature_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slot_labels</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LabelTokenizerSingleStateFeaturizer.encode"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer.encode">[docs]</a>    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, float]) -&gt; np.ndarray</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;LabelTokenizerSingleStateFeaturizer &quot;</span>
+                            <span class="s2">&quot;was not prepared before encoding.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="c1"># we are going to use floats and convert to int later if possible</span>
+        <span class="n">used_features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">using_only_ints</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">state_name</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">using_only_ints</span> <span class="o">=</span> <span class="n">using_only_ints</span> <span class="ow">and</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_int</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_labels</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">PREV_PREFIX</span> <span class="o">+</span> <span class="n">ACTION_LISTEN_NAME</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+                    <span class="c1"># else we predict next action from bot action and memory</span>
+                    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">state_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">split_symbol</span><span class="p">):</span>
+                        <span class="n">used_features</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">user_vocab</span><span class="p">[</span><span class="n">t</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">prob</span>
+
+            <span class="k">elif</span> <span class="n">state_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slot_labels</span><span class="p">:</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_vocab</span><span class="p">)</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slot_labels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">state_name</span><span class="p">)</span>
+                <span class="n">used_features</span><span class="p">[</span><span class="n">offset</span> <span class="o">+</span> <span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">prob</span>
+
+            <span class="k">elif</span> <span class="n">state_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">PREV_PREFIX</span><span class="p">):]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot_labels</span><span class="p">:</span>
+                <span class="n">action_name</span> <span class="o">=</span> <span class="n">state_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">PREV_PREFIX</span><span class="p">):]</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">action_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">split_symbol</span><span class="p">):</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_vocab</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slot_labels</span><span class="p">)</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot_vocab</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                    <span class="n">used_features</span><span class="p">[</span><span class="n">offset</span> <span class="o">+</span> <span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">prob</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;Feature &#39;</span><span class="si">{}</span><span class="s2">&#39; could not be found in &quot;</span>
+                    <span class="s2">&quot;feature map.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state_name</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">using_only_ints</span><span class="p">:</span>
+            <span class="c1"># this is an optimization - saves us a bit of memory</span>
+            <span class="k">return</span> <span class="n">used_features</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">used_features</span></div>
+
+<div class="viewcode-block" id="LabelTokenizerSingleStateFeaturizer.create_encoded_all_actions"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer.create_encoded_all_actions">[docs]</a>    <span class="k">def</span> <span class="nf">create_encoded_all_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Domain) -&gt; np.ndarray</span>
+        <span class="sd">&quot;&quot;&quot;Create matrix with all actions from domain</span>
+<span class="sd">            encoded in rows as bag of words.&quot;&quot;&quot;</span>
+        <span class="n">encoded_all_actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">domain</span><span class="o">.</span><span class="n">num_actions</span><span class="p">,</span>
+                                        <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bot_vocab</span><span class="p">)),</span>
+                                       <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">action_names</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">split_symbol</span><span class="p">):</span>
+                <span class="n">encoded_all_actions</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot_vocab</span><span class="p">[</span><span class="n">t</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">encoded_all_actions</span></div></div>
+
+
+<div class="viewcode-block" id="TrackerFeaturizer"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.TrackerFeaturizer">[docs]</a><span class="k">class</span> <span class="nc">TrackerFeaturizer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for actual tracker featurizers&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_intent_probabilities</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># type: (Optional[SingleStateFeaturizer], bool) -&gt; None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_featurizer</span> <span class="o">=</span> <span class="n">state_featurizer</span> <span class="ow">or</span> <span class="n">SingleStateFeaturizer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_intent_probabilities</span> <span class="o">=</span> <span class="n">use_intent_probabilities</span>
+
+    <span class="k">def</span> <span class="nf">_create_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                       <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: DialogueStateTracker</span>
+                       <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
+                       <span class="n">is_binary_training</span><span class="o">=</span><span class="kc">False</span>  <span class="c1"># type: bool</span>
+                       <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; List[Dict[Text, float]]</span>
+        <span class="sd">&quot;&quot;&quot;Create states: a list of dictionaries.</span>
+<span class="sd">            If use_intent_probabilities is False (default behaviour),</span>
+<span class="sd">            pick the most probable intent out of all provided ones and</span>
+<span class="sd">            set its probability to 1.0, while all the others to 0.0.&quot;&quot;&quot;</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">past_states</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+
+        <span class="c1"># during training we encounter only 1 or 0</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_intent_probabilities</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_binary_training</span><span class="p">:</span>
+            <span class="n">bin_states</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+                <span class="c1"># copy state dict to preserve internal order of keys</span>
+                <span class="n">bin_state</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+                <span class="n">best_intent</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">best_intent_prob</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+                <span class="k">for</span> <span class="n">state_name</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">state_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;intent_&#39;</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">prob</span> <span class="o">&gt;</span> <span class="n">best_intent_prob</span><span class="p">:</span>
+                            <span class="c1"># finding the maximum confidence intent</span>
+                            <span class="k">if</span> <span class="n">best_intent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="c1"># delete previous best intent</span>
+                                <span class="k">del</span> <span class="n">bin_state</span><span class="p">[</span><span class="n">best_intent</span><span class="p">]</span>
+                            <span class="n">best_intent</span> <span class="o">=</span> <span class="n">state_name</span>
+                            <span class="n">best_intent_prob</span> <span class="o">=</span> <span class="n">prob</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># delete other intents</span>
+                            <span class="k">del</span> <span class="n">bin_state</span><span class="p">[</span><span class="n">state_name</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">best_intent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># set the confidence of best intent to 1.0</span>
+                    <span class="n">bin_state</span><span class="p">[</span><span class="n">best_intent</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+                <span class="n">bin_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bin_state</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">bin_states</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_pad_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="c1"># type: (List[Any]) -&gt; List[Any]</span>
+        <span class="k">return</span> <span class="n">states</span>
+
+    <span class="k">def</span> <span class="nf">_featurize_states</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">trackers_as_states</span>  <span class="c1"># type: List[List[Dict[Text, float]]]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Tuple[np.ndarray, List[int]]</span>
+        <span class="sd">&quot;&quot;&quot;Create X&quot;&quot;&quot;</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">true_lengths</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">tracker_states</span> <span class="ow">in</span> <span class="n">trackers_as_states</span><span class="p">:</span>
+            <span class="n">dialogue_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tracker_states</span><span class="p">)</span>
+
+            <span class="c1"># len(trackers_as_states) = 1 means</span>
+            <span class="c1"># it is called during prediction or we have</span>
+            <span class="c1"># only one story, so no padding is needed</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trackers_as_states</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">tracker_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pad_states</span><span class="p">(</span><span class="n">tracker_states</span><span class="p">)</span>
+
+            <span class="n">story_features</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_featurizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+                              <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">tracker_states</span><span class="p">]</span>
+
+            <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">story_features</span><span class="p">)</span>
+            <span class="n">true_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dialogue_len</span><span class="p">)</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">true_lengths</span>
+
+    <span class="k">def</span> <span class="nf">_featurize_labels</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">trackers_as_actions</span><span class="p">,</span>  <span class="c1"># type: List[List[Text]</span>
+            <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; np.ndarray</span>
+        <span class="sd">&quot;&quot;&quot;Create y&quot;&quot;&quot;</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">tracker_actions</span> <span class="ow">in</span> <span class="n">trackers_as_actions</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trackers_as_actions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">tracker_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pad_states</span><span class="p">(</span><span class="n">tracker_actions</span><span class="p">)</span>
+
+            <span class="n">story_labels</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_featurizer</span><span class="o">.</span><span class="n">action_as_one_hot</span><span class="p">(</span><span class="n">action</span><span class="p">,</span>
+                                                                    <span class="n">domain</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">tracker_actions</span><span class="p">]</span>
+
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">story_labels</span><span class="p">)</span>
+
+        <span class="c1"># if it is MaxHistoryFeaturizer, squeeze out time axis</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">y</span>
+
+<div class="viewcode-block" id="TrackerFeaturizer.training_states_and_actions"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.TrackerFeaturizer.training_states_and_actions">[docs]</a>    <span class="k">def</span> <span class="nf">training_states_and_actions</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+            <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Tuple[List[List[Dict]], List[List[Dict]], Dict]</span>
+        <span class="sd">&quot;&quot;&quot;Transforms list of trackers to lists of states and actions&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Featurizer must have the capacity to &quot;</span>
+                                  <span class="s2">&quot;encode trackers to feature vectors&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TrackerFeaturizer.featurize_trackers"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.TrackerFeaturizer.featurize_trackers">[docs]</a>    <span class="k">def</span> <span class="nf">featurize_trackers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                           <span class="n">trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+                           <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+                           <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; DialogueTrainingData</span>
+        <span class="sd">&quot;&quot;&quot;Create training data&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_featurizer</span><span class="o">.</span><span class="n">prepare_from_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+
+        <span class="p">(</span><span class="n">trackers_as_states</span><span class="p">,</span>
+         <span class="n">trackers_as_actions</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_states_and_actions</span><span class="p">(</span><span class="n">trackers</span><span class="p">,</span>
+                                                                 <span class="n">domain</span><span class="p">)</span>
+
+        <span class="n">X</span><span class="p">,</span> <span class="n">true_lengths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_featurize_states</span><span class="p">(</span><span class="n">trackers_as_states</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_featurize_labels</span><span class="p">(</span><span class="n">trackers_as_actions</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">DialogueTrainingData</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">true_lengths</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TrackerFeaturizer.prediction_states"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.TrackerFeaturizer.prediction_states">[docs]</a>    <span class="k">def</span> <span class="nf">prediction_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+                          <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+                          <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; List[List[Dict[Text, float]]]</span>
+        <span class="sd">&quot;&quot;&quot;Transforms list of trackers to lists of states for prediction&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Featurizer must have the capacity to &quot;</span>
+                                  <span class="s2">&quot;create feature vector&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TrackerFeaturizer.create_X"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.TrackerFeaturizer.create_X">[docs]</a>    <span class="k">def</span> <span class="nf">create_X</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+                 <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+                 <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Tuple[np.ndarray, List[int]]</span>
+        <span class="sd">&quot;&quot;&quot;Create X for prediction&quot;&quot;&quot;</span>
+
+        <span class="n">trackers_as_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_states</span><span class="p">(</span><span class="n">trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_featurize_states</span><span class="p">(</span><span class="n">trackers_as_states</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">X</span></div>
+
+<div class="viewcode-block" id="TrackerFeaturizer.persist"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.TrackerFeaturizer.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">featurizer_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;featurizer.json&quot;</span><span class="p">)</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">create_dir_for_file</span><span class="p">(</span><span class="n">featurizer_file</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">featurizer_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">jsonpickle</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="TrackerFeaturizer.load"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.TrackerFeaturizer.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">featurizer_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;featurizer.json&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">featurizer_file</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">featurizer_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">_json</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">jsonpickle</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">_json</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t load featurizer for policy. &quot;</span>
+                         <span class="s2">&quot;File &#39;</span><span class="si">{}</span><span class="s2">&#39; doesn&#39;t exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">featurizer_file</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="FullDialogueTrackerFeaturizer"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.FullDialogueTrackerFeaturizer">[docs]</a><span class="k">class</span> <span class="nc">FullDialogueTrackerFeaturizer</span><span class="p">(</span><span class="n">TrackerFeaturizer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tracker featurizer that takes the trackers</span>
+<span class="sd">    and creates full dialogue training data for</span>
+<span class="sd">    time distributed rnn.</span>
+<span class="sd">    Training data is padded up to the length of the longest</span>
+<span class="sd">    dialogue with -1&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_featurizer</span><span class="p">,</span> <span class="n">use_intent_probabilities</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># type: (SingleStateFeaturizer, bool) -&gt; None</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FullDialogueTrackerFeaturizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="n">state_featurizer</span><span class="p">,</span> <span class="n">use_intent_probabilities</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_len</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_calculate_max_len</span><span class="p">(</span><span class="n">trackers_as_actions</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">trackers_as_actions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span> <span class="k">for</span> <span class="n">states</span> <span class="ow">in</span> <span class="n">trackers_as_actions</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_pad_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="c1"># type: (List[Any]) -&gt; List[Any]</span>
+        <span class="sd">&quot;&quot;&quot;Pads states up to max_len&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_len</span><span class="p">:</span>
+            <span class="n">states</span> <span class="o">+=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_len</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">states</span>
+
+<div class="viewcode-block" id="FullDialogueTrackerFeaturizer.training_states_and_actions"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.FullDialogueTrackerFeaturizer.training_states_and_actions">[docs]</a>    <span class="k">def</span> <span class="nf">training_states_and_actions</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+            <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Tuple[List[List[Dict]], List[List[Text]]]</span>
+
+        <span class="n">trackers_as_states</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">trackers_as_actions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating states and action examples from &quot;</span>
+                    <span class="s2">&quot;collected trackers (</span><span class="si">{}</span><span class="s2">)...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">trackers</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Processed trackers&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tracker</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_states</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span>
+                                         <span class="n">is_binary_training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">delete_first_state</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">tracker</span><span class="o">.</span><span class="n">applied_events</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">unpredictable</span><span class="p">:</span>
+                        <span class="c1"># only actions which can be</span>
+                        <span class="c1"># predicted at a stories start</span>
+                        <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># unpredictable actions can be</span>
+                        <span class="c1"># only the first in the story</span>
+                        <span class="k">if</span> <span class="n">delete_first_state</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Found two unpredictable &quot;</span>
+                                            <span class="s2">&quot;actions in one story.&quot;</span>
+                                            <span class="s2">&quot;Check your story files.&quot;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">delete_first_state</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="n">delete_first_state</span><span class="p">:</span>
+                <span class="n">states</span> <span class="o">=</span> <span class="n">states</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+            <span class="n">trackers_as_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">states</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">trackers_as_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_max_len</span><span class="p">(</span><span class="n">trackers_as_actions</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;The longest dialogue has </span><span class="si">{}</span><span class="s2"> actions.&quot;</span>
+                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_len</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">trackers_as_states</span><span class="p">,</span> <span class="n">trackers_as_actions</span></div>
+
+<div class="viewcode-block" id="FullDialogueTrackerFeaturizer.prediction_states"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.FullDialogueTrackerFeaturizer.prediction_states">[docs]</a>    <span class="k">def</span> <span class="nf">prediction_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+                          <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+                          <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; List[List[Dict[Text, float]]]</span>
+
+        <span class="n">trackers_as_states</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_states</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+                              <span class="k">for</span> <span class="n">tracker</span> <span class="ow">in</span> <span class="n">trackers</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">trackers_as_states</span></div></div>
+
+
+<div class="viewcode-block" id="MaxHistoryTrackerFeaturizer"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.MaxHistoryTrackerFeaturizer">[docs]</a><span class="k">class</span> <span class="nc">MaxHistoryTrackerFeaturizer</span><span class="p">(</span><span class="n">TrackerFeaturizer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tracker featurizer that takes the trackers,</span>
+<span class="sd">    slices them into max_history batches and</span>
+<span class="sd">    creates  training data for rnn that uses last output</span>
+<span class="sd">    for prediction.</span>
+<span class="sd">    Training data is padded up to the max_history with -1&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                 <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_intent_probabilities</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># type: (Optional(SingleStateFeaturizer), int, bool, bool) -&gt; None</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MaxHistoryTrackerFeaturizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="n">state_featurizer</span><span class="p">,</span> <span class="n">use_intent_probabilities</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_history</span> <span class="o">=</span> <span class="n">max_history</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_duplicates</span> <span class="o">=</span> <span class="n">remove_duplicates</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="MaxHistoryTrackerFeaturizer.slice_state_history"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.MaxHistoryTrackerFeaturizer.slice_state_history">[docs]</a>    <span class="k">def</span> <span class="nf">slice_state_history</span><span class="p">(</span>
+            <span class="n">states</span><span class="p">,</span>  <span class="c1"># type: List[Dict[Text, float]]</span>
+            <span class="n">slice_length</span>  <span class="c1"># type: int</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; List[Optional[Dict[Text, float]]]</span>
+        <span class="sd">&quot;&quot;&quot;Slices states from the trackers history.</span>
+
+<span class="sd">        If the slice is at the array borders, padding will be added to ensure</span>
+<span class="sd">        the slice length.&quot;&quot;&quot;</span>
+
+        <span class="n">slice_end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+        <span class="n">slice_start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">slice_end</span> <span class="o">-</span> <span class="n">slice_length</span><span class="p">)</span>
+        <span class="n">padding</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">slice_length</span> <span class="o">-</span> <span class="n">slice_end</span><span class="p">)</span>
+        <span class="n">state_features</span> <span class="o">=</span> <span class="n">padding</span> <span class="o">+</span> <span class="n">states</span><span class="p">[</span><span class="n">slice_start</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="n">state_features</span></div>
+
+    <span class="k">def</span> <span class="nf">_hash_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="n">frozen_states</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">s</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span>
+                               <span class="k">else</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+                               <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">))</span>
+        <span class="n">frozen_actions</span> <span class="o">=</span> <span class="p">(</span><span class="n">action</span><span class="p">,)</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="n">frozen_states</span><span class="p">,</span> <span class="n">frozen_actions</span><span class="p">))</span>
+
+<div class="viewcode-block" id="MaxHistoryTrackerFeaturizer.training_states_and_actions"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.MaxHistoryTrackerFeaturizer.training_states_and_actions">[docs]</a>    <span class="k">def</span> <span class="nf">training_states_and_actions</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+            <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Tuple[List[List[Dict]], List[List[Text]]]</span>
+
+        <span class="n">trackers_as_states</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">trackers_as_actions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># from multiple states that create equal featurizations</span>
+        <span class="c1"># we only need to keep one.</span>
+        <span class="n">hashed_examples</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating states and action examples from &quot;</span>
+                    <span class="s2">&quot;collected trackers (</span><span class="si">{}</span><span class="s2">)...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">trackers</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Processed trackers&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tracker</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_states</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">tracker</span><span class="o">.</span><span class="n">applied_events</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">unpredictable</span><span class="p">:</span>
+                        <span class="c1"># only actions which can be</span>
+                        <span class="c1"># predicted at a stories start</span>
+                        <span class="n">sliced_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice_state_history</span><span class="p">(</span>
+                            <span class="n">states</span><span class="p">[:</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_history</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_duplicates</span><span class="p">:</span>
+                            <span class="n">hashed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash_example</span><span class="p">(</span><span class="n">sliced_states</span><span class="p">,</span>
+                                                        <span class="n">event</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
+
+                            <span class="c1"># only continue with tracker_states that created a</span>
+                            <span class="c1"># hashed_featurization we haven&#39;t observed</span>
+                            <span class="k">if</span> <span class="n">hashed</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hashed_examples</span><span class="p">:</span>
+                                <span class="n">hashed_examples</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">hashed</span><span class="p">)</span>
+                                <span class="n">trackers_as_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sliced_states</span><span class="p">)</span>
+                                <span class="n">trackers_as_actions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">event</span><span class="o">.</span><span class="n">action_name</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">trackers_as_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sliced_states</span><span class="p">)</span>
+                            <span class="n">trackers_as_actions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">event</span><span class="o">.</span><span class="n">action_name</span><span class="p">])</span>
+
+                        <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">({</span><span class="s2">&quot;# actions&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="n">trackers_as_actions</span><span class="p">))})</span>
+                    <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Created </span><span class="si">{}</span><span class="s2"> action examples.&quot;</span>
+                    <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trackers_as_actions</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">trackers_as_states</span><span class="p">,</span> <span class="n">trackers_as_actions</span></div>
+
+<div class="viewcode-block" id="MaxHistoryTrackerFeaturizer.prediction_states"><a class="viewcode-back" href="../../rasa_dm.html#rasa_core.featurizers.MaxHistoryTrackerFeaturizer.prediction_states">[docs]</a>    <span class="k">def</span> <span class="nf">prediction_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+                          <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+                          <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; List[List[Dict[Text, float]]]</span>
+
+        <span class="n">trackers_as_states</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_states</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+                              <span class="k">for</span> <span class="n">tracker</span> <span class="ow">in</span> <span class="n">trackers</span><span class="p">]</span>
+        <span class="n">trackers_as_states</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">slice_state_history</span><span class="p">(</span><span class="n">states</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">max_history</span><span class="p">)</span>
+                              <span class="k">for</span> <span class="n">states</span> <span class="ow">in</span> <span class="n">trackers_as_states</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">trackers_as_states</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: wildcard
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../../0.6.5/index.html">0.6.5</a></dd>
+            <dd><a href="../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../../../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../../../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../async/index.html">async</a></dd>
+            <dd><a href="../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../fix/index.html">fix</a></dd>
+            <dd><a href="../../../master/index.html">master</a></dd>
+            <dd><a href="../../../memo_fix/index.html">memo_fix</a></dd>
+            <dd><a href="../../../ruamel/index.html">ruamel</a></dd>
+            <dd><a href="../../../script-docs/index.html">script-docs</a></dd>
+            <dd><a href="../../../stories_dumping/index.html">stories_dumping</a></dd>
+            <dd><a href="../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="featurizers.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.7.0a3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

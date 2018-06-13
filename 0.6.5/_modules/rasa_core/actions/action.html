@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core.actions.action &mdash; Rasa Core 0.7.0a3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a3 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../library.html">Library Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>rasa_core.actions.action</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rasa_core.actions.action</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Text</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Event</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">ACTION_LISTEN_NAME</span> <span class="o">=</span> <span class="s2">&quot;action_listen&quot;</span>
+
+<span class="n">ACTION_RESTART_NAME</span> <span class="o">=</span> <span class="s2">&quot;action_restart&quot;</span>
+
+
+<div class="viewcode-block" id="Action"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.Action">[docs]</a><span class="k">class</span> <span class="nc">Action</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Next action to be taken in response to a dialogue state.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Action.name"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.Action.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Text</span>
+        <span class="sd">&quot;&quot;&quot;Unique identifier of this simple action.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Action.run"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.Action.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Dispatcher, DialogueStateTracker, Domain) -&gt; List[Event]</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute the side effects of this action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tracker (DialogueStateTracker): the state tracker for the current user.</span>
+<span class="sd">                You can access slot values using ``tracker.get_slot(slot_name)``</span>
+<span class="sd">                and the most recent user message is ``tracker.latest_message``.</span>
+<span class="sd">            dispatcher (Dispatcher): the dispatcher which is used to send messages back</span>
+<span class="sd">                to the user. Use ``dipatcher.utter_message()`` or any other :class:`Dispatcher` method.</span>
+<span class="sd">            domain (Domain): the bot&#39;s domain</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List: A list of :class:`Event` instances</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Action(&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="UtterAction"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.UtterAction">[docs]</a><span class="k">class</span> <span class="nc">UtterAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An action which only effect is to utter a template when it is run.</span>
+
+<span class="sd">    Both, name and utter template, need to be specified using</span>
+<span class="sd">    the `name` method.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+
+<div class="viewcode-block" id="UtterAction.run"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.UtterAction.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Simple run implementation uttering a (hopefully defined) template.&quot;&quot;&quot;</span>
+
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                                  <span class="n">filled_slots</span><span class="o">=</span><span class="n">tracker</span><span class="o">.</span><span class="n">current_slot_values</span><span class="p">())</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="UtterAction.name"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.UtterAction.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;UtterAction(&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ActionListen"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.ActionListen">[docs]</a><span class="k">class</span> <span class="nc">ActionListen</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The first action in any turn - bot waits for a user message.</span>
+
+<span class="sd">    The bot should stop taking further actions and wait for the user to say</span>
+<span class="sd">    something.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ActionListen.name"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.ActionListen.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ACTION_LISTEN_NAME</span></div>
+
+<div class="viewcode-block" id="ActionListen.run"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.ActionListen.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span></div></div>
+
+
+<div class="viewcode-block" id="ActionRestart"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.ActionRestart">[docs]</a><span class="k">class</span> <span class="nc">ActionRestart</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Resets the tracker to its initial state.</span>
+
+<span class="sd">    Utters the restart template if available.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ActionRestart.name"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.ActionRestart.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ACTION_RESTART_NAME</span></div>
+
+<div class="viewcode-block" id="ActionRestart.run"><a class="viewcode-back" href="../../../rasa_dm.actions.html#rasa_core.actions.action.ActionRestart.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Restarted</span>
+
+        <span class="c1"># only utter the template if it is available</span>
+        <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">random_template_for</span><span class="p">(</span><span class="s2">&quot;utter_restart&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_restart&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Restarted</span><span class="p">()]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.6.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="action.html">0.6.5</a></dd>
+            <dd><a href="../../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../../../../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../../../../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../../0.9.4/index.html">0.9.4</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../../async/index.html">async</a></dd>
+            <dd><a href="../../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../../fix/index.html">fix</a></dd>
+            <dd><a href="../../../../master/index.html">master</a></dd>
+            <dd><a href="../../../../memo_fix/index.html">memo_fix</a></dd>
+            <dd><a href="../../../../ruamel/index.html">ruamel</a></dd>
+            <dd><a href="../../../../script-docs/index.html">script-docs</a></dd>
+            <dd><a href="../../../../stories_dumping/index.html">stories_dumping</a></dd>
+            <dd><a href="../../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="../../../../wildcard/index.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.7.0a3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

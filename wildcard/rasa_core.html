@@ -1,0 +1,1956 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core package &mdash; Rasa Core 0.7.0a3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a3 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Library Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>rasa_core package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/rasa_core.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="rasa-core-package">
+<h1>rasa_core package<a class="headerlink" href="#rasa-core-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rasa_core.actions.html">rasa_core.actions package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.actions.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.actions.html#module-rasa_core.actions.action">rasa_core.actions.action module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.actions.html#module-rasa_core.actions.factories">rasa_core.actions.factories module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.actions.html#module-rasa_core.actions">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rasa_core.channels.html">rasa_core.channels package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.channels.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.channels.html#module-rasa_core.channels.channel">rasa_core.channels.channel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.channels.html#module-rasa_core.channels.console">rasa_core.channels.console module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.channels.html#module-rasa_core.channels.custom">rasa_core.channels.custom module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.channels.html#module-rasa_core.channels.direct">rasa_core.channels.direct module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.channels.html#module-rasa_core.channels.facebook">rasa_core.channels.facebook module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.channels.html#module-rasa_core.channels.file">rasa_core.channels.file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.channels.html#module-rasa_core.channels.rest">rasa_core.channels.rest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.channels.html#module-rasa_core.channels">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rasa_core.conversation.html">rasa_core.conversation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.conversation.html#module-rasa_core.conversation">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rasa_core.events.html">rasa_core.events package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.events.html#module-rasa_core.events">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rasa_core.policies.html">rasa_core.policies package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.policies.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.policies.html#module-rasa_core.policies.ensemble">rasa_core.policies.ensemble module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.policies.html#module-rasa_core.policies.keras_policy">rasa_core.policies.keras_policy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.policies.html#module-rasa_core.policies.memoization">rasa_core.policies.memoization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.policies.html#rasa-core-policies-online-policy-trainer-module">rasa_core.policies.online_policy_trainer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.policies.html#module-rasa_core.policies.policy">rasa_core.policies.policy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.policies.html#rasa-core-policies-scoring-policy-module">rasa_core.policies.scoring_policy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.policies.html#rasa-core-policies-trainer-module">rasa_core.policies.trainer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.policies.html#module-rasa_core.policies">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rasa_core.training_utils.html">rasa_core.training_utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.training_utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.training_utils.html#rasa-core-training-utils-dsl-module">rasa_core.training_utils.dsl module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.training_utils.html#rasa-core-training-utils-story-graph-module">rasa_core.training_utils.story_graph module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.training_utils.html#rasa-core-training-utils-visualization-module">rasa_core.training_utils.visualization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasa_core.training_utils.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-rasa_core.agent">
+<span id="rasa-core-agent-module"></span><h2>rasa_core.agent module<a class="headerlink" href="#module-rasa_core.agent" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.agent.Agent">
+<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain</em>, <em>policies=None</em>, <em>interpreter=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Public interface for common things to do.</p>
+<p>This includes e.g. train an assistant (online or offline mode),
+handle messages with an assistant, load a dialogue model,
+get the next action, handle channel or toggle memoization</p>
+<dl class="method">
+<dt id="rasa_core.agent.Agent.continue_message_handling">
+<code class="descname">continue_message_handling</code><span class="sig-paren">(</span><em>sender_id</em>, <em>executed_action</em>, <em>events</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.continue_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.continue_message_handling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continue to process a messages.</p>
+<p>Predicts the next action to take by the caller</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.agent.Agent.create_tracker_store">
+<em class="property">static </em><code class="descname">create_tracker_store</code><span class="sig-paren">(</span><em>store</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.create_tracker_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.create_tracker_store" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.handle_channel">
+<code class="descname">handle_channel</code><span class="sig-paren">(</span><em>input_channel</em>, <em>message_preprocessor=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.handle_channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle messages coming from the channel.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.handle_message">
+<code class="descname">handle_message</code><span class="sig-paren">(</span><em>text_message</em>, <em>message_preprocessor=None</em>, <em>output_channel=None</em>, <em>sender_id=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.handle_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a single message.</p>
+<p>If a message preprocessor is passed, the message will be passed to that
+function first and the return value is then used as the
+input for the dialogue engine.</p>
+<p>The return value of this function depends on the <cite>output_channel</cite>. If
+the output channel is not set, set to <cite>None</cite>, or set
+to <cite>CollectingOutputChannel</cite> this function will return the messages
+the bot wants to respond.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;examples/restaurantbot/models/dialogue&quot;</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">interpreter</span><span class="o">=</span><span class="s2">&quot;examples/restaurantbot/models/nlu/current&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="go">[u&#39;how can I help you?&#39;]</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="rasa_core.agent.Agent.load">
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>interpreter=None</em>, <em>tracker_store=None</em>, <em>action_factory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a persisted model from the passed path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.load_data">
+<code class="descname">load_data</code><span class="sig-paren">(</span><em>resource_name</em>, <em>remove_duplicates=True</em>, <em>unique_last_num_states=None</em>, <em>augmentation_factor=20</em>, <em>max_number_of_trackers=None</em>, <em>tracker_limit=None</em>, <em>use_story_concatenation=True</em>, <em>debug_plots=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load training data from a resource.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.persist">
+<code class="descname">persist</code><span class="sig-paren">(</span><em>model_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.persist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Persists this agent into a directory for later loading and usage.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.start_message_handling">
+<code class="descname">start_message_handling</code><span class="sig-paren">(</span><em>text_message</em>, <em>sender_id=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.start_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.start_message_handling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start to process a messages, returning the next action to take.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.toggle_memoization">
+<code class="descname">toggle_memoization</code><span class="sig-paren">(</span><em>activate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.toggle_memoization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.toggle_memoization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles the memoization on and off.</p>
+<p>If a memoization policy is present in the ensemble, this will toggle
+the prediction of that policy. When set to <cite>false</cite> the Memoization
+policies present in the policy ensemble will not make any predictions.
+Hence, the prediction result from the ensemble always needs to come
+from a different policy (e.g. <cite>KerasPolicy</cite>). Useful to test prediction
+capabilities of an ensemble when ignoring memorized turns from the
+training data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>training_trackers</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train the policies / policy ensemble using dialogue data from file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>training_trackers</strong> &#8211; trackers to train on</li>
+<li><strong>kwargs</strong> &#8211; additional arguments passed to the underlying ML
+trainer (e.g. keras parameters)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.train_online">
+<code class="descname">train_online</code><span class="sig-paren">(</span><em>training_trackers</em>, <em>input_channel=None</em>, <em>max_visual_history=3</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.train_online"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train_online" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.agent.Agent.visualize">
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>resource_name</em>, <em>output_file</em>, <em>max_history</em>, <em>nlu_training_data=None</em>, <em>should_merge_nodes=True</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/agent.html#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="rasa-core-config-module">
+<h2>rasa_core.config module<a class="headerlink" href="#rasa-core-config-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-rasa_core.dispatcher">
+<span id="rasa-core-dispatcher-module"></span><h2>rasa_core.dispatcher module<a class="headerlink" href="#module-rasa_core.dispatcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.dispatcher.BotMessage">
+<em class="property">class </em><code class="descclassname">rasa_core.dispatcher.</code><code class="descname">BotMessage</code><span class="sig-paren">(</span><em>text</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#rasa_core.dispatcher.BotMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="rasa_core.dispatcher.BotMessage.data">
+<code class="descname">data</code><a class="headerlink" href="#rasa_core.dispatcher.BotMessage.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.dispatcher.BotMessage.text">
+<code class="descname">text</code><a class="headerlink" href="#rasa_core.dispatcher.BotMessage.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.dispatcher.Button">
+<em class="property">class </em><code class="descclassname">rasa_core.dispatcher.</code><code class="descname">Button</code><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Button"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Button" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">dict</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.dispatcher.Dispatcher">
+<em class="property">class </em><code class="descclassname">rasa_core.dispatcher.</code><code class="descname">Dispatcher</code><span class="sig-paren">(</span><em>sender_id</em>, <em>output_channel</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Dispatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Send messages back to user</p>
+<dl class="method">
+<dt id="rasa_core.dispatcher.Dispatcher.retrieve_template">
+<code class="descname">retrieve_template</code><span class="sig-paren">(</span><em>template_name</em>, <em>filled_slots=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Dispatcher.retrieve_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.retrieve_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a named template from the domain.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.dispatcher.Dispatcher.utter_attachment">
+<code class="descname">utter_attachment</code><span class="sig-paren">(</span><em>attachment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Dispatcher.utter_attachment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_attachment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a message to the client with attachments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.dispatcher.Dispatcher.utter_button_message">
+<code class="descname">utter_button_message</code><span class="sig-paren">(</span><em>text</em>, <em>buttons</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Dispatcher.utter_button_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_button_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a message with buttons to the output channel.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.dispatcher.Dispatcher.utter_button_template">
+<code class="descname">utter_button_template</code><span class="sig-paren">(</span><em>template</em>, <em>buttons</em>, <em>filled_slots=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Dispatcher.utter_button_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_button_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a message template with buttons to the output channel.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.dispatcher.Dispatcher.utter_custom_message">
+<code class="descname">utter_custom_message</code><span class="sig-paren">(</span><em>*elements</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Dispatcher.utter_custom_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_custom_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a message with custom elements to the output channel.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.dispatcher.Dispatcher.utter_message">
+<code class="descname">utter_message</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Dispatcher.utter_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#8220;Send a text to the output channel</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.dispatcher.Dispatcher.utter_response">
+<code class="descname">utter_response</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Dispatcher.utter_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a message to the client.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.dispatcher.Dispatcher.utter_template">
+<code class="descname">utter_template</code><span class="sig-paren">(</span><em>template</em>, <em>filled_slots=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Dispatcher.utter_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#8220;Send a message to the client based on a template.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.dispatcher.Element">
+<em class="property">class </em><code class="descclassname">rasa_core.dispatcher.</code><code class="descname">Element</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/dispatcher.html#Element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">dict</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.domain">
+<span id="rasa-core-domain-module"></span><h2>rasa_core.domain module<a class="headerlink" href="#module-rasa_core.domain" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.domain.Domain">
+<em class="property">class </em><code class="descclassname">rasa_core.domain.</code><code class="descname">Domain</code><span class="sig-paren">(</span><em>store_entities_as_slots=True</em>, <em>restart_intent=u'restart'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>The domain specifies the universe in which the bot&#8217;s policy acts.</p>
+<p>A Domain subclass provides the actions the bot can take, the intents
+and entities it can recognise</p>
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.DEFAULT_ACTIONS">
+<code class="descname">DEFAULT_ACTIONS</code><em class="property"> = [&lt;rasa_core.actions.action.ActionListen object&gt;, &lt;rasa_core.actions.action.ActionRestart object&gt;]</em><a class="headerlink" href="#rasa_core.domain.Domain.DEFAULT_ACTIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.action_for_index">
+<code class="descname">action_for_index</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.action_for_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.action_for_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integer index corresponding to an actions index in the action list.</p>
+<p>This method resolves the index to the actions name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.action_for_name">
+<code class="descname">action_for_name</code><span class="sig-paren">(</span><em>action_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.action_for_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.action_for_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Looks up which action corresponds to this action name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.action_map">
+<code class="descname">action_map</code><a class="headerlink" href="#rasa_core.domain.Domain.action_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.action_names">
+<code class="descname">action_names</code><a class="headerlink" href="#rasa_core.domain.Domain.action_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.actions">
+<code class="descname">actions</code><a class="headerlink" href="#rasa_core.domain.Domain.actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.compare_with_specification">
+<code class="descname">compare_with_specification</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.compare_with_specification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.compare_with_specification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares the domain spec of the current and the loaded domain.</p>
+<p>Throws exception if the loaded domain specification is different
+to the current domain are different.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.entities">
+<code class="descname">entities</code><a class="headerlink" href="#rasa_core.domain.Domain.entities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.entity_states">
+<code class="descname">entity_states</code><a class="headerlink" href="#rasa_core.domain.Domain.entity_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.get_active_states">
+<code class="descname">get_active_states</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.get_active_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.get_active_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a bag of active states from the tracker state</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.domain.Domain.get_parsing_states">
+<em class="property">static </em><code class="descname">get_parsing_states</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.get_parsing_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.get_parsing_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.get_prev_action_states">
+<code class="descname">get_prev_action_states</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.get_prev_action_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.get_prev_action_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns the previous taken action into a state name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.index_for_action">
+<code class="descname">index_for_action</code><span class="sig-paren">(</span><em>action_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.index_for_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.index_for_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Looks up which action index corresponds to this action name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.index_of_state">
+<code class="descname">index_of_state</code><span class="sig-paren">(</span><em>state_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.index_of_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.index_of_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides the index of a state.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.input_state_map">
+<code class="descname">input_state_map</code><a class="headerlink" href="#rasa_core.domain.Domain.input_state_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.input_states">
+<code class="descname">input_states</code><a class="headerlink" href="#rasa_core.domain.Domain.input_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.intent_states">
+<code class="descname">intent_states</code><a class="headerlink" href="#rasa_core.domain.Domain.intent_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.intents">
+<code class="descname">intents</code><a class="headerlink" href="#rasa_core.domain.Domain.intents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="rasa_core.domain.Domain.load">
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="rasa_core.domain.Domain.load_specification">
+<em class="property">classmethod </em><code class="descname">load_specification</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.load_specification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.load_specification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a domains specification from a dumped model directory.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.num_actions">
+<code class="descname">num_actions</code><a class="headerlink" href="#rasa_core.domain.Domain.num_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.num_states">
+<code class="descname">num_states</code><a class="headerlink" href="#rasa_core.domain.Domain.num_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.persist">
+<code class="descname">persist</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.persist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.persist_specification">
+<code class="descname">persist_specification</code><span class="sig-paren">(</span><em>model_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.persist_specification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.persist_specification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Persists the domain specification to storage.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.prev_action_states">
+<code class="descname">prev_action_states</code><a class="headerlink" href="#rasa_core.domain.Domain.prev_action_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.random_template_for">
+<code class="descname">random_template_for</code><span class="sig-paren">(</span><em>utter_action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.random_template_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.random_template_for" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.slot_states">
+<code class="descname">slot_states</code><a class="headerlink" href="#rasa_core.domain.Domain.slot_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.slots">
+<code class="descname">slots</code><a class="headerlink" href="#rasa_core.domain.Domain.slots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Domain subclass must provide a list of slots</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.slots_for_entities">
+<code class="descname">slots_for_entities</code><span class="sig-paren">(</span><em>entities</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.slots_for_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.slots_for_entities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.Domain.states_for_tracker_history">
+<code class="descname">states_for_tracker_history</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#Domain.states_for_tracker_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.Domain.states_for_tracker_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of states for each state of the trackers history.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.Domain.templates">
+<code class="descname">templates</code><a class="headerlink" href="#rasa_core.domain.Domain.templates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.domain.TemplateDomain">
+<em class="property">class </em><code class="descclassname">rasa_core.domain.</code><code class="descname">TemplateDomain</code><span class="sig-paren">(</span><em>intents</em>, <em>entities</em>, <em>slots</em>, <em>templates</em>, <em>action_classes</em>, <em>action_names</em>, <em>action_factory</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#TemplateDomain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.TemplateDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.domain.Domain" title="rasa_core.domain.Domain"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.domain.Domain</span></code></a></p>
+<dl class="attribute">
+<dt id="rasa_core.domain.TemplateDomain.actions">
+<code class="descname">actions</code><a class="headerlink" href="#rasa_core.domain.TemplateDomain.actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.domain.TemplateDomain.collect_slots">
+<em class="property">static </em><code class="descname">collect_slots</code><span class="sig-paren">(</span><em>slot_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#TemplateDomain.collect_slots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.TemplateDomain.collect_slots" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.domain.TemplateDomain.collect_templates">
+<em class="property">static </em><code class="descname">collect_templates</code><span class="sig-paren">(</span><em>yml_templates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#TemplateDomain.collect_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.TemplateDomain.collect_templates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go through the templates and make sure they are all in dict format</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.TemplateDomain.entities">
+<code class="descname">entities</code><a class="headerlink" href="#rasa_core.domain.TemplateDomain.entities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.domain.TemplateDomain.instantiate_actions">
+<em class="property">static </em><code class="descname">instantiate_actions</code><span class="sig-paren">(</span><em>factory_name</em>, <em>action_classes</em>, <em>action_names</em>, <em>templates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#TemplateDomain.instantiate_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.TemplateDomain.instantiate_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.TemplateDomain.intents">
+<code class="descname">intents</code><a class="headerlink" href="#rasa_core.domain.TemplateDomain.intents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="rasa_core.domain.TemplateDomain.load">
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>filename</em>, <em>action_factory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#TemplateDomain.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.TemplateDomain.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.domain.TemplateDomain.persist">
+<code class="descname">persist</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#TemplateDomain.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.TemplateDomain.persist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.TemplateDomain.slots">
+<code class="descname">slots</code><a class="headerlink" href="#rasa_core.domain.TemplateDomain.slots" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.domain.TemplateDomain.templates">
+<code class="descname">templates</code><a class="headerlink" href="#rasa_core.domain.TemplateDomain.templates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="rasa_core.domain.TemplateDomain.validate_domain_yaml">
+<em class="property">classmethod </em><code class="descname">validate_domain_yaml</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#TemplateDomain.validate_domain_yaml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.TemplateDomain.validate_domain_yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate domain yaml.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.domain.check_domain_sanity">
+<code class="descclassname">rasa_core.domain.</code><code class="descname">check_domain_sanity</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/domain.html#check_domain_sanity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.domain.check_domain_sanity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes sure the domain is properly configured.</p>
+<p>Checks the settings and checks if there are duplicate actions,
+intents, slots and entities.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.featurizers">
+<span id="rasa-core-featurizers-module"></span><h2>rasa_core.featurizers module<a class="headerlink" href="#module-rasa_core.featurizers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.featurizers.BinarySingleStateFeaturizer">
+<em class="property">class </em><code class="descclassname">rasa_core.featurizers.</code><code class="descname">BinarySingleStateFeaturizer</code><a class="reference internal" href="_modules/rasa_core/featurizers.html#BinarySingleStateFeaturizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.BinarySingleStateFeaturizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.featurizers.SingleStateFeaturizer" title="rasa_core.featurizers.SingleStateFeaturizer"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.featurizers.SingleStateFeaturizer</span></code></a></p>
+<p>Assumes all features are binary.</p>
+<p>All features should be either on or off, denoting them with 1 or 0.</p>
+<dl class="method">
+<dt id="rasa_core.featurizers.BinarySingleStateFeaturizer.create_encoded_all_actions">
+<code class="descname">create_encoded_all_actions</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#BinarySingleStateFeaturizer.create_encoded_all_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.BinarySingleStateFeaturizer.create_encoded_all_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create matrix with all actions from domain
+encoded in rows as bag of words.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.BinarySingleStateFeaturizer.encode">
+<code class="descname">encode</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#BinarySingleStateFeaturizer.encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.BinarySingleStateFeaturizer.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a binary vector indicating which features are active.</p>
+<p>Given a dictionary of states (e.g. &#8216;intent_greet&#8217;,
+&#8216;prev_action_listen&#8217;,...) return a binary vector indicating which
+features of <cite>self.input_features</cite> are in the bag. NB it&#8217;s a
+regular double precision float array type.</p>
+<p>For example with two active features out of five possible features
+this would return a vector like <cite>[0 0 1 0 1]</cite></p>
+<p>If intent features are given with a probability, for example
+with two active features and two uncertain intents out
+of five possible features this would return a vector
+like <cite>[0.3, 0.7, 1.0, 0, 1.0]</cite>.</p>
+<p>If this is just a padding vector we set all values to <cite>-1</cite>.
+padding vectors are specified by a <cite>None</cite> or <cite>[None]</cite>
+value for states.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.BinarySingleStateFeaturizer.prepare_from_domain">
+<code class="descname">prepare_from_domain</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#BinarySingleStateFeaturizer.prepare_from_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.BinarySingleStateFeaturizer.prepare_from_domain" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.featurizers.FullDialogueTrackerFeaturizer">
+<em class="property">class </em><code class="descclassname">rasa_core.featurizers.</code><code class="descname">FullDialogueTrackerFeaturizer</code><span class="sig-paren">(</span><em>state_featurizer</em>, <em>use_intent_probabilities=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#FullDialogueTrackerFeaturizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.FullDialogueTrackerFeaturizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.featurizers.TrackerFeaturizer" title="rasa_core.featurizers.TrackerFeaturizer"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.featurizers.TrackerFeaturizer</span></code></a></p>
+<p>Tracker featurizer that takes the trackers
+and creates full dialogue training data for
+time distributed rnn.
+Training data is padded up to the length of the longest
+dialogue with -1</p>
+<dl class="method">
+<dt id="rasa_core.featurizers.FullDialogueTrackerFeaturizer.prediction_states">
+<code class="descname">prediction_states</code><span class="sig-paren">(</span><em>trackers</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#FullDialogueTrackerFeaturizer.prediction_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.FullDialogueTrackerFeaturizer.prediction_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.FullDialogueTrackerFeaturizer.training_states_and_actions">
+<code class="descname">training_states_and_actions</code><span class="sig-paren">(</span><em>trackers</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#FullDialogueTrackerFeaturizer.training_states_and_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.FullDialogueTrackerFeaturizer.training_states_and_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer">
+<em class="property">class </em><code class="descclassname">rasa_core.featurizers.</code><code class="descname">LabelTokenizerSingleStateFeaturizer</code><span class="sig-paren">(</span><em>use_shared_vocab=False</em>, <em>split_symbol=u'_'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#LabelTokenizerSingleStateFeaturizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.featurizers.SingleStateFeaturizer" title="rasa_core.featurizers.SingleStateFeaturizer"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.featurizers.SingleStateFeaturizer</span></code></a></p>
+<p>SingleStateFeaturizer that splits user intents and
+bot action names into tokens and uses these tokens to
+create bag-of-words feature vectors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>split_symbol</strong> (<em>Text</em>) &#8211; The symbol that separates words in intets and action names.</li>
+<li><strong>use_shared_vocab</strong> (<em>bool</em>) &#8211; The flag that specifies if to create the same vocabulary for
+user intents and bot actions.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer.create_encoded_all_actions">
+<code class="descname">create_encoded_all_actions</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#LabelTokenizerSingleStateFeaturizer.create_encoded_all_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer.create_encoded_all_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create matrix with all actions from domain
+encoded in rows as bag of words.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer.encode">
+<code class="descname">encode</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#LabelTokenizerSingleStateFeaturizer.encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer.encode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer.prepare_from_domain">
+<code class="descname">prepare_from_domain</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#LabelTokenizerSingleStateFeaturizer.prepare_from_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.LabelTokenizerSingleStateFeaturizer.prepare_from_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates internal vocabularies for user intents
+and bot actions to use for featurization</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.featurizers.MaxHistoryTrackerFeaturizer">
+<em class="property">class </em><code class="descclassname">rasa_core.featurizers.</code><code class="descname">MaxHistoryTrackerFeaturizer</code><span class="sig-paren">(</span><em>state_featurizer=None</em>, <em>max_history=5</em>, <em>remove_duplicates=True</em>, <em>use_intent_probabilities=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#MaxHistoryTrackerFeaturizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.MaxHistoryTrackerFeaturizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.featurizers.TrackerFeaturizer" title="rasa_core.featurizers.TrackerFeaturizer"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.featurizers.TrackerFeaturizer</span></code></a></p>
+<p>Tracker featurizer that takes the trackers,
+slices them into max_history batches and
+creates  training data for rnn that uses last output
+for prediction.
+Training data is padded up to the max_history with -1</p>
+<dl class="method">
+<dt id="rasa_core.featurizers.MaxHistoryTrackerFeaturizer.prediction_states">
+<code class="descname">prediction_states</code><span class="sig-paren">(</span><em>trackers</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#MaxHistoryTrackerFeaturizer.prediction_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.MaxHistoryTrackerFeaturizer.prediction_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.featurizers.MaxHistoryTrackerFeaturizer.slice_state_history">
+<em class="property">static </em><code class="descname">slice_state_history</code><span class="sig-paren">(</span><em>states</em>, <em>slice_length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#MaxHistoryTrackerFeaturizer.slice_state_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.MaxHistoryTrackerFeaturizer.slice_state_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Slices states from the trackers history.</p>
+<p>If the slice is at the array borders, padding will be added to ensure
+the slice length.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.MaxHistoryTrackerFeaturizer.training_states_and_actions">
+<code class="descname">training_states_and_actions</code><span class="sig-paren">(</span><em>trackers</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#MaxHistoryTrackerFeaturizer.training_states_and_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.MaxHistoryTrackerFeaturizer.training_states_and_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.featurizers.SingleStateFeaturizer">
+<em class="property">class </em><code class="descclassname">rasa_core.featurizers.</code><code class="descname">SingleStateFeaturizer</code><a class="reference internal" href="_modules/rasa_core/featurizers.html#SingleStateFeaturizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.SingleStateFeaturizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for mechanisms to transform the conversations state
+into machine learning formats.</p>
+<p>Subclasses of SingleStateFeaturizer decide how the bot will transform
+the conversation state to a format which a classifier can read:
+feature vector.</p>
+<dl class="staticmethod">
+<dt id="rasa_core.featurizers.SingleStateFeaturizer.action_as_one_hot">
+<em class="property">static </em><code class="descname">action_as_one_hot</code><span class="sig-paren">(</span><em>action</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#SingleStateFeaturizer.action_as_one_hot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.SingleStateFeaturizer.action_as_one_hot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.SingleStateFeaturizer.create_encoded_all_actions">
+<code class="descname">create_encoded_all_actions</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#SingleStateFeaturizer.create_encoded_all_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.SingleStateFeaturizer.create_encoded_all_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create matrix with all actions from domain
+encoded in rows.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.SingleStateFeaturizer.encode">
+<code class="descname">encode</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#SingleStateFeaturizer.encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.SingleStateFeaturizer.encode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.SingleStateFeaturizer.prepare_from_domain">
+<code class="descname">prepare_from_domain</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#SingleStateFeaturizer.prepare_from_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.SingleStateFeaturizer.prepare_from_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper method to init based on domain</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.featurizers.TrackerFeaturizer">
+<em class="property">class </em><code class="descclassname">rasa_core.featurizers.</code><code class="descname">TrackerFeaturizer</code><span class="sig-paren">(</span><em>state_featurizer=None</em>, <em>use_intent_probabilities=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#TrackerFeaturizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.TrackerFeaturizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for actual tracker featurizers</p>
+<dl class="method">
+<dt id="rasa_core.featurizers.TrackerFeaturizer.create_X">
+<code class="descname">create_X</code><span class="sig-paren">(</span><em>trackers</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#TrackerFeaturizer.create_X"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.TrackerFeaturizer.create_X" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create X for prediction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.TrackerFeaturizer.featurize_trackers">
+<code class="descname">featurize_trackers</code><span class="sig-paren">(</span><em>trackers</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#TrackerFeaturizer.featurize_trackers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.TrackerFeaturizer.featurize_trackers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create training data</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.featurizers.TrackerFeaturizer.load">
+<em class="property">static </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#TrackerFeaturizer.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.TrackerFeaturizer.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.TrackerFeaturizer.persist">
+<code class="descname">persist</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#TrackerFeaturizer.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.TrackerFeaturizer.persist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.TrackerFeaturizer.prediction_states">
+<code class="descname">prediction_states</code><span class="sig-paren">(</span><em>trackers</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#TrackerFeaturizer.prediction_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.TrackerFeaturizer.prediction_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms list of trackers to lists of states for prediction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.featurizers.TrackerFeaturizer.training_states_and_actions">
+<code class="descname">training_states_and_actions</code><span class="sig-paren">(</span><em>trackers</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/featurizers.html#TrackerFeaturizer.training_states_and_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.featurizers.TrackerFeaturizer.training_states_and_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms list of trackers to lists of states and actions</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.interpreter">
+<span id="rasa-core-interpreter-module"></span><h2>rasa_core.interpreter module<a class="headerlink" href="#module-rasa_core.interpreter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.interpreter.NaturalLanguageInterpreter">
+<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">NaturalLanguageInterpreter</code><a class="reference internal" href="_modules/rasa_core/interpreter.html#NaturalLanguageInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.NaturalLanguageInterpreter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="rasa_core.interpreter.NaturalLanguageInterpreter.create">
+<em class="property">static </em><code class="descname">create</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#NaturalLanguageInterpreter.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.NaturalLanguageInterpreter.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.interpreter.NaturalLanguageInterpreter.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#NaturalLanguageInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.NaturalLanguageInterpreter.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.interpreter.RasaNLUHttpInterpreter">
+<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RasaNLUHttpInterpreter</code><span class="sig-paren">(</span><em>model_name</em>, <em>token</em>, <em>server</em>, <em>project_name=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#RasaNLUHttpInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUHttpInterpreter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.interpreter.NaturalLanguageInterpreter" title="rasa_core.interpreter.NaturalLanguageInterpreter"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.interpreter.NaturalLanguageInterpreter</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.interpreter.RasaNLUHttpInterpreter.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#RasaNLUHttpInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUHttpInterpreter.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a text message.</p>
+<p>Return a default value if the parsing of the text failed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.interpreter.RasaNLUInterpreter">
+<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RasaNLUInterpreter</code><span class="sig-paren">(</span><em>model_directory</em>, <em>config_file=None</em>, <em>lazy_init=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#RasaNLUInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUInterpreter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.interpreter.NaturalLanguageInterpreter" title="rasa_core.interpreter.NaturalLanguageInterpreter"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.interpreter.NaturalLanguageInterpreter</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.interpreter.RasaNLUInterpreter.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#RasaNLUInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUInterpreter.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a text message.</p>
+<p>Return a default value if the parsing of the text failed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.interpreter.RegexInterpreter">
+<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RegexInterpreter</code><a class="reference internal" href="_modules/rasa_core/interpreter.html#RegexInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RegexInterpreter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.interpreter.NaturalLanguageInterpreter" title="rasa_core.interpreter.NaturalLanguageInterpreter"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.interpreter.NaturalLanguageInterpreter</span></code></a></p>
+<dl class="staticmethod">
+<dt id="rasa_core.interpreter.RegexInterpreter.allowed_prefixes">
+<em class="property">static </em><code class="descname">allowed_prefixes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#RegexInterpreter.allowed_prefixes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RegexInterpreter.allowed_prefixes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.interpreter.RegexInterpreter.deprecated_extraction">
+<em class="property">static </em><code class="descname">deprecated_extraction</code><span class="sig-paren">(</span><em>user_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#RegexInterpreter.deprecated_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RegexInterpreter.deprecated_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>DEPRECATED parse of user input message.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.interpreter.RegexInterpreter.extract_intent_and_entities">
+<em class="property">static </em><code class="descname">extract_intent_and_entities</code><span class="sig-paren">(</span><em>user_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#RegexInterpreter.extract_intent_and_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RegexInterpreter.extract_intent_and_entities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the user input using regexes to extract intent &amp; entities.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.interpreter.RegexInterpreter.is_using_deprecated_format">
+<em class="property">static </em><code class="descname">is_using_deprecated_format</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#RegexInterpreter.is_using_deprecated_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RegexInterpreter.is_using_deprecated_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates if the text string is using the deprecated intent format.</p>
+<p>In the deprecated format entities where annotated using <cite>[name=Rasa]</cite>
+which has been replaced with <cite>{&#8220;name&#8221;: &#8220;Rasa&#8221;}</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.interpreter.RegexInterpreter.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/interpreter.html#RegexInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RegexInterpreter.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a text message.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.processor">
+<span id="rasa-core-processor-module"></span><h2>rasa_core.processor module<a class="headerlink" href="#module-rasa_core.processor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.processor.MessageProcessor">
+<em class="property">class </em><code class="descclassname">rasa_core.processor.</code><code class="descname">MessageProcessor</code><span class="sig-paren">(</span><em>interpreter</em>, <em>policy_ensemble</em>, <em>domain</em>, <em>tracker_store</em>, <em>max_number_of_predictions=10</em>, <em>message_preprocessor=None</em>, <em>on_circuit_break=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/processor.html#MessageProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.processor.MessageProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="rasa_core.processor.MessageProcessor.continue_message_handling">
+<code class="descname">continue_message_handling</code><span class="sig-paren">(</span><em>sender_id</em>, <em>executed_action</em>, <em>events</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/processor.html#MessageProcessor.continue_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.processor.MessageProcessor.continue_message_handling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.processor.MessageProcessor.handle_channel">
+<code class="descname">handle_channel</code><span class="sig-paren">(</span><em>input_channel=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/processor.html#MessageProcessor.handle_channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.processor.MessageProcessor.handle_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the input channel synchronously.</p>
+<p>Each message gets processed directly after it got received.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.processor.MessageProcessor.handle_channel_asynchronous">
+<code class="descname">handle_channel_asynchronous</code><span class="sig-paren">(</span><em>message_queue</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/processor.html#MessageProcessor.handle_channel_asynchronous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.processor.MessageProcessor.handle_channel_asynchronous" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles incoming messages from the message queue.</p>
+<p>An input channel should add messages to the queue asynchronously.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.processor.MessageProcessor.handle_message">
+<code class="descname">handle_message</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/processor.html#MessageProcessor.handle_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.processor.MessageProcessor.handle_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a single message with this processor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.processor.MessageProcessor.handle_reminder">
+<code class="descname">handle_reminder</code><span class="sig-paren">(</span><em>reminder_event</em>, <em>dispatcher</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/processor.html#MessageProcessor.handle_reminder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.processor.MessageProcessor.handle_reminder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a reminder that is triggered asynchronously.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.processor.MessageProcessor.log_bot_utterances_on_tracker">
+<em class="property">static </em><code class="descname">log_bot_utterances_on_tracker</code><span class="sig-paren">(</span><em>tracker</em>, <em>dispatcher</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/processor.html#MessageProcessor.log_bot_utterances_on_tracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.processor.MessageProcessor.log_bot_utterances_on_tracker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.processor.MessageProcessor.should_predict_another_action">
+<em class="property">static </em><code class="descname">should_predict_another_action</code><span class="sig-paren">(</span><em>action_name</em>, <em>events</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/processor.html#MessageProcessor.should_predict_another_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.processor.MessageProcessor.should_predict_another_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.processor.MessageProcessor.start_message_handling">
+<code class="descname">start_message_handling</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/processor.html#MessageProcessor.start_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.processor.MessageProcessor.start_message_handling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.server">
+<span id="rasa-core-server-module"></span><h2>rasa_core.server module<a class="headerlink" href="#module-rasa_core.server" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="rasa_core.server.bool_arg">
+<code class="descclassname">rasa_core.server.</code><code class="descname">bool_arg</code><span class="sig-paren">(</span><em>name</em>, <em>default=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/server.html#bool_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.server.bool_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a passed boolean argument of the request or a default.</p>
+<p>Checks the <cite>name</cite> parameter of the request if it contains a valid
+boolean value. If not, <cite>default</cite> is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.server.create_app">
+<code class="descclassname">rasa_core.server.</code><code class="descname">create_app</code><span class="sig-paren">(</span><em>model_directory</em>, <em>interpreter=None</em>, <em>loglevel=u'INFO'</em>, <em>logfile=u'rasa_core.log'</em>, <em>cors_origins=None</em>, <em>action_factory=None</em>, <em>auth_token=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/server.html#create_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.server.create_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a Rasa Core HTTP server.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.server.create_argument_parser">
+<code class="descclassname">rasa_core.server.</code><code class="descname">create_argument_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/server.html#create_argument_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.server.create_argument_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse all the command line arguments for the server script.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.server.ensure_loaded_agent">
+<code class="descclassname">rasa_core.server.</code><code class="descname">ensure_loaded_agent</code><span class="sig-paren">(</span><em>agent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/server.html#ensure_loaded_agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.server.ensure_loaded_agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps a request handler ensuring there is a loaded and usable model.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.server.request_parameters">
+<code class="descclassname">rasa_core.server.</code><code class="descname">request_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/server.html#request_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.server.request_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.server.requires_auth">
+<code class="descclassname">rasa_core.server.</code><code class="descname">requires_auth</code><span class="sig-paren">(</span><em>token=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/server.html#requires_auth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.server.requires_auth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps a request handler with token authentication.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.slots">
+<span id="rasa-core-slots-module"></span><h2>rasa_core.slots module<a class="headerlink" href="#module-rasa_core.slots" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.slots.BooleanSlot">
+<em class="property">class </em><code class="descclassname">rasa_core.slots.</code><code class="descname">BooleanSlot</code><span class="sig-paren">(</span><em>name</em>, <em>initial_value=None</em>, <em>value_reset_delay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#BooleanSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.BooleanSlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.slots.Slot" title="rasa_core.slots.Slot"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.slots.Slot</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.slots.BooleanSlot.as_feature">
+<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#BooleanSlot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.BooleanSlot.as_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.slots.BooleanSlot.type_name">
+<code class="descname">type_name</code><em class="property"> = u'bool'</em><a class="headerlink" href="#rasa_core.slots.BooleanSlot.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.slots.CategoricalSlot">
+<em class="property">class </em><code class="descclassname">rasa_core.slots.</code><code class="descname">CategoricalSlot</code><span class="sig-paren">(</span><em>name</em>, <em>values=None</em>, <em>initial_value=None</em>, <em>value_reset_delay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#CategoricalSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.CategoricalSlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.slots.Slot" title="rasa_core.slots.Slot"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.slots.Slot</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.slots.CategoricalSlot.as_feature">
+<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#CategoricalSlot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.CategoricalSlot.as_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.slots.CategoricalSlot.feature_dimensionality">
+<code class="descname">feature_dimensionality</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#CategoricalSlot.feature_dimensionality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.CategoricalSlot.feature_dimensionality" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.slots.CategoricalSlot.persistence_info">
+<code class="descname">persistence_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#CategoricalSlot.persistence_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.CategoricalSlot.persistence_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.slots.CategoricalSlot.type_name">
+<code class="descname">type_name</code><em class="property"> = u'categorical'</em><a class="headerlink" href="#rasa_core.slots.CategoricalSlot.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.slots.DataSlot">
+<em class="property">class </em><code class="descclassname">rasa_core.slots.</code><code class="descname">DataSlot</code><span class="sig-paren">(</span><em>name</em>, <em>initial_value=None</em>, <em>value_reset_delay=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#DataSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.DataSlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.slots.Slot" title="rasa_core.slots.Slot"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.slots.Slot</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.slots.DataSlot.as_feature">
+<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#DataSlot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.DataSlot.as_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.slots.FloatSlot">
+<em class="property">class </em><code class="descclassname">rasa_core.slots.</code><code class="descname">FloatSlot</code><span class="sig-paren">(</span><em>name</em>, <em>initial_value=None</em>, <em>value_reset_delay=None</em>, <em>max_value=1.0</em>, <em>min_value=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#FloatSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.FloatSlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.slots.Slot" title="rasa_core.slots.Slot"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.slots.Slot</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.slots.FloatSlot.as_feature">
+<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#FloatSlot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.FloatSlot.as_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.slots.FloatSlot.persistence_info">
+<code class="descname">persistence_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#FloatSlot.persistence_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.FloatSlot.persistence_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.slots.FloatSlot.type_name">
+<code class="descname">type_name</code><em class="property"> = u'float'</em><a class="headerlink" href="#rasa_core.slots.FloatSlot.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.slots.ListSlot">
+<em class="property">class </em><code class="descclassname">rasa_core.slots.</code><code class="descname">ListSlot</code><span class="sig-paren">(</span><em>name</em>, <em>initial_value=None</em>, <em>value_reset_delay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#ListSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.ListSlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.slots.Slot" title="rasa_core.slots.Slot"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.slots.Slot</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.slots.ListSlot.as_feature">
+<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#ListSlot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.ListSlot.as_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.slots.ListSlot.type_name">
+<code class="descname">type_name</code><em class="property"> = u'list'</em><a class="headerlink" href="#rasa_core.slots.ListSlot.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.slots.Slot">
+<em class="property">class </em><code class="descclassname">rasa_core.slots.</code><code class="descname">Slot</code><span class="sig-paren">(</span><em>name</em>, <em>initial_value=None</em>, <em>value_reset_delay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#Slot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="rasa_core.slots.Slot.as_feature">
+<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#Slot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot.as_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.slots.Slot.feature_dimensionality">
+<code class="descname">feature_dimensionality</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#Slot.feature_dimensionality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot.feature_dimensionality" title="Permalink to this definition">¶</a></dt>
+<dd><p>How many features this single slot creates.</p>
+<p>The dimensionality of the array returned by <cite>as_feature</cite> needs
+to correspond to this value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.slots.Slot.has_features">
+<code class="descname">has_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#Slot.has_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot.has_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicate if the slot creates any features.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.slots.Slot.persistence_info">
+<code class="descname">persistence_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#Slot.persistence_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot.persistence_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.slots.Slot.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#Slot.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.slots.Slot.resolve_by_type">
+<em class="property">static </em><code class="descname">resolve_by_type</code><span class="sig-paren">(</span><em>type_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#Slot.resolve_by_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot.resolve_by_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a slots class by its type name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.slots.Slot.type_name">
+<code class="descname">type_name</code><em class="property"> = None</em><a class="headerlink" href="#rasa_core.slots.Slot.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.slots.Slot.value_reset_delay">
+<code class="descname">value_reset_delay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#Slot.value_reset_delay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot.value_reset_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>After how many turns the slot should be reset to the initial_value.</p>
+<p>If the delay is set to <cite>None</cite>, the slot will keep its value forever.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.slots.TextSlot">
+<em class="property">class </em><code class="descclassname">rasa_core.slots.</code><code class="descname">TextSlot</code><span class="sig-paren">(</span><em>name</em>, <em>initial_value=None</em>, <em>value_reset_delay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#TextSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.TextSlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.slots.Slot" title="rasa_core.slots.Slot"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.slots.Slot</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.slots.TextSlot.as_feature">
+<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#TextSlot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.TextSlot.as_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.slots.TextSlot.type_name">
+<code class="descname">type_name</code><em class="property"> = u'text'</em><a class="headerlink" href="#rasa_core.slots.TextSlot.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.slots.UnfeaturizedSlot">
+<em class="property">class </em><code class="descclassname">rasa_core.slots.</code><code class="descname">UnfeaturizedSlot</code><span class="sig-paren">(</span><em>name</em>, <em>initial_value=None</em>, <em>value_reset_delay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#UnfeaturizedSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.UnfeaturizedSlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rasa_dm.html#rasa_core.slots.Slot" title="rasa_core.slots.Slot"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.slots.Slot</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.slots.UnfeaturizedSlot.as_feature">
+<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#UnfeaturizedSlot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.UnfeaturizedSlot.as_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.slots.UnfeaturizedSlot.feature_dimensionality">
+<code class="descname">feature_dimensionality</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/slots.html#UnfeaturizedSlot.feature_dimensionality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.UnfeaturizedSlot.feature_dimensionality" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.slots.UnfeaturizedSlot.type_name">
+<code class="descname">type_name</code><em class="property"> = u'unfeaturized'</em><a class="headerlink" href="#rasa_core.slots.UnfeaturizedSlot.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.tracker_store">
+<span id="rasa-core-tracker-store-module"></span><h2>rasa_core.tracker_store module<a class="headerlink" href="#module-rasa_core.tracker_store" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.tracker_store.InMemoryTrackerStore">
+<em class="property">class </em><code class="descclassname">rasa_core.tracker_store.</code><code class="descname">InMemoryTrackerStore</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#InMemoryTrackerStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.InMemoryTrackerStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="tracker_store.html#rasa_core.tracker_store.TrackerStore" title="rasa_core.tracker_store.TrackerStore"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.tracker_store.TrackerStore</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.tracker_store.InMemoryTrackerStore.keys">
+<code class="descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#InMemoryTrackerStore.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.InMemoryTrackerStore.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.InMemoryTrackerStore.retrieve">
+<code class="descname">retrieve</code><span class="sig-paren">(</span><em>sender_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#InMemoryTrackerStore.retrieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.InMemoryTrackerStore.retrieve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.InMemoryTrackerStore.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#InMemoryTrackerStore.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.InMemoryTrackerStore.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.tracker_store.RedisTrackerStore">
+<em class="property">class </em><code class="descclassname">rasa_core.tracker_store.</code><code class="descname">RedisTrackerStore</code><span class="sig-paren">(</span><em>domain</em>, <em>host=u'localhost'</em>, <em>port=6379</em>, <em>db=0</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#RedisTrackerStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.RedisTrackerStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="tracker_store.html#rasa_core.tracker_store.TrackerStore" title="rasa_core.tracker_store.TrackerStore"><code class="xref py py-class docutils literal"><span class="pre">rasa_core.tracker_store.TrackerStore</span></code></a></p>
+<dl class="method">
+<dt id="rasa_core.tracker_store.RedisTrackerStore.keys">
+<code class="descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#RedisTrackerStore.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.RedisTrackerStore.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.RedisTrackerStore.retrieve">
+<code class="descname">retrieve</code><span class="sig-paren">(</span><em>sender_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#RedisTrackerStore.retrieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.RedisTrackerStore.retrieve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.RedisTrackerStore.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>tracker</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#RedisTrackerStore.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.RedisTrackerStore.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.tracker_store.TrackerStore">
+<em class="property">class </em><code class="descclassname">rasa_core.tracker_store.</code><code class="descname">TrackerStore</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#TrackerStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.TrackerStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="rasa_core.tracker_store.TrackerStore.create_tracker">
+<code class="descname">create_tracker</code><span class="sig-paren">(</span><em>sender_id</em>, <em>append_action_listen=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#TrackerStore.create_tracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.TrackerStore.create_tracker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new tracker for the sender_id.</p>
+<p>The tracker is initially listening.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.TrackerStore.deserialise_tracker">
+<code class="descname">deserialise_tracker</code><span class="sig-paren">(</span><em>sender_id</em>, <em>_json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#TrackerStore.deserialise_tracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.TrackerStore.deserialise_tracker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.TrackerStore.get_or_create_tracker">
+<code class="descname">get_or_create_tracker</code><span class="sig-paren">(</span><em>sender_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#TrackerStore.get_or_create_tracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.TrackerStore.get_or_create_tracker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.TrackerStore.init_tracker">
+<code class="descname">init_tracker</code><span class="sig-paren">(</span><em>sender_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#TrackerStore.init_tracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.TrackerStore.init_tracker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.TrackerStore.keys">
+<code class="descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#TrackerStore.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.TrackerStore.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.TrackerStore.retrieve">
+<code class="descname">retrieve</code><span class="sig-paren">(</span><em>sender_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#TrackerStore.retrieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.TrackerStore.retrieve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.tracker_store.TrackerStore.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#TrackerStore.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.TrackerStore.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rasa_core.tracker_store.TrackerStore.serialise_tracker">
+<em class="property">static </em><code class="descname">serialise_tracker</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/tracker_store.html#TrackerStore.serialise_tracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.tracker_store.TrackerStore.serialise_tracker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.trackers">
+<span id="rasa-core-trackers-module"></span><h2>rasa_core.trackers module<a class="headerlink" href="#module-rasa_core.trackers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.trackers.DialogueStateTracker">
+<em class="property">class </em><code class="descclassname">rasa_core.trackers.</code><code class="descname">DialogueStateTracker</code><span class="sig-paren">(</span><em>sender_id</em>, <em>slots</em>, <em>max_event_history=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Maintains the state of a conversation.</p>
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.applied_events">
+<code class="descname">applied_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.applied_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.applied_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all actions that should be applied - w/o reverted events.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.as_dialogue">
+<code class="descname">as_dialogue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.as_dialogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.as_dialogue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <code class="docutils literal"><span class="pre">Dialogue</span></code> object containing all of the turns.</p>
+<p>This can be serialised and later used to recover the state
+of this tracker exactly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.clear_follow_up_action">
+<code class="descname">clear_follow_up_action</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.clear_follow_up_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.clear_follow_up_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears follow up action when it was executed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a duplicate of this tracker</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.current_slot_values">
+<code class="descname">current_slot_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.current_slot_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.current_slot_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the currently set values of the slots</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.current_state">
+<code class="descname">current_state</code><span class="sig-paren">(</span><em>should_include_events=False</em>, <em>only_events_after_latest_restart=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.current_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current tracker state as an object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.events_after_latest_restart">
+<code class="descname">events_after_latest_restart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.events_after_latest_restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.events_after_latest_restart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of events after the most recent restart.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.export_stories">
+<code class="descname">export_stories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.export_stories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.export_stories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the tracker as a story in the Rasa Core story format.</p>
+<p>Returns the dumped tracker as a string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.export_stories_to_file">
+<code class="descname">export_stories_to_file</code><span class="sig-paren">(</span><em>export_path=u'debug.md'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.export_stories_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.export_stories_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the tracker as a story to a file.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="rasa_core.trackers.DialogueStateTracker.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>sender_id</em>, <em>dump_as_dict</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a tracker from dump.</p>
+<p>The dump should be an array of dumped events. When restoring
+the tracker, these events will be replayed to recreate the state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers">
+<code class="descname">generate_all_prior_trackers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.generate_all_prior_trackers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator of the previous trackers of this tracker.</p>
+<p>The resulting array is representing
+the trackers before each action.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.get_latest_entity_values">
+<code class="descname">get_latest_entity_values</code><span class="sig-paren">(</span><em>entity_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.get_latest_entity_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_latest_entity_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get entity values found for the passed entity name in latest msg.</p>
+<p>If you are only interested in the first entity of a given type use
+<cite>next(tracker.get_latest_entity_values(&#8220;my_entity_name&#8221;), None)</cite>.
+If no entity is found <cite>None</cite> is the default result.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.get_slot">
+<code class="descname">get_slot</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.get_slot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_slot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the value of a slot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.idx_after_latest_restart">
+<code class="descname">idx_after_latest_restart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.idx_after_latest_restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.idx_after_latest_restart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the idx of the most recent restart in the list of events.</p>
+<p>If the conversation has not been restarted, <code class="docutils literal"><span class="pre">0</span></code> is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.init_copy">
+<code class="descname">init_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.init_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.init_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new state tracker with the same initial values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.is_paused">
+<code class="descname">is_paused</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.is_paused"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.is_paused" title="Permalink to this definition">¶</a></dt>
+<dd><p>State whether the tracker is currently paused.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.trackers.DialogueStateTracker.latest_message">
+<code class="descname">latest_message</code><em class="property"> = None</em><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.latest_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>stores the most recent message sent by the user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.past_states">
+<code class="descname">past_states</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.past_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.past_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the past states of this tracker based on the history.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue">
+<code class="descname">recreate_from_dialogue</code><span class="sig-paren">(</span><em>dialogue</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.recreate_from_dialogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a serialised <cite>Dialogue</cite> to update the trackers state.</p>
+<p>This uses the state as is persisted in a <code class="docutils literal"><span class="pre">TrackerStore</span></code>. If the
+tracker is blank before calling this method, the final state will be
+identical to the tracker from which the dialogue was created.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.replay_events">
+<code class="descname">replay_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.replay_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.replay_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the tracker based on a list of events.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.travel_back_in_time">
+<code class="descname">travel_back_in_time</code><span class="sig-paren">(</span><em>target_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.travel_back_in_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.travel_back_in_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new tracker with a state at a specific timestamp.</p>
+<p>A new tracker will be created and all events previous to the
+passed time stamp will be replayed. Events that occur exactly
+at the target time will be included.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.trigger_follow_up_action">
+<code class="descname">trigger_follow_up_action</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.trigger_follow_up_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.trigger_follow_up_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triggers another action following the execution of the current.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/trackers.html#DialogueStateTracker.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the state of the tracker according to an <code class="docutils literal"><span class="pre">Event</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.train">
+<span id="rasa-core-train-module"></span><h2>rasa_core.train module<a class="headerlink" href="#module-rasa_core.train" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="rasa_core.train.create_argument_parser">
+<code class="descclassname">rasa_core.train.</code><code class="descname">create_argument_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/train.html#create_argument_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.train.create_argument_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse all the command line arguments for the training script.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.train.train_dialogue_model">
+<code class="descclassname">rasa_core.train.</code><code class="descname">train_dialogue_model</code><span class="sig-paren">(</span><em>domain_file</em>, <em>stories_file</em>, <em>output_path</em>, <em>use_online_learning=False</em>, <em>nlu_model_path=None</em>, <em>max_history=None</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/train.html#train_dialogue_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.train.train_dialogue_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.utils">
+<span id="rasa-core-utils-module"></span><h2>rasa_core.utils module<a class="headerlink" href="#module-rasa_core.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rasa_core.utils.HashableNDArray">
+<em class="property">class </em><code class="descclassname">rasa_core.utils.</code><code class="descname">HashableNDArray</code><span class="sig-paren">(</span><em>wrapped</em>, <em>tight=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#HashableNDArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.HashableNDArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Hashable wrapper for ndarray objects.</p>
+<p>Instances of ndarray are not hashable, meaning they cannot be added to
+sets, nor used as keys in dictionaries. This is by design - ndarray
+objects are mutable, and therefore cannot reliably implement the
+__hash__() method.</p>
+<p>The hashable class allows a way around this limitation. It implements
+the required methods for hashable objects in terms of an encapsulated
+ndarray object. This can be either a copied instance (which is safer)
+or the original object (which requires the user to be careful enough
+not to modify it).</p>
+<dl class="method">
+<dt id="rasa_core.utils.HashableNDArray.unwrap">
+<code class="descname">unwrap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#HashableNDArray.unwrap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.HashableNDArray.unwrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the encapsulated ndarray.</p>
+<p>If the wrapper is &#8220;tight&#8221;, a copy of the encapsulated ndarray is
+returned. Otherwise, the encapsulated ndarray itself is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.add_logging_option_arguments">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">add_logging_option_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#add_logging_option_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.add_logging_option_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add options to an argument parser to configure logging levels.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.all_subclasses">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">all_subclasses</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#all_subclasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.all_subclasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all known (imported) subclasses of a class.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.utils.bcolors">
+<em class="property">class </em><code class="descclassname">rasa_core.utils.</code><code class="descname">bcolors</code><a class="reference internal" href="_modules/rasa_core/utils.html#bcolors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.bcolors" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="rasa_core.utils.bcolors.BOLD">
+<code class="descname">BOLD</code><em class="property"> = u'\x1b[1m'</em><a class="headerlink" href="#rasa_core.utils.bcolors.BOLD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.utils.bcolors.ENDC">
+<code class="descname">ENDC</code><em class="property"> = u'\x1b[0m'</em><a class="headerlink" href="#rasa_core.utils.bcolors.ENDC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.utils.bcolors.FAIL">
+<code class="descname">FAIL</code><em class="property"> = u'\x1b[91m'</em><a class="headerlink" href="#rasa_core.utils.bcolors.FAIL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.utils.bcolors.HEADER">
+<code class="descname">HEADER</code><em class="property"> = u'\x1b[95m'</em><a class="headerlink" href="#rasa_core.utils.bcolors.HEADER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.utils.bcolors.OKBLUE">
+<code class="descname">OKBLUE</code><em class="property"> = u'\x1b[94m'</em><a class="headerlink" href="#rasa_core.utils.bcolors.OKBLUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.utils.bcolors.OKGREEN">
+<code class="descname">OKGREEN</code><em class="property"> = u'\x1b[92m'</em><a class="headerlink" href="#rasa_core.utils.bcolors.OKGREEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.utils.bcolors.UNDERLINE">
+<code class="descname">UNDERLINE</code><em class="property"> = u'\x1b[4m'</em><a class="headerlink" href="#rasa_core.utils.bcolors.UNDERLINE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.utils.bcolors.WARNING">
+<code class="descname">WARNING</code><em class="property"> = u'\x1b[93m'</em><a class="headerlink" href="#rasa_core.utils.bcolors.WARNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.cap_length">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">cap_length</code><span class="sig-paren">(</span><em>s</em>, <em>char_limit=20</em>, <em>append_ellipsis=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#cap_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.cap_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes sure the string doesn&#8217;t exceed the passed char limit.</p>
+<p>Appends an ellipsis if the string is to long.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.class_from_module_path">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">class_from_module_path</code><span class="sig-paren">(</span><em>module_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#class_from_module_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.class_from_module_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the module name and path of a class, tries to retrieve the class.</p>
+<p>The loaded class can be used to instantiate new objects.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.configure_colored_logging">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">configure_colored_logging</code><span class="sig-paren">(</span><em>loglevel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#configure_colored_logging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.configure_colored_logging" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.configure_file_logging">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">configure_file_logging</code><span class="sig-paren">(</span><em>loglevel</em>, <em>logfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#configure_file_logging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.configure_file_logging" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.create_dir_for_file">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">create_dir_for_file</code><span class="sig-paren">(</span><em>file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#create_dir_for_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.create_dir_for_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates any missing parent directories of this files path.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.dump_obj_as_json_to_file">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">dump_obj_as_json_to_file</code><span class="sig-paren">(</span><em>filename</em>, <em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#dump_obj_as_json_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.dump_obj_as_json_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump an object as a json string to a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.dump_obj_as_str_to_file">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">dump_obj_as_str_to_file</code><span class="sig-paren">(</span><em>filename</em>, <em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#dump_obj_as_str_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.dump_obj_as_str_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump a text to a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.extract_args">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">extract_args</code><span class="sig-paren">(</span><em>kwargs</em>, <em>keys_to_extract</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#extract_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.extract_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go through the kwargs and filter out the specified keys.</p>
+<p>Return both, the filtered kwargs as well as the remaining kwargs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.fix_yaml_loader">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">fix_yaml_loader</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#fix_yaml_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.fix_yaml_loader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure that any string read by yaml is represented as unicode.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.generate_id">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">generate_id</code><span class="sig-paren">(</span><em>prefix=u''</em>, <em>max_chars=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#generate_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.generate_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.is_int">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">is_int</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#is_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.is_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a value is an integer.</p>
+<p>The type of the value is not important, it might be an int or a float.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.is_training_data_empty">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">is_training_data_empty</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#is_training_data_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.is_training_data_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the training matrix does contain training samples.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.lazyproperty">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">lazyproperty</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#lazyproperty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.lazyproperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows to avoid recomputing a property over and over.</p>
+<p>Instead the result gets stored in a local var. Computation of the property
+will happen once, on the first call of the property. All succeeding calls
+will use the value stored in the private property.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.module_path_from_instance">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">module_path_from_instance</code><span class="sig-paren">(</span><em>inst</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#module_path_from_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.module_path_from_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the module path of an instances class.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.one_hot">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">one_hot</code><span class="sig-paren">(</span><em>hot_idx</em>, <em>length</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#one_hot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.one_hot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.print_color">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">print_color</code><span class="sig-paren">(</span><em>text</em>, <em>color</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#print_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.print_color" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.read_file">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">read_file</code><span class="sig-paren">(</span><em>filename</em>, <em>encoding=u'utf-8'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#read_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.read_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read text from a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.read_yaml_file">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">read_yaml_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#read_yaml_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.read_yaml_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.request_input">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">request_input</code><span class="sig-paren">(</span><em>valid_values=None</em>, <em>prompt=None</em>, <em>max_suggested=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#request_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.request_input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.str_range_list">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">str_range_list</code><span class="sig-paren">(</span><em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#str_range_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.str_range_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.subsample_array">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">subsample_array</code><span class="sig-paren">(</span><em>arr</em>, <em>max_values</em>, <em>can_modify_incoming_array=True</em>, <em>rand=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#subsample_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.subsample_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuffles the array and returns <cite>max_values</cite> number of elements.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.wait_for_threads">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">wait_for_threads</code><span class="sig-paren">(</span><em>threads</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#wait_for_threads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.wait_for_threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Block until all child threads have been terminated.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.wrap_with_color">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">wrap_with_color</code><span class="sig-paren">(</span><em>text</em>, <em>color</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#wrap_with_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.wrap_with_color" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rasa_core.utils.zip_folder">
+<code class="descclassname">rasa_core.utils.</code><code class="descname">zip_folder</code><span class="sig-paren">(</span><em>folder</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/utils.html#zip_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.utils.zip_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an archive from a folder.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core.version">
+<span id="rasa-core-version-module"></span><h2>rasa_core.version module<a class="headerlink" href="#module-rasa_core.version" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-rasa_core.visualize">
+<span id="rasa-core-visualize-module"></span><h2>rasa_core.visualize module<a class="headerlink" href="#module-rasa_core.visualize" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="rasa_core.visualize.create_argument_parser">
+<code class="descclassname">rasa_core.visualize.</code><code class="descname">create_argument_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rasa_core/visualize.html#create_argument_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.visualize.create_argument_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse all the command line arguments for the visualisation script.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rasa_core">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rasa_core" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: wildcard
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../0.6.5/rasa_core.html">0.6.5</a></dd>
+            <dd><a href="../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../0.9.4/index.html">0.9.4</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../async/index.html">async</a></dd>
+            <dd><a href="../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../fix/index.html">fix</a></dd>
+            <dd><a href="../master/index.html">master</a></dd>
+            <dd><a href="../memo_fix/index.html">memo_fix</a></dd>
+            <dd><a href="../ruamel/index.html">ruamel</a></dd>
+            <dd><a href="../script-docs/index.html">script-docs</a></dd>
+            <dd><a href="../stories_dumping/index.html">stories_dumping</a></dd>
+            <dd><a href="../track_data/index.html">track_data</a></dd>
+            <dd><a href="rasa_core.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.7.0a3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
