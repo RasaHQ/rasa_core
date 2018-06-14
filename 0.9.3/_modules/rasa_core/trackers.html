@@ -216,10 +216,9 @@
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">events</span>
-<span class="kn">from</span> <span class="nn">rasa_core.conversation</span> <span class="k">import</span> <span class="n">Dialogue</span>
-<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">UserUttered</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">,</span> \
-    <span class="n">Event</span><span class="p">,</span> <span class="n">SlotSet</span><span class="p">,</span> <span class="n">Restarted</span><span class="p">,</span> <span class="n">ActionReverted</span><span class="p">,</span> <span class="n">UserUtteranceReverted</span><span class="p">,</span> \
-    <span class="n">BotUttered</span><span class="p">,</span> <span class="n">TopicSet</span>
+<span class="kn">from</span> <span class="nn">rasa_core.conversation</span> <span class="k">import</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">Topic</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">UserUttered</span><span class="p">,</span> <span class="n">TopicSet</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">,</span> \
+    <span class="n">Event</span><span class="p">,</span> <span class="n">SlotSet</span><span class="p">,</span> <span class="n">Restarted</span><span class="p">,</span> <span class="n">ActionReverted</span><span class="p">,</span> <span class="n">UserUtteranceReverted</span><span class="p">,</span> <span class="n">BotUttered</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -240,12 +239,15 @@
 <span class="sd">        the tracker, these events will be replayed to recreate the state.&quot;&quot;&quot;</span>
 
         <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">dump_as_dict</span><span class="p">)</span>
-        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">slots</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">topics</span><span class="p">,</span>
+                      <span class="n">domain</span><span class="o">.</span><span class="n">default_topic</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evts</span><span class="p">:</span>
             <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">tracker</span></div>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">slots</span><span class="p">,</span>
+                 <span class="n">topics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">default_topic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">max_event_history</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the tracker.</span>
 
@@ -259,6 +261,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_events</span><span class="p">([])</span>
         <span class="c1"># id of the source of the messages</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span> <span class="o">=</span> <span class="n">sender_id</span>
+        <span class="c1"># available topics in the domain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">topics</span> <span class="o">=</span> <span class="n">topics</span> <span class="k">if</span> <span class="n">topics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="c1"># default topic of the domain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_topic</span> <span class="o">=</span> <span class="n">default_topic</span>
         <span class="c1"># slots that can be filled in this domain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">slots</span> <span class="o">=</span> <span class="p">{</span><span class="n">slot</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">slots</span><span class="p">}</span>
 
@@ -271,6 +277,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_paused</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># A deterministically scheduled action to be executed next</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># topic tracking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_topic_stack</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="kc">None</span>
@@ -363,6 +371,23 @@
         <span class="sd">&quot;&quot;&quot;Return a list of events after the most recent restart.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx_after_latest_restart</span><span class="p">():]</span></div>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">previous_topic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Optional[Text]</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves the topic that was set before the current one.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events_after_latest_restart</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">TopicSet</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">topic</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">topic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Topic</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves current topic, or default if no topic has been set yet.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_topic_stack</span><span class="o">.</span><span class="n">top</span>
+
 <div class="viewcode-block" id="DialogueStateTracker.init_copy"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.init_copy">[docs]</a>    <span class="k">def</span> <span class="nf">init_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; DialogueStateTracker</span>
         <span class="sd">&quot;&quot;&quot;Creates a new state tracker with the same initial values.&quot;&quot;&quot;</span>
@@ -370,6 +395,8 @@
 
         <span class="k">return</span> <span class="n">DialogueStateTracker</span><span class="p">(</span><span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span><span class="p">,</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">topics</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">default_topic</span><span class="p">,</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">_max_event_history</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.generate_all_prior_trackers"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers">[docs]</a>    <span class="k">def</span> <span class="nf">generate_all_prior_trackers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -412,9 +439,6 @@
                 <span class="c1"># listen action).</span>
                 <span class="n">undo_till_previous</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">,</span> <span class="n">applied_events</span><span class="p">)</span>
                 <span class="n">undo_till_previous</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">applied_events</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">TopicSet</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Topics are deprecated, therefore the TopicSet &quot;</span>
-                            <span class="s2">&quot;event will be ignored&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">applied_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">applied_events</span></div>
@@ -517,6 +541,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="n">UserUttered</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="n">BotUttered</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_topic_stack</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">TopicStack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topics</span><span class="p">,</span> <span class="p">[],</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">default_topic</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_reset_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; None</span>
@@ -612,6 +638,7 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../../0.9.5/index.html">0.9.5</a></dd>
             <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
             <dd><a href="trackers.html">0.9.3</a></dd>
             <dd><a href="../../../0.9.2/index.html">0.9.2</a></dd>

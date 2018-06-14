@@ -476,7 +476,6 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse bot uttered event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
 
-<span class="c1"># TODO: DEPRECATED - remove in version 0.10.0</span>
 <span class="c1"># noinspection PyProtectedMember</span>
 <div class="viewcode-block" id="TopicSet"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.TopicSet">[docs]</a><span class="k">class</span> <span class="nc">TopicSet</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The topic of conversation has changed.</span>
@@ -527,7 +526,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse set topic event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
 <div class="viewcode-block" id="TopicSet.apply_to"><a class="viewcode-back" href="../../api/events.html#rasa_core.events.TopicSet.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">_topic_stack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -988,6 +987,7 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../../0.9.5/index.html">0.9.5</a></dd>
             <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
             <dd><a href="../../../0.9.3/index.html">0.9.3</a></dd>
             <dd><a href="../../../0.9.2/index.html">0.9.2</a></dd>
