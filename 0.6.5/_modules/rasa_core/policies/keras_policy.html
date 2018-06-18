@@ -1,0 +1,588 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core.policies.keras_policy &mdash; Rasa Core 0.7.0a3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a3 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../library.html">Library Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>rasa_core.policies.keras_policy</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rasa_core.policies.keras_policy</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.featurizers</span> <span class="k">import</span> <span class="n">TrackerFeaturizer</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">keras</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+
+
+<div class="viewcode-block" id="KerasPolicy"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.keras_policy.KerasPolicy">[docs]</a><span class="k">class</span> <span class="nc">KerasPolicy</span><span class="p">(</span><span class="n">Policy</span><span class="p">):</span>
+    <span class="n">SUPPORTS_ONLINE_TRAINING</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># Neural Net and training params</span>
+        <span class="s2">&quot;rnn_size&quot;</span><span class="p">:</span> <span class="mi">32</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[TrackerFeaturizer]</span>
+                 <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[keras.models.Sequential]</span>
+                 <span class="n">graph</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[keras.backend.tf.Graph]</span>
+                 <span class="n">current_epoch</span><span class="o">=</span><span class="mi">0</span>  <span class="c1"># type: int</span>
+                 <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">KerasPolicy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">KerasPolicy</span><span class="o">.</span><span class="n">is_using_tensorflow</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">graph</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">keras.backend</span> <span class="k">import</span> <span class="n">tf</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_default_graph</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">=</span> <span class="n">current_epoch</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">batch_input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="KerasPolicy.is_using_tensorflow"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.keras_policy.KerasPolicy.is_using_tensorflow">[docs]</a>    <span class="k">def</span> <span class="nf">is_using_tensorflow</span><span class="p">():</span>
+        <span class="kn">from</span> <span class="nn">keras.backend</span> <span class="k">import</span> <span class="n">_BACKEND</span>
+        <span class="k">return</span> <span class="n">_BACKEND</span> <span class="o">==</span> <span class="s2">&quot;tensorflow&quot;</span></div>
+
+    <span class="k">def</span> <span class="nf">_build_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">,</span> <span class="n">max_history_len</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Deprecated, use `model_architecture` instead.&quot;</span><span class="p">,</span>
+                      <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="KerasPolicy.model_architecture"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.keras_policy.KerasPolicy.model_architecture">[docs]</a>    <span class="k">def</span> <span class="nf">model_architecture</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">input_shape</span><span class="p">,</span>  <span class="c1"># type: Tuple[int, int]</span>
+            <span class="n">output_shape</span>  <span class="c1"># type: Tuple[int, Optional[int]]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; keras.models.Sequential</span>
+        <span class="sd">&quot;&quot;&quot;Build a keras model and return a compiled model.&quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
+        <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> \
+            <span class="n">Masking</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">TimeDistributed</span><span class="p">,</span> <span class="n">Activation</span>
+
+        <span class="c1"># Build Model</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+
+        <span class="c1"># the shape of the y vector of the labels,</span>
+        <span class="c1"># determines which output from rnn will be used</span>
+        <span class="c1"># to calculate the loss</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># y is (num examples, num features) so</span>
+            <span class="c1"># only the last output from the rnn is used to</span>
+            <span class="c1"># calculate the loss</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="n">mask_value</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">output_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># y is (num examples, max_dialogue_len, num features) so</span>
+            <span class="c1"># all the outputs from the rnn are used to</span>
+            <span class="c1"># calculate the loss, therefore a sequence is returned and</span>
+            <span class="c1"># time distributed layer is used</span>
+
+            <span class="c1"># the first value in input_shape is max dialogue_len,</span>
+            <span class="c1"># it is set to None, to allow dynamic_rnn creation</span>
+            <span class="c1"># during prediction</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="n">mask_value</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="n">output_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot construct the model because&quot;</span>
+                             <span class="s2">&quot;length of output_shape = </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                             <span class="s2">&quot;should be 1 or 2.&quot;</span>
+                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)))</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;softmax&#39;</span><span class="p">))</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span>
+                      <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;rmsprop&#39;</span><span class="p">,</span>
+                      <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">model</span></div>
+
+<div class="viewcode-block" id="KerasPolicy.train"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.keras_policy.KerasPolicy.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+              <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
+              <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
+              <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
+
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Parameter `rnn_size` is updated with </span><span class="si">{}</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)</span>
+
+        <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize_for_training</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span>
+                                                    <span class="n">domain</span><span class="p">,</span>
+                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span> <span class="o">=</span> <span class="n">training_data</span><span class="o">.</span><span class="n">shuffled_X_y</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_architecture</span><span class="p">(</span><span class="n">shuffled_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+                                                 <span class="n">shuffled_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="n">validation_split</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;validation_split&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fitting model with </span><span class="si">{}</span><span class="s2"> total samples and a validation &quot;</span>
+                    <span class="s2">&quot;split of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">training_data</span><span class="o">.</span><span class="n">num_examples</span><span class="p">(),</span>
+                                         <span class="n">validation_split</span><span class="p">))</span>
+        <span class="c1"># filter out kwargs that cannot be passed to fit</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_valid_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="c1"># the default parameter for epochs in keras fit is 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;epochs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done fitting keras policy model&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KerasPolicy.continue_training"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.keras_policy.KerasPolicy.continue_training">[docs]</a>    <span class="k">def</span> <span class="nf">continue_training</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (List[DialogueStateTracker], Domain, **Any) -&gt; None</span>
+        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+        <span class="c1"># takes the new example labelled and learns it</span>
+        <span class="c1"># via taking `epochs` samples of n_batch-1 parts of the training data,</span>
+        <span class="c1"># inserting our new example and learning them. this means that we can</span>
+        <span class="c1"># ask the network to fit the example without overemphasising</span>
+        <span class="c1"># its importance (and therefore throwing off the biases)</span>
+
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;batch_size&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">epochs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;epochs&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+
+        <span class="n">num_samples</span> <span class="o">=</span> <span class="n">batch_size</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">num_prev_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+            <span class="n">sampled_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_prev_examples</span><span class="p">),</span>
+                                           <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                           <span class="n">size</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span>
+                                                    <span class="n">num_prev_examples</span><span class="p">))</span>
+            <span class="n">trackers</span> <span class="o">=</span> <span class="p">[</span><span class="n">training_trackers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sampled_idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">training_trackers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize_for_training</span><span class="p">(</span><span class="n">trackers</span><span class="p">,</span>
+                                                        <span class="n">domain</span><span class="p">)</span>
+            <span class="c1"># fit to one extra example using updated trackers</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_data</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">training_data</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                           <span class="n">epochs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                           <span class="n">batch_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">training_data</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+                           <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                           <span class="n">initial_epoch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="KerasPolicy.predict_action_probabilities"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.keras_policy.KerasPolicy.predict_action_probabilities">[docs]</a>    <span class="k">def</span> <span class="nf">predict_action_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; List[float]</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">create_X</span><span class="p">([</span><span class="n">tracker</span><span class="p">],</span> <span class="n">domain</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">KerasPolicy</span><span class="o">.</span><span class="n">is_using_tensorflow</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+                <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">y_pred</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_persist_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file</span><span class="p">):</span>
+        <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;arch&quot;</span><span class="p">:</span> <span class="s2">&quot;keras_arch.json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="s2">&quot;keras_weights.h5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;epochs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span><span class="p">}</span>
+
+        <span class="n">utils</span><span class="o">.</span><span class="n">dump_obj_as_json_to_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">model_config</span><span class="p">)</span>
+
+<div class="viewcode-block" id="KerasPolicy.persist"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.keras_policy.KerasPolicy.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+            <span class="n">arch_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;keras_arch.json&#39;</span><span class="p">)</span>
+            <span class="n">weights_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;keras_weights.h5&#39;</span><span class="p">)</span>
+            <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;keras_policy.json&#39;</span><span class="p">)</span>
+
+            <span class="c1"># makes sure the model directory exists</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">create_dir_for_file</span><span class="p">(</span><span class="n">weights_file</span><span class="p">)</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">dump_obj_as_str_to_file</span><span class="p">(</span><span class="n">arch_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_persist_configuration</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">weights_file</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Persist called without a trained model present. &quot;</span>
+                          <span class="s2">&quot;Nothing to persist then!&quot;</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_load_model_arch</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">model_from_json</span>
+
+        <span class="n">arch_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;arch&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">arch_file</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">arch_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">model_from_json</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">model</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_load_weights_for_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="n">weights_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">weights_file</span><span class="p">):</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">weights_file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="KerasPolicy.load"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.keras_policy.KerasPolicy.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; KerasPolicy</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">featurizer</span> <span class="o">=</span> <span class="n">TrackerFeaturizer</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">meta_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;keras_policy.json&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">meta_path</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">meta_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">meta</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                <span class="n">model_arch</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_load_model_arch</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+                        <span class="n">featurizer</span><span class="o">=</span><span class="n">featurizer</span><span class="p">,</span>
+                        <span class="n">model</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">_load_weights_for_model</span><span class="p">(</span><span class="n">path</span><span class="p">,</span>
+                                                          <span class="n">model_arch</span><span class="p">,</span>
+                                                          <span class="n">meta</span><span class="p">),</span>
+                        <span class="n">current_epoch</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;epochs&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">featurizer</span><span class="o">=</span><span class="n">featurizer</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to load dialogue model. Path </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                            <span class="s2">&quot;doesn&#39;t exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.6.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="keras_policy.html">0.6.5</a></dd>
+            <dd><a href="../../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../../../../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../../../../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../../0.9.4/index.html">0.9.4</a></dd>
+            <dd><a href="../../../../0.9.5/index.html">0.9.5</a></dd>
+            <dd><a href="../../../../0.9.6/index.html">0.9.6</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../../async/index.html">async</a></dd>
+            <dd><a href="../../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../../fix/index.html">fix</a></dd>
+            <dd><a href="../../../../master/index.html">master</a></dd>
+            <dd><a href="../../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="../../../../wildcard/index.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.7.0a3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core.policies.ensemble &mdash; Rasa Core 0.7.0a3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a3 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../library.html">Library Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>rasa_core.policies.ensemble</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rasa_core.policies.ensemble</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">import</span> <span class="nn">rasa_core</span>
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">training</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">SlotSet</span><span class="p">,</span> <span class="n">ActionExecuted</span>
+<span class="kn">from</span> <span class="nn">rasa_core.featurizers</span> <span class="k">import</span> <span class="n">MaxHistoryTrackerFeaturizer</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.policies.policy</span> <span class="k">import</span> <span class="n">Policy</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+
+
+<div class="viewcode-block" id="UnsupportedDialogueModelError"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.UnsupportedDialogueModelError">[docs]</a><span class="k">class</span> <span class="nc">UnsupportedDialogueModelError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised when a model is to old to be loaded.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        message -- explanation of why the model is invalid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="PolicyEnsemble"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.PolicyEnsemble">[docs]</a><span class="k">class</span> <span class="nc">PolicyEnsemble</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policies</span><span class="p">,</span> <span class="n">action_fingerprints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># type: (List[Policy], Optional[Dict]) -&gt; None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policies</span> <span class="o">=</span> <span class="n">policies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_trackers</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">action_fingerprints</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_fingerprints</span> <span class="o">=</span> <span class="n">action_fingerprints</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_fingerprints</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_training_events_from_trackers</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">):</span>
+        <span class="n">events_metadata</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">training_trackers</span><span class="p">:</span>
+            <span class="n">tracker</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">init_copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">):</span>
+                    <span class="n">action_name</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_action_name</span>
+                    <span class="n">events_metadata</span><span class="p">[</span><span class="n">action_name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">events_metadata</span>
+
+<div class="viewcode-block" id="PolicyEnsemble.train"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.PolicyEnsemble.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (List[DialogueStateTracker], Domain, **Any) -&gt; None</span>
+        <span class="k">if</span> <span class="n">training_trackers</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
+                <span class="n">policy</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_trackers</span> <span class="o">=</span> <span class="n">training_trackers</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Skipped training, because there are no &quot;</span>
+                        <span class="s2">&quot;training samples.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PolicyEnsemble.probabilities_using_best_policy"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.PolicyEnsemble.probabilities_using_best_policy">[docs]</a>    <span class="k">def</span> <span class="nf">probabilities_using_best_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; List[float]</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="PolicyEnsemble.predict_next_action"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.PolicyEnsemble.predict_next_action">[docs]</a>    <span class="k">def</span> <span class="nf">predict_next_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; int</span>
+        <span class="sd">&quot;&quot;&quot;Predicts the next action the bot should take after seeing x.</span>
+
+<span class="sd">        This should be overwritten by more advanced policies to use ML to</span>
+<span class="sd">        predict the action. Returns the index of the next action&quot;&quot;&quot;</span>
+        <span class="n">probabilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">probabilities_using_best_policy</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="n">max_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probabilities</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Predicted next action &#39;</span><span class="si">{}</span><span class="s2">&#39; with prob </span><span class="si">{:.2f}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">domain</span><span class="o">.</span><span class="n">action_for_index</span><span class="p">(</span><span class="n">max_index</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                <span class="n">probabilities</span><span class="p">[</span><span class="n">max_index</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">max_index</span></div>
+
+    <span class="k">def</span> <span class="nf">_max_histories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; List[Optional[int]]</span>
+        <span class="sd">&quot;&quot;&quot;Return max history.&quot;&quot;&quot;</span>
+
+        <span class="n">max_histories</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="n">MaxHistoryTrackerFeaturizer</span><span class="p">):</span>
+                <span class="n">max_histories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">max_history</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">max_histories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">max_histories</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_create_action_fingerprints</span><span class="p">(</span><span class="n">training_events</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fingerprint each action using the events it created during train.</span>
+
+<span class="sd">        This allows us to emit warnings when the model is used</span>
+<span class="sd">        if an action does things it hasn&#39;t done during training.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">training_events</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">action_fingerprints</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">vs</span> <span class="ow">in</span> <span class="n">training_events</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">slots</span> <span class="o">=</span> <span class="nb">list</span><span class="p">({</span><span class="n">v</span><span class="o">.</span><span class="n">key</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vs</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">SlotSet</span><span class="p">)})</span>
+            <span class="n">action_fingerprints</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;slots&quot;</span><span class="p">:</span> <span class="n">slots</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">action_fingerprints</span>
+
+    <span class="k">def</span> <span class="nf">_persist_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Persists the domain specification to storage.&quot;&quot;&quot;</span>
+
+        <span class="c1"># make sure the directory we persist to exists</span>
+        <span class="n">domain_spec_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;policy_metadata.json&#39;</span><span class="p">)</span>
+        <span class="n">training_data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;stories.md&#39;</span><span class="p">)</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">create_dir_for_file</span><span class="p">(</span><span class="n">domain_spec_path</span><span class="p">)</span>
+
+        <span class="n">policy_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">module_path_from_instance</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">]</span>
+
+        <span class="n">training_events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_training_events_from_trackers</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">training_trackers</span><span class="p">)</span>
+
+        <span class="n">action_fingerprints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_action_fingerprints</span><span class="p">(</span><span class="n">training_events</span><span class="p">)</span>
+
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;action_fingerprints&quot;</span><span class="p">:</span> <span class="n">action_fingerprints</span><span class="p">,</span>
+            <span class="s2">&quot;rasa_core&quot;</span><span class="p">:</span> <span class="n">rasa_core</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+            <span class="s2">&quot;max_histories&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_histories</span><span class="p">(),</span>
+            <span class="s2">&quot;ensemble_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;policy_names&quot;</span><span class="p">:</span> <span class="n">policy_names</span>
+        <span class="p">}</span>
+
+        <span class="n">utils</span><span class="o">.</span><span class="n">dump_obj_as_json_to_file</span><span class="p">(</span><span class="n">domain_spec_path</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+        <span class="n">training</span><span class="o">.</span><span class="n">persist_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training_trackers</span><span class="p">,</span> <span class="n">training_data_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PolicyEnsemble.persist"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.PolicyEnsemble.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Persists the policy to storage.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_persist_metadata</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">policy</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">):</span>
+            <span class="n">dir_name</span> <span class="o">=</span> <span class="s1">&#39;policy_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="n">policy_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">)</span>
+            <span class="n">policy</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">policy_path</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="PolicyEnsemble.load_metadata"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.PolicyEnsemble.load_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">load_metadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">matadata_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;policy_metadata.json&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">matadata_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">metadata</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="PolicyEnsemble.ensure_model_compatibility"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.PolicyEnsemble.ensure_model_compatibility">[docs]</a>    <span class="k">def</span> <span class="nf">ensure_model_compatibility</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">packaging</span> <span class="k">import</span> <span class="n">version</span>
+
+        <span class="n">model_version</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rasa_core&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0.0&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">model_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;0.9.0&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">UnsupportedDialogueModelError</span><span class="p">(</span>
+                <span class="s2">&quot;The model version is to old to be &quot;</span>
+                <span class="s2">&quot;loaded by this Rasa Core instance. &quot;</span>
+                <span class="s2">&quot;Either retrain the model, or run with&quot;</span>
+                <span class="s2">&quot;an older version. &quot;</span>
+                <span class="s2">&quot;Model version: </span><span class="si">{}</span><span class="s2"> Instance version: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_version</span><span class="p">,</span> <span class="n">rasa_core</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span></div>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="PolicyEnsemble.load"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.PolicyEnsemble.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; PolicyEnsemble</span>
+        <span class="sd">&quot;&quot;&quot;Loads policy and domain specification from storage&quot;&quot;&quot;</span>
+
+        <span class="n">metadata</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">load_metadata</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">ensure_model_compatibility</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="n">policies</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">policy_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;policy_names&quot;</span><span class="p">]):</span>
+            <span class="n">policy_cls</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">class_from_module_path</span><span class="p">(</span><span class="n">policy_name</span><span class="p">)</span>
+            <span class="n">dir_name</span> <span class="o">=</span> <span class="s1">&#39;policy_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">policy_cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="n">policy_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">)</span>
+            <span class="n">policy</span> <span class="o">=</span> <span class="n">policy_cls</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">policy_path</span><span class="p">)</span>
+            <span class="n">policies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span>
+        <span class="n">ensemble_cls</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">class_from_module_path</span><span class="p">(</span>
+                                <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;ensemble_name&quot;</span><span class="p">])</span>
+        <span class="n">fingerprints</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action_fingerprints&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">ensemble</span> <span class="o">=</span> <span class="n">ensemble_cls</span><span class="p">(</span><span class="n">policies</span><span class="p">,</span> <span class="n">fingerprints</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ensemble</span></div></div>
+
+
+<div class="viewcode-block" id="SimplePolicyEnsemble"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.SimplePolicyEnsemble">[docs]</a><span class="k">class</span> <span class="nc">SimplePolicyEnsemble</span><span class="p">(</span><span class="n">PolicyEnsemble</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SimplePolicyEnsemble.probabilities_using_best_policy"><a class="viewcode-back" href="../../../rasa_dm.policies.html#rasa_core.policies.ensemble.SimplePolicyEnsemble.probabilities_using_best_policy">[docs]</a>    <span class="k">def</span> <span class="nf">probabilities_using_best_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; List[float]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">max_confidence</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">best_policy_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">):</span>
+            <span class="n">probabilities</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">predict_action_probabilities</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+            <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">confidence</span> <span class="o">&gt;</span> <span class="n">max_confidence</span><span class="p">:</span>
+                <span class="n">max_confidence</span> <span class="o">=</span> <span class="n">confidence</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">probabilities</span>
+                <span class="n">best_policy_name</span> <span class="o">=</span> <span class="s1">&#39;policy_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Predicted next action using </span><span class="si">{}</span><span class="s2">&quot;</span>
+                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_policy_name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">result</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: wildcard
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../../../0.6.5/index.html">0.6.5</a></dd>
+            <dd><a href="../../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../../../../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../../../../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../../0.9.4/index.html">0.9.4</a></dd>
+            <dd><a href="../../../../0.9.5/index.html">0.9.5</a></dd>
+            <dd><a href="../../../../0.9.6/index.html">0.9.6</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../../async/index.html">async</a></dd>
+            <dd><a href="../../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../../fix/index.html">fix</a></dd>
+            <dd><a href="../../../../master/index.html">master</a></dd>
+            <dd><a href="../../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="ensemble.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.7.0a3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

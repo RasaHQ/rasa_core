@@ -186,16 +186,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
-
-
-    
-    
-
-
-
-    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
-<h1>Source code for rasa_core.agent</h1><div class="highlight"><pre>
+  <h1>Source code for rasa_core.agent</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
@@ -398,7 +389,7 @@
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">):</span>
                 <span class="n">max_max_history</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">max_history</span><span class="p">,</span>
                                       <span class="n">max_max_history</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">else</span><span class="p">:</span>
                 <span class="n">all_max_history_featurizers</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">unique_last_num_states</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -521,13 +512,13 @@
                          <span class="s2">&quot;all old model files. Some files might be &quot;</span>
                          <span class="s2">&quot;overwritten.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
 
-<div class="viewcode-block" id="Agent.persist"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_path</span><span class="p">,</span> <span class="n">dump_flattened_stories</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Agent.persist"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_path</span><span class="p">):</span>
         <span class="c1"># type: (Text) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Persists this agent into a directory for later loading and usage.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_model_directory</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">dump_flattened_stories</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="s2">&quot;domain.yml&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">persist_specification</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
 
@@ -655,20 +646,58 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
-            <dd><a href="../../../0.9.6/index.html">0.9.6</a></dd>
-            <dd><a href="../../../0.9.5/index.html">0.9.5</a></dd>
-            <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
-            <dd><a href="../../../0.9.3/index.html">0.9.3</a></dd>
-            <dd><a href="../../../0.9.2/index.html">0.9.2</a></dd>
-            <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
-            <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
-            <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
-            <dd><a href="agent.html">0.7.9</a></dd>
+            <dd><a href="../../../0.6.5/index.html">0.6.5</a></dd>
             <dd><a href="../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="agent.html">0.7.9</a></dd>
+            <dd><a href="../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../../../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
+            <dd><a href="../../../0.9.5/index.html">0.9.5</a></dd>
+            <dd><a href="../../../0.9.6/index.html">0.9.6</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>
+            <dd><a href="../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../async/index.html">async</a></dd>
+            <dd><a href="../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../fix/index.html">fix</a></dd>
             <dd><a href="../../../master/index.html">master</a></dd>
+            <dd><a href="../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="../../../wildcard/index.html">wildcard</a></dd>
         </dl>
     </div>
 </div>
