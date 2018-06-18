@@ -395,7 +395,7 @@
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">):</span>
                 <span class="n">max_max_history</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">max_history</span><span class="p">,</span>
                                       <span class="n">max_max_history</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">all_max_history_featurizers</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">unique_last_num_states</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -518,13 +518,13 @@
                          <span class="s2">&quot;all old model files. Some files might be &quot;</span>
                          <span class="s2">&quot;overwritten.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
 
-<div class="viewcode-block" id="Agent.persist"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_path</span><span class="p">,</span> <span class="n">dump_flattened_stories</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Agent.persist"><a class="viewcode-back" href="../../api/agent.html#rasa_core.agent.Agent.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_path</span><span class="p">):</span>
         <span class="c1"># type: (Text) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Persists this agent into a directory for later loading and usage.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_model_directory</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">dump_flattened_stories</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="s2">&quot;domain.yml&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">persist_specification</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
 
@@ -652,6 +652,7 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../../0.9.6/index.html">0.9.6</a></dd>
             <dd><a href="../../../0.9.5/index.html">0.9.5</a></dd>
             <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
             <dd><a href="../../../0.9.3/index.html">0.9.3</a></dd>

@@ -193,9 +193,12 @@
   
 
 
+    
+    
 
 
 
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../0.9.6/api/tracker.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.9.6.</a></p>
 
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -238,7 +241,7 @@ conversation are received and updated after actions have been executed</p>
 <p>Here we go:</p>
 <span class="target" id="module-rasa_core.trackers"></span><dl class="class">
 <dt id="rasa_core.trackers.DialogueStateTracker">
-<em class="property">class </em><code class="descclassname">rasa_core.trackers.</code><code class="descname">DialogueStateTracker</code><span class="sig-paren">(</span><em>sender_id</em>, <em>slots</em>, <em>max_event_history=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">rasa_core.trackers.</code><code class="descname">DialogueStateTracker</code><span class="sig-paren">(</span><em>sender_id</em>, <em>slots</em>, <em>topics=None</em>, <em>default_topic=None</em>, <em>max_event_history=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Maintains the state of a conversation.</p>
 <dl class="method">
@@ -354,6 +357,12 @@ If no entity is found <cite>None</cite> is the default result.</p>
 <dd><p>Generate the past states of this tracker based on the history.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="rasa_core.trackers.DialogueStateTracker.previous_topic">
+<code class="descname">previous_topic</code><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.previous_topic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the topic that was set before the current one.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue">
 <code class="descname">recreate_from_dialogue</code><span class="sig-paren">(</span><em>dialogue</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.recreate_from_dialogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue" title="Permalink to this definition">¶</a></dt>
@@ -367,6 +376,12 @@ identical to the tracker from which the dialogue was created.</p>
 <dt id="rasa_core.trackers.DialogueStateTracker.replay_events">
 <code class="descname">replay_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.replay_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.replay_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the tracker based on a list of events.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.trackers.DialogueStateTracker.topic">
+<code class="descname">topic</code><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.topic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves current topic, or default if no topic has been set yet.</p>
 </dd></dl>
 
 <dl class="method">
@@ -438,6 +453,7 @@ at the target time will be included.</p>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../0.9.6/api/tracker.html">0.9.6</a></dd>
             <dd><a href="tracker.html">0.9.5</a></dd>
             <dd><a href="../../0.9.4/api/tracker.html">0.9.4</a></dd>
             <dd><a href="../../0.9.3/api/tracker.html">0.9.3</a></dd>
