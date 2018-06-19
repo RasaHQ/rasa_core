@@ -382,6 +382,7 @@ the default is to ignore <code class="docutils literal"><span class="pre">http_t
 <ul class="simple">
 <li>changed the logic inside AugmentedMemoizationPolicy to recall actions only if they are the same in training stories</li>
 <li>moved AugmentedMemoizationPolicy to memoization.py</li>
+<li>wrapped initialization of BackgroundScheduler in try/except to allow running on jupyterhub / binderhub/ colaboratory</li>
 </ul>
 </div>
 <div class="section" id="removed">
