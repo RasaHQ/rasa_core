@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core.train &mdash; Rasa Core 0.7.0a3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a3 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Library Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>rasa_core.train</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rasa_core.train</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa_core.channels.console</span> <span class="k">import</span> <span class="n">ConsoleInputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RasaNLUInterpreter</span><span class="p">,</span> <span class="n">RegexInterpreter</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="k">import</span> <span class="n">KerasPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
+
+
+<div class="viewcode-block" id="create_argument_parser"><a class="viewcode-back" href="../../rasa_core.html#rasa_core.train.create_argument_parser">[docs]</a><span class="k">def</span> <span class="nf">create_argument_parser</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Parse all the command line arguments for the training script.&quot;&quot;&quot;</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;trains a dialogue model&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--stories&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;file or folder containing the training stories&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--out&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;directory to persist the trained model in&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--domain&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;domain specification yaml file&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;-u&#39;</span><span class="p">,</span> <span class="s1">&#39;--nlu&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;trained nlu model&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--history&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;max history to use of a story&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--epochs&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;number of epochs to train the model&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--validation_split&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Percentage of training samples used for validation, &quot;</span>
+                 <span class="s2">&quot;0.1 by default&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--batch_size&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;number of training samples to put into one training batch&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--online&#39;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;enable online training&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--augmentation&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;how much data augmentation to use during training&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--debug_plots&#39;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If enabled, will create plots showing checkpoints &quot;</span>
+                 <span class="s2">&quot;and their connections between story blocks in a  &quot;</span>
+                 <span class="s2">&quot;file called `story_blocks_connections.pdf`.&quot;</span><span class="p">)</span>
+
+    <span class="n">utils</span><span class="o">.</span><span class="n">add_logging_option_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="train_dialogue_model"><a class="viewcode-back" href="../../rasa_core.html#rasa_core.train.train_dialogue_model">[docs]</a><span class="k">def</span> <span class="nf">train_dialogue_model</span><span class="p">(</span><span class="n">domain_file</span><span class="p">,</span> <span class="n">stories_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span>
+                         <span class="n">use_online_learning</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">nlu_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">max_history</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">domain_file</span><span class="p">,</span> <span class="n">policies</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">MemoizationPolicy</span><span class="p">(</span><span class="n">max_history</span><span class="o">=</span><span class="n">max_history</span><span class="p">),</span>
+        <span class="n">KerasPolicy</span><span class="p">()])</span>
+
+    <span class="n">data_load_args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">extract_args</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span>
+                                                <span class="p">{</span><span class="s2">&quot;use_story_concatenation&quot;</span><span class="p">,</span>
+                                                 <span class="s2">&quot;unique_last_num_states&quot;</span><span class="p">,</span>
+                                                 <span class="s2">&quot;augmentation_factor&quot;</span><span class="p">,</span>
+                                                 <span class="s2">&quot;remove_duplicates&quot;</span><span class="p">,</span>
+                                                 <span class="s2">&quot;debug_plots&quot;</span><span class="p">})</span>
+    <span class="n">training_data</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">stories_file</span><span class="p">,</span> <span class="o">**</span><span class="n">data_load_args</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_online_learning</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">nlu_model_path</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">interpreter</span> <span class="o">=</span> <span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="n">nlu_model_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">interpreter</span> <span class="o">=</span> <span class="n">RegexInterpreter</span><span class="p">()</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">train_online</span><span class="p">(</span>
+                <span class="n">training_data</span><span class="p">,</span>
+                <span class="n">input_channel</span><span class="o">=</span><span class="n">ConsoleInputChannel</span><span class="p">(),</span>
+                <span class="n">model_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">agent</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="c1"># Running as standalone python application</span>
+    <span class="n">arg_parser</span> <span class="o">=</span> <span class="n">create_argument_parser</span><span class="p">()</span>
+    <span class="n">cmdline_args</span> <span class="o">=</span> <span class="n">arg_parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">utils</span><span class="o">.</span><span class="n">configure_colored_logging</span><span class="p">(</span><span class="n">cmdline_args</span><span class="o">.</span><span class="n">loglevel</span><span class="p">)</span>
+
+    <span class="n">additional_arguments</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;epochs&quot;</span><span class="p">:</span> <span class="n">cmdline_args</span><span class="o">.</span><span class="n">epochs</span><span class="p">,</span>
+        <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">cmdline_args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="s2">&quot;validation_split&quot;</span><span class="p">:</span> <span class="n">cmdline_args</span><span class="o">.</span><span class="n">validation_split</span><span class="p">,</span>
+        <span class="s2">&quot;augmentation_factor&quot;</span><span class="p">:</span> <span class="n">cmdline_args</span><span class="o">.</span><span class="n">augmentation</span><span class="p">,</span>
+        <span class="s2">&quot;debug_plots&quot;</span><span class="p">:</span> <span class="n">cmdline_args</span><span class="o">.</span><span class="n">debug_plots</span>
+    <span class="p">}</span>
+
+    <span class="n">train_dialogue_model</span><span class="p">(</span><span class="n">cmdline_args</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
+                         <span class="n">cmdline_args</span><span class="o">.</span><span class="n">stories</span><span class="p">,</span>
+                         <span class="n">cmdline_args</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
+                         <span class="n">cmdline_args</span><span class="o">.</span><span class="n">online</span><span class="p">,</span>
+                         <span class="n">cmdline_args</span><span class="o">.</span><span class="n">nlu</span><span class="p">,</span>
+                         <span class="n">cmdline_args</span><span class="o">.</span><span class="n">history</span><span class="p">,</span>
+                         <span class="n">additional_arguments</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.6.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="train.html">0.6.5</a></dd>
+            <dd><a href="../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../../../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../../../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
+            <dd><a href="../../../0.9.5/index.html">0.9.5</a></dd>
+            <dd><a href="../../../0.9.6/index.html">0.9.6</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../apscheduler_try/index.html">apscheduler_try</a></dd>
+            <dd><a href="../../../async/index.html">async</a></dd>
+            <dd><a href="../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../fix/index.html">fix</a></dd>
+            <dd><a href="../../../master/index.html">master</a></dd>
+            <dd><a href="../../../model-pull/index.html">model-pull</a></dd>
+            <dd><a href="../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="../../../wildcard/index.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.7.0a3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

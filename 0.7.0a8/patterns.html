@@ -1,0 +1,464 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Common Patterns &mdash; Rasa Core 0.7.0a8 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a8 documentation" href="index.html"/>
+        <link rel="next" title="Using Rasa Core as a HTTP server" href="http.html"/>
+        <link rel="prev" title="Interactive Learning with a Fake User" href="tutorial_fake_user.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Common Patterns</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#collecting-information-to-complete-a-request">Collecting Information to Complete a Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-slot-values-to-influence-which-actions-are-predicted">Using Slot Values to Influence Which Actions are Predicted</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#storing-api-responses-in-the-tracker">Storing API responses in the tracker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">Using Rasa Core as a HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Common Patterns</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/patterns.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="common-patterns">
+<span id="patterns"></span><h1>Common Patterns<a class="headerlink" href="#common-patterns" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Here we go through some typical conversation patterns and explain how to implement
+them with Rasa Core.</p>
+</div>
+<p>Rasa Core uses ML models to predict actions, and <code class="docutils literal"><span class="pre">slots</span></code> provide important
+information these models rely on to keep track of context and handle multi-turn dialogue.
+Slots are for storing information that&#8217;s relevant over multiple turns. For example, in
+our restaurant example, we would want to keep track of things like the cuisine and number of
+people for the duration of the conversation.</p>
+<div class="section" id="collecting-information-to-complete-a-request">
+<h2>Collecting Information to Complete a Request<a class="headerlink" href="#collecting-information-to-complete-a-request" title="Permalink to this headline">¶</a></h2>
+<p>For collecting a set of preferences, you can use <code class="docutils literal"><span class="pre">TextSlot</span></code> s like in the restaurant example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">cuisine</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class=" -Error"> </span><span class="l l-Scalar l-Scalar-Plain">people</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+ <span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>When Rasa sees an entity with the same name as one of the slots, this value is automatically saved.
+For example, if your NLU module detects the entity <code class="docutils literal"><span class="pre">people=8</span></code> in the sentence <em>&#8220;I&#8217;d like a table for 8&#8221;</em>,
+this will be saved as a slot,</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">{</span><span class="s2">&quot;people&quot;</span><span class="p">:</span> <span class="s2">&quot;8&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>When Rasa Core predicts the next action to take, the only information it has about the <code class="docutils literal"><span class="pre">TextSlot</span></code> s is
+<strong>whether or not they are defined</strong>. So you have enough information to know that you don&#8217;t have to ask for this
+information again, but the <em>value</em> has no impact on which actions Rasa Core predicts.
+The full set of slot types and their behaviour is described here: <a class="reference internal" href="slot_types.html#slot-types"><span class="std std-ref">Slot Types Reference</span></a>.</p>
+</div>
+<div class="section" id="using-slot-values-to-influence-which-actions-are-predicted">
+<h2>Using Slot Values to Influence Which Actions are Predicted<a class="headerlink" href="#using-slot-values-to-influence-which-actions-are-predicted" title="Permalink to this headline">¶</a></h2>
+<p>Maybe your restaurant booking system can only handle bookings for up to 6 people, so the
+request above isn&#8217;t valid. In this case you want the <em>value</em> of the slot to influence the
+next selected action (not just whether it&#8217;s been specified). You can achieve this using a custom
+slot class.</p>
+<p>The way we defined it below, if the number of people is less than or equal to 6, we return <code class="docutils literal"><span class="pre">(1,0)</span></code>,
+if it&#8217;s more we return <code class="docutils literal"><span class="pre">(0,1)</span></code>, and if it&#8217;s not set <code class="docutils literal"><span class="pre">(0,0)</span></code>.</p>
+<p>Rasa Core can use that information to distinguish between different situations - so long as
+you have some training stories where the appropriate responses take place, e.g.:</p>
+<div class="highlight-md"><div class="highlight"><pre><span></span><span class="gh">#</span> story1
+...
+<span class="k">*</span> _inform[people=3]
+<span class="k">-</span> action_book_table
+...
+<span class="gh">#</span> story2
+<span class="k">*</span> _inform[people=9]
+<span class="k">-</span> action_explain_table_limit
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.slots</span> <span class="kn">import</span> <span class="n">Slot</span>
+
+<span class="k">class</span> <span class="nc">NumberOfPeopleSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
+
+  <span class="k">def</span> <span class="nf">feature_dimensionality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="mi">2</span>
+
+  <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_dimensionality</span><span class="p">()</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">:</span>
+              <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+          <span class="k">else</span><span class="p">:</span>
+              <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+      <span class="k">return</span> <span class="n">r</span>
+</pre></div>
+</div>
+<p>If you want to store something like the price range, this is actually a little simpler. Variables
+like price range usually take on one-of-n values, e.g. low, medium, high. For these cases you can use
+a <code class="docutils literal"><span class="pre">CategoricalSlot</span></code>.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">pricerange</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical</span>
+    <span class="l l-Scalar l-Scalar-Plain">values</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">low, medium, high</span>
+</pre></div>
+</div>
+<p>Rasa automatically represents (featurises) this as a one-hot encoding of the values: <code class="docutils literal"><span class="pre">(1,0,0)</span></code>, <code class="docutils literal"><span class="pre">(0,1,0)</span></code>, or <code class="docutils literal"><span class="pre">(0,0,1)</span></code>.</p>
+</div>
+<div class="section" id="storing-api-responses-in-the-tracker">
+<h2>Storing API responses in the tracker<a class="headerlink" href="#storing-api-responses-in-the-tracker" title="Permalink to this headline">¶</a></h2>
+<p>You often want to save some information in the tracker, like the results from
+a database query, or from an API call. If you don&#8217;t want the value to influence the
+dialogue, you can use a <code class="docutils literal"><span class="pre">UnfeaturizedSlot</span></code>. You can explicitly set this value in a custom action:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="kn">import</span> <span class="n">Action</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="k">class</span> <span class="nc">ApiAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">):</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+      <span class="k">return</span> <span class="p">[</span><span class="n">SetSlot</span><span class="p">(</span><span class="s2">&quot;api_result&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="http.html" class="btn btn-neutral float-right" title="Using Rasa Core as a HTTP server" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial_fake_user.html" class="btn btn-neutral" title="Interactive Learning with a Fake User" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.7.0a8
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../0.6.5/patterns.html">0.6.5</a></dd>
+            <dd><a href="../0.6.9/patterns.html">0.6.9</a></dd>
+            <dd><a href="../0.7.0/patterns.html">0.7.0</a></dd>
+            <dd><a href="../0.7.0a10/patterns.html">0.7.0a10</a></dd>
+            <dd><a href="../0.7.0a5/patterns.html">0.7.0a5</a></dd>
+            <dd><a href="../0.7.0a6/patterns.html">0.7.0a6</a></dd>
+            <dd><a href="../0.7.0a7/patterns.html">0.7.0a7</a></dd>
+            <dd><a href="patterns.html">0.7.0a8</a></dd>
+            <dd><a href="../0.7.0a9/patterns.html">0.7.0a9</a></dd>
+            <dd><a href="../0.7.1/patterns.html">0.7.1</a></dd>
+            <dd><a href="../0.7.2/patterns.html">0.7.2</a></dd>
+            <dd><a href="../0.7.3/patterns.html">0.7.3</a></dd>
+            <dd><a href="../0.7.4/patterns.html">0.7.4</a></dd>
+            <dd><a href="../0.7.5/patterns.html">0.7.5</a></dd>
+            <dd><a href="../0.7.6/patterns.html">0.7.6</a></dd>
+            <dd><a href="../0.7.7/patterns.html">0.7.7</a></dd>
+            <dd><a href="../0.7.8/patterns.html">0.7.8</a></dd>
+            <dd><a href="../0.7.9/patterns.html">0.7.9</a></dd>
+            <dd><a href="../0.8.0/patterns.html">0.8.0</a></dd>
+            <dd><a href="../0.8.1/patterns.html">0.8.1</a></dd>
+            <dd><a href="../0.8.2/patterns.html">0.8.2</a></dd>
+            <dd><a href="../0.8.3/patterns.html">0.8.3</a></dd>
+            <dd><a href="../0.8.4/patterns.html">0.8.4</a></dd>
+            <dd><a href="../0.8.5/patterns.html">0.8.5</a></dd>
+            <dd><a href="../0.8.6/patterns.html">0.8.6</a></dd>
+            <dd><a href="../0.9.0/patterns.html">0.9.0</a></dd>
+            <dd><a href="../0.9.0a1/patterns.html">0.9.0a1</a></dd>
+            <dd><a href="../0.9.0a2/patterns.html">0.9.0a2</a></dd>
+            <dd><a href="../0.9.0a3/patterns.html">0.9.0a3</a></dd>
+            <dd><a href="../0.9.0a5/patterns.html">0.9.0a5</a></dd>
+            <dd><a href="../0.9.0a7/patterns.html">0.9.0a7</a></dd>
+            <dd><a href="../0.9.1/patterns.html">0.9.1</a></dd>
+            <dd><a href="../0.9.2/patterns.html">0.9.2</a></dd>
+            <dd><a href="../0.9.3/patterns.html">0.9.3</a></dd>
+            <dd><a href="../0.9.4/patterns.html">0.9.4</a></dd>
+            <dd><a href="../0.9.5/patterns.html">0.9.5</a></dd>
+            <dd><a href="../0.9.6/patterns.html">0.9.6</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../0.9.x/patterns.html">0.9.x</a></dd>
+            <dd><a href="../add-auth/patterns.html">add-auth</a></dd>
+            <dd><a href="../apscheduler_try/patterns.html">apscheduler_try</a></dd>
+            <dd><a href="../async/patterns.html">async</a></dd>
+            <dd><a href="../direct_input/patterns.html">direct_input</a></dd>
+            <dd><a href="../dispatcher/patterns.html">dispatcher</a></dd>
+            <dd><a href="../embed_policy/patterns.html">embed_policy</a></dd>
+            <dd><a href="../eval_scripts/patterns.html">eval_scripts</a></dd>
+            <dd><a href="../event-stream/patterns.html">event-stream</a></dd>
+            <dd><a href="../fix/patterns.html">fix</a></dd>
+            <dd><a href="../master/patterns.html">master</a></dd>
+            <dd><a href="../model-pull/patterns.html">model-pull</a></dd>
+            <dd><a href="../track_data/patterns.html">track_data</a></dd>
+            <dd><a href="../wildcard/patterns.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.7.0a8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

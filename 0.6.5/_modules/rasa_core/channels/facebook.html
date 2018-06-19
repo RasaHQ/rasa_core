@@ -1,0 +1,600 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core.channels.facebook &mdash; Rasa Core 0.7.0a3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a3 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../library.html">Library Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>rasa_core.channels.facebook</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rasa_core.channels.facebook</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">fbmessenger</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">BaseMessenger</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">MessengerClient</span><span class="p">,</span> <span class="n">attachments</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core.channels.channel</span> <span class="k">import</span> <span class="n">UserMessage</span><span class="p">,</span> <span class="n">OutputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.channels.rest</span> <span class="k">import</span> <span class="n">HttpInputComponent</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Messenger"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.Messenger">[docs]</a><span class="k">class</span> <span class="nc">Messenger</span><span class="p">(</span><span class="n">BaseMessenger</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Implement a fbmessenger to parse incoming webhooks and send msgs.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page_access_token</span><span class="p">,</span> <span class="n">on_new_message</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Callable[[UserMessage], None]) -&gt; None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">page_access_token</span> <span class="o">=</span> <span class="n">page_access_token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_new_message</span> <span class="o">=</span> <span class="n">on_new_message</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Messenger</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page_access_token</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_is_audio_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; bool</span>
+        <span class="sd">&quot;&quot;&quot;Check if the users message is a recorced voice message.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">message</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;attachments&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">message</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">][</span><span class="s1">&#39;attachments&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;audio&#39;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_is_user_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; bool</span>
+        <span class="sd">&quot;&quot;&quot;Check if the message is a message from the user&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">message</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="ow">not</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_echo&quot;</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Messenger.message"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.Messenger.message">[docs]</a>    <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Handle an incoming event from the fb webhook.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_user_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">][</span><span class="s1">&#39;text&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_audio_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+            <span class="n">attachment</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">][</span><span class="s1">&#39;attachments&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">attachment</span><span class="p">[</span><span class="s1">&#39;payload&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Received a message from facebook that we can not &quot;</span>
+                        <span class="s2">&quot;handle. Message: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handle_user_message</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user_id</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Messenger.postback"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.Messenger.postback">[docs]</a>    <span class="k">def</span> <span class="nf">postback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Handle a postback (e.g. quick reply button).&quot;&quot;&quot;</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;postback&#39;</span><span class="p">][</span><span class="s1">&#39;payload&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handle_user_message</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user_id</span><span class="p">())</span></div>
+
+    <span class="k">def</span> <span class="nf">_handle_user_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Text) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Pass on the text to the dialogue engine for processing.&quot;&quot;&quot;</span>
+
+        <span class="n">out_channel</span> <span class="o">=</span> <span class="n">MessengerBot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="n">user_msg</span> <span class="o">=</span> <span class="n">UserMessage</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">out_channel</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">on_new_message</span><span class="p">(</span><span class="n">user_msg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception when trying to handle webhook &quot;</span>
+                             <span class="s2">&quot;for facebook message.&quot;</span><span class="p">)</span>
+            <span class="k">pass</span>
+
+<div class="viewcode-block" id="Messenger.delivery"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.Messenger.delivery">[docs]</a>    <span class="k">def</span> <span class="nf">delivery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Do nothing. Method to handle `message_deliveries`&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Messenger.read"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.Messenger.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Do nothing. Method to handle `message_reads`&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Messenger.account_linking"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.Messenger.account_linking">[docs]</a>    <span class="k">def</span> <span class="nf">account_linking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Do nothing. Method to handle `account_linking`&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Messenger.optin"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.Messenger.optin">[docs]</a>    <span class="k">def</span> <span class="nf">optin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Do nothing. Method to handle `messaging_optins`&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="MessengerBot"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.MessengerBot">[docs]</a><span class="k">class</span> <span class="nc">MessengerBot</span><span class="p">(</span><span class="n">OutputChannel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A bot that uses fb-messenger to communicate.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messenger_client</span><span class="p">):</span>
+        <span class="c1"># type: (MessengerClient) -&gt; None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">messenger_client</span> <span class="o">=</span> <span class="n">messenger_client</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MessengerBot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MessengerBot.send"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.MessengerBot.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_id</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Any) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Sends a message to the recipient using the messenger client.&quot;&quot;&quot;</span>
+
+        <span class="c1"># this is a bit hacky, but the client doesn&#39;t have a proper API to</span>
+        <span class="c1"># send messages but instead expects the incoming sender to be present</span>
+        <span class="c1"># which we don&#39;t have as it is stored in the input channel.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">messenger_client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+                                   <span class="p">{</span><span class="s2">&quot;sender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">recipient_id</span><span class="p">}},</span>
+                                   <span class="s1">&#39;RESPONSE&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MessengerBot.send_text_message"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.MessengerBot.send_text_message">[docs]</a>    <span class="k">def</span> <span class="nf">send_text_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_id</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Text) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Send a message through this channel.&quot;&quot;&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sending message: &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">recipient_id</span><span class="p">,</span> <span class="n">elements</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">message</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MessengerBot.send_image_url"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.MessengerBot.send_image_url">[docs]</a>    <span class="k">def</span> <span class="nf">send_image_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_id</span><span class="p">,</span> <span class="n">image_url</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Text) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Sends an image. Default will just post the url as a string.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">recipient_id</span><span class="p">,</span> <span class="n">attachments</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">image_url</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MessengerBot.send_text_with_buttons"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.MessengerBot.send_text_with_buttons">[docs]</a>    <span class="k">def</span> <span class="nf">send_text_with_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_id</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">buttons</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Text, List[Dict[Text, Any]], **Any) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Sends buttons to the output.&quot;&quot;&quot;</span>
+
+        <span class="c1"># buttons is a list of tuples: [(option_name,payload)]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buttons</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Facebook API currently allows only up to 3 buttons. &quot;</span>
+                        <span class="s2">&quot;If you add more, all will be ignored.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_text_message</span><span class="p">(</span><span class="n">recipient_id</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_postback_info</span><span class="p">(</span><span class="n">buttons</span><span class="p">)</span>
+
+            <span class="c1"># Currently there is no predefined way to create a message with</span>
+            <span class="c1"># buttons in the fbmessenger framework - so we need to create the</span>
+            <span class="c1"># payload on our own</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;attachment&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;template&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;payload&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;template_type&quot;</span><span class="p">:</span> <span class="s2">&quot;button&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+                        <span class="s2">&quot;buttons&quot;</span><span class="p">:</span> <span class="n">buttons</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">messenger_client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span>
+                                       <span class="p">{</span><span class="s2">&quot;sender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">recipient_id</span><span class="p">}},</span>
+                                       <span class="s1">&#39;RESPONSE&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MessengerBot.send_custom_message"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.MessengerBot.send_custom_message">[docs]</a>    <span class="k">def</span> <span class="nf">send_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_id</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+        <span class="c1"># type: (Text, List[Dict[Text, Any]]) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Sends elements to the output.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_postback_info</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;buttons&#39;</span><span class="p">])</span>
+
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;attachment&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;template&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;payload&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;template_type&quot;</span><span class="p">:</span> <span class="s2">&quot;generic&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="n">elements</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">messenger_client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">_recipient_json</span><span class="p">(</span><span class="n">recipient_id</span><span class="p">),</span>
+                                   <span class="s1">&#39;RESPONSE&#39;</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_add_postback_info</span><span class="p">(</span><span class="n">buttons</span><span class="p">):</span>
+        <span class="c1"># type: (List[Dict[Text, Any]]) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Set the button type to postback for all buttons. Happens in place.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="n">buttons</span><span class="p">:</span>
+            <span class="n">button</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;postback&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_recipient_json</span><span class="p">(</span><span class="n">recipient_id</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; Dict[Text, Dict[Text, Text]]</span>
+        <span class="sd">&quot;&quot;&quot;Generate the response json for the recipient expected by FB.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;sender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">recipient_id</span><span class="p">}}</span></div>
+
+
+<div class="viewcode-block" id="FacebookInput"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.FacebookInput">[docs]</a><span class="k">class</span> <span class="nc">FacebookInput</span><span class="p">(</span><span class="n">HttpInputComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Facebook input channel implementation. Based on the HTTPInputChannel.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fb_verify</span><span class="p">,</span> <span class="n">fb_secret</span><span class="p">,</span> <span class="n">fb_access_token</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Text, Text) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Create a facebook input channel.</span>
+
+<span class="sd">        Needs a couple of settings to properly authenticate and validate</span>
+<span class="sd">        messages. Details to setup:</span>
+
+<span class="sd">        https://github.com/rehabstudio/fbmessenger#facebook-app-setup</span>
+<span class="sd">        :param fb_verify: FB Verification string</span>
+<span class="sd">                          (can be chosen by yourself on webhook creation)</span>
+<span class="sd">        :param fb_secret: facebook application secret</span>
+<span class="sd">        :param fb_access_token: access token to post in the name of the FB page</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fb_verify</span> <span class="o">=</span> <span class="n">fb_verify</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fb_secret</span> <span class="o">=</span> <span class="n">fb_secret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fb_access_token</span> <span class="o">=</span> <span class="n">fb_access_token</span>
+
+<div class="viewcode-block" id="FacebookInput.blueprint"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.FacebookInput.blueprint">[docs]</a>    <span class="k">def</span> <span class="nf">blueprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_new_message</span><span class="p">):</span>
+
+        <span class="n">fb_webhook</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;fb_webhook&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="nd">@fb_webhook</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+        <span class="k">def</span> <span class="nf">health</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">})</span>
+
+        <span class="nd">@fb_webhook</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/webhook&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+        <span class="k">def</span> <span class="nf">token_verification</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hub.verify_token&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">fb_verify</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hub.challenge&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Invalid fb verify token! Make sure this matches &quot;</span>
+                            <span class="s2">&quot;your webhook settings on the facebook app.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s2">&quot;failure, invalid token&quot;</span>
+
+        <span class="nd">@fb_webhook</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/webhook&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+        <span class="k">def</span> <span class="nf">webhook</span><span class="p">():</span>
+            <span class="n">signature</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;X-Hub-Signature&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_hub_signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fb_secret</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                                               <span class="n">signature</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Wrong fb secret! Make sure this matches the &quot;</span>
+                            <span class="s2">&quot;secret in your facebook app settings&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s2">&quot;not validated&quot;</span>
+
+            <span class="n">messenger</span> <span class="o">=</span> <span class="n">Messenger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fb_access_token</span><span class="p">,</span> <span class="n">on_new_message</span><span class="p">)</span>
+
+            <span class="n">messenger</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="k">return</span> <span class="s2">&quot;success&quot;</span>
+
+        <span class="k">return</span> <span class="n">fb_webhook</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="FacebookInput.validate_hub_signature"><a class="viewcode-back" href="../../../rasa_dm.channels.html#rasa_core.channels.facebook.FacebookInput.validate_hub_signature">[docs]</a>    <span class="k">def</span> <span class="nf">validate_hub_signature</span><span class="p">(</span><span class="n">app_secret</span><span class="p">,</span> <span class="n">request_payload</span><span class="p">,</span>
+                               <span class="n">hub_signature_header</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Makes sure the incoming webhook requests are properly signed.</span>
+
+<span class="sd">        :param app_secret: Secret Key for application</span>
+<span class="sd">        :param request_payload: request body</span>
+<span class="sd">        :param hub_signature_header: X-Hub-Signature header sent with request</span>
+<span class="sd">        :return: boolean indicated that hub signature is validated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hash_method</span><span class="p">,</span> <span class="n">hub_signature</span> <span class="o">=</span> <span class="n">hub_signature_header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">digest_module</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">hashlib</span><span class="p">,</span> <span class="n">hash_method</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
+                <span class="c1"># noinspection PyCompatibility</span>
+                <span class="n">hmac_object</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="n">app_secret</span><span class="p">),</span>
+                        <span class="n">unicode</span><span class="p">(</span><span class="n">request_payload</span><span class="p">),</span> <span class="n">digest_module</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">hmac_object</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+                        <span class="nb">bytearray</span><span class="p">(</span><span class="n">app_secret</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">),</span>
+                        <span class="n">request_payload</span><span class="p">,</span> <span class="n">digest_module</span><span class="p">)</span>
+            <span class="n">generated_hash</span> <span class="o">=</span> <span class="n">hmac_object</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">hub_signature</span> <span class="o">==</span> <span class="n">generated_hash</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.6.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="facebook.html">0.6.5</a></dd>
+            <dd><a href="../../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../../../../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../../../../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../../0.9.4/index.html">0.9.4</a></dd>
+            <dd><a href="../../../../0.9.5/index.html">0.9.5</a></dd>
+            <dd><a href="../../../../0.9.6/index.html">0.9.6</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../../apscheduler_try/index.html">apscheduler_try</a></dd>
+            <dd><a href="../../../../async/index.html">async</a></dd>
+            <dd><a href="../../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../../fix/index.html">fix</a></dd>
+            <dd><a href="../../../../master/index.html">master</a></dd>
+            <dd><a href="../../../../model-pull/index.html">model-pull</a></dd>
+            <dd><a href="../../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="../../../../wildcard/index.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.7.0a3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
