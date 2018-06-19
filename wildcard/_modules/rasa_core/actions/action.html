@@ -224,7 +224,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            tracker (DialogueStateTracker): the state tracker for the current user.</span>
 <span class="sd">                You can access slot values using ``tracker.get_slot(slot_name)``</span>
-<span class="sd">                and the most recent user message is ``tracker.latest_message``.</span>
+<span class="sd">                and the most recent user message is ``tracker.latest_message.text``.</span>
 <span class="sd">            dispatcher (Dispatcher): the dispatcher which is used to send messages back</span>
 <span class="sd">                to the user. Use ``dipatcher.utter_message()`` or any other :class:`Dispatcher` method.</span>
 <span class="sd">            domain (Domain): the bot&#39;s domain</span>

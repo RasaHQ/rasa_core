@@ -253,7 +253,7 @@
 <dd><dl class="first docutils">
 <dt>tracker (DialogueStateTracker): the state tracker for the current user.</dt>
 <dd>You can access slot values using <code class="docutils literal"><span class="pre">tracker.get_slot(slot_name)</span></code>
-and the most recent user message is <code class="docutils literal"><span class="pre">tracker.latest_message</span></code>.</dd>
+and the most recent user message is <code class="docutils literal"><span class="pre">tracker.latest_message.text</span></code>.</dd>
 <dt>dispatcher (Dispatcher): the dispatcher which is used to send messages back</dt>
 <dd>to the user. Use <code class="docutils literal"><span class="pre">dipatcher.utter_message()</span></code> or any other <code class="xref py py-class docutils literal"><span class="pre">Dispatcher</span></code> method.</dd>
 </dl>
