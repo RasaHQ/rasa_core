@@ -1,0 +1,714 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core.trackers &mdash; Rasa Core 0.9.0a2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Rasa Core 0.9.0a2 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/tracker.html">Dialogue State Tracker</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>rasa_core.trackers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rasa_core.trackers</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+
+<span class="kn">import</span> <span class="nn">jsonpickle</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">events</span>
+<span class="kn">from</span> <span class="nn">rasa_core.conversation</span> <span class="k">import</span> <span class="n">Dialogue</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">UserUttered</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">,</span> \
+    <span class="n">Event</span><span class="p">,</span> <span class="n">SlotSet</span><span class="p">,</span> <span class="n">Restarted</span><span class="p">,</span> <span class="n">ActionReverted</span><span class="p">,</span> <span class="n">UserUtteranceReverted</span><span class="p">,</span> \
+    <span class="n">BotUttered</span><span class="p">,</span> <span class="n">TopicSet</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="k">import</span> <span class="n">Action</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+
+
+<div class="viewcode-block" id="DialogueStateTracker"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker">[docs]</a><span class="k">class</span> <span class="nc">DialogueStateTracker</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Maintains the state of a conversation.&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="DialogueStateTracker.from_dict"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">dump_as_dict</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Text, List[Dict[Text, Any]]) -&gt; DialogueStateTracker</span>
+        <span class="sd">&quot;&quot;&quot;Create a tracker from dump.</span>
+
+<span class="sd">        The dump should be an array of dumped events. When restoring</span>
+<span class="sd">        the tracker, these events will be replayed to recreate the state.&quot;&quot;&quot;</span>
+
+        <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">dump_as_dict</span><span class="p">)</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evts</span><span class="p">:</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tracker</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">slots</span><span class="p">,</span>
+                 <span class="n">max_event_history</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the tracker.</span>
+
+<span class="sd">        A set of events can be stored externally, and we will run through all</span>
+<span class="sd">        of them to get the current state. The tracker will represent all the</span>
+<span class="sd">        information we captured while processing messages of the dialogue.&quot;&quot;&quot;</span>
+
+        <span class="c1"># maximum number of events to store</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_event_history</span> <span class="o">=</span> <span class="n">max_event_history</span>
+        <span class="c1"># list of previously seen events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_events</span><span class="p">([])</span>
+        <span class="c1"># id of the source of the messages</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span> <span class="o">=</span> <span class="n">sender_id</span>
+        <span class="c1"># slots that can be filled in this domain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slots</span> <span class="o">=</span> <span class="p">{</span><span class="n">slot</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">slots</span><span class="p">}</span>
+
+        <span class="c1">###</span>
+        <span class="c1"># current state of the tracker - MUST be re-creatable by processing</span>
+        <span class="c1"># all the events. This only defines the attributes, values are set in</span>
+        <span class="c1"># `reset()`</span>
+        <span class="c1">###</span>
+        <span class="c1"># if tracker is paused, no actions should be taken</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_paused</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># A deterministically scheduled action to be executed next</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;stores the most recent message sent by the user.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+
+    <span class="c1">###</span>
+    <span class="c1"># Public tracker interface</span>
+    <span class="c1">###</span>
+<div class="viewcode-block" id="DialogueStateTracker.current_state"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.current_state">[docs]</a>    <span class="k">def</span> <span class="nf">current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">should_include_events</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">only_events_after_latest_restart</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># type: (bool, bool) -&gt; Dict[Text, Any]</span>
+        <span class="sd">&quot;&quot;&quot;Return the current tracker state as an object.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">should_include_events</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">only_events_after_latest_restart</span><span class="p">:</span>
+                <span class="n">es</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">es</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events_after_latest_restart</span><span class="p">()</span>
+            <span class="n">evts</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">es</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">evts</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">latest_event_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">latest_event_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;sender_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span>
+            <span class="s2">&quot;slots&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_slot_values</span><span class="p">(),</span>
+            <span class="s2">&quot;latest_message&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">parse_data</span><span class="p">,</span>
+            <span class="s2">&quot;latest_event_time&quot;</span><span class="p">:</span> <span class="n">latest_event_time</span><span class="p">,</span>
+            <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span><span class="p">(),</span>
+            <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">evts</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.past_states"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.past_states">[docs]</a>    <span class="k">def</span> <span class="nf">past_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (Domain) -&gt; deque</span>
+        <span class="sd">&quot;&quot;&quot;Generate the past states of this tracker based on the history.&quot;&quot;&quot;</span>
+
+        <span class="n">generated_states</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">states_for_tracker_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deque</span><span class="p">((</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">generated_states</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.current_slot_values"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.current_slot_values">[docs]</a>    <span class="k">def</span> <span class="nf">current_slot_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Dict[Text, Any]</span>
+        <span class="sd">&quot;&quot;&quot;Return the currently set values of the slots&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">slot</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.get_slot"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.get_slot">[docs]</a>    <span class="k">def</span> <span class="nf">get_slot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; Optional[Any]</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves the value of a slot.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Tried to access non existent slot &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.get_latest_entity_values"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.get_latest_entity_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_latest_entity_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; Iterator[Text]</span>
+        <span class="sd">&quot;&quot;&quot;Get entity values found for the passed entity name in latest msg.</span>
+
+<span class="sd">        If you are only interested in the first entity of a given type use</span>
+<span class="sd">        `next(tracker.get_latest_entity_values(&quot;my_entity_name&quot;), None)`.</span>
+<span class="sd">        If no entity is found `None` is the default result.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">entities</span>
+                <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entity&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">entity_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.is_paused"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.is_paused">[docs]</a>    <span class="k">def</span> <span class="nf">is_paused</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; bool</span>
+        <span class="sd">&quot;&quot;&quot;State whether the tracker is currently paused.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paused</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.idx_after_latest_restart"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.idx_after_latest_restart">[docs]</a>    <span class="k">def</span> <span class="nf">idx_after_latest_restart</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; int</span>
+        <span class="sd">&quot;&quot;&quot;Return the idx of the most recent restart in the list of events.</span>
+
+<span class="sd">        If the conversation has not been restarted, ``0`` is returned.&quot;&quot;&quot;</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Restarted</span><span class="p">):</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">idx</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.events_after_latest_restart"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.events_after_latest_restart">[docs]</a>    <span class="k">def</span> <span class="nf">events_after_latest_restart</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; List[Event]</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of events after the most recent restart.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx_after_latest_restart</span><span class="p">():]</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.init_copy"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.init_copy">[docs]</a>    <span class="k">def</span> <span class="nf">init_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; DialogueStateTracker</span>
+        <span class="sd">&quot;&quot;&quot;Creates a new state tracker with the same initial values.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span>
+
+        <span class="k">return</span> <span class="n">DialogueStateTracker</span><span class="p">(</span><span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_max_event_history</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.generate_all_prior_trackers"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers">[docs]</a>    <span class="k">def</span> <span class="nf">generate_all_prior_trackers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Generator[DialogueStateTracker, None, None]</span>
+        <span class="sd">&quot;&quot;&quot;Returns a generator of the previous trackers of this tracker.</span>
+
+<span class="sd">        The resulting array is representing</span>
+<span class="sd">        the trackers before each action.&quot;&quot;&quot;</span>
+
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_copy</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">tracker</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">tracker</span>  <span class="c1"># yields the final state</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.applied_events"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.applied_events">[docs]</a>    <span class="k">def</span> <span class="nf">applied_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; List[Event]</span>
+        <span class="sd">&quot;&quot;&quot;Returns all actions that should be applied - w/o reverted events.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">undo_till_previous</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="n">done_events</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Removes events from `done_events` until `event_type` is found.&quot;&quot;&quot;</span>
+            <span class="c1"># list gets modified - hence we need to copy events!</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">done_events</span><span class="p">[:]):</span>
+                <span class="k">del</span> <span class="n">done_events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">event_type</span><span class="p">):</span>
+                    <span class="k">break</span>
+
+        <span class="n">applied_events</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Restarted</span><span class="p">):</span>
+                <span class="n">applied_events</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ActionReverted</span><span class="p">):</span>
+                <span class="n">undo_till_previous</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">applied_events</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">UserUtteranceReverted</span><span class="p">):</span>
+                <span class="c1"># Seeing a user uttered event automatically implies there was</span>
+                <span class="c1"># a listen event right before it, so we&#39;ll first rewind the</span>
+                <span class="c1"># user utterance, then get the action right before it (the</span>
+                <span class="c1"># listen action).</span>
+                <span class="n">undo_till_previous</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">,</span> <span class="n">applied_events</span><span class="p">)</span>
+                <span class="n">undo_till_previous</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">applied_events</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">TopicSet</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Topics are deprecated, therefore the TopicSet &quot;</span>
+                            <span class="s2">&quot;event will be ignored&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">applied_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">applied_events</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.replay_events"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.replay_events">[docs]</a>    <span class="k">def</span> <span class="nf">replay_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Update the tracker based on a list of events.&quot;&quot;&quot;</span>
+
+        <span class="n">applied_events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">applied_events</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.recreate_from_dialogue"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue">[docs]</a>    <span class="k">def</span> <span class="nf">recreate_from_dialogue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">):</span>
+        <span class="c1"># type: (Dialogue) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Use a serialised `Dialogue` to update the trackers state.</span>
+
+<span class="sd">        This uses the state as is persisted in a ``TrackerStore``. If the</span>
+<span class="sd">        tracker is blank before calling this method, the final state will be</span>
+<span class="sd">        identical to the tracker from which the dialogue was created.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dialogue</span><span class="p">,</span> <span class="n">Dialogue</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;story </span><span class="si">{0}</span><span class="s2"> is not of type Dialogue. &quot;</span>
+                             <span class="s2">&quot;Have you deserialized it?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dialogue</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dialogue</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replay_events</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.copy"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a duplicate of this tracker&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">travel_back_in_time</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.travel_back_in_time"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.travel_back_in_time">[docs]</a>    <span class="k">def</span> <span class="nf">travel_back_in_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_time</span><span class="p">):</span>
+        <span class="c1"># type: (float) -&gt; DialogueStateTracker</span>
+        <span class="sd">&quot;&quot;&quot;Creates a new tracker with a state at a specific timestamp.</span>
+
+<span class="sd">        A new tracker will be created and all events previous to the</span>
+<span class="sd">        passed time stamp will be replayed. Events that occur exactly</span>
+<span class="sd">        at the target time will be included.&quot;&quot;&quot;</span>
+
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_copy</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&lt;=</span> <span class="n">target_time</span><span class="p">:</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">tracker</span>  <span class="c1"># yields the final state</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.as_dialogue"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.as_dialogue">[docs]</a>    <span class="k">def</span> <span class="nf">as_dialogue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Dialogue</span>
+        <span class="sd">&quot;&quot;&quot;Return a ``Dialogue`` object containing all of the turns.</span>
+
+<span class="sd">        This can be serialised and later used to recover the state</span>
+<span class="sd">        of this tracker exactly.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">Dialogue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.update"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="c1"># type: (Event) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Modify the state of the tracker according to an ``Event``. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Event</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;event to log must be an instance &quot;</span>
+                             <span class="s2">&quot;of a subclass of Event.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.export_stories"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.export_stories">[docs]</a>    <span class="k">def</span> <span class="nf">export_stories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Text</span>
+        <span class="sd">&quot;&quot;&quot;Dump the tracker as a story in the Rasa Core story format.</span>
+
+<span class="sd">        Returns the dumped tracker as a string.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.training.structures</span> <span class="k">import</span> <span class="n">Story</span>
+
+        <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">story</span><span class="o">.</span><span class="n">as_story_string</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.export_stories_to_file"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.export_stories_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">export_stories_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="s2">&quot;debug.md&quot;</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Dump the tracker as a story to a file.&quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">export_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_stories</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    <span class="c1">###</span>
+    <span class="c1"># Internal methods for the modification of the trackers state. Should</span>
+    <span class="c1"># only be called by events, not directly. Rather update the tracker</span>
+    <span class="c1"># with an event that in its ``apply_on`` method modifies the tracker.</span>
+    <span class="c1">###</span>
+    <span class="k">def</span> <span class="nf">_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Reset tracker to initial state - doesn&#39;t delete events though!.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_slots</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_paused</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="n">UserUttered</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="n">BotUttered</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_reset_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Set all the slots to their initial value.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">slot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_set_slot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Any) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Set the value of a slot if that slot exists.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Tried to set non existent slot &#39;</span><span class="si">{}</span><span class="s2">&#39;. Make sure you &quot;</span>
+                         <span class="s2">&quot;added all your slots to your domain file.&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_create_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evts</span><span class="p">):</span>
+        <span class="c1"># type: (List[Event]) -&gt; deque</span>
+
+        <span class="k">if</span> <span class="n">evts</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">evts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Event</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;events, if given, must be a list of events&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deque</span><span class="p">(</span><span class="n">evts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_event_history</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">events</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="ow">and</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DialogueStateTracker.trigger_follow_up_action"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.trigger_follow_up_action">[docs]</a>    <span class="k">def</span> <span class="nf">trigger_follow_up_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="c1"># type: (Action) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Triggers another action following the execution of the current.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="n">action</span></div>
+
+<div class="viewcode-block" id="DialogueStateTracker.clear_follow_up_action"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.clear_follow_up_action">[docs]</a>    <span class="k">def</span> <span class="nf">clear_follow_up_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Clears follow up action when it was executed&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">_merge_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># type: (Optional[List[Dict[Text, Any]]]) -&gt; List[SlotSet]</span>
+        <span class="sd">&quot;&quot;&quot;Take a list of entities and create tracker slot set events.</span>
+
+<span class="sd">        If an entity type matches a slots name, the entities value is set</span>
+<span class="sd">        as the slots value by creating a ``SlotSet`` event.&quot;&quot;&quot;</span>
+
+        <span class="n">entities</span> <span class="o">=</span> <span class="n">entities</span> <span class="k">if</span> <span class="n">entities</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">entities</span>
+        <span class="n">new_slots</span> <span class="o">=</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;entity&quot;</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entities</span> <span class="k">if</span>
+                     <span class="n">e</span><span class="p">[</span><span class="s2">&quot;entity&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">new_slots</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.9.0a2
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../../0.6.5/index.html">0.6.5</a></dd>
+            <dd><a href="../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../../../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="trackers.html">0.9.0a2</a></dd>
+            <dd><a href="../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
+            <dd><a href="../../../0.9.5/index.html">0.9.5</a></dd>
+            <dd><a href="../../../0.9.6/index.html">0.9.6</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../apscheduler_try/index.html">apscheduler_try</a></dd>
+            <dd><a href="../../../async/index.html">async</a></dd>
+            <dd><a href="../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../fix/index.html">fix</a></dd>
+            <dd><a href="../../../master/index.html">master</a></dd>
+            <dd><a href="../../../model-pull/index.html">model-pull</a></dd>
+            <dd><a href="../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="../../../train_from_url/index.html">train_from_url</a></dd>
+            <dd><a href="../../../wildcard/index.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.9.0a2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0074/3851.js" async="async"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

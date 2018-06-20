@@ -1,0 +1,549 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Dialogue State Tracker &mdash; Rasa Core 0.10.0a2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Rasa Core 0.10.0a2 documentation" href="../index.html"/>
+        <link rel="next" title="Featurization" href="../featurisation.html"/>
+        <link rel="prev" title="Events" href="events.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.10
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_supervised.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../patterns.html">Slot Filling and Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors.html#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="events.html">Events</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dialogue State Tracker</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies.html">Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Dialogue State Tracker</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/tracker.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="dialogue-state-tracker">
+<h1>Dialogue State Tracker<a class="headerlink" href="#dialogue-state-tracker" title="Permalink to this headline">¶</a></h1>
+<p>The tracker stores and maintains the state of the dialogue with a single user.
+It is stored in a tracker store, retrieved when incoming messages for the
+conversation are received and updated after actions have been executed</p>
+<p>Here we go:</p>
+<span class="target" id="module-rasa_core.trackers"></span><dl class="class">
+<dt id="rasa_core.trackers.DialogueStateTracker">
+<em class="property">class </em><code class="descclassname">rasa_core.trackers.</code><code class="descname">DialogueStateTracker</code><span class="sig-paren">(</span><em>sender_id</em>, <em>slots</em>, <em>max_event_history=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Maintains the state of a conversation.</p>
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.applied_events">
+<code class="descname">applied_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.applied_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.applied_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all actions that should be applied - w/o reverted events.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.as_dialogue">
+<code class="descname">as_dialogue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.as_dialogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.as_dialogue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <code class="docutils literal"><span class="pre">Dialogue</span></code> object containing all of the turns.</p>
+<p>This can be serialised and later used to recover the state
+of this tracker exactly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.clear_follow_up_action">
+<code class="descname">clear_follow_up_action</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.clear_follow_up_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.clear_follow_up_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears follow up action when it was executed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a duplicate of this tracker</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.current_slot_values">
+<code class="descname">current_slot_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.current_slot_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.current_slot_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the currently set values of the slots</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.current_state">
+<code class="descname">current_state</code><span class="sig-paren">(</span><em>should_include_events=False</em>, <em>only_events_after_latest_restart=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.current_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current tracker state as an object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.events_after_latest_restart">
+<code class="descname">events_after_latest_restart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.events_after_latest_restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.events_after_latest_restart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of events after the most recent restart.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.export_stories">
+<code class="descname">export_stories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.export_stories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.export_stories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the tracker as a story in the Rasa Core story format.</p>
+<p>Returns the dumped tracker as a string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.export_stories_to_file">
+<code class="descname">export_stories_to_file</code><span class="sig-paren">(</span><em>export_path=u'debug.md'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.export_stories_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.export_stories_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the tracker as a story to a file.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="rasa_core.trackers.DialogueStateTracker.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>sender_id</em>, <em>dump_as_dict</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a tracker from dump.</p>
+<p>The dump should be an array of dumped events. When restoring
+the tracker, these events will be replayed to recreate the state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers">
+<code class="descname">generate_all_prior_trackers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.generate_all_prior_trackers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.generate_all_prior_trackers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator of the previous trackers of this tracker.</p>
+<p>The resulting array is representing
+the trackers before each action.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.get_latest_entity_values">
+<code class="descname">get_latest_entity_values</code><span class="sig-paren">(</span><em>entity_type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.get_latest_entity_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_latest_entity_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get entity values found for the passed entity name in latest msg.</p>
+<p>If you are only interested in the first entity of a given type use
+<cite>next(tracker.get_latest_entity_values(&#8220;my_entity_name&#8221;), None)</cite>.
+If no entity is found <cite>None</cite> is the default result.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.get_slot">
+<code class="descname">get_slot</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.get_slot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_slot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the value of a slot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.idx_after_latest_restart">
+<code class="descname">idx_after_latest_restart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.idx_after_latest_restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.idx_after_latest_restart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the idx of the most recent restart in the list of events.</p>
+<p>If the conversation has not been restarted, <code class="docutils literal"><span class="pre">0</span></code> is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.init_copy">
+<code class="descname">init_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.init_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.init_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new state tracker with the same initial values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.is_paused">
+<code class="descname">is_paused</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.is_paused"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.is_paused" title="Permalink to this definition">¶</a></dt>
+<dd><p>State whether the tracker is currently paused.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.trackers.DialogueStateTracker.latest_message">
+<code class="descname">latest_message</code><em class="property"> = None</em><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.latest_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>stores the most recent message sent by the user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.past_states">
+<code class="descname">past_states</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.past_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.past_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the past states of this tracker based on the history.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue">
+<code class="descname">recreate_from_dialogue</code><span class="sig-paren">(</span><em>dialogue</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.recreate_from_dialogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a serialised <cite>Dialogue</cite> to update the trackers state.</p>
+<p>This uses the state as is persisted in a <code class="docutils literal"><span class="pre">TrackerStore</span></code>. If the
+tracker is blank before calling this method, the final state will be
+identical to the tracker from which the dialogue was created.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.replay_events">
+<code class="descname">replay_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.replay_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.replay_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the tracker based on a list of events.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.travel_back_in_time">
+<code class="descname">travel_back_in_time</code><span class="sig-paren">(</span><em>target_time</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.travel_back_in_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.travel_back_in_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new tracker with a state at a specific timestamp.</p>
+<p>A new tracker will be created and all events previous to the
+passed time stamp will be replayed. Events that occur exactly
+at the target time will be included.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.trigger_follow_up_action">
+<code class="descname">trigger_follow_up_action</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.trigger_follow_up_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.trigger_follow_up_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triggers another action following the execution of the current.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/trackers.html#DialogueStateTracker.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the state of the tracker according to an <code class="docutils literal"><span class="pre">Event</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../featurisation.html" class="btn btn-neutral float-right" title="Featurization" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="events.html" class="btn btn-neutral" title="Events" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: master
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../0.6.5/index.html">0.6.5</a></dd>
+            <dd><a href="../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../0.9.0/api/tracker.html">0.9.0</a></dd>
+            <dd><a href="../0.9.0a1/api/tracker.html">0.9.0a1</a></dd>
+            <dd><a href="../0.9.0a2/api/tracker.html">0.9.0a2</a></dd>
+            <dd><a href="../0.9.0a3/api/tracker.html">0.9.0a3</a></dd>
+            <dd><a href="../0.9.0a5/api/tracker.html">0.9.0a5</a></dd>
+            <dd><a href="../0.9.0a7/api/tracker.html">0.9.0a7</a></dd>
+            <dd><a href="../0.9.1/api/tracker.html">0.9.1</a></dd>
+            <dd><a href="../0.9.2/api/tracker.html">0.9.2</a></dd>
+            <dd><a href="../0.9.3/api/tracker.html">0.9.3</a></dd>
+            <dd><a href="../0.9.4/api/tracker.html">0.9.4</a></dd>
+            <dd><a href="../0.9.5/api/tracker.html">0.9.5</a></dd>
+            <dd><a href="../0.9.6/api/tracker.html">0.9.6</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../0.9.x/api/tracker.html">0.9.x</a></dd>
+            <dd><a href="../add-auth/api/tracker.html">add-auth</a></dd>
+            <dd><a href="../apscheduler_try/api/tracker.html">apscheduler_try</a></dd>
+            <dd><a href="../async/api/tracker.html">async</a></dd>
+            <dd><a href="../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../dispatcher/api/tracker.html">dispatcher</a></dd>
+            <dd><a href="../embed_policy/api/tracker.html">embed_policy</a></dd>
+            <dd><a href="../eval_scripts/api/tracker.html">eval_scripts</a></dd>
+            <dd><a href="../event-stream/api/tracker.html">event-stream</a></dd>
+            <dd><a href="../fix/api/tracker.html">fix</a></dd>
+            <dd><a href="../master/api/tracker.html">master</a></dd>
+            <dd><a href="../model-pull/api/tracker.html">model-pull</a></dd>
+            <dd><a href="../track_data/api/tracker.html">track_data</a></dd>
+            <dd><a href="../train_from_url/api/tracker.html">train_from_url</a></dd>
+            <dd><a href="../wildcard/index.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.10.0a2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0074/3851.js" async="async"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>

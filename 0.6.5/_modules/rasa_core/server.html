@@ -1,0 +1,747 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rasa_core.server &mdash; Rasa Core 0.7.0a3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/banner.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Rasa Core 0.7.0a3 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../read_first.html">Read this first</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation and Hello World</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tour.html">A Quick Tour (no ML)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_scratch.html">A Bot From Scratch</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_babi.html">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_fake_user.html">Interactive Learning with a Fake User</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../slot_types.html">Slot Types Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../domains_actions.html">Domains and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../policies.html">Creating Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stories.html">Stories Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scheduling.html">Scheduling Reminders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_handling.html">Message Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Library Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>rasa_core.server</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rasa_core.server</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">Response</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">flask_cors</span> <span class="k">import</span> <span class="n">CORS</span><span class="p">,</span> <span class="n">cross_origin</span>
+<span class="kn">from</span> <span class="nn">gevent.pywsgi</span> <span class="k">import</span> <span class="n">WSGIServer</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">events</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa_core.channels.direct</span> <span class="k">import</span> <span class="n">CollectingOutputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span>
+<span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">TrackerStore</span>
+<span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+<span class="kn">from</span> <span class="nn">rasa_core.version</span> <span class="k">import</span> <span class="n">__version__</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span> <span class="k">as</span> <span class="n">NLI</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_argument_parser"><a class="viewcode-back" href="../../rasa_core.html#rasa_core.server.create_argument_parser">[docs]</a><span class="k">def</span> <span class="nf">create_argument_parser</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Parse all the command line arguments for the server script.&quot;&quot;&quot;</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;starts server to serve an agent&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--core&#39;</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;core model to run with the server&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;-u&#39;</span><span class="p">,</span> <span class="s1">&#39;--nlu&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;nlu model to run with the server&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--port&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">5005</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;port to run the server at&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--cors&#39;</span><span class="p">,</span>
+            <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;enable CORS for the passed origin. &quot;</span>
+                 <span class="s2">&quot;Use * to whitelist all origins&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--auth_token&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enable token based authentication. Requests need to provide &quot;</span>
+                 <span class="s2">&quot;the token to be accepted.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--log_file&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="s2">&quot;rasa_core.log&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;store log file in specified file&quot;</span><span class="p">)</span>
+
+    <span class="n">utils</span><span class="o">.</span><span class="n">add_logging_option_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="ensure_loaded_agent"><a class="viewcode-back" href="../../rasa_core.html#rasa_core.server.ensure_loaded_agent">[docs]</a><span class="k">def</span> <span class="nf">ensure_loaded_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wraps a request handler ensuring there is a loaded and usable model.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">__agent</span> <span class="o">=</span> <span class="n">agent</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">__agent</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
+                        <span class="s2">&quot;No agent loaded. To continue processing, a model &quot;</span>
+                        <span class="s2">&quot;of a trained agent needs to be loaded.&quot;</span><span class="p">,</span>
+                        <span class="n">status</span><span class="o">=</span><span class="mi">503</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">decorated</span>
+
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+<div class="viewcode-block" id="bool_arg"><a class="viewcode-back" href="../../rasa_core.html#rasa_core.server.bool_arg">[docs]</a><span class="k">def</span> <span class="nf">bool_arg</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="c1"># type: ( Text, bool) -&gt; bool</span>
+    <span class="sd">&quot;&quot;&quot;Return a passed boolean argument of the request or a default.</span>
+
+<span class="sd">    Checks the `name` parameter of the request if it contains a valid</span>
+<span class="sd">    boolean value. If not, `default` is returned.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">default</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span></div>
+
+
+<div class="viewcode-block" id="request_parameters"><a class="viewcode-back" href="../../rasa_core.html#rasa_core.server.request_parameters">[docs]</a><span class="k">def</span> <span class="nf">request_parameters</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;GET&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to decode json during respond request. &quot;</span>
+                         <span class="s2">&quot;Error: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="requires_auth"><a class="viewcode-back" href="../../rasa_core.html#rasa_core.server.requires_auth">[docs]</a><span class="k">def</span> <span class="nf">requires_auth</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># type: (Optional[Text]) -&gt; function</span>
+    <span class="sd">&quot;&quot;&quot;Wraps a request handler with token authentication.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">provided</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">provided</span> <span class="o">==</span> <span class="n">token</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">decorated</span>
+
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+<span class="k">def</span> <span class="nf">_create_agent</span><span class="p">(</span>
+        <span class="n">model_directory</span><span class="p">,</span>  <span class="c1"># type: Text</span>
+        <span class="n">interpreter</span><span class="p">,</span>  <span class="c1"># type: Union[Text,NLI,None]</span>
+        <span class="n">action_factory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
+        <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[TrackerStore]</span>
+<span class="p">):</span>
+    <span class="c1"># type: (...) -&gt; Optional[Agent]</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="n">interpreter</span><span class="p">,</span>
+                          <span class="n">tracker_store</span><span class="o">=</span><span class="n">tracker_store</span><span class="p">,</span>
+                          <span class="n">action_factory</span><span class="o">=</span><span class="n">action_factory</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Failed to load any agent model. Running &quot;</span>
+                    <span class="s2">&quot;Rasa Core server with out loaded model now. </span><span class="si">{}</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="create_app"><a class="viewcode-back" href="../../rasa_core.html#rasa_core.server.create_app">[docs]</a><span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span>  <span class="c1"># type: Text</span>
+               <span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[Text, NLI, None]</span>
+               <span class="n">loglevel</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
+               <span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;rasa_core.log&quot;</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
+               <span class="n">cors_origins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[List[Text]]</span>
+               <span class="n">action_factory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
+               <span class="n">auth_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
+               <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[TrackerStore]</span>
+               <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class representing a Rasa Core HTTP server.&quot;&quot;&quot;</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="p">{</span><span class="sa">r</span><span class="s2">&quot;/*&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;origins&quot;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span><span class="p">}})</span>
+    <span class="c1"># Setting up logfile</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">configure_file_logging</span><span class="p">(</span><span class="n">loglevel</span><span class="p">,</span> <span class="n">logfile</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cors_origins</span><span class="p">:</span>
+        <span class="n">cors_origins</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">model_directory</span> <span class="o">=</span> <span class="n">model_directory</span>
+
+    <span class="n">interpreter</span> <span class="o">=</span> <span class="n">interpreter</span>
+
+    <span class="n">tracker_store</span> <span class="o">=</span> <span class="n">tracker_store</span>
+
+    <span class="n">action_factory</span> <span class="o">=</span> <span class="n">action_factory</span>
+
+    <span class="c1"># this needs to be an array, so we can modify it in the nested functions...</span>
+    <span class="n">_agent</span> <span class="o">=</span> <span class="p">[</span><span class="n">_create_agent</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="n">interpreter</span><span class="p">,</span>
+                            <span class="n">action_factory</span><span class="p">,</span> <span class="n">tracker_store</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">agent</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">_agent</span> <span class="ow">and</span> <span class="n">_agent</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">_agent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span>
+               <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;Check if the server is running and responds with the version.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;hello from Rasa Core: &quot;</span> <span class="o">+</span> <span class="n">__version__</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/version&quot;</span><span class="p">,</span>
+               <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;respond with the version number of the installed rasa core.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">})</span>
+
+    <span class="c1"># &lt;sender_id&gt; can be be &#39;default&#39; if there&#39;s only 1 client</span>
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conversations/&lt;sender_id&gt;/continue&quot;</span><span class="p">,</span>
+               <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="nd">@requires_auth</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+    <span class="nd">@ensure_loaded_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">continue_predicting</span><span class="p">(</span><span class="n">sender_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Continue a prediction started with parse.</span>
+
+<span class="sd">        Caller should have executed the action returned from the parse</span>
+<span class="sd">        endpoint. The events returned from that executed action are</span>
+<span class="sd">        passed to continue which will trigger the next action prediction.</span>
+
+<span class="sd">        If continue predicts action listen, the caller should wait for the</span>
+<span class="sd">        next user message.&quot;&quot;&quot;</span>
+
+        <span class="n">request_params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">encoded_events</span> <span class="o">=</span> <span class="n">request_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">executed_action</span> <span class="o">=</span> <span class="n">request_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;executed_action&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">encoded_events</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">continue_message_handling</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span>
+                                                         <span class="n">executed_action</span><span class="p">,</span>
+                                                         <span class="n">evts</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">jsonify</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">),</span>
+                            <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+                            <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">jsonify</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="s2">&quot;Server failure. Error: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                                          <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)),</span>
+                            <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                            <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conversations/&lt;sender_id&gt;/tracker/events&quot;</span><span class="p">,</span>
+               <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="nd">@requires_auth</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+    <span class="nd">@ensure_loaded_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">append_events</span><span class="p">(</span><span class="n">sender_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Append a list of events to the state of a conversation&quot;&quot;&quot;</span>
+
+        <span class="n">request_params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">request_params</span><span class="p">)</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">tracker_store</span><span class="o">.</span><span class="n">get_or_create_tracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evts</span><span class="p">:</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">tracker_store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">current_state</span><span class="p">())</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conversations&quot;</span><span class="p">,</span>
+               <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="nd">@requires_auth</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+    <span class="nd">@ensure_loaded_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">list_trackers</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">tracker_store</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conversations/&lt;sender_id&gt;/tracker&quot;</span><span class="p">,</span>
+               <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="nd">@requires_auth</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+    <span class="nd">@ensure_loaded_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">retrieve_tracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a dump of a conversations tracker including its events.&quot;&quot;&quot;</span>
+
+        <span class="c1"># parameters</span>
+        <span class="n">use_history</span> <span class="o">=</span> <span class="n">bool_arg</span><span class="p">(</span><span class="s1">&#39;ignore_restarts&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">should_include_events</span> <span class="o">=</span> <span class="n">bool_arg</span><span class="p">(</span><span class="s1">&#39;events&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">until_time</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;until&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># retrieve tracker and set to requested state</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">tracker_store</span><span class="o">.</span><span class="n">get_or_create_tracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">until_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tracker</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">travel_back_in_time</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">until_time</span><span class="p">))</span>
+
+        <span class="c1"># dump and return tracker</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">current_state</span><span class="p">(</span>
+                <span class="n">should_include_events</span><span class="o">=</span><span class="n">should_include_events</span><span class="p">,</span>
+                <span class="n">only_events_after_latest_restart</span><span class="o">=</span><span class="n">use_history</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conversations/&lt;sender_id&gt;/tracker&quot;</span><span class="p">,</span>
+               <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PUT&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="nd">@requires_auth</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+    <span class="nd">@ensure_loaded_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">update_tracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Use a list of events to set a conversations tracker to a state.&quot;&quot;&quot;</span>
+
+        <span class="n">request_params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="n">DialogueStateTracker</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span>
+                                                 <span class="n">request_params</span><span class="p">,</span>
+                                                 <span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
+        <span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">tracker_store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+
+        <span class="c1"># will override an existing tracker with the same id!</span>
+        <span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">tracker_store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">current_state</span><span class="p">(</span><span class="n">should_include_events</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conversations/&lt;sender_id&gt;/parse&quot;</span><span class="p">,</span>
+               <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="nd">@requires_auth</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+    <span class="nd">@ensure_loaded_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">sender_id</span><span class="p">):</span>
+        <span class="n">request_params</span> <span class="o">=</span> <span class="n">request_parameters</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;query&#39;</span> <span class="ow">in</span> <span class="n">request_params</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">request_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;q&#39;</span> <span class="ow">in</span> <span class="n">request_params</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">request_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
+                    <span class="n">jsonify</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="s2">&quot;Invalid parse parameter specified.&quot;</span><span class="p">),</span>
+                    <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+                    <span class="n">mimetype</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Fetches the predicted action in a json format</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">start_message_handling</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Caught an exception during parse.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">jsonify</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="s2">&quot;Server failure. Error: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                                          <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)),</span>
+                            <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                            <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conversations/&lt;sender_id&gt;/respond&quot;</span><span class="p">,</span>
+               <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="nd">@requires_auth</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+    <span class="nd">@ensure_loaded_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">respond</span><span class="p">(</span><span class="n">sender_id</span><span class="p">):</span>
+        <span class="n">request_params</span> <span class="o">=</span> <span class="n">request_parameters</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;query&#39;</span> <span class="ow">in</span> <span class="n">request_params</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">request_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;q&#39;</span> <span class="ow">in</span> <span class="n">request_params</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">request_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">jsonify</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="s2">&quot;Invalid respond parameter &quot;</span>
+                                          <span class="s2">&quot;specified.&quot;</span><span class="p">),</span>
+                            <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+                            <span class="n">mimetype</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Set the output channel</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">CollectingOutputChannel</span><span class="p">()</span>
+            <span class="c1"># Fetches the appropriate bot response in a json format</span>
+            <span class="n">responses</span> <span class="o">=</span> <span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">message</span><span class="p">,</span>
+                                               <span class="n">output_channel</span><span class="o">=</span><span class="n">out</span><span class="p">,</span>
+                                               <span class="n">sender_id</span><span class="o">=</span><span class="n">sender_id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Caught an exception during respond.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">jsonify</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="s2">&quot;Server failure. Error: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                                          <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)),</span>
+                            <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                            <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/load&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">])</span>
+    <span class="nd">@requires_auth</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+    <span class="nd">@cross_origin</span><span class="p">(</span><span class="n">origins</span><span class="o">=</span><span class="n">cors_origins</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">load_model</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;Loads a zipped model, replacing the existing one.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="s1">&#39;model&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+            <span class="c1"># model file is missing</span>
+            <span class="n">abort</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+
+        <span class="n">model_file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Received new model through REST interface.&quot;</span><span class="p">)</span>
+        <span class="n">zipped_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.zip&quot;</span><span class="p">)</span>
+        <span class="n">zipped_path</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">model_file</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">zipped_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Downloaded model to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zipped_path</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="n">zip_ref</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">zipped_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">zip_ref</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span>
+        <span class="n">zip_ref</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unzipped model to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)))</span>
+
+        <span class="n">_agent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_create_agent</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="n">interpreter</span><span class="p">,</span>
+                                  <span class="n">action_factory</span><span class="p">,</span> <span class="n">tracker_store</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Finished loading new agent.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">app</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Running as standalone python application</span>
+    <span class="n">arg_parser</span> <span class="o">=</span> <span class="n">create_argument_parser</span><span class="p">()</span>
+    <span class="n">cmdline_args</span> <span class="o">=</span> <span class="n">arg_parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="c1"># Setting up the color scheme of logger</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">configure_colored_logging</span><span class="p">(</span><span class="n">cmdline_args</span><span class="o">.</span><span class="n">loglevel</span><span class="p">)</span>
+
+    <span class="c1"># Setting up the rasa_core application framework</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="n">cmdline_args</span><span class="o">.</span><span class="n">core</span><span class="p">,</span>
+                     <span class="n">cmdline_args</span><span class="o">.</span><span class="n">nlu</span><span class="p">,</span>
+                     <span class="n">cmdline_args</span><span class="o">.</span><span class="n">loglevel</span><span class="p">,</span>
+                     <span class="n">cmdline_args</span><span class="o">.</span><span class="n">log_file</span><span class="p">,</span>
+                     <span class="n">cmdline_args</span><span class="o">.</span><span class="n">cors</span><span class="p">,</span>
+                     <span class="n">auth_token</span><span class="o">=</span><span class="n">cmdline_args</span><span class="o">.</span><span class="n">auth_token</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Started http server on port </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cmdline_args</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+
+    <span class="c1"># Running the server at &#39;this&#39; address with the</span>
+    <span class="c1"># rasa_core application framework</span>
+    <span class="n">http_server</span> <span class="o">=</span> <span class="n">WSGIServer</span><span class="p">((</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">cmdline_args</span><span class="o">.</span><span class="n">port</span><span class="p">),</span> <span class="n">app</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Up and running&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">http_server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.6.5
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="server.html">0.6.5</a></dd>
+            <dd><a href="../../../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../../../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../../../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../../../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../../../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../../../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../../../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../../../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../../../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../../../0.7.2/index.html">0.7.2</a></dd>
+            <dd><a href="../../../0.7.3/index.html">0.7.3</a></dd>
+            <dd><a href="../../../0.7.4/index.html">0.7.4</a></dd>
+            <dd><a href="../../../0.7.5/index.html">0.7.5</a></dd>
+            <dd><a href="../../../0.7.6/index.html">0.7.6</a></dd>
+            <dd><a href="../../../0.7.7/index.html">0.7.7</a></dd>
+            <dd><a href="../../../0.7.8/index.html">0.7.8</a></dd>
+            <dd><a href="../../../0.7.9/index.html">0.7.9</a></dd>
+            <dd><a href="../../../0.8.0/index.html">0.8.0</a></dd>
+            <dd><a href="../../../0.8.1/index.html">0.8.1</a></dd>
+            <dd><a href="../../../0.8.2/index.html">0.8.2</a></dd>
+            <dd><a href="../../../0.8.3/index.html">0.8.3</a></dd>
+            <dd><a href="../../../0.8.4/index.html">0.8.4</a></dd>
+            <dd><a href="../../../0.8.5/index.html">0.8.5</a></dd>
+            <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
+            <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
+            <dd><a href="../../../0.9.0a1/index.html">0.9.0a1</a></dd>
+            <dd><a href="../../../0.9.0a2/index.html">0.9.0a2</a></dd>
+            <dd><a href="../../../0.9.0a3/index.html">0.9.0a3</a></dd>
+            <dd><a href="../../../0.9.0a5/index.html">0.9.0a5</a></dd>
+            <dd><a href="../../../0.9.0a7/index.html">0.9.0a7</a></dd>
+            <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
+            <dd><a href="../../../0.9.2/index.html">0.9.2</a></dd>
+            <dd><a href="../../../0.9.3/index.html">0.9.3</a></dd>
+            <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
+            <dd><a href="../../../0.9.5/index.html">0.9.5</a></dd>
+            <dd><a href="../../../0.9.6/index.html">0.9.6</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../0.9.x/index.html">0.9.x</a></dd>
+            <dd><a href="../../../add-auth/index.html">add-auth</a></dd>
+            <dd><a href="../../../apscheduler_try/index.html">apscheduler_try</a></dd>
+            <dd><a href="../../../async/index.html">async</a></dd>
+            <dd><a href="../../../direct_input/index.html">direct_input</a></dd>
+            <dd><a href="../../../dispatcher/index.html">dispatcher</a></dd>
+            <dd><a href="../../../embed_policy/index.html">embed_policy</a></dd>
+            <dd><a href="../../../eval_scripts/index.html">eval_scripts</a></dd>
+            <dd><a href="../../../event-stream/index.html">event-stream</a></dd>
+            <dd><a href="../../../fix/index.html">fix</a></dd>
+            <dd><a href="../../../master/index.html">master</a></dd>
+            <dd><a href="../../../model-pull/index.html">model-pull</a></dd>
+            <dd><a href="../../../track_data/index.html">track_data</a></dd>
+            <dd><a href="../../../train_from_url/index.html">train_from_url</a></dd>
+            <dd><a href="../../../wildcard/index.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.7.0a3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
