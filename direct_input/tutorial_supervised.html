@@ -1,0 +1,883 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Supervised Learning Tutorial &mdash; Rasa Core 0.8.0a1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Rasa Core 0.8.0a1 documentation" href="index.html"/>
+        <link rel="next" title="Interactive Learning" href="tutorial_interactive_learning.html"/>
+        <link rel="prev" title="Building a Simple Bot" href="tutorial_basics.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_python.html">But I don&#8217;t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial_basics.html">Building a Simple Bot</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Supervised Learning Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#goal">Goal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-the-domain">1. Creating the Domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-training-data">2. Creating Training Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#training-your-bot">3. Training your bot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nlu-model">NLU model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dialogue-policy">Dialogue Policy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-bot">4. Using the bot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_remote.html">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patterns.html">Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plumbing.html">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduling.html">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featurisation.html">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpreters.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Custom Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state.html">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Supervised Learning Tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tutorial_supervised.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="supervised-learning-tutorial">
+<span id="tutorial-supervised"></span><h1>Supervised Learning Tutorial<a class="headerlink" href="#supervised-learning-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This tutorial will cover how to use Rasa Core directly from python. We will
+dive a bit deeper into the different concepts and overall structure of the
+library. You should already be familiar with the terms domain, stories, and
+have some knowledge of NLU.</p>
+<p class="last"><a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/master/examples/restaurantbot">Example Code on GitHub</a></p>
+</div>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this example we will create a restaurant search bot, by training
+a neural net on example conversations. A user can contact the bot with something
+close to <code class="docutils literal"><span class="pre">&quot;I</span> <span class="pre">want</span> <span class="pre">a</span> <span class="pre">mexican</span> <span class="pre">restaurant!&quot;</span></code> and the bot will ask more details
+until it is ready to suggest a restaurant.</p>
+<p>Let&#8217;s start by creating a new project directory:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir restaurantbot <span class="o">&amp;&amp;</span> <span class="nb">cd</span> restaurantbot
+</pre></div>
+</div>
+<p>After we are done creating the different files, the final structure will look
+like this:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>restaurantbot/
+├── data/
+│   ├── babi_stories.md       # dialogue training data
+│   └── franken_data.json     # nlu training data
+├── restaurant_domain.yml     # dialogue configuration
+└── nlu_model_config.json     # nlu configuration
+</pre></div>
+</div>
+<p>All example code snippets assume you are running the code from within that
+project directory.</p>
+</div>
+<div class="section" id="creating-the-domain">
+<h2>1. Creating the Domain<a class="headerlink" href="#creating-the-domain" title="Permalink to this headline">¶</a></h2>
+<p>Our restaurant domain contains a couple of slots as well as a number of
+intents, entities, utterance templates and actions. Let&#8217;s save the following
+domain definition in <code class="docutils literal"><span class="pre">restaurant_domain.yml</span></code>:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">slots</span><span class="p">:</span>
+  <span class="n">cuisine</span><span class="p">:</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">text</span>
+  <span class="n">people</span><span class="p">:</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">text</span>
+  <span class="n">location</span><span class="p">:</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">text</span>
+  <span class="n">price</span><span class="p">:</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">text</span>
+  <span class="n">info</span><span class="p">:</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">text</span>
+  <span class="n">matches</span><span class="p">:</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">list</span>
+
+<span class="n">intents</span><span class="p">:</span>
+ <span class="o">-</span> <span class="n">greet</span>
+ <span class="o">-</span> <span class="n">affirm</span>
+ <span class="o">-</span> <span class="n">deny</span>
+ <span class="o">-</span> <span class="n">inform</span>
+ <span class="o">-</span> <span class="n">thankyou</span>
+ <span class="o">-</span> <span class="n">request_info</span>
+
+<span class="n">entities</span><span class="p">:</span>
+ <span class="o">-</span> <span class="n">location</span>
+ <span class="o">-</span> <span class="n">info</span>
+ <span class="o">-</span> <span class="n">people</span>
+ <span class="o">-</span> <span class="n">price</span>
+ <span class="o">-</span> <span class="n">cuisine</span>
+
+<span class="n">templates</span><span class="p">:</span>
+  <span class="n">utter_greet</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;hey there!&quot;</span>
+  <span class="n">utter_goodbye</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;goodbye :(&quot;</span>
+    <span class="o">-</span> <span class="s2">&quot;Bye-bye&quot;</span>
+  <span class="n">utter_default</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;default message&quot;</span>
+  <span class="n">utter_ack_dosearch</span><span class="p">:</span> 
+    <span class="o">-</span> <span class="s2">&quot;ok let me see what I can find&quot;</span>
+  <span class="n">utter_ack_findalternatives</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;ok let me see what else there is&quot;</span>
+  <span class="n">utter_ack_makereservation</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;ok making a reservation&quot;</span>
+  <span class="n">utter_ask_cuisine</span><span class="p">:</span> 
+    <span class="o">-</span> <span class="s2">&quot;what kind of cuisine would you like?&quot;</span>
+  <span class="n">utter_ask_helpmore</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;is there anything more that I can help with?&quot;</span>
+  <span class="n">utter_ask_howcanhelp</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;how can I help you?&quot;</span>
+  <span class="n">utter_ask_location</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;in which city?&quot;</span>
+  <span class="n">utter_ask_moreupdates</span><span class="p">:</span> 
+    <span class="o">-</span> <span class="s2">&quot;anything else you&#39;d like to modify?&quot;</span>
+  <span class="n">utter_ask_numpeople</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;for how many people?&quot;</span>
+  <span class="n">utter_ask_price</span><span class="p">:</span> 
+    <span class="o">-</span> <span class="n">text</span><span class="p">:</span> <span class="s2">&quot;in which price range?&quot;</span>
+      <span class="n">buttons</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">title</span><span class="p">:</span> <span class="s2">&quot;cheap&quot;</span>
+        <span class="n">payload</span><span class="p">:</span> <span class="s2">&quot;cheap&quot;</span>
+      <span class="o">-</span> <span class="n">title</span><span class="p">:</span> <span class="s2">&quot;expensive&quot;</span>
+        <span class="n">payload</span><span class="p">:</span> <span class="s2">&quot;expensive&quot;</span>
+
+  <span class="n">utter_on_it</span><span class="p">:</span> 
+    <span class="o">-</span> <span class="s2">&quot;I&#39;m on it&quot;</span>
+
+<span class="n">actions</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">utter_greet</span>
+  <span class="o">-</span> <span class="n">utter_goodbye</span>
+  <span class="o">-</span> <span class="n">utter_default</span>
+  <span class="o">-</span> <span class="n">utter_ack_dosearch</span>
+  <span class="o">-</span> <span class="n">utter_ack_findalternatives</span>
+  <span class="o">-</span> <span class="n">utter_ack_makereservation</span>
+  <span class="o">-</span> <span class="n">utter_ask_cuisine</span>
+  <span class="o">-</span> <span class="n">utter_ask_helpmore</span>
+  <span class="o">-</span> <span class="n">utter_ask_howcanhelp</span>
+  <span class="o">-</span> <span class="n">utter_ask_location</span>
+  <span class="o">-</span> <span class="n">utter_ask_moreupdates</span>
+  <span class="o">-</span> <span class="n">utter_ask_numpeople</span>
+  <span class="o">-</span> <span class="n">utter_ask_price</span>
+  <span class="o">-</span> <span class="n">utter_on_it</span>
+  <span class="o">-</span> <span class="n">bot</span><span class="o">.</span><span class="n">ActionSearchRestaurants</span>
+  <span class="o">-</span> <span class="n">bot</span><span class="o">.</span><span class="n">ActionSuggest</span>
+</pre></div>
+</td></tr></table></div>
+<p>You can instantiate that <code class="docutils literal"><span class="pre">Domain</span></code> like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">TemplateDomain</span>
+<span class="n">domain</span> <span class="o">=</span> <span class="n">TemplateDomain</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;restaurant_domain.yml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Our <code class="docutils literal"><span class="pre">Domain</span></code> has clearly defined <code class="docutils literal"><span class="pre">slots</span></code> (in our case criterion for target restaurant) and <code class="docutils literal"><span class="pre">intents</span></code>
+(what the user can send). It also requires <code class="docutils literal"><span class="pre">templates</span></code> to have text to use to respond given a certain <code class="docutils literal"><span class="pre">action</span></code>.</p>
+<p>Each of these <code class="docutils literal"><span class="pre">actions</span></code> must either be named after an utterance (dropping the <code class="docutils literal"><span class="pre">utter_</span></code> prefix)
+or must be a module path to an action. Here is the code for one the two custom actions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="k">import</span> <span class="n">Action</span>
+
+<span class="k">class</span> <span class="nc">ActionSearchRestaurants</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;search_restaurants&#39;</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_message</span><span class="p">(</span><span class="s2">&quot;here&#39;s what I found&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">name</span></code> method is to match up actions to utterances, and the <code class="docutils literal"><span class="pre">run</span></code> command is run whenever the action is called. This
+may involve api calls or internal bot dynamics.</p>
+<p>But a domain alone doesn&#8217;t make a bot, we need some training data to tell the
+bot which actions it should execute at what point in time. So lets create some
+stories!</p>
+</div>
+<div class="section" id="creating-training-data">
+<h2>2. Creating Training Data<a class="headerlink" href="#creating-training-data" title="Permalink to this headline">¶</a></h2>
+<p>The training conversations come from the <a class="reference external" href="https://research.fb.com/downloads/babi/">bAbI dialog task</a> .
+However, the messages in these dialogues are machine generated, so we will augment
+this dataset with real user messages from the <a class="reference external" href="http://camdial.org/~mh521/dstc/">DSTC dataset</a>.
+Lucky for us, this dataset is also in the restaurant domain.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">the babi dataset is machine-generated, and there are a LOT of dialogues in there.
+There are 1000 stories in the training set, but you don&#8217;t need that many to build
+a useful bot. How much data you need depends on the number of actions you define, and the
+number of edge cases you want to support. But a few dozen stories is a good place to start.</p>
+</div>
+<p>We have converted the bAbI dialogue training set into the Rasa stories format, you
+can download the stories training data from <a class="reference external" href="https://raw.githubusercontent.com/RasaHQ/rasa_core/master/examples/restaurantbot/data/babi_stories.md">GitHub</a>.
+Download that file, and store it in <code class="docutils literal"><span class="pre">babi_stories.yml</span></code>. Here&#8217;s an example
+conversation snippet:</p>
+<div class="highlight-md"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gu">##</span> story_07715946
+<span class="k">*</span> greet
+ <span class="k">-</span> action_ask_howcanhelp
+<span class="k">*</span> inform{&quot;location&quot;: &quot;rome&quot;, &quot;price&quot;: &quot;cheap&quot;}
+ <span class="k">-</span> action_on_it
+ <span class="k">-</span> action_ask_cuisine
+<span class="k">*</span> inform{&quot;cuisine&quot;: &quot;spanish&quot;}
+ <span class="k">-</span> action_ask_numpeople
+<span class="k">*</span> inform{&quot;people&quot;: &quot;six&quot;}
+ <span class="k">-</span> action_ack_dosearch
+ ...
+</pre></div>
+</td></tr></table></div>
+<p>See <a class="reference internal" href="stories.html#stories"><span class="std std-ref">Stories - The Training Data</span></a> to get more information about the Rasa Core data format.
+We can also visualize that training data to generate a graph which is similar to a flow chart:</p>
+<img alt="_images/babi_flow.png" src="_images/babi_flow.png" />
+<p>The graph shows all of the actions executed in the training data, and the user messages (if any)
+that occurred between them. As you can see, flow charts get complicated quite quickly. Nevertheless, they
+can be a helpful tool in debugging a bot. More information can be found in <a class="reference internal" href="stories.html#story-visualization"><span class="std std-ref">Visualization of Stories</span></a>.</p>
+</div>
+<div class="section" id="training-your-bot">
+<h2>3. Training your bot<a class="headerlink" href="#training-your-bot" title="Permalink to this headline">¶</a></h2>
+<p>We can go directly from data to bot with only a few steps:</p>
+<ol class="arabic simple">
+<li>train a Rasa NLU model to extract intents and entities. Read more about that in the <a class="reference external" href="http://rasa-nlu.readthedocs.io/">NLU docs</a>.</li>
+<li>train a dialogue policy which will learn to choose the correct actions</li>
+<li>set up an agent which has both model 1 and model 2 working together to go directly from <strong>user input</strong> to <strong>action</strong></li>
+</ol>
+<p>We will go through these steps one by one.</p>
+<div class="section" id="nlu-model">
+<h3>NLU model<a class="headerlink" href="#nlu-model" title="Permalink to this headline">¶</a></h3>
+<p>To train our Rasa NLU model, we need to create a configuration first in <code class="docutils literal"><span class="pre">config_nlu.json</span></code>:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;nlp_spacy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tokenizer_spacy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;intent_featurizer_spacy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;intent_classifier_sklearn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ner_crf&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ner_synonyms&quot;</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;path&quot;</span> <span class="p">:</span> <span class="s2">&quot;./models&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;nlu&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;data&quot;</span> <span class="p">:</span> <span class="s2">&quot;./data/franken_data.json&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>We can train the NLU model using</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_nlu.train -c nlu_model_config.json --fixed_model_name current
+</pre></div>
+</div>
+<p>or using python code</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_nlu</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">rasa_nlu.converters</span> <span class="k">import</span> <span class="n">load_data</span>
+    <span class="kn">from</span> <span class="nn">rasa_nlu.config</span> <span class="k">import</span> <span class="n">RasaNLUConfig</span>
+    <span class="kn">from</span> <span class="nn">rasa_nlu.model</span> <span class="k">import</span> <span class="n">Trainer</span>
+
+    <span class="n">training_data</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s1">&#39;data/franken_data.json&#39;</span><span class="p">)</span>
+    <span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">RasaNLUConfig</span><span class="p">(</span><span class="s2">&quot;nlu_model_config.json&quot;</span><span class="p">))</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span>
+    <span class="n">model_directory</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="s1">&#39;models/nlu/&#39;</span><span class="p">,</span> <span class="n">fixed_model_name</span><span class="o">=</span><span class="s2">&quot;current&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model_directory</span>
+</pre></div>
+</td></tr></table></div>
+<p>You can learn all about Rasa NLU starting from the
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu">github repository</a>.
+What you need to know though is that <code class="docutils literal"><span class="pre">interpreter.parse(user_message)</span></code> returns
+a dictionary with the intent and entities from a user message.</p>
+<p><em>Training NLU takes approximately 18 seconds on a 2014 MacBook Pro.</em></p>
+</div>
+<div class="section" id="dialogue-policy">
+<h3>Dialogue Policy<a class="headerlink" href="#dialogue-policy" title="Permalink to this headline">¶</a></h3>
+<p>Now our bot needs to learn what to do in response to these messages.
+We do this by training one or multiple Rasa Core policies.</p>
+<p>For this bot, we came up with our own policy. Here are the gory details:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RestaurantPolicy</span><span class="p">(</span><span class="n">KerasPolicy</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">model_architecture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">,</span> <span class="n">max_history_len</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Build a Keras model and return a compiled model.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Activation</span><span class="p">,</span> <span class="n">Masking</span><span class="p">,</span> <span class="n">Dense</span>
+        <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
+
+        <span class="n">n_hidden</span> <span class="o">=</span> <span class="mi">32</span>  <span class="c1"># size of hidden layer in LSTM</span>
+        <span class="c1"># Build Model</span>
+        <span class="n">batch_shape</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_history_len</span><span class="p">,</span> <span class="n">num_features</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_input_shape</span><span class="o">=</span><span class="n">batch_shape</span><span class="p">))</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">batch_input_shape</span><span class="o">=</span><span class="n">batch_shape</span><span class="p">))</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="n">num_actions</span><span class="p">))</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;softmax&#39;</span><span class="p">))</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span>
+                      <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+                      <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Remember, you do not need to create your own policy. The default policy setup
+using a memoization policy and a Keras policy works quite well. Nevertheless,
+you can always fine tune them for your use case. Read <a class="reference internal" href="plumbing.html#plumbing"><span class="std std-ref">Plumbing - How it all fits together</span></a> for more info.</p>
+</div>
+<p>This policy extends the Keras Policy modifying the ML architecture of the
+network. The parameters <code class="docutils literal"><span class="pre">max_history_len</span></code> and <code class="docutils literal"><span class="pre">n_hidden</span></code> may be altered
+dependent on the task complexity and the amount of data one has.
+<code class="docutils literal"><span class="pre">max_history_len</span></code> is important as it is the amount of story steps the
+network has access to to make a classification.</p>
+<p>Now let&#8217;s train it:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_dialogue</span><span class="p">(</span><span class="n">domain_file</span><span class="o">=</span><span class="s2">&quot;restaurant_domain.yml&quot;</span><span class="p">,</span>
+                   <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;models/dialogue&quot;</span><span class="p">,</span>
+                   <span class="n">training_data_file</span><span class="o">=</span><span class="s2">&quot;data/babi_stories.md&quot;</span><span class="p">):</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">domain_file</span><span class="p">,</span>
+                  <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">RestaurantPolicy</span><span class="p">()])</span>
+
+    <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+            <span class="n">training_data_file</span><span class="p">,</span>
+            <span class="n">max_history</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">augmentation_factor</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span>
+    <span class="p">)</span>
+
+    <span class="n">agent</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">agent</span>
+</pre></div>
+</td></tr></table></div>
+<p>This code creates the policies to be trained and uses the story training data
+to train and persist a model. The goal of the trained policy is to predict
+the next action, given the current state of the bot.</p>
+<p>To train it from the cmd, run</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python bot.py train-dialogue
+</pre></div>
+</div>
+<p>to get our trained policy.</p>
+<p><em>Training the dialogue model takes roughly 12 minutes on a 2014 MacBook Pro</em></p>
+</div>
+</div>
+<div class="section" id="using-the-bot">
+<h2>4. Using the bot<a class="headerlink" href="#using-the-bot" title="Permalink to this headline">¶</a></h2>
+<p>Now we&#8217;re going to glue some pieces together to create an actual bot.
+We instantiate the policy, and an <code class="docutils literal"><span class="pre">Agent</span></code> instance,
+which owns an <code class="docutils literal"><span class="pre">Interpreter</span></code>, a <code class="docutils literal"><span class="pre">Policy</span></code>, and a <code class="docutils literal"><span class="pre">Domain</span></code>.</p>
+<p>We put the NLU model into an <code class="docutils literal"><span class="pre">Interpreter</span></code> and then put that into an <code class="docutils literal"><span class="pre">Agent</span></code>.</p>
+<p>We will pass messages directly to the bot, but this is just for
+this is just for demonstration purposes. You can look at how to
+build a command line bot and a facebook bot by checking out the <a class="reference internal" href="connectors.html#connectors"><span class="std std-ref">Connecting to messaging &amp; voice platforms</span></a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RasaNLUInterpreter</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;models/dialogue&quot;</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="s2">&quot;models/nlu/current&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We can then try sending it a message:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="s2">&quot;/greet&quot;</span><span class="p">)</span>
+<span class="go">[u&#39;hey there!&#39;]</span>
+</pre></div>
+</div>
+<p>And there we have it! A minimal bot containing all the important pieces of Rasa Core.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are wondering why we are not sending the bot a message like
+&#8220;hello there&#8221; head over to <a class="reference internal" href="interpreters.html#fixed-intent-format"><span class="std std-ref">Fixed intent &amp; entity input</span></a>. It basically forces,
+the bot to interpret the message as if it would have the intent <code class="docutils literal"><span class="pre">greet</span></code>,
+skipping the NLU.</p>
+</div>
+<p>If you want to handle input from the command line (or a different input channel) you need handle
+that channel instead of handling messages directly, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.console</span> <span class="kn">import</span> <span class="n">ConsoleInputChannel</span>
+<span class="n">agent</span><span class="o">.</span><span class="n">handle_channel</span><span class="p">(</span><span class="n">ConsoleInputChannel</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>In this case messages will be retrieved from the command line because we specified
+the <code class="docutils literal"><span class="pre">ConsoleInputChannel</span></code>. Responses are printed to the command line as well. You
+can find a complete example of how to load an agent and chat with it on the
+command line in <code class="docutils literal"><span class="pre">examples/restaurantbot/run.py</span></code>.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tutorial_interactive_learning.html" class="btn btn-neutral float-right" title="Interactive Learning" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial_basics.html" class="btn btn-neutral" title="Building a Simple Bot" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: direct_input
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../0.6.5/index.html">0.6.5</a></dd>
+            <dd><a href="../0.6.9/index.html">0.6.9</a></dd>
+            <dd><a href="../0.7.0/index.html">0.7.0</a></dd>
+            <dd><a href="../0.7.0a10/index.html">0.7.0a10</a></dd>
+            <dd><a href="../0.7.0a5/index.html">0.7.0a5</a></dd>
+            <dd><a href="../0.7.0a6/index.html">0.7.0a6</a></dd>
+            <dd><a href="../0.7.0a7/index.html">0.7.0a7</a></dd>
+            <dd><a href="../0.7.0a8/index.html">0.7.0a8</a></dd>
+            <dd><a href="../0.7.0a9/index.html">0.7.0a9</a></dd>
+            <dd><a href="../0.7.1/index.html">0.7.1</a></dd>
+            <dd><a href="../0.7.2/tutorial_supervised.html">0.7.2</a></dd>
+            <dd><a href="../0.7.3/tutorial_supervised.html">0.7.3</a></dd>
+            <dd><a href="../0.7.4/tutorial_supervised.html">0.7.4</a></dd>
+            <dd><a href="../0.7.5/tutorial_supervised.html">0.7.5</a></dd>
+            <dd><a href="../0.7.6/tutorial_supervised.html">0.7.6</a></dd>
+            <dd><a href="../0.7.7/tutorial_supervised.html">0.7.7</a></dd>
+            <dd><a href="../0.7.8/tutorial_supervised.html">0.7.8</a></dd>
+            <dd><a href="../0.7.9/tutorial_supervised.html">0.7.9</a></dd>
+            <dd><a href="../0.8.0/tutorial_supervised.html">0.8.0</a></dd>
+            <dd><a href="../0.8.1/tutorial_supervised.html">0.8.1</a></dd>
+            <dd><a href="../0.8.2/tutorial_supervised.html">0.8.2</a></dd>
+            <dd><a href="../0.8.3/tutorial_supervised.html">0.8.3</a></dd>
+            <dd><a href="../0.8.4/tutorial_supervised.html">0.8.4</a></dd>
+            <dd><a href="../0.8.5/tutorial_supervised.html">0.8.5</a></dd>
+            <dd><a href="../0.8.6/tutorial_supervised.html">0.8.6</a></dd>
+            <dd><a href="../0.9.0/tutorial_supervised.html">0.9.0</a></dd>
+            <dd><a href="../0.9.0a1/tutorial_supervised.html">0.9.0a1</a></dd>
+            <dd><a href="../0.9.0a2/tutorial_supervised.html">0.9.0a2</a></dd>
+            <dd><a href="../0.9.0a3/tutorial_supervised.html">0.9.0a3</a></dd>
+            <dd><a href="../0.9.0a5/tutorial_supervised.html">0.9.0a5</a></dd>
+            <dd><a href="../0.9.0a7/tutorial_supervised.html">0.9.0a7</a></dd>
+            <dd><a href="../0.9.1/tutorial_supervised.html">0.9.1</a></dd>
+            <dd><a href="../0.9.2/tutorial_supervised.html">0.9.2</a></dd>
+            <dd><a href="../0.9.3/tutorial_supervised.html">0.9.3</a></dd>
+            <dd><a href="../0.9.4/tutorial_supervised.html">0.9.4</a></dd>
+            <dd><a href="../0.9.5/tutorial_supervised.html">0.9.5</a></dd>
+            <dd><a href="../0.9.6/tutorial_supervised.html">0.9.6</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../0.9.x/tutorial_supervised.html">0.9.x</a></dd>
+            <dd><a href="../add-auth/tutorial_supervised.html">add-auth</a></dd>
+            <dd><a href="../apscheduler_try/tutorial_supervised.html">apscheduler_try</a></dd>
+            <dd><a href="../async/tutorial_supervised.html">async</a></dd>
+            <dd><a href="tutorial_supervised.html">direct_input</a></dd>
+            <dd><a href="../dispatcher/tutorial_supervised.html">dispatcher</a></dd>
+            <dd><a href="../embed_policy/tutorial_supervised.html">embed_policy</a></dd>
+            <dd><a href="../eval_scripts/tutorial_supervised.html">eval_scripts</a></dd>
+            <dd><a href="../event-stream/tutorial_supervised.html">event-stream</a></dd>
+            <dd><a href="../fix/tutorial_supervised.html">fix</a></dd>
+            <dd><a href="../master/tutorial_supervised.html">master</a></dd>
+            <dd><a href="../model-pull/tutorial_supervised.html">model-pull</a></dd>
+            <dd><a href="../track_data/tutorial_supervised.html">track_data</a></dd>
+            <dd><a href="../train_from_url/tutorial_supervised.html">train_from_url</a></dd>
+            <dd><a href="../wildcard/index.html">wildcard</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.0a1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-4"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-4');
+</script>
+
+
+</body>
+</html>

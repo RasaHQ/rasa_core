@@ -188,15 +188,6 @@
            <div itemprop="articleBody">
             
   
-
-
-    
-    
-
-
-
-    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../0.9.6/api/agent.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.9.6.</a></p>
-
 <style>
 /* CSS overrides for sphinx_rtd_theme */
 
@@ -245,10 +236,10 @@ policy, interpreter, and the tracker store) on your own to customize them.</p>
 <dt id="rasa_core.agent.Agent">
 <em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain</em>, <em>policies=None</em>, <em>interpreter=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Public interface for common things to do.</p>
-<p>This includes e.g. train an assistant (online or offline mode),
-handle messages with an assistant, load a dialogue model,
-get the next action, handle channel or toggle memoization</p>
+<p>The Agent class provides a convenient interface for the most important
+Rasa Core functionality.</p>
+<p>This includes training, handling messages, loading a dialogue model,
+getting the next action, and handling a channel.</p>
 <dl class="method">
 <dt id="rasa_core.agent.Agent.continue_message_handling">
 <code class="descname">continue_message_handling</code><span class="sig-paren">(</span><em>sender_id</em>, <em>executed_action</em>, <em>events</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.continue_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.continue_message_handling" title="Permalink to this definition">¶</a></dt>
@@ -274,9 +265,9 @@ get the next action, handle channel or toggle memoization</p>
 <p>If a message preprocessor is passed, the message will be passed to that
 function first and the return value is then used as the
 input for the dialogue engine.</p>
-<p>The return value of this function depends on the <cite>output_channel</cite>. If
-the output channel is not set, set to <cite>None</cite>, or set
-to <cite>CollectingOutputChannel</cite> this function will return the messages
+<p>The return value of this function depends on the <code class="docutils literal"><span class="pre">output_channel</span></code>. If
+the output channel is not set, set to <code class="docutils literal"><span class="pre">None</span></code>, or set
+to <code class="docutils literal"><span class="pre">CollectingOutputChannel</span></code> this function will return the messages
 the bot wants to respond.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -309,14 +300,14 @@ the bot wants to respond.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.persist">
-<code class="descname">persist</code><span class="sig-paren">(</span><em>model_path</em>, <em>dump_flattened_stories=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.persist" title="Permalink to this definition">¶</a></dt>
+<code class="descname">persist</code><span class="sig-paren">(</span><em>model_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.persist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Persists this agent into a directory for later loading and usage.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.start_message_handling">
 <code class="descname">start_message_handling</code><span class="sig-paren">(</span><em>text_message</em>, <em>sender_id=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.start_message_handling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.start_message_handling" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start to process a messages, returning the next action to take.</p>
+<dd><p>Start to process messages, returning the next action to take.</p>
 </dd></dl>
 
 <dl class="method">
@@ -324,10 +315,10 @@ the bot wants to respond.</p>
 <code class="descname">toggle_memoization</code><span class="sig-paren">(</span><em>activate</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/agent.html#Agent.toggle_memoization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.toggle_memoization" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggles the memoization on and off.</p>
 <p>If a memoization policy is present in the ensemble, this will toggle
-the prediction of that policy. When set to <cite>false</cite> the Memoization
+the prediction of that policy. When set to <code class="docutils literal"><span class="pre">False</span></code> the Memoization
 policies present in the policy ensemble will not make any predictions.
 Hence, the prediction result from the ensemble always needs to come
-from a different policy (e.g. <cite>KerasPolicy</cite>). Useful to test prediction
+from a different policy (e.g. <code class="docutils literal"><span class="pre">KerasPolicy</span></code>). Useful to test prediction
 capabilities of an ensemble when ignoring memorized turns from the
 training data.</p>
 </dd></dl>
@@ -408,20 +399,61 @@ trainer (e.g. keras parameters)</li>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
-            <dd><a href="../../0.9.6/api/agent.html">0.9.6</a></dd>
-            <dd><a href="../../0.9.5/api/agent.html">0.9.5</a></dd>
-            <dd><a href="../../0.9.4/api/agent.html">0.9.4</a></dd>
-            <dd><a href="../../0.9.3/api/agent.html">0.9.3</a></dd>
-            <dd><a href="../../0.9.2/api/agent.html">0.9.2</a></dd>
-            <dd><a href="../../0.9.1/api/agent.html">0.9.1</a></dd>
-            <dd><a href="../../0.9.0/api/agent.html">0.9.0</a></dd>
-            <dd><a href="../../0.8.6/api/agent.html">0.8.6</a></dd>
-            <dd><a href="agent.html">0.7.9</a></dd>
+            <dd><a href="../../0.6.5/index.html">0.6.5</a></dd>
             <dd><a href="../../0.6.9/api/agent.html">0.6.9</a></dd>
+            <dd><a href="../../0.7.0/api/agent.html">0.7.0</a></dd>
+            <dd><a href="../../0.7.0a10/api/agent.html">0.7.0a10</a></dd>
+            <dd><a href="../../0.7.0a5/api/agent.html">0.7.0a5</a></dd>
+            <dd><a href="../../0.7.0a6/api/agent.html">0.7.0a6</a></dd>
+            <dd><a href="../../0.7.0a7/api/agent.html">0.7.0a7</a></dd>
+            <dd><a href="../../0.7.0a8/api/agent.html">0.7.0a8</a></dd>
+            <dd><a href="../../0.7.0a9/api/agent.html">0.7.0a9</a></dd>
+            <dd><a href="../../0.7.1/api/agent.html">0.7.1</a></dd>
+            <dd><a href="../../0.7.2/api/agent.html">0.7.2</a></dd>
+            <dd><a href="../../0.7.3/api/agent.html">0.7.3</a></dd>
+            <dd><a href="../../0.7.4/api/agent.html">0.7.4</a></dd>
+            <dd><a href="../../0.7.5/api/agent.html">0.7.5</a></dd>
+            <dd><a href="../../0.7.6/api/agent.html">0.7.6</a></dd>
+            <dd><a href="../../0.7.7/api/agent.html">0.7.7</a></dd>
+            <dd><a href="../../0.7.8/api/agent.html">0.7.8</a></dd>
+            <dd><a href="agent.html">0.7.9</a></dd>
+            <dd><a href="../../0.8.0/api/agent.html">0.8.0</a></dd>
+            <dd><a href="../../0.8.1/api/agent.html">0.8.1</a></dd>
+            <dd><a href="../../0.8.2/api/agent.html">0.8.2</a></dd>
+            <dd><a href="../../0.8.3/api/agent.html">0.8.3</a></dd>
+            <dd><a href="../../0.8.4/api/agent.html">0.8.4</a></dd>
+            <dd><a href="../../0.8.5/api/agent.html">0.8.5</a></dd>
+            <dd><a href="../../0.8.6/api/agent.html">0.8.6</a></dd>
+            <dd><a href="../../0.9.0/api/agent.html">0.9.0</a></dd>
+            <dd><a href="../../0.9.0a1/api/agent.html">0.9.0a1</a></dd>
+            <dd><a href="../../0.9.0a2/api/agent.html">0.9.0a2</a></dd>
+            <dd><a href="../../0.9.0a3/api/agent.html">0.9.0a3</a></dd>
+            <dd><a href="../../0.9.0a5/api/agent.html">0.9.0a5</a></dd>
+            <dd><a href="../../0.9.0a7/api/agent.html">0.9.0a7</a></dd>
+            <dd><a href="../../0.9.1/api/agent.html">0.9.1</a></dd>
+            <dd><a href="../../0.9.2/api/agent.html">0.9.2</a></dd>
+            <dd><a href="../../0.9.3/api/agent.html">0.9.3</a></dd>
+            <dd><a href="../../0.9.4/api/agent.html">0.9.4</a></dd>
+            <dd><a href="../../0.9.5/api/agent.html">0.9.5</a></dd>
+            <dd><a href="../../0.9.6/api/agent.html">0.9.6</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>
+            <dd><a href="../../0.9.x/api/agent.html">0.9.x</a></dd>
+            <dd><a href="../../add-auth/api/agent.html">add-auth</a></dd>
+            <dd><a href="../../apscheduler_try/api/agent.html">apscheduler_try</a></dd>
+            <dd><a href="../../async/api/agent.html">async</a></dd>
+            <dd><a href="../../direct_input/api/agent.html">direct_input</a></dd>
+            <dd><a href="../../dispatcher/api/agent.html">dispatcher</a></dd>
+            <dd><a href="../../embed_policy/api/agent.html">embed_policy</a></dd>
+            <dd><a href="../../eval_scripts/api/agent.html">eval_scripts</a></dd>
+            <dd><a href="../../event-stream/api/agent.html">event-stream</a></dd>
+            <dd><a href="../../fix/api/agent.html">fix</a></dd>
             <dd><a href="../../master/api/agent.html">master</a></dd>
+            <dd><a href="../../model-pull/api/agent.html">model-pull</a></dd>
+            <dd><a href="../../track_data/api/agent.html">track_data</a></dd>
+            <dd><a href="../../train_from_url/api/agent.html">train_from_url</a></dd>
+            <dd><a href="../../wildcard/index.html">wildcard</a></dd>
         </dl>
     </div>
 </div>
