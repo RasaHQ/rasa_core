@@ -1,0 +1,201 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>The Rasa Core dialogue engine &#8212; Rasa Core 0.10.0a2 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+    <link rel="stylesheet" href="_static/button.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quickstart" href="quickstart.html" />
+   
+  <!--<link rel="stylesheet" href="_static/custom.css" type="text/css" />-->
+  <link rel="stylesheet" href="_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+<div class="nav-top" style="background-color: #3D44BC;">
+  <h1 class="brand">
+      <img src="/_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+  </h1>
+  <ul class="nav">
+    
+      
+        <li><a href="#">About</a></li>
+      
+    
+      
+        <li><a href="#">NLU</a></li>
+      
+    
+      
+        <li class="active"><a href="#">Core</a></li>
+      
+    
+      
+        <li><a href="#">Platform</a></li>
+      
+    
+  </ul>
+</div>
+
+
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customactions.html">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="slots.html">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="slotfilling.html">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fallbacks.html">Fallback / Default Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluating and Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/slots_api.html">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/interpreter.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/policy.html">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/featurizer.html">Featurization</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+<h3>Versions</h3>
+<ul>
+    <li><a href="index.html">docs_reorg</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="the-rasa-core-dialogue-engine">
+<h1>The Rasa Core dialogue engine<a class="headerlink" href="#the-rasa-core-dialogue-engine" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is the documentation for version 0.10.0a2 of Rasa Core. Make sure you select
+the appropriate version of the documentation for your local installation!</p>
+</div>
+
+  <div class="chat-bubble user">
+    <p>What am I looking at?</p>
+  </div>
+  <div class="chat-bubble bot">
+    <p>Rasa is a framework for building conversational software:
+Messenger/Slack bots, Alexa skills, etc. We'll abbreviate this as a <strong>bot</strong>
+in this documentation.</p>
+  </div>
+  <div class="chat-bubble user">
+    <p>What's cool about it?</p>
+  </div>
+  <div class="chat-bubble bot">
+    <p>Rather than a bunch of <code>if/else</code> statements, the logic of your bot is
+based on a probabilistic model trained on example conversations.</p>
+  </div>
+  <div class="chat-bubble user">
+    <p>That sounds harder than writing a few <code>if</code> statements.</p>
+  </div>
+  <div class="chat-bubble bot">
+    <p>In the beginning of a project, it seems easier to just hard code some logic.
+Rasa helps you when you want to go past that and create a bot that can handle more complexity.
+This <a href="https://medium.com/rasa-blog/a-new-approach-to-conversational-software-2e64a5d05f2a" target="_blank">blog post </a> explains the philosophy behind Rasa Core.</p>
+  </div>
+  <div class="chat-bubble user">
+    <p>Can I see it in action?</p>
+  </div>
+  <div class="chat-bubble bot">
+    <p>We thought you'd never ask!
+You can build a full example without installing anything, just go to the quickstart!</p>
+  </div><div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/privacy-policy/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
+    </div>
+
+    
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0074/3851.js" async="async"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+  </body>
+</html>

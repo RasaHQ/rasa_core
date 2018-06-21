@@ -1,0 +1,252 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Tracking Conversation State &#8212; Rasa Core 0.10.0a2 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+    <link rel="stylesheet" href="_static/button.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <!--<link rel="stylesheet" href="_static/custom.css" type="text/css" />-->
+  <link rel="stylesheet" href="_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+<div class="nav-top" style="background-color: #3D44BC;">
+  <h1 class="brand">
+      <img src="/_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+  </h1>
+  <ul class="nav">
+    
+      
+        <li><a href="#">About</a></li>
+      
+    
+      
+        <li><a href="#">NLU</a></li>
+      
+    
+      
+        <li class="active"><a href="#">Core</a></li>
+      
+    
+      
+        <li><a href="#">Platform</a></li>
+      
+    
+  </ul>
+</div>
+
+
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectors.html">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customactions.html">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="slots.html">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="slotfilling.html">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interactive_learning.html">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fallbacks.html">Fallback / Default Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policies.html">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluating and Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stories.html">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/slots_api.html">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/events.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tracker.html">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/interpreter.html">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/policy.html">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/featurizer.html">Featurization</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+<h3>Versions</h3>
+<ul>
+    <li><a href="state.html">docs_reorg</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="tracking-conversation-state">
+<span id="state"></span><h1>Tracking Conversation State<a class="headerlink" href="#tracking-conversation-state" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">DialogueStateTracker</span></code> is the stateful object which keeps track of a conversation.
+The only way the tracker should ever be updated is by passing <code class="docutils literal notranslate"><span class="pre">events</span></code> to the <code class="docutils literal notranslate"><span class="pre">update</span></code> method.
+For example:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="kn">import</span> <span class="n">DialogueStateTracker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rasa_core.slots</span> <span class="kn">import</span> <span class="n">TextSlot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="kn">import</span> <span class="n">SlotSet</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tracker</span> <span class="o">=</span> <span class="n">DialogueStateTracker</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="p">[</span><span class="n">TextSlot</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
+<span class="go">{u&#39;cuisine&#39;: &lt;TextSlot(cuisine: None)&gt;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">,</span><span class="s2">&quot;Mexican&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
+<span class="go">{u&#39;cuisine&#39;: &lt;TextSlot(cuisine: Mexican)&gt;}</span>
+</pre></div>
+</div>
+<p>The full set of events is documented in the <a class="reference internal" href="api/events.html"><span class="doc">Events API documentation</span></a>.</p>
+<div class="section" id="persisting-trackers">
+<span id="id1"></span><h2>Persisting Trackers:<a class="headerlink" href="#persisting-trackers" title="Permalink to this headline">¶</a></h2>
+<p>When you’re running your bot in production,
+you want your application to be stateless.
+For example, you wouldn’t want to lose track of every conversation
+each time you restart a running process.
+That’s why Rasa persists trackers in a key-value store.
+For testing, the <code class="docutils literal notranslate"><span class="pre">InMemoryTrackerStore</span></code> is sufficient,
+but in production you would want to use the <code class="docutils literal notranslate"><span class="pre">RedisTrackerStore</span></code> to restore
+after restarting the application. It’s straightforward to define a
+custom <code class="docutils literal notranslate"><span class="pre">TrackerStore</span></code> subclass for the persistence tool of your choice.</p>
+</div>
+<div class="section" id="serialisation">
+<h2>Serialisation<a class="headerlink" href="#serialisation" title="Permalink to this headline">¶</a></h2>
+<p>Rather than pickling the final state of the tracker object,
+Rasa creates a <code class="docutils literal notranslate"><span class="pre">dialogue</span></code> object to serialise.
+A dialogue is a full record of the previous <code class="docutils literal notranslate"><span class="pre">N</span></code> dialogue turns.
+To return to the current state of the conversation,
+we iterate over the turns and log the events in each.</p>
+<p>We use the <code class="docutils literal notranslate"><span class="pre">jsonpickle</span></code> library to serialise these Dialogues.
+Here’s a simple example of a dialogue as it would be stored in the TrackerStore:</p>
+<div class="highlight-json notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;py/object&quot;</span><span class="p">:</span> <span class="s2">&quot;rasa_core.conversation.Dialogue&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;py/object&quot;</span><span class="p">:</span> <span class="s2">&quot;rasa_core.events.UserUttered&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="nt">&quot;intent&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;greet&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">1.0</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;parse_data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;intent&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;greet&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">1.0</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;/greet&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;/greet&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;py/object&quot;</span><span class="p">:</span> <span class="s2">&quot;rasa_core.events.ActionExecuted&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;action_name&quot;</span><span class="p">:</span> <span class="s2">&quot;utter_greet&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;unpredictable&quot;</span><span class="p">:</span> <span class="kc">false</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;hello_world&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/privacy-policy/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
+    </div>
+
+    
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0074/3851.js" async="async"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+  </body>
+</html>
