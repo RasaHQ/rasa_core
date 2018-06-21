@@ -450,7 +450,7 @@
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">):</span>
                 <span class="n">max_max_history</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">max_history</span><span class="p">,</span>
                                       <span class="n">max_max_history</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">all_max_history_featurizers</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">unique_last_num_states</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
