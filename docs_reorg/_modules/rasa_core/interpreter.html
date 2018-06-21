@@ -31,24 +31,24 @@
 
 <div class="nav-top" style="background-color: #3D44BC;">
   <h1 class="brand">
-      <img src="/_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+      <img src="_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
   </h1>
   <ul class="nav">
     
       
-        <li><a href="#">About</a></li>
+        <li><a href=https://newdocs.rasa.com/about>About</a></li>
       
     
       
-        <li><a href="#">NLU</a></li>
+        <li><a href=https://newdocs.rasa.com/nlu>NLU</a></li>
       
     
       
-        <li class="active"><a href="#">Core</a></li>
+        <li class="active"><a href=https://newdocs.rasa.com/core>Core</a></li>
       
     
       
-        <li><a href="#">Platform</a></li>
+        <li><a href=https://newdocs.rasa.com/platform>Platform</a></li>
       
     
   </ul>
@@ -271,14 +271,14 @@
         <span class="p">}</span>
 
 
-<span class="k">class</span> <span class="nc">RasaNLUHttpInterpreter</span><span class="p">(</span><span class="n">NaturalLanguageInterpreter</span><span class="p">):</span>
+<div class="viewcode-block" id="RasaNLUHttpInterpreter"><a class="viewcode-back" href="../../api/interpreter.html#rasa_core.interpreter.RasaNLUHttpInterpreter">[docs]</a><span class="k">class</span> <span class="nc">RasaNLUHttpInterpreter</span><span class="p">(</span><span class="n">NaturalLanguageInterpreter</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">server</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span> <span class="o">=</span> <span class="n">project_name</span>
 
-    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+<div class="viewcode-block" id="RasaNLUHttpInterpreter.parse"><a class="viewcode-back" href="../../api/interpreter.html#rasa_core.interpreter.RasaNLUHttpInterpreter.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parse a text message.</span>
 
 <span class="sd">        Return a default value if the parsing of the text failed.&quot;&quot;&quot;</span>
@@ -287,7 +287,7 @@
                           <span class="s2">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rasa_http_parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">result</span> <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">default_return</span>
+        <span class="k">return</span> <span class="n">result</span> <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">default_return</span></div>
 
     <span class="k">def</span> <span class="nf">_rasa_http_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Send a text message to a running rasa NLU http server.</span>
@@ -320,7 +320,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                     <span class="s2">&quot;Failed to parse text &#39;</span><span class="si">{}</span><span class="s2">&#39; using rasa NLU over http. &quot;</span>
                     <span class="s2">&quot;Error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-            <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="RasaNLUInterpreter"><a class="viewcode-back" href="../../api/interpreter.html#rasa_core.interpreter.RasaNLUInterpreter">[docs]</a><span class="k">class</span> <span class="nc">RasaNLUInterpreter</span><span class="p">(</span><span class="n">NaturalLanguageInterpreter</span><span class="p">):</span>
