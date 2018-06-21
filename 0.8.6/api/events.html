@@ -189,6 +189,15 @@
            <div itemprop="articleBody">
             
   
+
+
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../0.9.6/api/events.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.9.6.</a></p>
+
 <style>
 /* CSS overrides for sphinx_rtd_theme */
 
@@ -423,9 +432,13 @@ be set to <code class="docutils literal"><span class="pre">True</span></code>.</
 <dt id="rasa_core.events.Event">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">Event</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Events describe everything that occurs in 
-a conversation and tell the <code class="xref py py-class docutils literal"><span class="pre">DialogueStateTracker</span></code>
-how to update its state.</p>
+<p>An event is one of the following:
+- something the user has said to the bot (starts a new turn)
+- the topic has been set
+- the bot has taken an action</p>
+<p>Events are logged by the Tracker&#8217;s update method.
+This updates the list of turns so that the current state
+can be recovered by consuming the list of turns.</p>
 <dl class="method">
 <dt id="rasa_core.events.Event.apply_to">
 <code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/events.html#Event.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.apply_to" title="Permalink to this definition">¶</a></dt>
@@ -708,61 +721,20 @@ As a side effect the <code class="docutils literal"><span class="pre">Tracker</s
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
-            <dd><a href="../../0.6.5/index.html">0.6.5</a></dd>
-            <dd><a href="../../0.6.9/api/events.html">0.6.9</a></dd>
-            <dd><a href="../../0.7.0/api/events.html">0.7.0</a></dd>
-            <dd><a href="../../0.7.0a10/api/events.html">0.7.0a10</a></dd>
-            <dd><a href="../../0.7.0a5/api/events.html">0.7.0a5</a></dd>
-            <dd><a href="../../0.7.0a6/api/events.html">0.7.0a6</a></dd>
-            <dd><a href="../../0.7.0a7/api/events.html">0.7.0a7</a></dd>
-            <dd><a href="../../0.7.0a8/api/events.html">0.7.0a8</a></dd>
-            <dd><a href="../../0.7.0a9/api/events.html">0.7.0a9</a></dd>
-            <dd><a href="../../0.7.1/api/events.html">0.7.1</a></dd>
-            <dd><a href="../../0.7.2/api/events.html">0.7.2</a></dd>
-            <dd><a href="../../0.7.3/api/events.html">0.7.3</a></dd>
-            <dd><a href="../../0.7.4/api/events.html">0.7.4</a></dd>
-            <dd><a href="../../0.7.5/api/events.html">0.7.5</a></dd>
-            <dd><a href="../../0.7.6/api/events.html">0.7.6</a></dd>
-            <dd><a href="../../0.7.7/api/events.html">0.7.7</a></dd>
-            <dd><a href="../../0.7.8/api/events.html">0.7.8</a></dd>
-            <dd><a href="../../0.7.9/api/events.html">0.7.9</a></dd>
-            <dd><a href="../../0.8.0/api/events.html">0.8.0</a></dd>
-            <dd><a href="../../0.8.1/api/events.html">0.8.1</a></dd>
-            <dd><a href="../../0.8.2/api/events.html">0.8.2</a></dd>
-            <dd><a href="../../0.8.3/api/events.html">0.8.3</a></dd>
-            <dd><a href="../../0.8.4/api/events.html">0.8.4</a></dd>
-            <dd><a href="../../0.8.5/api/events.html">0.8.5</a></dd>
-            <dd><a href="events.html">0.8.6</a></dd>
-            <dd><a href="../../0.9.0/api/events.html">0.9.0</a></dd>
-            <dd><a href="../../0.9.0a1/api/events.html">0.9.0a1</a></dd>
-            <dd><a href="../../0.9.0a2/api/events.html">0.9.0a2</a></dd>
-            <dd><a href="../../0.9.0a3/api/events.html">0.9.0a3</a></dd>
-            <dd><a href="../../0.9.0a5/api/events.html">0.9.0a5</a></dd>
-            <dd><a href="../../0.9.0a7/api/events.html">0.9.0a7</a></dd>
-            <dd><a href="../../0.9.1/api/events.html">0.9.1</a></dd>
-            <dd><a href="../../0.9.2/api/events.html">0.9.2</a></dd>
-            <dd><a href="../../0.9.3/api/events.html">0.9.3</a></dd>
-            <dd><a href="../../0.9.4/api/events.html">0.9.4</a></dd>
-            <dd><a href="../../0.9.5/api/events.html">0.9.5</a></dd>
             <dd><a href="../../0.9.6/api/events.html">0.9.6</a></dd>
+            <dd><a href="../../0.9.5/api/events.html">0.9.5</a></dd>
+            <dd><a href="../../0.9.4/api/events.html">0.9.4</a></dd>
+            <dd><a href="../../0.9.3/api/events.html">0.9.3</a></dd>
+            <dd><a href="../../0.9.2/api/events.html">0.9.2</a></dd>
+            <dd><a href="../../0.9.1/api/events.html">0.9.1</a></dd>
+            <dd><a href="../../0.9.0/api/events.html">0.9.0</a></dd>
+            <dd><a href="events.html">0.8.6</a></dd>
+            <dd><a href="../../0.7.9/api/events.html">0.7.9</a></dd>
+            <dd><a href="../../0.6.9/api/events.html">0.6.9</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../../0.9.x/api/events.html">0.9.x</a></dd>
-            <dd><a href="../../add-auth/api/events.html">add-auth</a></dd>
-            <dd><a href="../../apscheduler_try/api/events.html">apscheduler_try</a></dd>
-            <dd><a href="../../async/api/events.html">async</a></dd>
-            <dd><a href="../../direct_input/api/events.html">direct_input</a></dd>
-            <dd><a href="../../dispatcher/api/events.html">dispatcher</a></dd>
-            <dd><a href="../../embed_policy/api/events.html">embed_policy</a></dd>
-            <dd><a href="../../eval_scripts/api/events.html">eval_scripts</a></dd>
-            <dd><a href="../../event-stream/api/events.html">event-stream</a></dd>
-            <dd><a href="../../fix/api/events.html">fix</a></dd>
             <dd><a href="../../master/api/events.html">master</a></dd>
-            <dd><a href="../../model-pull/api/events.html">model-pull</a></dd>
-            <dd><a href="../../track_data/api/events.html">track_data</a></dd>
-            <dd><a href="../../train_from_url/api/events.html">train_from_url</a></dd>
-            <dd><a href="../../wildcard/index.html">wildcard</a></dd>
         </dl>
     </div>
 </div>

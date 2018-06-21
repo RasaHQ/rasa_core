@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Change Log &mdash; Rasa Core 0.10.0a2 documentation</title>
+  <title>Change Log &mdash; Rasa Core 0.9.6 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Rasa Core 0.10.0a2 documentation" href="index.html"/>
+    <link rel="top" title="Rasa Core 0.9.6 documentation" href="index.html"/>
         <link rel="prev" title="Migration Guide" href="migrations.html"/> 
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.10
+                0.9
               </div>
             
           
@@ -318,6 +318,12 @@
            <div itemprop="articleBody">
             
   
+
+
+
+
+
+
 <style>
 /* CSS overrides for sphinx_rtd_theme */
 
@@ -363,24 +369,12 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 </div>
 <div class="section" id="added">
 <h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>options to prevent slack from making re-deliver message upon meeting failure condition.
-the default is to ignore <code class="docutils literal"><span class="pre">http_timeout</span></code>.</li>
-</ul>
 </div>
 <div class="section" id="changed">
 <h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>changed the logic inside AugmentedMemoizationPolicy to recall actions only if they are the same in training stories</li>
-<li>moved AugmentedMemoizationPolicy to memoization.py</li>
-<li>wrapped initialization of BackgroundScheduler in try/except to allow running on jupyterhub / binderhub/ colaboratory</li>
-</ul>
 </div>
 <div class="section" id="removed">
 <h3>Removed<a class="headerlink" href="#removed" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>removed support for topics</li>
-</ul>
 </div>
 </div>
 <div class="section" id="id1">
@@ -836,67 +830,26 @@ wrong predictions</li>
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: master
+        v: 0.9.6
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
-            <dd><a href="0.6.5/changelog.html">0.6.5</a></dd>
-            <dd><a href="0.6.9/changelog.html">0.6.9</a></dd>
-            <dd><a href="0.7.0/changelog.html">0.7.0</a></dd>
-            <dd><a href="0.7.0a10/changelog.html">0.7.0a10</a></dd>
-            <dd><a href="0.7.0a5/changelog.html">0.7.0a5</a></dd>
-            <dd><a href="0.7.0a6/changelog.html">0.7.0a6</a></dd>
-            <dd><a href="0.7.0a7/changelog.html">0.7.0a7</a></dd>
-            <dd><a href="0.7.0a8/changelog.html">0.7.0a8</a></dd>
-            <dd><a href="0.7.0a9/changelog.html">0.7.0a9</a></dd>
-            <dd><a href="0.7.1/changelog.html">0.7.1</a></dd>
-            <dd><a href="0.7.2/changelog.html">0.7.2</a></dd>
-            <dd><a href="0.7.3/changelog.html">0.7.3</a></dd>
-            <dd><a href="0.7.4/changelog.html">0.7.4</a></dd>
-            <dd><a href="0.7.5/changelog.html">0.7.5</a></dd>
-            <dd><a href="0.7.6/changelog.html">0.7.6</a></dd>
-            <dd><a href="0.7.7/changelog.html">0.7.7</a></dd>
-            <dd><a href="0.7.8/changelog.html">0.7.8</a></dd>
-            <dd><a href="0.7.9/changelog.html">0.7.9</a></dd>
-            <dd><a href="0.8.0/changelog.html">0.8.0</a></dd>
-            <dd><a href="0.8.1/changelog.html">0.8.1</a></dd>
-            <dd><a href="0.8.2/changelog.html">0.8.2</a></dd>
-            <dd><a href="0.8.3/changelog.html">0.8.3</a></dd>
-            <dd><a href="0.8.4/changelog.html">0.8.4</a></dd>
-            <dd><a href="0.8.5/changelog.html">0.8.5</a></dd>
-            <dd><a href="0.8.6/changelog.html">0.8.6</a></dd>
-            <dd><a href="0.9.0/changelog.html">0.9.0</a></dd>
-            <dd><a href="0.9.0a1/changelog.html">0.9.0a1</a></dd>
-            <dd><a href="0.9.0a2/changelog.html">0.9.0a2</a></dd>
-            <dd><a href="0.9.0a3/changelog.html">0.9.0a3</a></dd>
-            <dd><a href="0.9.0a5/changelog.html">0.9.0a5</a></dd>
-            <dd><a href="0.9.0a7/changelog.html">0.9.0a7</a></dd>
-            <dd><a href="0.9.1/changelog.html">0.9.1</a></dd>
-            <dd><a href="0.9.2/changelog.html">0.9.2</a></dd>
-            <dd><a href="0.9.3/changelog.html">0.9.3</a></dd>
-            <dd><a href="0.9.4/changelog.html">0.9.4</a></dd>
-            <dd><a href="0.9.5/changelog.html">0.9.5</a></dd>
             <dd><a href="0.9.6/changelog.html">0.9.6</a></dd>
+            <dd><a href="0.9.5/changelog.html">0.9.5</a></dd>
+            <dd><a href="0.9.4/changelog.html">0.9.4</a></dd>
+            <dd><a href="0.9.3/changelog.html">0.9.3</a></dd>
+            <dd><a href="0.9.2/changelog.html">0.9.2</a></dd>
+            <dd><a href="0.9.1/changelog.html">0.9.1</a></dd>
+            <dd><a href="0.9.0/changelog.html">0.9.0</a></dd>
+            <dd><a href="0.8.6/changelog.html">0.8.6</a></dd>
+            <dd><a href="0.7.9/changelog.html">0.7.9</a></dd>
+            <dd><a href="0.6.9/changelog.html">0.6.9</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>
-            <dd><a href="0.9.x/changelog.html">0.9.x</a></dd>
-            <dd><a href="add-auth/changelog.html">add-auth</a></dd>
-            <dd><a href="apscheduler_try/changelog.html">apscheduler_try</a></dd>
-            <dd><a href="async/changelog.html">async</a></dd>
-            <dd><a href="direct_input/changelog.html">direct_input</a></dd>
-            <dd><a href="dispatcher/changelog.html">dispatcher</a></dd>
-            <dd><a href="embed_policy/changelog.html">embed_policy</a></dd>
-            <dd><a href="eval_scripts/changelog.html">eval_scripts</a></dd>
-            <dd><a href="event-stream/changelog.html">event-stream</a></dd>
-            <dd><a href="fix/changelog.html">fix</a></dd>
             <dd><a href="master/changelog.html">master</a></dd>
-            <dd><a href="model-pull/changelog.html">model-pull</a></dd>
-            <dd><a href="track_data/changelog.html">track_data</a></dd>
-            <dd><a href="train_from_url/changelog.html">train_from_url</a></dd>
-            <dd><a href="wildcard/changelog.html">wildcard</a></dd>
         </dl>
     </div>
 </div>
@@ -907,7 +860,7 @@ wrong predictions</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.10.0a2',
+            VERSION:'0.9.6',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
