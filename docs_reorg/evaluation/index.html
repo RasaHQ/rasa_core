@@ -1,0 +1,181 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Evaluating and Testing &#8212; Rasa Core 0.10.0a2 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/button.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Domain Format" href="../domains/" />
+    <link rel="prev" title="Debugging" href="../debugging/" />
+   
+  <!--<link rel="stylesheet" href="../_static/custom.css" type="text/css" />-->
+  <link rel="stylesheet" href="../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <script defer type="text/javascript" src="../_static/config.js"></script>
+  <script defer type="text/javascript" src="../_static/klaro.js"></script>
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+<div class="nav-top" style="background-color: #3D44BC;">
+  <h1 class="brand">
+      <img src="_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+  </h1>
+  <ul class="nav">
+    
+      
+        <li><a href=https://newdocs.rasa.com/about>About</a></li>
+      
+    
+      
+        <li><a href=https://newdocs.rasa.com/nlu>NLU</a></li>
+      
+    
+      
+        <li class="active"><a href=https://newdocs.rasa.com/core>Core</a></li>
+      
+    
+      
+        <li><a href=https://newdocs.rasa.com/platform>Platform</a></li>
+      
+    
+  </ul>
+</div>
+
+
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fallbacks/">Fallback / Default Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Evaluating and Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+</ul>
+
+<h3>Versions</h3>
+<ul>
+    <li><a href="evaluation.html">docs_reorg</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="evaluating-and-testing">
+<span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
+<p>You can evaluate your trained model on a set of test stories by using the evaluate script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.evaluate -d models/dialogue -s test_stories.md -o matrix.pdf --failed failed_stories.md
+</pre></div>
+</div>
+<p>This will print the failed stories to <code class="docutils literal notranslate"><span class="pre">failed_stories.md</span></code>.
+We count any story as <cite>failed</cite> if at least one of the actions was predicted incorrectly.</p>
+<p>In addition, this will save a confusion matrix to a file called <code class="docutils literal notranslate"><span class="pre">matrix.pdf</span></code>.
+The confusion matrix shows, for each action in your domain, how often that action
+was predicted, and how often an incorrect action was predicted instead.</p>
+<p>The full list of options for the script is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] -s STORIES [-m MAX_STORIES] -d CORE [-u NLU]
+                   [-o OUTPUT] [--failed FAILED] [--debug] [-v]
+
+evaluates a dialogue model
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s STORIES, --stories STORIES
+                        file or folder containing stories to evaluate on
+  -m MAX_STORIES, --max_stories MAX_STORIES
+                        maximum number of stories to test on
+  -d CORE, --core CORE  core model to run with the server
+  -u NLU, --nlu NLU     nlu model to run with the server. None for regex
+                        interpreter
+  -o OUTPUT, --output OUTPUT
+                        output path for the created evaluation plot. If set to
+                        Noneor an empty string, no plot will be generated.
+  --failed FAILED       output path for the failed stories
+  --debug               Print lots of debugging statements. Sets logging level
+                        to DEBUG
+  -v, --verbose         Be verbose. Sets logging level to INFO
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/privacy-policy/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
+    </div>
+
+    
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  </body>
+</html>

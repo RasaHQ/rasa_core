@@ -1,0 +1,169 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Using Docker &#8212; Rasa Core 0.10.0a2 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/button.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+   
+  <!--<link rel="stylesheet" href="../_static/custom.css" type="text/css" />-->
+  <link rel="stylesheet" href="../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <script defer type="text/javascript" src="../_static/config.js"></script>
+  <script defer type="text/javascript" src="../_static/klaro.js"></script>
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+<div class="nav-top" style="background-color: #3D44BC;">
+  <h1 class="brand">
+      <img src="_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+  </h1>
+  <ul class="nav">
+    
+      
+        <li><a href=https://newdocs.rasa.com/about>About</a></li>
+      
+    
+      
+        <li><a href=https://newdocs.rasa.com/nlu>NLU</a></li>
+      
+    
+      
+        <li class="active"><a href=https://newdocs.rasa.com/core>Core</a></li>
+      
+    
+      
+        <li><a href=https://newdocs.rasa.com/platform>Platform</a></li>
+      
+    
+  </ul>
+</div>
+
+
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fallbacks/">Fallback / Default Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+</ul>
+
+<h3>Versions</h3>
+<ul>
+    <li><a href="no_python.html">docs_reorg</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="using-docker">
+<span id="docker"></span><h1>Using Docker<a class="headerlink" href="#using-docker" title="Permalink to this headline">¶</a></h1>
+<p>We provide a Dockerfile which allows you to build an image of Rasa Core
+with a simple command: <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">rasa_core</span> <span class="pre">.</span></code></p>
+<p>The default command of the resulting container starts the Rasa Core server
+with the <code class="docutils literal notranslate"><span class="pre">--core</span></code> and <code class="docutils literal notranslate"><span class="pre">--nlu</span></code> options. At this stage the container does not
+yet contain any models, so you have to mount them from a local folder into
+the container’s <code class="docutils literal notranslate"><span class="pre">/app/model/dialogue</span></code> and <code class="docutils literal notranslate"><span class="pre">app/model/nlu</span></code> directories.
+The full run command looks like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_DIALOGUE_MODEL_DIR&gt;,target<span class="o">=</span>/app/dialogue <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_NLU_MODEL_DIR&gt;,target<span class="o">=</span>/app/nlu <span class="se">\</span>
+   rasa_core
+</pre></div>
+</div>
+<p>You also have the option to use the container to train a model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_STORIES_FILE&gt;/stories.md,target<span class="o">=</span>/app/stories.md <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_DOMAIN_FILE&gt;/domain.yml,target<span class="o">=</span>/app/domain.yml <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;OUT_PATH&gt;,target<span class="o">=</span>/app/out <span class="se">\</span>
+   rasa_core train
+</pre></div>
+</div>
+<p>You may in addition run any Rasa Core command inside the container with
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">rasa_core</span> <span class="pre">run</span> <span class="pre">[COMMAND]</span></code>.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/privacy-policy/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
+    </div>
+
+    
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  </body>
+</html>

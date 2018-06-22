@@ -1,0 +1,361 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>rasa_core.slots &#8212; Rasa Core 0.10.0a2 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/button.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+   
+  <!--<link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />-->
+  <link rel="stylesheet" href="../../../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <script defer type="text/javascript" src="../../../_static/config.js"></script>
+  <script defer type="text/javascript" src="../../../_static/klaro.js"></script>
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+<div class="nav-top" style="background-color: #3D44BC;">
+  <h1 class="brand">
+      <img src="_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+  </h1>
+  <ul class="nav">
+    
+      
+        <li><a href=https://newdocs.rasa.com/about>About</a></li>
+      
+    
+      
+        <li><a href=https://newdocs.rasa.com/nlu>NLU</a></li>
+      
+    
+      
+        <li class="active"><a href=https://newdocs.rasa.com/core>Core</a></li>
+      
+    
+      
+        <li><a href=https://newdocs.rasa.com/platform>Platform</a></li>
+      
+    
+  </ul>
+</div>
+
+
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fallbacks/">Fallback / Default Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../debugging/">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../evaluation/">Evaluating and Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server/">Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/featurizer/">Featurization</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog/">Change Log</a></li>
+</ul>
+
+<h3>Versions</h3>
+<ul>
+    <li><a href="../../docs_reorg/_modules/rasa_core/slots.html">docs_reorg</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for rasa_core.slots</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Slot"><a class="viewcode-back" href="../../../api/slots_api/#rasa_core.slots.Slot">[docs]</a><span class="k">class</span> <span class="nc">Slot</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">type_name</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_reset_delay</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">initial_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span> <span class="o">=</span> <span class="n">initial_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value_reset_delay</span> <span class="o">=</span> <span class="n">value_reset_delay</span>
+
+<div class="viewcode-block" id="Slot.feature_dimensionality"><a class="viewcode-back" href="../../../api/slots_api/#rasa_core.slots.Slot.feature_dimensionality">[docs]</a>    <span class="k">def</span> <span class="nf">feature_dimensionality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;How many features this single slot creates.</span>
+
+<span class="sd">        The dimensionality of the array returned by `as_feature` needs</span>
+<span class="sd">        to correspond to this value.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span></div>
+
+    <span class="k">def</span> <span class="nf">has_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Indicate if the slot creates any features.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_dimensionality</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">value_reset_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;After how many turns the slot should be reset to the initial_value.</span>
+
+<span class="sd">        If the delay is set to `None`, the slot will keep its value forever.&quot;&quot;&quot;</span>
+        <span class="c1"># TODO: FUTURE this needs to be implemented - slots are not reset yet</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_reset_delay</span>
+
+<div class="viewcode-block" id="Slot.as_feature"><a class="viewcode-back" href="../../../api/slots_api/#rasa_core.slots.Slot.as_feature">[docs]</a>    <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Each slot type needs to specify how its &quot;</span>
+                                  <span class="s2">&quot;value can be converted to a feature.&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">)&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">resolve_by_type</span><span class="p">(</span><span class="n">type_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a slots class by its type name.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">all_subclasses</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">type_name</span> <span class="o">==</span> <span class="n">type_name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">cls</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">class_from_module_path</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Failed to find slot type. Neither a known type nor. If &quot;</span>
+                    <span class="s2">&quot;you are creating your own slot type, make sure its &quot;</span>
+                    <span class="s2">&quot;module path is correct: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">persistence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">module_path_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+                <span class="s2">&quot;initial_value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span><span class="p">}</span></div>
+
+
+<span class="k">class</span> <span class="nc">FloatSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
+    <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                 <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">value_reset_delay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                 <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FloatSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">,</span> <span class="n">value_reset_delay</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="n">max_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">min_value</span>
+
+        <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;=</span> <span class="n">max_value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Float slot (&#39;</span><span class="si">{}</span><span class="s2">&#39;) created with an invalid range &quot;</span>
+                    <span class="s2">&quot;using min (</span><span class="si">{}</span><span class="s2">) and max (</span><span class="si">{}</span><span class="s2">) values. Make sure &quot;</span>
+                    <span class="s2">&quot;min is smaller than max.&quot;</span>
+                    <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">initial_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                <span class="ow">not</span> <span class="p">(</span><span class="n">min_value</span> <span class="o">&lt;=</span> <span class="n">initial_value</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">)):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Float slot (&#39;</span><span class="si">{}</span><span class="s2">&#39;) created with an initial value </span><span class="si">{}</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;outside of configured min (</span><span class="si">{}</span><span class="s2">) and max (</span><span class="si">{}</span><span class="s2">) values.&quot;</span>
+                        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">capped_value</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span>
+                               <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">covered_range</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">covered_range</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="p">[(</span><span class="n">capped_value</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">)</span> <span class="o">/</span> <span class="n">covered_range</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">persistence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">FloatSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">persistence_info</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;max_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;min_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+
+<span class="k">class</span> <span class="nc">BooleanSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
+    <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;bool&quot;</span>
+
+    <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">)]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="c1"># we couldn&#39;t convert the value to float - using default value</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">TextSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
+    <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;text&quot;</span>
+
+    <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">ListSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
+    <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;list&quot;</span>
+
+    <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="c1"># we couldn&#39;t convert the value to a list - using default value</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">UnfeaturizedSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
+    <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;unfeaturized&quot;</span>
+
+    <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">feature_dimensionality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+
+<span class="k">class</span> <span class="nc">CategoricalSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
+    <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;categorical&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                 <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">value_reset_delay</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CategoricalSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                                              <span class="n">initial_value</span><span class="p">,</span>
+                                              <span class="n">value_reset_delay</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span> <span class="k">if</span> <span class="n">values</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">persistence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">CategoricalSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">persistence_info</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_dimensionality</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                            <span class="s2">&quot;Categorical slot &#39;</span><span class="si">{}</span><span class="s2">&#39; is set to a value (&#39;</span><span class="si">{}</span><span class="s2">&#39;) &quot;</span>
+                            <span class="s2">&quot;that is not specified in the domain. &quot;</span>
+                            <span class="s2">&quot;Value will be ignored and the slot will &quot;</span>
+                            <span class="s2">&quot;behave as if no value is set. &quot;</span>
+                            <span class="s2">&quot;Make sure to add all values a categorical &quot;</span>
+                            <span class="s2">&quot;slot should store to the domain.&quot;</span>
+                            <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to featurize categorical slot.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+    <span class="k">def</span> <span class="nf">feature_dimensionality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DataSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_reset_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DataSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">,</span> <span class="n">value_reset_delay</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Each slot type needs to specify how its &quot;</span>
+                                  <span class="s2">&quot;value can be converted to a feature.&quot;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/privacy-policy/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
+    </div>
+
+    
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  </body>
+</html>
