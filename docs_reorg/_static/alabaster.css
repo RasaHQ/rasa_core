@@ -49,6 +49,7 @@ body {
     color: #617287;
     margin: 0;
     padding: 0;
+    margin-top: 63px;
 }
 
 * {
@@ -77,8 +78,9 @@ div.sphinxsidebar {
     overflow-y: auto;
     top: 0;
     bottom: 0;
-    padding-top:50px;
     height: 100vh;
+    margin-top: 63px;
+    background:#F4F5F7;
 }
 
 hr {
@@ -90,6 +92,7 @@ div.body {
     color: #617287;
     padding: 0;
     margin-left: 24px;
+    margin-top:36px;
 }
 
 div.body > .section {
@@ -135,8 +138,13 @@ div.sphinxsidebar a:hover {
     border-bottom: 1px solid #617287;
 }
 
+div.sphinxsidebar a.current {
+    color:#5B17F0;
+    font-weight:600;
+}
+
 div.sphinxsidebarwrapper {
-    padding: 30px 10px;
+    padding: 48px 10px;
 }
 
 div.sphinxsidebarwrapper p.logo {
@@ -228,6 +236,24 @@ div.sphinxsidebar hr {
     font-weight:bold;
 }
 
+.rst-versions {
+    font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+.rst-other-versions {
+  visibility: hidden; 
+}
+
+.rst-versions:hover .rst-other-versions {
+  visibility:visible;
+  display: block;
+  border:1px solid ;
+  box-shadow: 0 4px 4px 0 rgba(107,107,107,0.04);
+  padding:0 24px;
+  max-width:100px;
+}
+  
+
 /* -- body styles ----------------------------------------------------------- */
 
 a {
@@ -247,10 +273,24 @@ a:hover {
   -moz-border-radius: 8px;
   border-radius: 8px;
   padding:12px;
-  font-size:18px;
+  font-size:15px;
   border:0;
   cursor:pointer;
   font-weight:600;
+}
+
+.btn-ghost {
+  background:none;
+  border: 1px solid #5B17F0;
+  color: #5B17F0
+}
+
+.btn-small {
+  padding:8px 12px;
+}
+
+.button i {
+    margin-right:8px;
 }
 
 input[type=button] {
@@ -886,12 +926,17 @@ nav#breadcrumbs li+li:before {
 }
 
 .nav-top {
-    color:#fff;
+    background-color: #fff;
+    color: #617287;
     padding:12px;
     font-size: 120%;
-    height:30px;
+    height:38px;
     z-index: 100;
     position: relative;
+    border-bottom: 1px solid #E8E8E8;
+    position:fixed;
+    width: 100%;
+    top: 0;
 }
 
 .nav-top .brand {
@@ -901,9 +946,18 @@ nav#breadcrumbs li+li:before {
     margin-top: -6px;
 }
 
+.nav-top > .logo.extension {
+    font-size:18px;
+    margin-left:6px;
+    vertical-align: middle;
+    line-height: 30px;
+    font-weight:600;
+}
+
 .nav-top .nav {
     float:right;
     font-weight:600;
+    margin-right:24px;
 }
 
 .nav-top ul {
@@ -917,16 +971,23 @@ nav#breadcrumbs li+li:before {
 }
 
 .nav-top ul li a {
-    font-size: 18px;
-    padding: 14px 16px;
+    font-size: 16px;
+    padding: 14px 20px;
     text-decoration: none;
-    color:#fff;
+    color: #617287;
+    transition: all .25s ease-out;
 }
 
 .nav-top ul li.active {
-    background:#222AA0;
-    color:#fff;
     padding: 14px 16px;
+}
+
+.nav-top ul li.active a {
+    color: #5B17F0
+}
+
+.nav-top ul li:hover {
+    opacity:0.6;
 }
 
 .columns {
