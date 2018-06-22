@@ -254,6 +254,9 @@ question with a <code class="docutils literal notranslate"><span class="pre">Boo
 </div>
 <p>Some important things to consider:</p>
 <ul class="simple">
+<li>The <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method is called when the action is run and all slots are filled.
+If you are just collecting some information and don’t need to make an API call at the end, your <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method
+should just <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">[]</span></code>.</li>
 <li>Your domain needs to have a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code>. This can be unfeaturized, but if you want
 to support contextual questions like <em>“why do you need to know that information?”</em> it will help if you make this
 a categorical slot.</li>
