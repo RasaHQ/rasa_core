@@ -1,116 +1,240 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Scheduling Reminders &#8212; Rasa Core 0.10.0a2 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Scheduling Reminders &mdash; Rasa Core 0.9.6 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
     <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/button.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="index" title="Index" href="../genindex/" />
-    <link rel="search" title="Search" href="../search/" />
+  
+    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex/"/>
+        <link rel="search" title="Search" href="../search/"/>
+    <link rel="top" title="Rasa Core 0.9.6 documentation" href="../"/>
+        <link rel="next" title="Agent" href="../api/agent/"/>
+        <link rel="prev" title="Connecting to messaging &amp; voice platforms" href="../connectors/"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
    
-  <!--<link rel="stylesheet" href="../_static/custom.css" type="text/css" />-->
-  <link rel="stylesheet" href="../_static/xq-light.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
-  <script defer type="text/javascript" src="../_static/config.js"></script>
-  <script defer type="text/javascript" src="../_static/klaro.js"></script>
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
 
-  </head><body>
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
-<div class="nav-top" style="background-color: #3D44BC;">
-  <h1 class="brand">
-      <img src="/_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
-  </h1>
-  <ul class="nav">
-    
-      
-        <li><a href=https://newdocs.rasa.com/about>About</a></li>
-      
-    
-      
-        <li><a href=https://newdocs.rasa.com/nlu>NLU</a></li>
-      
-    
-      
-        <li class="active"><a href=https://newdocs.rasa.com/core>Core</a></li>
-      
-    
-      
-        <li><a href=https://newdocs.rasa.com/platform>Platform</a></li>
-      
-    
-  </ul>
+          
+            <a href="../" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
 
+          
+        </div>
 
-  <div class="document">
-    
-    
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation/">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../no_python/">But I don’t code in python!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">User Guide</span></p>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../interactive_learning/">Interactive Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fallbacks/">Fallback / Default Actions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_basics/">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_supervised/">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_remote/">Rasa Core without Python</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../domains/">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories/">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../patterns/">Slot Filling and Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plumbing/">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Scheduling Reminders</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#scheduling-the-reminder">Scheduling the reminder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-happens-when-the-reminder-is-triggered">What happens when the reminder is triggered</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../featurisation/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpreters/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies/">Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../state/">Tracking Conversation State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
 </ul>
 
-<h3>Versions</h3>
-<ul>
-    <li><a href="docs_reorg/scheduling.html">docs_reorg</a></li>
-</ul>
+            
+          
         </div>
       </div>
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
           
 
-          <div class="body" role="main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../">Docs</a> &raquo;</li>
+        
+      <li>Scheduling Reminders</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
             
-  <div class="section" id="scheduling-reminders">
+            <a href="../_sources/scheduling.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+
+
+
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="scheduling-reminders">
 <span id="scheduling"></span><h1>Scheduling Reminders<a class="headerlink" href="#scheduling-reminders" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -231,32 +355,115 @@ So make sure to add a story into your training data that starts with the action 
 </div>
 
 
+           </div>
           </div>
-          
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../api/agent/" class="btn btn-neutral float-right" title="Agent" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../connectors/" class="btn btn-neutral" title="Connecting to messaging &amp; voice platforms" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-    <div class="clearer"></div>
+
+    </section>
+
   </div>
-    <div class="footer">
-      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/privacy-policy/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
-      
-
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.9.6
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="0.9.6/scheduling.html">0.9.6</a></dd>
+            <dd><a href="0.9.5/scheduling.html">0.9.5</a></dd>
+            <dd><a href="0.9.4/scheduling.html">0.9.4</a></dd>
+            <dd><a href="0.9.3/scheduling.html">0.9.3</a></dd>
+            <dd><a href="0.9.2/scheduling.html">0.9.2</a></dd>
+            <dd><a href="0.9.1/scheduling.html">0.9.1</a></dd>
+            <dd><a href="0.9.0/scheduling.html">0.9.0</a></dd>
+            <dd><a href="0.8.6/scheduling.html">0.8.6</a></dd>
+            <dd><a href="0.7.9/scheduling.html">0.7.9</a></dd>
+            <dd><a href="0.6.9/scheduling.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="docs_reorg/scheduling.html">docs_reorg</a></dd>
+            <dd><a href="master/scheduling.html">master</a></dd>
+        </dl>
     </div>
+</div>
 
-    
 
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
+  
 
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', 'UA-87333416-1', {
-      'anonymize_ip': true,
-    });
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.9.6',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
   </script>
-  </body>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0074/3851.js" async="async"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
 </html>
