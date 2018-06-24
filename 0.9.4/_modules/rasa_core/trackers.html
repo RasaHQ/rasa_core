@@ -233,7 +233,7 @@
 
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="DialogueStateTracker.from_dict"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">dump_as_dict</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="c1"># type: (Text, List[Dict[Text, Any]]) -&gt; DialogueStateTracker</span>
+        <span class="c1"># type: (Text, List[Dict[Text, Any]], Domain) -&gt; DialogueStateTracker</span>
         <span class="sd">&quot;&quot;&quot;Create a tracker from dump.</span>
 
 <span class="sd">        The dump should be an array of dumped events. When restoring</span>
