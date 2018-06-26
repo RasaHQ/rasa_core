@@ -209,10 +209,12 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
 
+<span class="kn">import</span> <span class="nn">jsonpickle</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
 
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">events</span>
 <span class="kn">from</span> <span class="nn">rasa_core.conversation</span> <span class="k">import</span> <span class="n">Dialogue</span>
 <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">UserUttered</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">,</span> \
@@ -231,7 +233,7 @@
 
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="DialogueStateTracker.from_dict"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">dump_as_dict</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="c1"># type: (Text, List[Dict[Text, Any]], Domain) -&gt; DialogueStateTracker</span>
+        <span class="c1"># type: (Text, List[Dict[Text, Any]]) -&gt; DialogueStateTracker</span>
         <span class="sd">&quot;&quot;&quot;Create a tracker from dump.</span>
 
 <span class="sd">        The dump should be an array of dumped events. When restoring</span>
@@ -389,7 +391,6 @@
 <div class="viewcode-block" id="DialogueStateTracker.applied_events"><a class="viewcode-back" href="../../api/tracker.html#rasa_core.trackers.DialogueStateTracker.applied_events">[docs]</a>    <span class="k">def</span> <span class="nf">applied_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; List[Event]</span>
         <span class="sd">&quot;&quot;&quot;Returns all actions that should be applied - w/o reverted events.&quot;&quot;&quot;</span>
-
         <span class="k">def</span> <span class="nf">undo_till_previous</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="n">done_events</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Removes events from `done_events` until `event_type` is found.&quot;&quot;&quot;</span>
             <span class="c1"># list gets modified - hence we need to copy events!</span>
