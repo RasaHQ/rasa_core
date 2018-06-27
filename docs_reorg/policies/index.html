@@ -34,7 +34,9 @@
 
 <div class="nav-top">
   <h1 class="brand">
+    <a href="/">
       <img src="/_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+    </a>
   </h1>
   <span class="logo extension">docs</span>
   
@@ -228,7 +230,8 @@ you should store it as a slot. Slot information is always available for every fe
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] -s STORIES -o OUT -d DOMAIN [-u NLU] [--history HISTORY]
                 [--epochs EPOCHS] [--validation_split VALIDATION_SPLIT]
                 [--batch_size BATCH_SIZE] [--online]
-                [--augmentation AUGMENTATION] [--debug_plots] [--debug] [-v]
+                [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
+                [--debug] [-v]
 
 trains a dialogue model
 
@@ -254,6 +257,7 @@ optional arguments:
   --debug_plots         If enabled, will create plots showing checkpoints and
                         their connections between story blocks in a file
                         called `story_blocks_connections.pdf`.
+  --dump_stories        If enabled, save flattened stories to a file
   --debug               Print lots of debugging statements. Sets logging level
                         to DEBUG
   -v, --verbose         Be verbose. Sets logging level to INFO

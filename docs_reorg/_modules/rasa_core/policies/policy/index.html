@@ -32,7 +32,9 @@
 
 <div class="nav-top">
   <h1 class="brand">
+    <a href="/">
       <img src="/_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+    </a>
   </h1>
   <span class="logo extension">docs</span>
   
@@ -184,12 +186,10 @@
 
 <div class="viewcode-block" id="Policy"><a class="viewcode-back" href="../../../../api/policy/#rasa_core.policies.Policy">[docs]</a><span class="k">class</span> <span class="nc">Policy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">SUPPORTS_ONLINE_TRAINING</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">MAX_HISTORY_DEFAULT</span> <span class="o">=</span> <span class="mi">5</span>
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_standard_featurizer</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">MaxHistoryTrackerFeaturizer</span><span class="p">(</span><span class="n">BinarySingleStateFeaturizer</span><span class="p">(),</span>
-                                           <span class="bp">cls</span><span class="o">.</span><span class="n">MAX_HISTORY_DEFAULT</span><span class="p">)</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_standard_featurizer</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">MaxHistoryTrackerFeaturizer</span><span class="p">(</span><span class="n">BinarySingleStateFeaturizer</span><span class="p">())</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_create_featurizer</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
