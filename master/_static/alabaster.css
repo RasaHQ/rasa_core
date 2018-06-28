@@ -40,6 +40,16 @@
        url('fonts/source-code-pro-v7-latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
+/* source-code-pro-700 - latin */
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Source Code Pro Bold'), local('SourceCodePro-Bold'),
+       url('fonts/source-code-pro-v7-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('fonts/source-code-pro-v7-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
 /* -- page layout ----------------------------------------------------------- */
 
 body {
@@ -81,6 +91,15 @@ div.sphinxsidebar {
     height: 100vh;
     margin-top: 63px;
     background:#F4F5F7;
+    border-right:1px solid #E8E8E8;
+}
+
+.sidebar-extended {
+    width: 20%;
+    background: #F4F5F7;
+    height: 100vh;
+    position: fixed;
+    margin-left: 0;
 }
 
 hr {
@@ -135,7 +154,8 @@ div.sphinxsidebar a {
 }
 
 div.sphinxsidebar a:hover {
-    border-bottom: 1px solid #617287;
+    border-bottom: none;
+    color: #5B17F0;
 }
 
 div.sphinxsidebar a.current {
@@ -195,15 +215,16 @@ div.sphinxsidebar h3 a:hover {
 }
 
 div.sphinxsidebar p {
-    color: #555;
+    color: #617287;
     margin: 0;
+    font-weight: 600;
 }
 
 div.sphinxsidebar ul {
     padding: 0;
     color: #617287;
     line-height:2;
-    margin: 0 0 24px 0;
+    margin: 0 0 24px 12px;
 }
 
 div.sphinxsidebar ul li.toctree-l1 > a {
@@ -232,8 +253,8 @@ div.sphinxsidebar hr {
 }
 
 .sphinxsidebar .caption{
-    font-size:120%;
-    font-weight:bold;
+    font-size:130%;
+    font-weight:600;
 }
 
 .rst-versions {
@@ -340,9 +361,96 @@ div.body p, div.body dd, div.body li {
     line-height: 1.5em;
 }
 
+/* Margin Helpers */
+
+/* Tiny margin */
+.tmtb {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.tmt {
+  margin-top: 12px;
+}
+
+.tmb {
+  margin-bottom: 12px;
+}
+
+/* Small margin */
+.smtb {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.smt {
+  margin-top: 24px;
+}
+
+.smb {
+  margin-bottom: 24px;
+}
+
+/* Default Margin */
+.mtb {
+  margin-top: 72px;
+  margin-bottom: 72px;
+}
+
+.mt {
+  margin-top: 72px;
+}
+
+.mb {
+  margin-bottom: 72px;
+}
+
+/* Padding Helpers*/
+
+/* Tiny Padding*/
+.tptb {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.tpt {
+  padding-top: 12px;
+}
+
+.tpb {
+  padding-top: 12px;
+}
+
+/* Small Padding*/
+.sptb {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.spt {
+  padding-top: 24px;
+}
+
+.spb {
+  padding-bottom: 24px;
+}
+
+/* Regular Padding*/
+.ptb {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+.pt {
+  padding-top: 72px;
+}
+
+.pb {
+  padding-bottom: 72px;
+}
+
 .card {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.03);
-  margin-top: 24px;
   border:1px solid #E8E8E8;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
