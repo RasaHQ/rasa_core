@@ -621,13 +621,6 @@ div.topic {
     list-style:none;
 }
 
-.contents.topic .simple ul li:before {
-    color: #aebacb;
-    content: '#';
-    left: -16px;
-    margin-right:12px;
-}
-
 .contents.topic .simple a.reference {
     text-decoration: none;
     color: #617287;
@@ -1083,6 +1076,10 @@ nav#breadcrumbs li+li:before {
     font-weight:600;
     text-decoration:none;
     color: #617287;
+}
+
+a.brand-link {
+    text-decoration: none;
 }
 
 .nav-top .nav {
