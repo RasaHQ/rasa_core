@@ -149,7 +149,6 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
-              <a href="../fallback_master/fallbacks.html">fallback_master</a>
               <a href="fallbacks.html">master</a>
           </div>
         </div>
@@ -192,15 +191,10 @@ or if none of the dialogue policies predict an action with confidence higher tha
                <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">KerasPolicy</span><span class="p">(),</span> <span class="n">fallback</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>You also need to include a story to let Rasa Core know what to do after the fallback
-action. Most likely you just want to listen for the next user input, in which case your
-story will look like this:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gu">##</span> fallback story
-<span class="k">-</span> utter_default
-</pre></div>
-</div>
+<p><code class="docutils literal notranslate"><span class="pre">action_listen</span></code> will always be predicted after the fallback action, meaning
+the bot will wait for the next user input.</p>
 <p>If you have a specific intent that will trigger this, let’s say it’s called <code class="docutils literal notranslate"><span class="pre">out_of_scope</span></code>, then you
-should also add this as a story:</p>
+should add this as a story:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gu">##</span> fallback story
 <span class="k">*</span> out_of_scope
   <span class="k">-</span> utter_default
