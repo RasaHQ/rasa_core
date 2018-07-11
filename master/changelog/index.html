@@ -197,6 +197,8 @@ the default is to ignore <code class="docutils literal notranslate"><span class=
 <li>changed the logic inside AugmentedMemoizationPolicy to recall actions only if they are the same in training stories</li>
 <li>moved AugmentedMemoizationPolicy to memoization.py</li>
 <li>wrapped initialization of BackgroundScheduler in try/except to allow running on jupyterhub / binderhub/ colaboratory</li>
+<li>fixed order of events logged on a tracker: action executed is now always
+logged before bot utterances that action created</li>
 </ul>
 </div>
 <div class="section" id="removed">
