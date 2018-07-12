@@ -194,6 +194,8 @@
 
 <span class="n">ACTION_RESTART_NAME</span> <span class="o">=</span> <span class="s2">&quot;action_restart&quot;</span>
 
+<span class="n">ACTION_DEFAULT_FALLBACK_NAME</span> <span class="o">=</span> <span class="s2">&quot;action_default_fallback&quot;</span>
+
 
 <span class="k">class</span> <span class="nc">Action</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Next action to be taken in response to a dialogue state.&quot;&quot;&quot;</span>
@@ -279,6 +281,22 @@
         <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">random_template_for</span><span class="p">(</span><span class="s2">&quot;utter_restart&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_restart&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Restarted</span><span class="p">()]</span>
+
+
+<span class="k">class</span> <span class="nc">ActionDefaultFallback</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Executes the fallback action and goes back to the previous state</span>
+<span class="sd">    of the dialogue&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ACTION_DEFAULT_FALLBACK_NAME</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">UserUtteranceReverted</span>
+
+        <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">random_template_for</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">()]</span>
 </pre></div>
 
           </div>
