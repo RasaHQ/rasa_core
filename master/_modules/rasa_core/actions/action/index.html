@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>rasa_core.actions.action &#8212; Rasa Core 0.10.0a2 documentation</title>
+    <title>rasa_core.actions.action &#8212; Rasa Core 0.10.0a3 documentation</title>
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/banner.css" type="text/css" />
@@ -95,7 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../interactive_learning/">Interactive Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../fallbacks/">Fallback / Default Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fallbacks/">Fallback Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../evaluation/">Evaluating and Testing</a></li>
@@ -283,7 +283,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">Restarted</span><span class="p">()]</span>
 
 
-<span class="k">class</span> <span class="nc">ActionDefaultFallback</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+<div class="viewcode-block" id="ActionDefaultFallback"><a class="viewcode-back" href="../../../../fallbacks/#rasa_core.actions.ActionDefaultFallback">[docs]</a><span class="k">class</span> <span class="nc">ActionDefaultFallback</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Executes the fallback action and goes back to the previous state</span>
 <span class="sd">    of the dialogue&quot;&quot;&quot;</span>
 
@@ -296,7 +296,7 @@
         <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">random_template_for</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">()]</span></div>
 </pre></div>
 
           </div>
