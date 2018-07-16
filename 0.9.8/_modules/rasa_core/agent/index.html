@@ -214,20 +214,17 @@
 <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">TemplateDomain</span><span class="p">,</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">check_domain_sanity</span>
 <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span>
-<span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">Policy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.ensemble</span> <span class="k">import</span> <span class="n">SimplePolicyEnsemble</span><span class="p">,</span> <span class="n">PolicyEnsemble</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.processor</span> <span class="k">import</span> <span class="n">MessageProcessor</span>
 <span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">InMemoryTrackerStore</span><span class="p">,</span> <span class="n">TrackerStore</span>
 <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
-<span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span> <span class="k">as</span> <span class="n">NLI</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span> <span class="k">as</span> <span class="n">NLG</span>
 
 
 <div class="viewcode-block" id="Agent"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent">[docs]</a><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -242,14 +239,12 @@
             <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Union[Text, Domain]</span>
             <span class="n">policies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[PolicyEnsemble, List[Policy], None]</span>
             <span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[NLI, Text, None]</span>
-            <span class="n">generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[EndpointConfig, NLG]</span>
             <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[TrackerStore]</span>
     <span class="p">):</span>
         <span class="c1"># Initializing variables with the passed parameters.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_ensemble</span><span class="p">(</span><span class="n">policies</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="o">=</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interpreter</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span> <span class="o">=</span> <span class="n">NaturalLanguageGenerator</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_tracker_store</span><span class="p">(</span>
                 <span class="n">tracker_store</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
 
@@ -258,8 +253,7 @@
              <span class="n">path</span><span class="p">,</span>  <span class="c1"># type: Text</span>
              <span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Union[NLI, Text, None]</span>
              <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[TrackerStore]</span>
-             <span class="n">action_factory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
-             <span class="n">generator</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Union[EndpointConfig, NLG]</span>
+             <span class="n">action_factory</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Text]</span>
              <span class="p">):</span>
         <span class="c1"># type: (Text, Any, Optional[TrackerStore]) -&gt; Agent</span>
         <span class="sd">&quot;&quot;&quot;Load a persisted model from the passed path.&quot;&quot;&quot;</span>
@@ -281,9 +275,10 @@
                                      <span class="n">action_factory</span><span class="p">)</span>
         <span class="c1"># ensures the domain hasn&#39;t changed between test and train</span>
         <span class="n">domain</span><span class="o">.</span><span class="n">compare_with_specification</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">_interpreter</span> <span class="o">=</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interpreter</span><span class="p">)</span>
         <span class="n">_tracker_store</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">create_tracker_store</span><span class="p">(</span><span class="n">tracker_store</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">interpreter</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">_tracker_store</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">_interpreter</span><span class="p">,</span> <span class="n">_tracker_store</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.handle_message"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_message">[docs]</a>    <span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -578,7 +573,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_agent_is_prepared</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">MessageProcessor</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span><span class="p">,</span> <span class="n">message_preprocessor</span><span class="o">=</span><span class="n">preprocessor</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span><span class="p">,</span> <span class="n">message_preprocessor</span><span class="o">=</span><span class="n">preprocessor</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">):</span>
