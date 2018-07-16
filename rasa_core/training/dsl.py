@@ -13,6 +13,7 @@ import warnings
 
 from rasa_nlu import utils as nlu_utils
 from typing import Optional, List, Text, Any, Dict
+from numpy.random import choice
 
 from rasa_core import utils
 from rasa_core.events import (
@@ -128,6 +129,7 @@ class StoryStepBuilder(object):
 
 class StoryFileReader(object):
     """Helper class to read a story file."""
+    max_intent_samples = 4
 
     def __init__(self, domain, interpreter, template_vars=None):
         self.story_steps = []
@@ -221,7 +223,11 @@ class StoryFileReader(object):
 
                 elif ANY_INTENT_LABEL in line:
                     entities = '{{{}}}'.format(re.findall("\{([^{}]+)\}", line)[0])
-                    user_messages = ["{0}{1}".format(intent, entities) for intent in self.domain.intents]
+                    if len(self.domain.intents) > self.max_intent_samples:
+                        intents = choice(self.domain.intents, size=self.max_intent_samples)
+                    else:
+                        intents = self.domain.intents
+                    user_messages = ["{0}{1}".format(intent, entities) for intent in intents]
                     self.add_user_messages(user_messages, line_num)
                 elif line.startswith("#"):  # reached a new story block
                     name = line[1:].strip("# ")
