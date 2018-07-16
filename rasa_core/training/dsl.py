@@ -20,7 +20,8 @@ from rasa_core.events import (
 from rasa_core.interpreter import RegexInterpreter
 from rasa_core.training.structures import (
     Checkpoint, STORY_START, StoryStep,
-    GENERATED_CHECKPOINT_PREFIX, GENERATED_HASH_LENGTH)
+    GENERATED_CHECKPOINT_PREFIX, GENERATED_HASH_LENGTH,
+    ANY_INTENT_LABEL)
 
 logger = logging.getLogger(__name__)
 
@@ -217,6 +218,11 @@ class StoryFileReader(object):
                         self._clean_up_line(line))
                 if line.strip() == "":
                     continue
+
+                elif ANY_INTENT_LABEL in line:
+                    entities = '{{{}}}'.format(re.findall("\{([^{}]+)\}", line)[0])
+                    user_messages = ["{0}{1}".format(intent, entities) for intent in self.domain.intents]
+                    self.add_user_messages(user_messages, line_num)
                 elif line.startswith("#"):  # reached a new story block
                     name = line[1:].strip("# ")
                     self.new_story_part(name)
@@ -231,6 +237,8 @@ class StoryFileReader(object):
                     user_messages = [el.strip() for el in
                                      line[1:].split(" OR ")]
                     self.add_user_messages(user_messages, line_num)
+
+
                 else:  # reached an unknown type of line
                     logger.warning("Skipping line {}. "
                                    "No valid command found. "

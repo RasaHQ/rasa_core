@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 # Checkpoint id used to identify story starting blocks
 STORY_START = "STORY_START"
+ANY_INTENT_LABEL = "ANY_INTENT"
 
 # Checkpoint id used to identify story end blocks
 STORY_END = None
@@ -34,6 +35,7 @@ GENERATED_CHECKPOINT_PREFIX = "GENR_"
 CHECKPOINT_CYCLE_PREFIX = "CYCL_"
 
 GENERATED_HASH_LENGTH = 5
+
 
 
 class Checkpoint(object):
