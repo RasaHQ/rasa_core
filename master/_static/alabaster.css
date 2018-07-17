@@ -456,6 +456,7 @@ div.body p, div.body dd, div.body li {
   -moz-border-radius: 8px;
   border-radius: 8px;
   padding: 24px;
+  min-height: 150px;
 }
 
 .card h4 {
