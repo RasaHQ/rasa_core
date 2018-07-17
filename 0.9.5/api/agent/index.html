@@ -246,7 +246,7 @@ policy, interpreter, and the tracker store) on your own to customize them.</p>
 <p>Here we go:</p>
 <span class="target" id="module-rasa_core.agent"></span><dl class="class">
 <dt id="rasa_core.agent.Agent">
-<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain</em>, <em>policies=None</em>, <em>interpreter=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain</em>, <em>policies=None</em>, <em>interpreter=None</em>, <em>generator=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The Agent class provides a convenient interface for the most important
 Rasa Core functionality.</p>
@@ -300,7 +300,7 @@ the bot wants to respond.</p>
 
 <dl class="classmethod">
 <dt id="rasa_core.agent.Agent.load">
-<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>interpreter=None</em>, <em>tracker_store=None</em>, <em>action_factory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>interpreter=None</em>, <em>tracker_store=None</em>, <em>action_factory=None</em>, <em>generator=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a persisted model from the passed path.</p>
 </dd></dl>
 
