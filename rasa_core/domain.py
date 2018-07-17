@@ -30,6 +30,7 @@ from rasa_core.actions.factories import (
 from rasa_core.slots import Slot
 from rasa_core.trackers import DialogueStateTracker, SlotSet
 from rasa_core.utils import read_file, read_yaml_string
+from rasa_core.training.structures import ANY_INTENT_LABEL
 
 logger = logging.getLogger(__name__)
 

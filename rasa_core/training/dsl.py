@@ -223,11 +223,7 @@ class StoryFileReader(object):
 
                 elif ANY_INTENT_LABEL in line:
                     entities = '{{{}}}'.format(re.findall("\{([^{}]+)\}", line)[0])
-                    if len(self.domain.intents) > self.max_intent_samples:
-                        intents = choice(self.domain.intents, size=self.max_intent_samples)
-                    else:
-                        intents = self.domain.intents
-                    user_messages = ["{0}{1}".format(intent, entities) for intent in intents]
+                    user_messages = ["{0}{1}".format(ANY_INTENT_LABEL, entities)]
                     self.add_user_messages(user_messages, line_num)
                 elif line.startswith("#"):  # reached a new story block
                     name = line[1:].strip("# ")

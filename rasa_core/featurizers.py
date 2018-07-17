@@ -19,6 +19,7 @@ from rasa_core.events import ActionExecuted
 from rasa_core.training.data import DialogueTrainingData
 
 from rasa_core.actions.action import ACTION_LISTEN_NAME
+from rasa_core.training.structures import ANY_INTENT_LABEL
 from rasa_core.domain import PREV_PREFIX
 
 logger = logging.getLogger(__name__)
@@ -85,7 +86,7 @@ class BinarySingleStateFeaturizer(SingleStateFeaturizer):
         # type: (Domain) -> None
         self.num_features = domain.num_states
         self.input_state_map = domain.input_state_map
-
+        self.intent_features = [value for key, value in self.input_state_map.items() if 'intent' in key]
         self.user_feature_len = (len(domain.intent_states) +
                                  len(domain.entity_states))
         self.slot_feature_len = len(domain.slot_states)
@@ -123,8 +124,13 @@ class BinarySingleStateFeaturizer(SingleStateFeaturizer):
         # we are going to use floats and convert to int later if possible
         used_features = np.zeros(self.num_features, dtype=np.float)
         using_only_ints = True
+
         for state_name, prob in state.items():
-            if state_name in self.input_state_map:
+            if state_name == 'intent_' + ANY_INTENT_LABEL:
+                intent_idxs = np.random.choice(self.intent_features, size=min(np.random.poisson(3), len(self.intent_features)), replace=True)
+                for idx in intent_idxs:
+                    used_features[idx] = 1
+            elif state_name in self.input_state_map:
                 idx = self.input_state_map[state_name]
                 used_features[idx] = prob
                 using_only_ints = using_only_ints and utils.is_int(prob)
