@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Chat &amp; Voice platforms &#8212; Rasa Core 0.10.0 documentation</title>
+    <title>Chat &amp; Voice platforms &#8212; Rasa Core 0.10.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
@@ -126,13 +126,14 @@
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.0
+        v: 0.10.1
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="0.10.1/connectors.html">0.10.1</a>
               <a href="0.10.0/connectors.html">0.10.0</a>
               <a href="0.9.8/connectors.html">0.9.8</a>
               <a href="0.8.6/connectors.html">0.8.6</a>
@@ -524,6 +525,72 @@ to use when sending messages back to the user.</p>
 <p>To use a custom channel, modify they <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code> script, either adding your channel to the
 <code class="docutils literal notranslate"><span class="pre">_create_external_channel</span></code> function or directly overriding the <code class="docutils literal notranslate"><span class="pre">input_channel</span></code> variable defined in the
 <code class="docutils literal notranslate"><span class="pre">main</span></code> function.</p>
+<p>To define a custom channel, you need to define a HTTP endpoint that will receive messages.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CustomInput</span><span class="p">(</span><span class="n">HttpInputComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A custom http input channel.</span>
+
+<span class="sd">    This implementation is the basis for a custom implementation of a chat</span>
+<span class="sd">    frontend. You can customize this to send messages to Rasa Core and</span>
+<span class="sd">    retrieve responses from the agent.&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;rest&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">access_token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_channel</span> <span class="o">=</span> <span class="n">CustomOutput</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">access_token</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">blueprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_new_message</span><span class="p">):</span>
+        <span class="n">custom_webhook</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;custom_webhook&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="nd">@custom_webhook</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+        <span class="k">def</span> <span class="nf">health</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">})</span>
+
+        <span class="nd">@custom_webhook</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/webhook&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+        <span class="k">def</span> <span class="nf">receive</span><span class="p">():</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
+            <span class="n">sender_id</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sender&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">on_new_message</span><span class="p">(</span><span class="n">UserMessage</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channel</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">))</span>
+            <span class="k">return</span> <span class="s2">&quot;success&quot;</span>
+
+        <span class="k">return</span> <span class="n">custom_webhook</span>
+</pre></div>
+</div>
+<p>To send a message, you would run a command like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -XPOST http://localhost:5000/webhook <span class="se">\</span>
+  -d <span class="s1">&#39;{&quot;sender&quot;: &quot;user1&quot;, &quot;message&quot;: &quot;hello&quot;}&#39;</span> <span class="se">\</span>
+  -H <span class="s2">&quot;Content-type: application/json&quot;</span>
+</pre></div>
+</div>
+<p>To get responses, you also need an output channel which implements sending messages back to the user.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CustomOutput</span><span class="p">(</span><span class="n">OutputChannel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A bot that uses a custom channel to communicate.&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;rest&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">access_token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+
+    <span class="k">def</span> <span class="nf">send_text_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_id</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="c1"># you probably use http to send a message</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Auth-token&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="n">url</span><span class="p">,</span>
+                <span class="n">message</span><span class="p">,</span>
+                <span class="n">headers</span><span class="o">=</span><span class="n">headers</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 
