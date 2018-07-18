@@ -16,7 +16,8 @@ from typing import \
 from rasa_core import utils
 from rasa_core.actions.action import ACTION_LISTEN_NAME
 from rasa_core.conversation import Dialogue
-from rasa_core.events import UserUttered, ActionExecuted, Event
+from rasa_core.events import UserUttered, ActionExecuted, Event, SlotSet
+from rasa_core.policies.plans import StartPlan, EndPlan
 
 if typing.TYPE_CHECKING:
     from rasa_core.domain import Domain
@@ -104,6 +105,7 @@ class StoryStep(object):
     def as_story_string(self, flat=False):
         # if the result should be flattened, we
         # will exclude the caption and any checkpoints.
+        plan_active = False
         if flat:
             result = ""
         else:
@@ -113,10 +115,27 @@ class StoryStep(object):
                     result += "> {}\n".format(s.as_story_string())
         for s in self.events:
             if isinstance(s, UserUttered):
-                result += "* {}\n".format(s.as_story_string())
-            elif isinstance(s, Event):
+                if not plan_active:
+                    result += "* {}\n".format(s.as_story_string())
+            elif isinstance(s, StartPlan):
+                plan_active = True
                 converted = s.as_story_string()
                 if converted:
+                    result += "    - {}\n".format(s.as_story_string())
+            elif isinstance(s, EndPlan):
+                plan_active = False
+                converted = s.as_story_string()
+                if converted:
+                    result += "    - {}\n".format(s.as_story_string())
+            elif isinstance(s, SlotSet):
+                converted = s.as_story_string()
+                if converted:
+                    result += "    - {}\n".format(s.as_story_string())
+            elif isinstance(s, Event):
+                converted = s.as_story_string()
+                if converted and not plan_active:
+                    result += "    - {}\n".format(s.as_story_string())
+                elif converted == 'deactivate_plan':
                     result += "    - {}\n".format(s.as_story_string())
             else:
                 raise Exception("Unexpected element in story step: "

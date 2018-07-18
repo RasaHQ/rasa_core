@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 
 PREV_PREFIX = 'prev_'
 
+from rasa_core.policies.plans import SimpleForm
 
 def check_domain_sanity(domain):
     """Makes sure the domain is properly configured.
@@ -412,8 +413,10 @@ class TemplateDomain(Domain):
         if not action_factory:
             action_factory = data.get("action_factory", None)
         slots = cls.collect_slots(data.get("slots", {}))
+        plans = data.get("plans", {})
         additional_arguments = data.get("config", {})
         intents = cls.collect_intents(data.get("intents", {}))
+
         return cls(
             intents,
             data.get("entities", []),
@@ -422,6 +425,7 @@ class TemplateDomain(Domain):
             data.get("actions", []),
             data.get("action_names", []),
             action_factory,
+            plans,
             **additional_arguments
         )
 
@@ -493,7 +497,7 @@ class TemplateDomain(Domain):
         return templates
 
     def __init__(self, intents, entities, slots, templates, action_classes,
-                 action_names, action_factory, **kwargs):
+                 action_names, action_factory, plans, **kwargs):
         self._intents = intents
         self._entities = entities
         self._slots = slots
@@ -503,6 +507,7 @@ class TemplateDomain(Domain):
         self._factory_name = action_factory
         self._actions = self.instantiate_actions(
                 action_factory, action_classes, action_names, templates)
+        self._plans = self.instantiate_plans(plans)
         super(TemplateDomain, self).__init__(**kwargs)
 
     @staticmethod
@@ -513,6 +518,16 @@ class TemplateDomain(Domain):
         actions = Domain.DEFAULT_ACTIONS[:] + custom_actions
         ensure_action_name_uniqueness(actions)
         return actions
+
+    @staticmethod
+    def instantiate_plans(plans):
+        plan_name = plans['name']
+        required_slots = plans['required_slots']
+        finish_action = plans['finish_action']
+        details_intent = plans['details_intent']
+        rules = plans['rules']
+        plan = SimpleForm(plan_name, required_slots, finish_action, exit_dict=plans['exit_dict'], chitchat_dict=plans['chitchat_dict'], details_intent=details_intent, rules=rules)
+        return plan
 
     def _slot_definitions(self):
         return {slot.name: slot.persistence_info() for slot in self.slots}
@@ -529,7 +544,8 @@ class TemplateDomain(Domain):
             "templates": self.templates,
             "actions": self._action_classes,  # class names of the actions
             "action_names": action_names,  # names in stories
-            "action_factory": self._factory_name
+            "action_factory": self._factory_name,
+            "plans": self._plans.as_dict()
         }
         return domain_data
 
