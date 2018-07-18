@@ -238,19 +238,19 @@ It can <code class="docutils literal notranslate"><span class="pre">return</span
 </span></pre></div>
 </div>
 <p>Now we’ve given Rasa Core a few examples of how to handle the different values
-that the <code class="docutils literal notranslate"><span class="pre">location_match</span></code> slot can take. With so little data, your trained
-policy will still get things wrong sometimes, because the dialogue history went
-differently from exactly what’s in the training data. <a class="reference internal" href="../interactive_learning/#interactive-learning"><span class="std std-ref">Interactive Learning</span></a> is a
-great way to explore more conversations that aren’t in your stories already.
+that the <code class="docutils literal notranslate"><span class="pre">location_match</span></code> slot can take.
+Right now, we still only have four stories, which is not a lot of training data.
+<a class="reference internal" href="../interactive_learning/#interactive-learning"><span class="std std-ref">Interactive Learning</span></a> is agreat way to explore more conversations
+that aren’t in your stories already.
 The best way to improve your model is to test it yourself, have other people test it,
 and correct the mistakes it makes.</p>
 <div class="section" id="debugging">
 <h3>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h3>
-<p>If something doesn’t work as you expect, <strong>don’t panic</strong>!
-If you are just getting started,
-you probably only have a few hand-written stories. This is a great starting point, but
+<p>The first thing to try is to run your bot with the <code class="docutils literal notranslate"><span class="pre">debug</span></code> flag, see <a class="reference internal" href="../debugging/#debugging"><span class="std std-ref">Debugging</span></a> for details.
+If you are just getting started, you probably only have a few hand-written stories.
+This is a great starting point, but
 you should give your bot to people to test <strong>as soon as possible</strong>. One of the guiding principles
-behind Rasa Core is this:</p>
+behind Rasa Core is:</p>
 <blockquote class="pull-quote">
 <div>Learning from real conversations is more important than designing hypothetical ones</div></blockquote>
 <p>So don’t try to cover every possiblity in your hand-written stories before giving it to testers.
@@ -295,30 +295,34 @@ fewer stories to get the initial flow working.</p>
 <p>The way this works is that every time you call this action, it will pick one of the
 <code class="docutils literal notranslate"><span class="pre">REQUIRED_FIELDS</span></code> that’s still missing and ask the user for it. You can also ask a yes/no
 question with a <code class="docutils literal notranslate"><span class="pre">BooleanFormField</span></code>.</p>
-<p>The story will look something like this:</p>
+<p>The form action will set a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code> to keep track if what it has asked the user.
+So a story will look something like this:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="k">*</span> request_restaurant
      <span class="k">-</span> action_restaurant_form
      <span class="k">-</span> slot{&quot;requested_slot&quot;: &quot;people&quot;}
 <span class="k">*</span> inform{&quot;number&quot;: 3}
      <span class="k">-</span> action_restaurant_form
      <span class="k">-</span> slot{&quot;people&quot;: 3}
-     <span class="k">-</span> slot{&quot;requested_slot&quot;: &quot;time&quot;}
-<span class="k">*</span> inform{&quot;time&quot;: &quot;8pm&quot;}
-   <span class="k">-</span> action_restaurant_form
+     <span class="k">-</span> slot{&quot;requested_slot&quot;: &quot;cuisine&quot;}
+<span class="k">*</span> inform{&quot;cuisine&quot;: &quot;chinese&quot;}
+     <span class="k">-</span> action_restaurant_form
+     <span class="k">-</span> slot{&quot;cuisine&quot;: &quot;chinese&quot;}
+     <span class="k">-</span> slot{&quot;requested_slot&quot;: &quot;vegetarian&quot;}
+<span class="k">*</span> deny
+     <span class="k">-</span> action_restaurant_form
+     <span class="k">-</span> slot{&quot;vegetarian&quot;: false}
 </pre></div>
 </div>
 <p>Some important things to consider:</p>
 <ul class="simple">
-<li>The <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method is called when the action is run and all slots are filled.
+<li>The <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method is called when the action is run and all slots are filled, in this case after the <code class="docutils literal notranslate"><span class="pre">deny</span></code> intent.
 If you are just collecting some information and don’t need to make an API call at the end, your <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method
 should just <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">[]</span></code>.</li>
-<li>Your domain needs to have a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code>. This can be unfeaturized, but if you want
-to support contextual questions like <em>“why do you need to know that information?”</em> it will help if you make this
-a categorical slot.</li>
+<li>Your domain needs to have a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code>. You can make this an unfeaturized slot.</li>
 <li>You need to define utterances for asking for each slot in your domain, e.g. <code class="docutils literal notranslate"><span class="pre">utter_ask_{slot_name}</span></code>.</li>
 <li>We strongly recommend that you create these stories using interactive learning, because if you
-type these by hand you will probably forget to add all of the slots.</li>
-<li>Any slots that are already set won’t be asked for. E.g. if someone says “I’d like a Chinese restaurant for 8 people” the <code class="docutils literal notranslate"><span class="pre">submit</span></code> function should get called right away.</li>
+type these by hand you will probably forget to include the lines for the <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code>.</li>
+<li>Any slots that are already set won’t be asked for. E.g. if someone says “I’d like a vegetarian Chinese restaurant for 8 people” the <code class="docutils literal notranslate"><span class="pre">submit</span></code> function should get called right away.</li>
 </ul>
 <div class="section" id="form-fields-and-free-text-input">
 <h3>Form Fields and Free-text Input<a class="headerlink" href="#form-fields-and-free-text-input" title="Permalink to this headline">¶</a></h3>
