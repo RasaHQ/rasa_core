@@ -1,0 +1,255 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Installation &#8212; Rasa Core 0.10.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/button.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="High-Level Architecture" href="../architecture/" />
+    <link rel="prev" title="Quickstart" href="../quickstart/" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta name="description" content="">
+  <meta property="og:title" content="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:description" content="" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@Rasa_HQ">
+  <meta name="twitter:title" content="">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:creator" content="@Rasa_HQ">
+  <meta name="twitter:image" content="">
+    
+  <link rel="stylesheet" href="../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <script defer type="text/javascript" src="../_static/config.js"></script>
+  <script defer type="text/javascript" src="../_static/klaro.js"></script>
+  
+  
+  
+
+  </head><body>
+
+<div class="nav-top">
+  <a href="/" class="brand-link">
+      <h1 class="brand">
+          <img src="../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+      </h1>
+      <span class="logo extension">docs</span>
+  </a>
+  
+  <ul class="nav">
+    
+      
+        <li><a href=https://newdocs.rasa.com/about>About</a></li>
+      
+    
+      
+        <li><a href=https://newdocs.rasa.com/nlu>NLU</a></li>
+      
+    
+      
+        <li class="active"><a href=https://newdocs.rasa.com/core>Core</a></li>
+      
+    
+      
+        <li><a href=https://newdocs.rasa.com/platform>Platform</a></li>
+      
+    
+    
+    <li>
+      <a href="https://www.github.com/RasaHQ" target="_blank"><button class="button btn-ghost btn-small"><i class="fab fa-github"></i>GitHub</button></a>
+    </li>
+    
+  </ul>
+</div>
+
+  <div class="sidebar-extended"></div>
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fallbacks/">Fallback Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+</ul>
+
+<div class="versions">
+    <div>
+      <span class="current-version">
+        v: 0.10.0
+      </span>
+    </div>
+    <div class="other-versions">
+        <div class="dropdown">
+          <button class="dropdown-btn">tags</button>
+          <div class="dropdown-content">
+              <a href="installation.html">0.10.0</a>
+              <a href="../0.9.8/installation.html">0.9.8</a>
+              <a href="../0.8.6/installation.html">0.8.6</a>
+              <a href="../0.7.9/installation.html">0.7.9</a>
+              <a href="../0.6.9/installation.html">0.6.9</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="dropdown-btn">tags</button>
+          <div class="dropdown-content">
+              <a href="../master/installation.html">master</a>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+
+
+
+
+
+<div class="section" id="installation">
+<span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Install Rasa Core to get started with the Rasa stack.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>You can also get started without installing anything by using this</p>
+
+
+  <a href="https://colab.research.google.com/github/RasaHQ/rasa_core/blob/master/getting_started.ipynb">
+  <button class="button">colab notebook</button>
+  </a>
+</div>
+<div class="section" id="install-rasa-core">
+<h2>Install Rasa Core<a class="headerlink" href="#install-rasa-core" title="Permalink to this headline">¶</a></h2>
+<p>The recommended way to install Rasa Core is using pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install rasa_core
+</pre></div>
+</div>
+<p>If you alredy have <cite>rasa_core</cite> installed and want to update it run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -U rasa_core
+</pre></div>
+</div>
+<p>Unless you’ve already got numpy &amp; scipy installed, we highly recommend
+that you install and use <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a>.</p>
+<p>If you want to use the bleeding edge version of Rasa use github + setup.py:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/RasaHQ/rasa_core.git
+<span class="nb">cd</span> rasa_core
+pip install -r requirements.txt
+pip install -e .
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If you want to change the Rasa Core code and want to run the tests or
+build the documentation, you need to install the development dependencies:</p>
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -r dev-requirements.txt
+pip install -e .
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="add-natural-language-understanding">
+<h2>Add Natural Language Understanding<a class="headerlink" href="#add-natural-language-understanding" title="Permalink to this headline">¶</a></h2>
+<p>We use Rasa NLU for intent classification &amp; entity extraction. To get it, run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install rasa_nlu<span class="o">[</span>tensorflow<span class="o">]</span>
+</pre></div>
+</div>
+<p>Full instructions can be found <a class="reference external" href="https://nlu.rasa.com/installation.html">here</a>.</p>
+<p>You can also use other NLU services like wit.ai, dialogflow, or LUIS.
+In fact, you don’t need to use NLU at all, if your messaging app uses buttons
+rather than free text.</p>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>To see your newly installed Rasa Core in action, head over to the
+<a class="reference internal" href="../quickstart/#quickstart"><span class="std std-ref">Quickstart</span></a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
+    </div>
+
+    
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  </body>
+</html>
