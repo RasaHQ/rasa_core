@@ -17,6 +17,8 @@ from builtins import str
 from rasa_core import utils
 from rasa_core.events import ActionExecuted
 from rasa_core.training.data import DialogueTrainingData
+from rasa_core.policies.plans import SimpleForm
+# print(rasa_core.__file__)
 
 from rasa_core.actions.action import ACTION_LISTEN_NAME
 from rasa_core.domain import PREV_PREFIX

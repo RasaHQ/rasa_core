@@ -74,6 +74,7 @@ class DialogueStateTracker(object):
         self.latest_message = None
         # Stores the most recent message sent by the user
         self.latest_bot_utterance = None
+        self.active_plan = None
         self._reset()
 
     ###
@@ -118,6 +119,13 @@ class DialogueStateTracker(object):
         # type: () -> Dict[Text, Any]
         """Return the currently set values of the slots"""
         return {key: slot.value for key, slot in self.slots.items()}
+
+    def activate_plan(self, plan):
+        # type: (Plan) -> ()
+        self.active_plan = plan
+
+    def deactivate_plan(self):
+        self.active_plan = None
 
     def get_slot(self, key):
         # type: (Text) -> Optional[Any]
