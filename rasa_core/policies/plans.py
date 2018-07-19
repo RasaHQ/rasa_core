@@ -35,39 +35,45 @@ class SimpleForm(Plan):
     def __init__(self, name, required_slots, finish_action, optional_slots=None, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None):
         self.name = name
         self.required_slots = required_slots
+        self.current_required = self.required_slots
         self.optional_slots = optional_slots
         # exit dict is {exit_intent_name: exit_action_name}
         self.exit_dict = exit_dict
         self.chitchat_dict = chitchat_dict
         self.finish_action = finish_action
         self.details_intent = details_intent
-        self.rules = self._process_rules(rules)
+        self.rules_yaml = rules
+        self.rules = self._process_rules(self.rules_yaml)
         self.last_question = None
 
     def _process_rules(self, rules):
-        print(rules)
         rule_dict = {}
-        for slot, values in rules[0].items():
-            print(values)
+        for slot, values in rules.items():
             for value, rules in values.items():
-                print(value)
-                rule_dict[(slot, value[0])] = (value.get('need'), value.get('lose'))
-        print(rule_dict)
-        exit()
+                rule_dict[(slot, value)] = (rules.get('need'), rules.get('lose'))
+        return rule_dict
 
     def _update_requirements(self, tracker):
         #type: (DialogueStateTracker)
         if self.rules is None:
             return
-        print(self.rules)
-        print(list(tracker.current_slot_values().items()))
+        all_add, all_take = [], []
+        for slot_tuple in list(tracker.current_slot_values().items()):
+            if slot_tuple in self.rules.keys():
+                add, take = self.rules[slot_tuple]
+                all_add.extend(add)
+                all_take.extend(take)
+        self.current_required = list(set(self.required_slots+all_add)-set(all_take))
 
+    def check_unfilled_slots(self, tracker):
+        current_filled_slots = [key for key, value in tracker.current_slot_values().items() if value is not None]
+        still_to_ask = list(set(self.current_required) - set(current_filled_slots))
+        return still_to_ask
 
     def next_action_idx(self, tracker, domain):
         # type: (DialogueStateTracker, Domain) -> int
-        intent = tracker.latest_message.parse_data['intent']['name']
+        intent = tracker.latest_message.parse_data['intent']['name'].lstrip('plan_')
         self._update_requirements(tracker)
-        exit()
         if "utter_ask_" in tracker.latest_action_name or tracker.latest_action_name in self.exit_dict.values():
             return domain.index_for_action('action_listen')
 
@@ -80,8 +86,7 @@ class SimpleForm(Plan):
         elif intent in self.details_intent and 'utter_explain' not in tracker.latest_action_name:
             return domain.index_for_action("utter_explain_{}_restaurant".format(self.last_question))
 
-        current_filled_slots = [key for key, value in tracker.current_slot_values().items() if value is not None]
-        still_to_ask = list(set(self.required_slots) - set(current_filled_slots))
+        still_to_ask = self.check_unfilled_slots(tracker)
 
         if len(still_to_ask) == 0:
             return domain.index_for_action(self.finish_action)
@@ -98,7 +103,7 @@ class SimpleForm(Plan):
                 "exit_dict": self.exit_dict,
                 "chitchat_dict": self.chitchat_dict,
                 "details_intent": self.details_intent,
-                "rules": self.rules}
+                "rules": self.rules_yaml}
 
 
 class ActivatePlan(Action):
@@ -122,7 +127,12 @@ class PlanComplete(Action):
         self._name = 'deactivate_plan'
 
     def run(self, dispatcher, tracker, domain):
-        return [EndPlan(), SlotSet('active_plan', False)]
+        unfilled = tracker.active_plan.check_unfilled_slots(tracker)
+        if len(unfilled) == 0:
+            complete = True
+        else:
+            complete = False
+        return [EndPlan(), SlotSet('active_plan', False), SlotSet('plan_complete', complete)]
 
     def name(self):
         return self._name
