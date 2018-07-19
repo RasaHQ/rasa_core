@@ -249,16 +249,18 @@ class Domain(with_metaclass(abc.ABCMeta, object)):
 
         latest_msg = tracker.latest_message
 
-        if "intent_ranking" in latest_msg.parse_data:
-            for intent in latest_msg.parse_data["intent_ranking"]:
-                if intent.get("name"):
-                    intent_id = "intent_{}".format(intent["name"])
-                    state_dict[intent_id] = intent["confidence"]
 
-        elif latest_msg.intent.get("name"):
-            intent_id = "intent_{}".format(latest_msg.intent["name"])
-            state_dict[intent_id] = latest_msg.intent.get("confidence", 1.0)
+        if 'plan_flag' not in latest_msg.parse_data:
+            if "intent_ranking" in latest_msg.parse_data:
+                for intent in latest_msg.parse_data["intent_ranking"]:
+                    if intent.get("name"):
+                        intent_id = "intent_{}".format(intent["name"])
+                        state_dict[intent_id] = intent["confidence"]
 
+            elif latest_msg.intent.get("name"):
+                intent_id = "intent_{}".format(latest_msg.intent["name"])
+                state_dict[intent_id] = latest_msg.intent.get("confidence", 1.0)
+        # print(state_dict,'===========\n\n\n\n\n')
         return state_dict
 
     def get_prev_action_states(self, tracker):
@@ -293,7 +295,7 @@ class Domain(with_metaclass(abc.ABCMeta, object)):
         # type: (DialogueStateTracker) -> List[Dict[Text, float]]
         """Array of states for each state of the trackers history."""
         return [self.get_active_states(tr) for tr in
-                tracker.generate_all_prior_trackers()]
+                tracker.generate_all_prior_trackers() if tr.should_be_featurized()]
 
     def slots_for_entities(self, entities):
         if self.store_entities_as_slots:

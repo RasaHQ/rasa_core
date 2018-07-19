@@ -57,6 +57,7 @@ class Event(object):
 
     def __init__(self, timestamp=None):
         self.timestamp = timestamp if timestamp else time.time()
+        self.plan_flag = False
 
     def __ne__(self, other):
         # Not strictly necessary, but to avoid having both x==y and x!=y
@@ -209,7 +210,10 @@ class UserUttered(Event):
 
     def apply_to(self, tracker):
         # type: (DialogueStateTracker) -> None
-
+        if self.plan_flag is True and not self.intent['name'].startswith('plan_'):
+            # self.parse_data['intent']['name'] = 'plan_{}'.format(self.parse_data['intent']['name'])
+            self.intent['name'] = 'plan_{}'.format(self.intent['name'])
+            self.parse_data['plan_flag'] = True
         tracker.latest_message = self
 
 

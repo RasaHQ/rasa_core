@@ -127,6 +127,14 @@ class DialogueStateTracker(object):
     def deactivate_plan(self):
         self.active_plan = None
 
+    def should_be_featurized(self):
+        if self.active_plan is None:
+            return True
+        elif self.latest_action_name == 'activate_plan':
+            return True
+        else:
+            return False
+
     def get_slot(self, key):
         # type: (Text) -> Optional[Any]
         """Retrieves the value of a slot."""
@@ -179,7 +187,6 @@ class DialogueStateTracker(object):
         return DialogueStateTracker(UserMessage.DEFAULT_SENDER_ID,
                                     self.slots.values(),
                                     self._max_event_history)
-
     def generate_all_prior_trackers(self):
         # type: () -> Generator[DialogueStateTracker, None, None]
         """Returns a generator of the previous trackers of this tracker.
@@ -289,7 +296,8 @@ class DialogueStateTracker(object):
         if not isinstance(event, Event):  # pragma: no cover
             raise ValueError("event to log must be an instance "
                              "of a subclass of Event.")
-
+        if self.active_plan is not None:
+            event.plan_flag = True
         self.events.append(event)
         event.apply_to(self)
 

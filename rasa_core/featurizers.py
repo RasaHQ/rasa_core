@@ -18,7 +18,6 @@ from rasa_core import utils
 from rasa_core.events import ActionExecuted
 from rasa_core.training.data import DialogueTrainingData
 from rasa_core.policies.plans import SimpleForm
-# print(rasa_core.__file__)
 
 from rasa_core.actions.action import ACTION_LISTEN_NAME
 from rasa_core.domain import PREV_PREFIX
@@ -113,15 +112,13 @@ class BinarySingleStateFeaturizer(SingleStateFeaturizer):
             padding vectors are specified by a `None` or `[None]`
             value for states.
         """
-
         if not self.num_features:
             raise Exception("BinarySingleStateFeaturizer "
                             "was not prepared "
                             "before encoding.")
-
         if state is None or None in state:
             return np.ones(self.num_features, dtype=np.int32) * -1
-
+        logger.debug(state)
         # we are going to use floats and convert to int later if possible
         used_features = np.zeros(self.num_features, dtype=np.float)
         using_only_ints = True
@@ -290,7 +287,6 @@ class TrackerFeaturizer(object):
             pick the most probable intent out of all provided ones and
             set its probability to 1.0, while all the others to 0.0."""
         states = tracker.past_states(domain)
-
         # during training we encounter only 1 or 0
         if not self.use_intent_probabilities and not is_binary_training:
             bin_states = []
@@ -312,6 +308,7 @@ class TrackerFeaturizer(object):
                             # delete other intents
                             del bin_state[state_name]
 
+
                 if best_intent is not None:
                     # set the confidence of best intent to 1.0
                     bin_state[best_intent] = 1.0
@@ -319,7 +316,10 @@ class TrackerFeaturizer(object):
                 bin_states.append(bin_state)
             return bin_states
         else:
-            return [dict(state) for state in states]
+            states = [dict(state) for state in states]
+            return states
+
+
 
     def _pad_states(self, states):
         # type: (List[Any]) -> List[Any]
@@ -481,7 +481,6 @@ class FullDialogueTrackerFeaturizer(TrackerFeaturizer):
             domain  # type: Domain
     ):
         # type: (...) -> Tuple[List[List[Dict]], List[List[Text]]]
-
         trackers_as_states = []
         trackers_as_actions = []
 
@@ -583,14 +582,11 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
             domain  # type: Domain
     ):
         # type: (...) -> Tuple[List[List[Dict]], List[List[Text]]]
-
         trackers_as_states = []
         trackers_as_actions = []
-
         # from multiple states that create equal featurizations
         # we only need to keep one.
         hashed_examples = set()
-
         logger.info("Creating states and action examples from "
                     "collected trackers (by {})..."
                     "".format(type(self).__name__))
