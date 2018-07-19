@@ -1,193 +1,162 @@
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>rasa_core.events &mdash; Rasa Core 0.9.8 documentation</title>
-  
-
-  
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>rasa_core.events &#8212; Rasa Core 0.10.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
-  
-    <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex/"/>
-        <link rel="search" title="Search" href="../../../search/"/>
-    <link rel="top" title="Rasa Core 0.9.8 documentation" href="../../../"/>
-        <link rel="up" title="Module code" href="../../"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
+    <link rel="stylesheet" href="../../../_static/button.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
    
-  <div class="wy-grid-for-nav">
-
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta name="description" content="">
+  <meta property="og:title" content="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:description" content="" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@Rasa_HQ">
+  <meta name="twitter:title" content="">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:creator" content="@Rasa_HQ">
+  <meta name="twitter:image" content="">
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+  <link rel="stylesheet" href="../../../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <script defer type="text/javascript" src="../../../_static/config.js"></script>
+  <script defer type="text/javascript" src="../../../_static/klaro.js"></script>
+  
+  
+  
 
-          
-            <a href="../../../" class="icon icon-home"> Rasa Core
-          
+  </head><body>
 
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                0.9
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search/" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+<div class="nav-top">
+  <a href="/docs" class="brand-link">
+      <h1 class="brand">
+          <img src="../../../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+      </h1>
+      <span class="logo extension">docs</span>
+  </a>
+  
+  <ul class="nav">
+    
+      
+        <li><a href=/docs/about>About</a></li>
+      
+    
+      
+        <li><a href=/docs/nlu>NLU</a></li>
+      
+    
+      
+        <li class="active"><a href=/docs/core>Core</a></li>
+      
+    
+      
+        <li><a href=/docs/platform>Platform</a></li>
+      
+    
+    
+    <li>
+      <a href="https://www.github.com/RasaHQ" target="_blank"><button class="button btn-ghost btn-small"><i class="fab fa-github"></i>GitHub</button></a>
+    </li>
+    
+  </ul>
 </div>
 
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <p class="caption"><span class="caption-text">Getting Started</span></p>
+  <div class="sidebar-extended"></div>
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../motivation/">Motivation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../no_python/">But I don’t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tutorials</span></p>
+<p class="caption"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_basics/">Building a Simple Bot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_supervised/">Supervised Learning Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_interactive_learning/">Interactive Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_remote/">Rasa Core without Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../responses/">Bot Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fallbacks/">Fallback Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../debugging/">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../evaluation/">Evaluating and Testing</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../domains/">Domain, Slots, and Actions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../stories/">Stories - The Training Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../patterns/">Slot Filling and Common Patterns</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../plumbing/">Plumbing - How it all fits together</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../http/">HTTP server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../connectors/">Connecting to messaging &amp; voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../connectors/#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../scheduling/">Scheduling Reminders</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
-<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server/">Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../http/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/featurizer/">Featurization</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../featurisation/">Featurization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../interpreters/">Interpreters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../policies/">Policies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../state/">Tracking Conversation State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../migrations/">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog/">Change Log</a></li>
 </ul>
 
-            
-          
+<div class="versions">
+    <div>
+      <span class="current-version">
+        v: 0.10.1
+      </span>
+    </div>
+    <div class="other-versions">
+        <div class="dropdown">
+          <button class="dropdown-btn">tags</button>
+          <div class="dropdown-content">
+              <a href="../../0.10.1/_modules/rasa_core/events.html">0.10.1</a>
+              <a href="../../0.10.0/index.html">0.10.0</a>
+              <a href="../../0.9.8/index.html">0.9.8</a>
+              <a href="../../0.8.6/index.html">0.8.6</a>
+              <a href="../../0.7.9/index.html">0.7.9</a>
+              <a href="../../0.6.9/index.html">0.6.9</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="dropdown-btn">tags</button>
+          <div class="dropdown-content">
+              <a href="../../master/index.html">master</a>
+              <a href="../../only_build_docs_on_master/index.html">only_build_docs_on_master</a>
+          </div>
+        </div>
+    </div>
+</div>
+
+
         </div>
       </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../">Rasa Core</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
           
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../">Docs</a> &raquo;</li>
-        
-          <li><a href="../../">Module code</a> &raquo;</li>
-        
-      <li>rasa_core.events</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+          <div class="body" role="main">
             
   
 
@@ -220,7 +189,7 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="deserialise_events"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.deserialise_events">[docs]</a><span class="k">def</span> <span class="nf">deserialise_events</span><span class="p">(</span><span class="n">serialized_events</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">deserialise_events</span><span class="p">(</span><span class="n">serialized_events</span><span class="p">):</span>
     <span class="c1"># type: (List[Dict[Text, Any]]) -&gt; List[Event]</span>
     <span class="sd">&quot;&quot;&quot;Convert a list of dictionaries to a list of corresponding events.</span>
 
@@ -230,10 +199,10 @@
 
     <span class="k">return</span> <span class="p">[</span><span class="n">Event</span><span class="o">.</span><span class="n">from_parameters</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">serialized_events</span>
-            <span class="k">if</span> <span class="s2">&quot;event&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="p">]</span></div>
+            <span class="k">if</span> <span class="s2">&quot;event&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="first_key"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.first_key">[docs]</a><span class="k">def</span> <span class="nf">first_key</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">default_key</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">first_key</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">default_key</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">default_key</span><span class="p">:</span>
@@ -242,7 +211,7 @@
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -261,15 +230,15 @@
         <span class="c1"># True at the same time</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Event.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<div class="viewcode-block" id="Event.from_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event.from_story_string">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_story_string</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">resolve_by_type</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Event.from_parameters"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event.from_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">event_name</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;event&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">event_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -278,18 +247,18 @@
             <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">resolve_by_type</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+            <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called to convert a parsed story line into an event.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
 
-<div class="viewcode-block" id="Event.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span>
             <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span>
-        <span class="p">}</span></div>
+        <span class="p">}</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
@@ -302,7 +271,7 @@
 
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Event.resolve_by_type"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event.resolve_by_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">resolve_by_type</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a slots class by its type name.&quot;&quot;&quot;</span>
 
@@ -312,11 +281,11 @@
         <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">default</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown event name &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown event name &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
 
-<div class="viewcode-block" id="Event.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
-        <span class="k">pass</span></div></div>
+        <span class="k">pass</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -370,17 +339,17 @@
         <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;UserUttered(text: </span><span class="si">{}</span><span class="s2">, intent: </span><span class="si">{}</span><span class="s2">, &quot;</span>
                 <span class="s2">&quot;entities: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span><span class="p">))</span>
 
-<div class="viewcode-block" id="UserUttered.empty"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUttered.empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">empty</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">UserUttered</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">UserUttered</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
-<div class="viewcode-block" id="UserUttered.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUttered.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
             <span class="s2">&quot;parse_data&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_data</span><span class="p">,</span>
         <span class="p">})</span>
-        <span class="k">return</span> <span class="n">d</span></div>
+        <span class="k">return</span> <span class="n">d</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
@@ -391,7 +360,7 @@
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse bot uttered event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
-<div class="viewcode-block" id="UserUttered.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUttered.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span><span class="p">:</span>
                 <span class="n">ent_string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="n">ent</span><span class="p">[</span><span class="s1">&#39;entity&#39;</span><span class="p">]:</span> <span class="n">ent</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
@@ -403,12 +372,12 @@
                     <span class="n">intent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
                     <span class="n">entities</span><span class="o">=</span><span class="n">ent_string</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span>
 
-<div class="viewcode-block" id="UserUttered.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUttered.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
 
-        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="bp">self</span></div></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="bp">self</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -440,25 +409,25 @@
         <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;BotUttered(text: </span><span class="si">{}</span><span class="s2">, data: </span><span class="si">{}</span><span class="s2">)&quot;</span>
                 <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)))</span>
 
-<div class="viewcode-block" id="BotUttered.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.BotUttered.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
 
-        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="bp">self</span></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="bp">self</span>
 
-<div class="viewcode-block" id="BotUttered.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.BotUttered.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="BotUttered.empty"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.BotUttered.empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">empty</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">BotUttered</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">BotUttered</span><span class="p">()</span>
 
-<div class="viewcode-block" id="BotUttered.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.BotUttered.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BotUttered</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
             <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
         <span class="p">})</span>
-        <span class="k">return</span> <span class="n">d</span></div>
+        <span class="k">return</span> <span class="n">d</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
@@ -472,7 +441,7 @@
 
 <span class="c1"># TODO: DEPRECATED - remove in version 0.10.0</span>
 <span class="c1"># noinspection PyProtectedMember</span>
-<div class="viewcode-block" id="TopicSet"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.TopicSet">[docs]</a><span class="k">class</span> <span class="nc">TopicSet</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">TopicSet</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The topic of conversation has changed.</span>
 
 <span class="sd">    As a side effect self.topic will be pushed on to ``Tracker.topic_stack``.&quot;&quot;&quot;</span>
@@ -495,8 +464,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">topic</span>
 
-<div class="viewcode-block" id="TopicSet.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.TopicSet.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}</span><span class="s2">[</span><span class="si">{props}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}</span><span class="s2">[</span><span class="si">{props}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
@@ -507,10 +476,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="TopicSet.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.TopicSet.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">TopicSet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">})</span>
-        <span class="k">return</span> <span class="n">d</span></div>
+        <span class="k">return</span> <span class="n">d</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
@@ -520,8 +489,8 @@
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse set topic event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
-<div class="viewcode-block" id="TopicSet.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.TopicSet.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+        <span class="k">pass</span>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -550,9 +519,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SlotSet.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.SlotSet.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">props</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">})</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}{props}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="n">props</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}{props}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="n">props</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
@@ -565,13 +534,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="SlotSet.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.SlotSet.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SlotSet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span>
             <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
         <span class="p">})</span>
-        <span class="k">return</span> <span class="n">d</span></div>
+        <span class="k">return</span> <span class="n">d</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
@@ -582,8 +551,8 @@
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse set slot event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
-<div class="viewcode-block" id="SlotSet.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.SlotSet.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">_set_slot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div></div>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">_set_slot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -603,21 +572,22 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;Restarted()&quot;</span>
 
-<div class="viewcode-block" id="Restarted.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Restarted.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
 
-<div class="viewcode-block" id="Restarted.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Restarted.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ActionListen</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="n">ActionListen</span><span class="p">()</span></div></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="n">ActionListen</span><span class="p">()</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
 <div class="viewcode-block" id="UserUtteranceReverted"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUtteranceReverted">[docs]</a><span class="k">class</span> <span class="nc">UserUtteranceReverted</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Bot undoes its last action.</span>
-
-<span class="sd">    Shouldn&#39;t be used during actual user interactions, mostly for train.</span>
-<span class="sd">    As a side effect the ``Tracker``&#39;s last turn is removed.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Bot reverts everything until before the most recent user message. </span>
+<span class="sd">    </span>
+<span class="sd">    The bot will revert all events after the latest `UserUttered`, this </span>
+<span class="sd">    also means that the last event on the tracker is usually `action_listen` </span>
+<span class="sd">    and the bot is waiting for a new user message.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;rewind&quot;</span>
 
@@ -630,14 +600,14 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;UserUtteranceReverted()&quot;</span>
 
-<div class="viewcode-block" id="UserUtteranceReverted.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUtteranceReverted.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
 
-<div class="viewcode-block" id="UserUtteranceReverted.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUtteranceReverted.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
 
         <span class="n">tracker</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">replay_events</span><span class="p">()</span></div></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">replay_events</span><span class="p">()</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -657,11 +627,11 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;AllSlotsReset()&quot;</span>
 
-<div class="viewcode-block" id="AllSlotsReset.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.AllSlotsReset.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
 
-<div class="viewcode-block" id="AllSlotsReset.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.AllSlotsReset.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">_reset_slots</span><span class="p">()</span></div></div>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">_reset_slots</span><span class="p">()</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -714,14 +684,14 @@
             <span class="s2">&quot;kill_on_user_msg&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">kill_on_user_message</span>
         <span class="p">}</span>
 
-<div class="viewcode-block" id="ReminderScheduled.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ReminderScheduled.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">props</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_obj</span><span class="p">())</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}{props}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="n">props</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}{props}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="n">props</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ReminderScheduled.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ReminderScheduled.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ReminderScheduled</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_obj</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">d</span></div>
+        <span class="k">return</span> <span class="n">d</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_trigger_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date_time</span><span class="p">):</span>
@@ -743,8 +713,11 @@
 <div class="viewcode-block" id="ActionReverted"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ActionReverted">[docs]</a><span class="k">class</span> <span class="nc">ActionReverted</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bot undoes its last action.</span>
 
-<span class="sd">    Shouldn&#39;t be used during actual user interactions, mostly for train.</span>
-<span class="sd">    As a side effect the ``Tracker``&#39;s last turn is removed.&quot;&quot;&quot;</span>
+<span class="sd">    The bot everts everything until before the most recent action.</span>
+<span class="sd">    This includes the action itself, as well as any events that </span>
+<span class="sd">    action created, like set slot events - the bot will now </span>
+<span class="sd">    predict a new action using the state before the most recent </span>
+<span class="sd">    action.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;undo&quot;</span>
 
@@ -757,18 +730,18 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;ActionReverted()&quot;</span>
 
-<div class="viewcode-block" id="ActionReverted.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ActionReverted.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
 
-<div class="viewcode-block" id="ActionReverted.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ActionReverted.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
 
         <span class="n">tracker</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">replay_events</span><span class="p">()</span></div></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">replay_events</span><span class="p">()</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
-<div class="viewcode-block" id="StoryExported"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.StoryExported">[docs]</a><span class="k">class</span> <span class="nc">StoryExported</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">StoryExported</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Story should get dumped to a file.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;export&quot;</span>
@@ -786,13 +759,13 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;StoryExported()&quot;</span>
 
-<div class="viewcode-block" id="StoryExported.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.StoryExported.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
 
-<div class="viewcode-block" id="StoryExported.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.StoryExported.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
-            <span class="n">tracker</span><span class="o">.</span><span class="n">export_stories_to_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div></div>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">export_stories_to_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -813,11 +786,11 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;ConversationPaused()&quot;</span>
 
-<div class="viewcode-block" id="ConversationPaused.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ConversationPaused.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
 
-<div class="viewcode-block" id="ConversationPaused.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ConversationPaused.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">_paused</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">_paused</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -838,11 +811,11 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;ConversationResumed()&quot;</span>
 
-<div class="viewcode-block" id="ConversationResumed.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ConversationResumed.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
 
-<div class="viewcode-block" id="ConversationResumed.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ConversationResumed.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">_paused</span> <span class="o">=</span> <span class="kc">False</span></div></div>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">_paused</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -871,26 +844,26 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">action_name</span>
 
-<div class="viewcode-block" id="ActionExecuted.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ActionExecuted.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">ActionExecuted</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
 
-<div class="viewcode-block" id="ActionExecuted.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ActionExecuted.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">})</span>
-        <span class="k">return</span> <span class="n">d</span></div>
+        <span class="k">return</span> <span class="n">d</span>
 
-<div class="viewcode-block" id="ActionExecuted.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ActionExecuted.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
 
-        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span></div></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span></div>
 
 
-<div class="viewcode-block" id="AgentUttered"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.AgentUttered">[docs]</a><span class="k">class</span> <span class="nc">AgentUttered</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">AgentUttered</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The agent has said something to the user.</span>
 
 <span class="sd">    This class is not used in the story training as it is contained in the</span>
@@ -917,25 +890,25 @@
         <span class="k">return</span> <span class="s2">&quot;AgentUttered(text: </span><span class="si">{}</span><span class="s2">, data: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
-<div class="viewcode-block" id="AgentUttered.apply_to"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.AgentUttered.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
 
-        <span class="k">pass</span></div>
+        <span class="k">pass</span>
 
-<div class="viewcode-block" id="AgentUttered.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.AgentUttered.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="AgentUttered.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.AgentUttered.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">AgentUttered</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
             <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
         <span class="p">})</span>
-        <span class="k">return</span> <span class="n">d</span></div>
+        <span class="k">return</span> <span class="n">d</span>
 
-<div class="viewcode-block" id="AgentUttered.empty"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.AgentUttered.empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">empty</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">AgentUttered</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">AgentUttered</span><span class="p">()</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
@@ -945,110 +918,35 @@
                                 <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse agent uttered event. &quot;</span>
-                             <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+                             <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 </pre></div>
 
-           </div>
           </div>
-          <footer>
-
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2018, Rasa Technologies GmbH.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
+          
         </div>
       </div>
-
-    </section>
-
+    <div class="clearer"></div>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-        <span class="fa fa-book"> Other Versions</span>
-        v: 0.9.8
-        <span class="fa fa-caret-down"></span>
-    </span>
-    <div class="rst-other-versions">
-        <dl>
-            <dt>Tags</dt>
-            <dd><a href="../../0.9.8/_modules/rasa_core/events.html">0.9.8</a></dd>
-            <dd><a href="../../0.9.7/index.html">0.9.7</a></dd>
-            <dd><a href="../../0.9.6/index.html">0.9.6</a></dd>
-            <dd><a href="../../0.9.5/index.html">0.9.5</a></dd>
-            <dd><a href="../../0.9.4/index.html">0.9.4</a></dd>
-            <dd><a href="../../0.9.3/index.html">0.9.3</a></dd>
-            <dd><a href="../../0.9.2/index.html">0.9.2</a></dd>
-            <dd><a href="../../0.9.1/index.html">0.9.1</a></dd>
-            <dd><a href="../../0.9.0/index.html">0.9.0</a></dd>
-            <dd><a href="../../0.8.6/index.html">0.8.6</a></dd>
-            <dd><a href="../../0.7.9/index.html">0.7.9</a></dd>
-            <dd><a href="../../0.6.9/index.html">0.6.9</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="../../master/index.html">master</a></dd>
-        </dl>
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
     </div>
-</div>
 
+    
 
-  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'0.9.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
   </script>
-
-  
-  
- 
-<!-- Global Site Tag (gtag.js) - Google Analytics -->
-<script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0074/3851.js" async="async"></script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments)};
-gtag('js', new Date());
-
-gtag('config', 'UA-87333416-1');
-</script>
-
-
-</body>
+  </body>
 </html>

@@ -192,9 +192,12 @@
   
 
 
+    
+    
 
 
 
+    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.events</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
@@ -614,10 +617,11 @@
 
 <span class="c1"># noinspection PyProtectedMember</span>
 <div class="viewcode-block" id="UserUtteranceReverted"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUtteranceReverted">[docs]</a><span class="k">class</span> <span class="nc">UserUtteranceReverted</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Bot undoes its last action.</span>
-
-<span class="sd">    Shouldn&#39;t be used during actual user interactions, mostly for train.</span>
-<span class="sd">    As a side effect the ``Tracker``&#39;s last turn is removed.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Bot reverts everything until before the most recent user message. </span>
+<span class="sd">    </span>
+<span class="sd">    The bot will revert all events after the latest `UserUttered`, this </span>
+<span class="sd">    also means that the last event on the tracker is usually `action_listen` </span>
+<span class="sd">    and the bot is waiting for a new user message.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;rewind&quot;</span>
 
@@ -743,8 +747,11 @@
 <div class="viewcode-block" id="ActionReverted"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ActionReverted">[docs]</a><span class="k">class</span> <span class="nc">ActionReverted</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bot undoes its last action.</span>
 
-<span class="sd">    Shouldn&#39;t be used during actual user interactions, mostly for train.</span>
-<span class="sd">    As a side effect the ``Tracker``&#39;s last turn is removed.&quot;&quot;&quot;</span>
+<span class="sd">    The bot everts everything until before the most recent action.</span>
+<span class="sd">    This includes the action itself, as well as any events that </span>
+<span class="sd">    action created, like set slot events - the bot will now </span>
+<span class="sd">    predict a new action using the state before the most recent </span>
+<span class="sd">    action.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;undo&quot;</span>
 
@@ -982,15 +989,9 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../../0.10.1/index.html">0.10.1</a></dd>
+            <dd><a href="../../../0.10.0/index.html">0.10.0</a></dd>
             <dd><a href="events.html">0.9.8</a></dd>
-            <dd><a href="../../../0.9.7/index.html">0.9.7</a></dd>
-            <dd><a href="../../../0.9.6/index.html">0.9.6</a></dd>
-            <dd><a href="../../../0.9.5/index.html">0.9.5</a></dd>
-            <dd><a href="../../../0.9.4/index.html">0.9.4</a></dd>
-            <dd><a href="../../../0.9.3/index.html">0.9.3</a></dd>
-            <dd><a href="../../../0.9.2/index.html">0.9.2</a></dd>
-            <dd><a href="../../../0.9.1/index.html">0.9.1</a></dd>
-            <dd><a href="../../../0.9.0/index.html">0.9.0</a></dd>
             <dd><a href="../../../0.8.6/index.html">0.8.6</a></dd>
             <dd><a href="../../../0.7.9/index.html">0.7.9</a></dd>
             <dd><a href="../../../0.6.9/index.html">0.6.9</a></dd>
@@ -998,6 +999,7 @@
         <dl>
             <dt>Branches</dt>
             <dd><a href="../../../master/index.html">master</a></dd>
+            <dd><a href="../../../only_build_docs_on_master/index.html">only_build_docs_on_master</a></dd>
         </dl>
     </div>
 </div>

@@ -1,0 +1,268 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Interpreters &#8212; Rasa Core 0.10.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/banner.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/button.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Policy" href="../policy/" />
+    <link rel="prev" title="Dialogue State Tracker" href="../tracker/" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta name="description" content="">
+  <meta property="og:title" content="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:description" content="" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@Rasa_HQ">
+  <meta name="twitter:title" content="">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:creator" content="@Rasa_HQ">
+  <meta name="twitter:image" content="">
+    
+  <link rel="stylesheet" href="../../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <script defer type="text/javascript" src="../../_static/config.js"></script>
+  <script defer type="text/javascript" src="../../_static/klaro.js"></script>
+  
+  
+  
+
+  </head><body>
+
+<div class="nav-top">
+  <a href="/docs" class="brand-link">
+      <h1 class="brand">
+          <img src="../../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+      </h1>
+      <span class="logo extension">docs</span>
+  </a>
+  
+  <ul class="nav">
+    
+      
+        <li><a href=/docs/about>About</a></li>
+      
+    
+      
+        <li><a href=/docs/nlu>NLU</a></li>
+      
+    
+      
+        <li class="active"><a href=/docs/core>Core</a></li>
+      
+    
+      
+        <li><a href=/docs/platform>Platform</a></li>
+      
+    
+    
+    <li>
+      <a href="https://www.github.com/RasaHQ" target="_blank"><button class="button btn-ghost btn-small"><i class="fab fa-github"></i>GitHub</button></a>
+    </li>
+    
+  </ul>
+</div>
+
+  <div class="sidebar-extended"></div>
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../responses/">Bot Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fallbacks/">Fallback Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../debugging/">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../evaluation/">Evaluating and Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../server/">Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../featurizer/">Featurization</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/">Change Log</a></li>
+</ul>
+
+<div class="versions">
+    <div>
+      <span class="current-version">
+        v: 0.10.1
+      </span>
+    </div>
+    <div class="other-versions">
+        <div class="dropdown">
+          <button class="dropdown-btn">tags</button>
+          <div class="dropdown-content">
+              <a href="../0.10.1/api/interpreter.html">0.10.1</a>
+              <a href="../0.10.0/api/interpreter.html">0.10.0</a>
+              <a href="../0.9.8/index.html">0.9.8</a>
+              <a href="../0.8.6/index.html">0.8.6</a>
+              <a href="../0.7.9/index.html">0.7.9</a>
+              <a href="../0.6.9/index.html">0.6.9</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="dropdown-btn">tags</button>
+          <div class="dropdown-content">
+              <a href="../master/api/interpreter.html">master</a>
+              <a href="../only_build_docs_on_master/api/interpreter.html">only_build_docs_on_master</a>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+
+
+
+
+
+<div class="section" id="interpreters">
+<span id="id1"></span><h1>Interpreters<a class="headerlink" href="#interpreters" title="Permalink to this headline">¶</a></h1>
+<p>Rasa Core itself does not interpret text. You can use <a class="reference external" href="https://rasa.com/docs/nlu/">Rasa NLU</a> for this.</p>
+<dl class="class">
+<dt id="rasa_core.interpreter.RasaNLUHttpInterpreter">
+<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RasaNLUHttpInterpreter</code><span class="sig-paren">(</span><em>model_name=None</em>, <em>endpoint=None</em>, <em>project_name=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUHttpInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUHttpInterpreter" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="rasa_core.interpreter.RasaNLUHttpInterpreter.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUHttpInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUHttpInterpreter.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a text message.</p>
+<p>Return a default value if the parsing of the text failed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.interpreter.RasaNLUInterpreter">
+<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RasaNLUInterpreter</code><span class="sig-paren">(</span><em>model_directory</em>, <em>config_file=None</em>, <em>lazy_init=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUInterpreter" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="rasa_core.interpreter.RasaNLUInterpreter.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUInterpreter.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a text message.</p>
+<p>Return a default value if the parsing of the text failed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>To use something other than Rasa NLU, you just need to implement a
+subclass of <code class="docutils literal notranslate"><span class="pre">Interpreter</span></code>
+which has a method <code class="docutils literal notranslate"><span class="pre">parse(message)</span></code> which takes a single string argument
+and returns a dict in the following format:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;show me chinese restaurants&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;intent&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;restaurant_search&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;confidence&quot;</span><span class="o">:</span> <span class="mf">1.0</span>
+  <span class="p">}</span>
+  <span class="s2">&quot;entities&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;start&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+      <span class="s2">&quot;end&quot;</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+      <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="s2">&quot;chinese&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;entity&quot;</span><span class="o">:</span> <span class="s2">&quot;cuisine&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="buttons-and-other-structured-input">
+<span id="fixed-intent-format"></span><h2>Buttons and other Structured Input<a class="headerlink" href="#buttons-and-other-structured-input" title="Permalink to this headline">¶</a></h2>
+<p>If your bot uses button clicks or other input which isn’t natural language, you don’t need
+an interpreter at all. You can define your own <code class="docutils literal notranslate"><span class="pre">Interpreter</span></code> subclass which does any custom
+logic you may need. You can look at the <code class="docutils literal notranslate"><span class="pre">RegexInterpreter</span></code> class as an example.</p>
+<p>Sometimes, you want to make sure a message is treated as being of a fixed
+intent containing defined entities. To achieve that, you can specify the
+message in a markup format instead of using the text of the message.</p>
+<p>Instead of sending a message like <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">I</span> <span class="pre">am</span> <span class="pre">Rasa</span></code> and hoping that gets
+classified correctly, you can circumvent the NLU and directly send the
+bot a message like <code class="docutils literal notranslate"><span class="pre">/greet{&quot;name&quot;:</span> <span class="pre">&quot;Rasa&quot;}</span></code>. Rasa Core will treat this
+incoming message like a normal message with the intent <code class="docutils literal notranslate"><span class="pre">greet</span></code> and the entity
+<code class="docutils literal notranslate"><span class="pre">name</span></code> with value <code class="docutils literal notranslate"><span class="pre">Rasa</span></code>.</p>
+<p>If you want to specify an input string, that contains multiple entity values of
+the same type you can use</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/add_to_shopping_list<span class="o">{</span><span class="s2">&quot;item&quot;</span>: <span class="o">[</span><span class="s2">&quot;milk&quot;</span>, <span class="s2">&quot;salt&quot;</span><span class="o">]}</span>
+</pre></div>
+</div>
+<p>Which corresponds to a message <code class="docutils literal notranslate"><span class="pre">&quot;I</span> <span class="pre">want</span> <span class="pre">to</span> <span class="pre">add</span> <span class="pre">milk</span> <span class="pre">and</span> <span class="pre">salt</span> <span class="pre">to</span> <span class="pre">my</span> <span class="pre">list&quot;</span></code>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
+    </div>
+
+    
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  </body>
+</html>
