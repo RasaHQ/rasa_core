@@ -133,15 +133,9 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../../0.10.1/api/agent.html">0.10.1</a>
+              <a href="../../0.10.0/api/agent.html">0.10.0</a>
               <a href="../../0.9.8/api/agent.html">0.9.8</a>
-              <a href="../../0.9.7/api/agent.html">0.9.7</a>
-              <a href="../../0.9.6/api/agent.html">0.9.6</a>
-              <a href="../../0.9.5/api/agent.html">0.9.5</a>
-              <a href="../../0.9.4/api/agent.html">0.9.4</a>
-              <a href="../../0.9.3/api/agent.html">0.9.3</a>
-              <a href="../../0.9.2/api/agent.html">0.9.2</a>
-              <a href="../../0.9.1/api/agent.html">0.9.1</a>
-              <a href="../../0.9.0/api/agent.html">0.9.0</a>
               <a href="../../0.8.6/api/agent.html">0.8.6</a>
               <a href="../../0.7.9/api/agent.html">0.7.9</a>
               <a href="../../0.6.9/api/agent.html">0.6.9</a>
@@ -173,7 +167,7 @@
 
 
 
-    <p class="scv-banner"><a href="../../0.9.8/api/agent.html"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.9.8.</a></p>
+    <p class="scv-banner"><a href="../../0.10.1/api/agent.html"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.10.1.</a></p>
 <div class="section" id="agent">
 <h1>Agent<a class="headerlink" href="#agent" title="Permalink to this headline">¶</a></h1>
 <p>The agent allows you to train a model, load, and use it. It is a simple API
@@ -186,7 +180,7 @@ policy, interpreter, and the tracker store) on your own to customize them.</p>
 </div>
 <dl class="class">
 <dt id="rasa_core.agent.Agent">
-<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain</em>, <em>policies=None</em>, <em>interpreter=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain</em>, <em>policies=None</em>, <em>interpreter=None</em>, <em>generator=None</em>, <em>tracker_store=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Agent class provides a convenient interface for the most important
 Rasa Core functionality.</p>
 <p>This includes training, handling messages, loading a dialogue model,
@@ -234,7 +228,7 @@ the bot wants to respond.</p>
 
 <dl class="classmethod">
 <dt id="rasa_core.agent.Agent.load">
-<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>interpreter=None</em>, <em>tracker_store=None</em>, <em>action_factory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>interpreter=None</em>, <em>tracker_store=None</em>, <em>action_factory=None</em>, <em>generator=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a persisted model from the passed path.</p>
 </dd></dl>
 

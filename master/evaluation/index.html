@@ -133,15 +133,9 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../0.10.1/evaluation.html">0.10.1</a>
+              <a href="../0.10.0/evaluation.html">0.10.0</a>
               <a href="../0.9.8/index.html">0.9.8</a>
-              <a href="../0.9.7/index.html">0.9.7</a>
-              <a href="../0.9.6/index.html">0.9.6</a>
-              <a href="../0.9.5/index.html">0.9.5</a>
-              <a href="../0.9.4/index.html">0.9.4</a>
-              <a href="../0.9.3/index.html">0.9.3</a>
-              <a href="../0.9.2/index.html">0.9.2</a>
-              <a href="../0.9.1/index.html">0.9.1</a>
-              <a href="../0.9.0/index.html">0.9.0</a>
               <a href="../0.8.6/index.html">0.8.6</a>
               <a href="../0.7.9/index.html">0.7.9</a>
               <a href="../0.6.9/index.html">0.6.9</a>
@@ -173,9 +167,11 @@
 
 
 
-    <p class="scv-banner"><b>Warning:</b> This document is for the development version of Rasa Core.</p>
+    <p class="scv-banner"><a href="../0.10.1/evaluation.html"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.10.1.</a></p>
 <div class="section" id="evaluating-and-testing">
 <span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="evaluating-a-trained-model">
+<h2>Evaluating a Trained Model<a class="headerlink" href="#evaluating-a-trained-model" title="Permalink to this headline">¶</a></h2>
 <p>You can evaluate your trained model on a set of test stories by using the evaluate script:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.evaluate -d models/dialogue -s test_stories.md -o matrix.pdf --failed failed_stories.md
 </pre></div>
@@ -208,6 +204,30 @@ optional arguments:
                         to DEBUG
   -v, --verbose         Be verbose. Sets logging level to INFO
 </pre></div>
+</div>
+</div>
+<div class="section" id="comparing-policies">
+<h2>Comparing Policies<a class="headerlink" href="#comparing-policies" title="Permalink to this headline">¶</a></h2>
+<p>To choose a specific policy, or to choose hyperparameters for a specific policy, you want
+to measure how well Rasa Core will <cite>generalise</cite> to conversations which it hasn’t seen before.
+Especially in the beginning of a project, you do not have a lot of real conversations to use to train
+your bot, so you don’t just want to throw some away to use as a test set.</p>
+<p>Rasa Core has some scripts to help you choose and fine-tune your policy. Once you are happy
+with it, you can then train your final policy on your full data set.
+To do this, split your training data into multiple files in a single directory.
+You can then use the <code class="docutils literal notranslate"><span class="pre">train_paper</span></code> script to train multiple policies on the same data.
+You can choose one of the files to be partially excluded. This means that Rasa Core
+will be trained multiple times, with 0, 5, 25, 50, 70, 90, 95, and 100% of the stories
+in that file removed from the training data. By evaluating on the full set of stories, you
+can measure how well Rasa Core is predicting the held-out stories.</p>
+<p>The full list of options for the script is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python2.7.14/bin/python: No module named rasa_core.train_paper
+</pre></div>
+</div>
+<p>The full list of options for the evaluation script is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python2.7.14/bin/python: No module named rasa_core.evaluate_paper
+</pre></div>
+</div>
 </div>
 </div>
 
