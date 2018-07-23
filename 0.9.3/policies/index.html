@@ -1,0 +1,591 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Policies &mdash; Rasa Core 0.9.3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex/"/>
+        <link rel="search" title="Search" href="../search/"/>
+    <link rel="top" title="Rasa Core 0.9.3 documentation" href="../"/>
+        <link rel="next" title="Tracking Conversation State" href="../state/"/>
+        <link rel="prev" title="Interpreters" href="../interpreters/"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../" class="icon icon-home"> Rasa Core
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../motivation/">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../no_python/">But I don’t code in python!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_basics/">Building a Simple Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_supervised/">Supervised Learning Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_remote/">Rasa Core without Python</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Dives</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains/">Domain, Slots, and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories/">Stories - The Training Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../patterns/">Slot Filling and Common Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plumbing/">Plumbing - How it all fits together</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/">Connecting to messaging &amp; voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/#using-ngrok-for-local-testing">Using Ngrok For Local Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scheduling/">Scheduling Reminders</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../featurisation/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpreters/">Interpreters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Policies</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-policies-from-stories">Creating Policies from Stories</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#memorising-the-training-data">Memorising the training data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#augmented-memoization">Augmented memoization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#generalising-to-new-dialogues">Generalising to new Dialogues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#keras-policy">Keras policy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../state/">Tracking Conversation State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Rasa Core</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../">Docs</a> &raquo;</li>
+        
+      <li>Policies</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/policies.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../0.9.8/policies.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.9.8.</a></p>
+
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="policies">
+<span id="id1"></span><h1>Policies<a class="headerlink" href="#policies" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Policy</span></code> is the core of your bot, with its most important method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">predict_action_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; List[float]</span>
+        <span class="sd">&quot;&quot;&quot;Predicts the next action the bot should take</span>
+<span class="sd">        after seeing the tracker.</span>
+
+<span class="sd">        Returns the list of probabilities for the next actions&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
+                                  <span class="s2">&quot;to predict.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This uses the current state of the conversation (provided by the tracker) to choose the next action to take.
+The domain is there if you need it, but only some policy types make use of it. The returned array contains
+the probabilities for each action to be executed next. The action that is most likely will be executed.</p>
+<p>Let’s look at a simple example for a custom policy:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="go">from rasa_core.policies import Policy</span>
+<span class="go">from rasa_core.actions.action import ACTION_LISTEN_NAME</span>
+<span class="go">from rasa_core import utils</span>
+<span class="go">import numpy as np</span>
+
+<span class="go">class SimplePolicy(Policy):</span>
+<span class="go">    def predict_action_probabilities(self, tracker, domain):</span>
+<span class="go">        responses = {&quot;greet&quot;: 3}</span>
+
+<span class="go">        if tracker.latest_action_name == ACTION_LISTEN_NAME:</span>
+<span class="go">            key = tracker.latest_message.intent[&quot;name&quot;]</span>
+<span class="go">            action = responses[key] if key in responses else 2</span>
+<span class="go">            return utils.one_hot(action, domain.num_actions)</span>
+<span class="go">        else:</span>
+<span class="go">            return np.zeros(domain.num_actions)</span>
+</pre></div>
+</div>
+<p><strong>How does this work?</strong>
+When the controller processes a message from a user, it will keep asking for the next most likely action using
+<code class="docutils literal notranslate"><span class="pre">predict_action_probabilities</span></code>. The bot then executes that action, then call <code class="docutils literal notranslate"><span class="pre">predict_action_probabilities</span></code> again
+with a new <code class="docutils literal notranslate"><span class="pre">tracker</span></code>, until it receives an <code class="docutils literal notranslate"><span class="pre">ActionListen</span></code> instruction.
+This breaks the loop and makes the bot await further instructions.</p>
+<p>In pseudocode, what the <code class="docutils literal notranslate"><span class="pre">SimplePolicy</span></code> above does is:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>-&gt; a new message has come in
+
+if we were previously listening:
+    return a canned response
+else:
+    we must have just said something, so let&#39;s listen again
+</pre></div>
+</div>
+<p>Note that the policy itself is stateless, and all the state is carried by the <code class="docutils literal notranslate"><span class="pre">tracker</span></code> object.</p>
+<div class="section" id="creating-policies-from-stories">
+<h2>Creating Policies from Stories<a class="headerlink" href="#creating-policies-from-stories" title="Permalink to this headline">¶</a></h2>
+<p>Writing rules like in the SimplePolicy above is not a great way to build a bot, it gets messy fast &amp; is hard to debug.
+If you’ve found Rasa Core, it’s likely you’ve already tried this approach and were looking for something better.</p>
+<p>The second important method of any policy is <code class="docutils literal notranslate"><span class="pre">train(...)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+              <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
+              <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
+              <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&quot;&quot;&quot;Trains the policy on given training trackers.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
+                                  <span class="s2">&quot;to train.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This method creates “some rules” for prediction depending on the training data.</p>
+<div class="section" id="memorising-the-training-data">
+<h3>Memorising the training data<a class="headerlink" href="#memorising-the-training-data" title="Permalink to this headline">¶</a></h3>
+<p>A good next step is to use our story framework to build a policy by giving it some example conversations.
+We won’t use machine learning yet, we will just create a policy which memorises these stories.</p>
+<p>We can use the <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code> to do this.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For the <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code>, the <code class="docutils literal notranslate"><span class="pre">train()</span></code> method just memorises
+the actions taken in the story of <code class="docutils literal notranslate"><span class="pre">max_history</span></code> turns, so that when your bot encounters an
+identical situation it will make the decision you intended.</p>
+</div>
+</div>
+<div class="section" id="augmented-memoization">
+<h3>Augmented memoization<a class="headerlink" href="#augmented-memoization" title="Permalink to this headline">¶</a></h3>
+<p>If it is needed to recall turns from training dialogues
+where some <code class="docutils literal notranslate"><span class="pre">slots</span></code> might not be set during prediction time,
+add relevant stories without such <code class="docutils literal notranslate"><span class="pre">slots</span></code> to training data.
+E.g. reminder stories.</p>
+<p>Since <code class="docutils literal notranslate"><span class="pre">slots</span></code> that are set some time in the past are
+preserved in all future feature vectors until they are set
+to None, this policy has a capability to recall the turns
+up to <code class="docutils literal notranslate"><span class="pre">max_history</span></code> and less from training stories during prediction,
+even if additional slots were filled in the past for current dialogue.</p>
+</div>
+</div>
+<div class="section" id="generalising-to-new-dialogues">
+<h2>Generalising to new Dialogues<a class="headerlink" href="#generalising-to-new-dialogues" title="Permalink to this headline">¶</a></h2>
+<p>The stories data format gives you a compact way to describe a large number of possible dialogues without much effort.
+But humans are infinitely creative, and you could never hope to describe <em>every</em> possible dialogue programatically.
+Even if you could, it probably wouldn’t fit in memory :)</p>
+<p>So how do we create a policy which behaves well even in scenarios you haven’t thought of?
+We will try to achieve this generalisation by creating a policy based on Machine Learning.</p>
+<p>Any policy should be initialized with a featurizer.
+The policy’s <code class="docutils literal notranslate"><span class="pre">train</span></code> method calls this featurizer on provided <code class="docutils literal notranslate"><span class="pre">training_trackers</span></code> to create <code class="docutils literal notranslate"><span class="pre">X,</span> <span class="pre">y</span></code> data,
+suitable for ML algorithm (see <a class="reference internal" href="../featurisation/#featurization"><span class="std std-ref">Featurization</span></a> for details).</p>
+<p>The method to featurize trackers is defined here:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">featurize_for_training</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+            <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
+            <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; DialogueTrainingData</span>
+        <span class="sd">&quot;&quot;&quot;Transform training trackers into a vector representation.</span>
+<span class="sd">        The trackers, consisting of multiple turns, will be transformed</span>
+<span class="sd">        into a float vector which can be used by a ML model.&quot;&quot;&quot;</span>
+
+        <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">featurize_trackers</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span>
+                                                           <span class="n">domain</span><span class="p">)</span>
+
+        <span class="n">max_training_samples</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_training_samples&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_training_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Limit training data to </span><span class="si">{}</span><span class="s2"> training samples.&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_training_samples</span><span class="p">))</span>
+            <span class="n">training_data</span><span class="o">.</span><span class="n">limit_training_data_to</span><span class="p">(</span><span class="n">max_training_samples</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">training_data</span>
+</pre></div>
+</div>
+<div class="section" id="keras-policy">
+<h3>Keras policy<a class="headerlink" href="#keras-policy" title="Permalink to this headline">¶</a></h3>
+<p>You can use whichever machine learning library you like to train your policy.
+One implementation that ships with Rasa is the <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code>,
+which uses Keras as a machine learning library to train your dialogue model.
+This class has already implemented the logic of persisting and reloading models.</p>
+<p>The model is defined here:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">model_architecture</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">input_shape</span><span class="p">,</span>  <span class="c1"># type: Tuple[int, int]</span>
+            <span class="n">output_shape</span>  <span class="c1"># type: Tuple[int, Optional[int]]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; keras.models.Sequential</span>
+        <span class="sd">&quot;&quot;&quot;Build a keras model and return a compiled model.&quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
+        <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> \
+            <span class="n">Masking</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">TimeDistributed</span><span class="p">,</span> <span class="n">Activation</span>
+
+        <span class="c1"># Build Model</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+
+        <span class="c1"># the shape of the y vector of the labels,</span>
+        <span class="c1"># determines which output from rnn will be used</span>
+        <span class="c1"># to calculate the loss</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># y is (num examples, num features) so</span>
+            <span class="c1"># only the last output from the rnn is used to</span>
+            <span class="c1"># calculate the loss</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="n">mask_value</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">output_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># y is (num examples, max_dialogue_len, num features) so</span>
+            <span class="c1"># all the outputs from the rnn are used to</span>
+            <span class="c1"># calculate the loss, therefore a sequence is returned and</span>
+            <span class="c1"># time distributed layer is used</span>
+
+            <span class="c1"># the first value in input_shape is max dialogue_len,</span>
+            <span class="c1"># it is set to None, to allow dynamic_rnn creation</span>
+            <span class="c1"># during prediction</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Masking</span><span class="p">(</span><span class="n">mask_value</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="n">output_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot construct the model because&quot;</span>
+                             <span class="s2">&quot;length of output_shape = </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                             <span class="s2">&quot;should be 1 or 2.&quot;</span>
+                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)))</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;softmax&#39;</span><span class="p">))</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span>
+                      <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;rmsprop&#39;</span><span class="p">,</span>
+                      <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+<p>and the training is run here:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+              <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
+              <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: **Any</span>
+              <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
+
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Parameter `rnn_size` is updated with </span><span class="si">{}</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)</span>
+
+        <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize_for_training</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span>
+                                                    <span class="n">domain</span><span class="p">,</span>
+                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span> <span class="o">=</span> <span class="n">training_data</span><span class="o">.</span><span class="n">shuffled_X_y</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_architecture</span><span class="p">(</span><span class="n">shuffled_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+                                                 <span class="n">shuffled_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="n">validation_split</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;validation_split&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fitting model with </span><span class="si">{}</span><span class="s2"> total samples and a validation &quot;</span>
+                    <span class="s2">&quot;split of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">training_data</span><span class="o">.</span><span class="n">num_examples</span><span class="p">(),</span>
+                                         <span class="n">validation_split</span><span class="p">))</span>
+        <span class="c1"># filter out kwargs that cannot be passed to fit</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_valid_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="c1"># the default parameter for epochs in keras fit is 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;epochs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done fitting keras policy model&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can implement the model of your choice by overriding these methods,
+or initialize <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> with already defined <code class="docutils literal notranslate"><span class="pre">keras</span> <span class="pre">model</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../state/" class="btn btn-neutral float-right" title="Tracking Conversation State" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../interpreters/" class="btn btn-neutral" title="Interpreters" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Rasa Technologies GmbH.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: 0.9.3
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../0.9.8/policies.html">0.9.8</a></dd>
+            <dd><a href="../0.9.7/policies.html">0.9.7</a></dd>
+            <dd><a href="../0.9.6/policies.html">0.9.6</a></dd>
+            <dd><a href="../0.9.5/policies.html">0.9.5</a></dd>
+            <dd><a href="../0.9.4/policies.html">0.9.4</a></dd>
+            <dd><a href="policies.html">0.9.3</a></dd>
+            <dd><a href="../0.9.2/policies.html">0.9.2</a></dd>
+            <dd><a href="../0.9.1/policies.html">0.9.1</a></dd>
+            <dd><a href="../0.9.0/policies.html">0.9.0</a></dd>
+            <dd><a href="../0.8.6/policies.html">0.8.6</a></dd>
+            <dd><a href="../0.7.9/policies.html">0.7.9</a></dd>
+            <dd><a href="../0.6.9/policies.html">0.6.9</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../master/policies.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.9.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+  
+  
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0074/3851.js" async="async"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments)};
+gtag('js', new Date());
+
+gtag('config', 'UA-87333416-1');
+</script>
+
+
+</body>
+</html>
