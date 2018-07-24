@@ -4,6 +4,11 @@
 import numpy as np
 from rasa_core.actions import Action
 from rasa_core.events import Event, SlotSet
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 
 class Plan(object):
@@ -32,9 +37,10 @@ class Plan(object):
 
 
 class SimpleForm(Plan):
-    def __init__(self, name, required_slots, finish_action, optional_slots=None, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None):
+    def __init__(self, name, required_slots, finish_action, optional_slots=None, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None, subject=None):
         self.name = name
-        self.required_slots = required_slots
+        self.required_slots = list(required_slots.keys())
+        self.slot_type_dict = required_slots
         self.current_required = self.required_slots
         self.optional_slots = optional_slots
         # exit dict is {exit_intent_name: exit_action_name}
@@ -44,6 +50,8 @@ class SimpleForm(Plan):
         self.details_intent = details_intent
         self.rules_yaml = rules
         self.rules = self._process_rules(self.rules_yaml)
+        self.subject = subject
+
         self.last_question = None
 
     def _process_rules(self, rules):
@@ -61,8 +69,10 @@ class SimpleForm(Plan):
         for slot_tuple in list(tracker.current_slot_values().items()):
             if slot_tuple in self.rules.keys():
                 add, take = self.rules[slot_tuple]
-                all_add.extend(add)
-                all_take.extend(take)
+                if add is not None:
+                    all_add.extend(add)
+                if take is not None:
+                    all_take.extend(take)
         self.current_required = list(set(self.required_slots+all_add)-set(all_take))
 
     def check_unfilled_slots(self, tracker):
@@ -72,11 +82,10 @@ class SimpleForm(Plan):
 
     def next_action_idx(self, tracker, domain):
         # type: (DialogueStateTracker, Domain) -> int
-        intent = tracker.latest_message.parse_data['intent']['name'].lstrip('plan_')
+        intent = tracker.latest_message.parse_data['intent']['name'].replace('plan_', '', 1)
         self._update_requirements(tracker)
         if "utter_ask_" in tracker.latest_action_name or tracker.latest_action_name in self.exit_dict.values():
             return domain.index_for_action('action_listen')
-
         # for v0.1 lets assume that the entities are same as slots so they are already set
         if intent in self.exit_dict.keys():
             # actions in this dict should deactivate this plan in the tracker
@@ -84,7 +93,7 @@ class SimpleForm(Plan):
         elif intent in self.chitchat_dict.keys() and tracker.latest_action_name not in self.chitchat_dict.values():
             return domain.index_for_action(self.chitchat_dict[intent])
         elif intent in self.details_intent and 'utter_explain' not in tracker.latest_action_name:
-            return domain.index_for_action("utter_explain_{}_restaurant".format(self.last_question))
+            return domain.index_for_action("utter_explain_{}_{}".format(self.last_question, self.subject))
 
         still_to_ask = self.check_unfilled_slots(tracker)
 
@@ -97,13 +106,14 @@ class SimpleForm(Plan):
 
     def as_dict(self):
         return {"name": self.name,
-                "required_slots": self.required_slots,
+                "required_slots": self.slot_type_dict,
                 "optional_slots": self.optional_slots,
                 "finish_action": self.finish_action,
                 "exit_dict": self.exit_dict,
                 "chitchat_dict": self.chitchat_dict,
                 "details_intent": self.details_intent,
-                "rules": self.rules_yaml}
+                "rules": self.rules_yaml,
+                "subject": self.subject}
 
 
 class ActivatePlan(Action):
@@ -142,9 +152,13 @@ class PlanComplete(Action):
 
 
 class StartPlan(Event):
-    def __init__(self, domain):
+    def __init__(self, domain, plan_name):
         super(StartPlan).__init__()
-        self.plan = domain._plans
+        self.plan = domain._plans.get(plan_name, [])
+        if self.plan == []:
+            logger.error("Tried to set non existent plan '{}'. Make sure you "
+                         "added all your plans to your domain file."
+                         "".format(plan_name))
 
     def apply_to(self, tracker):
         # type: (DialogueStateTracker) -> None
