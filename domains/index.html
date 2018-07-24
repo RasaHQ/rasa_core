@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Domain Format &#8212; Rasa Core 0.10.1 documentation</title>
+    <title>Domain Format &#8212; Rasa Core 0.10.2 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
@@ -126,13 +126,14 @@
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.1
+        v: 0.10.2
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="0.10.2/domains.html">0.10.2</a>
               <a href="0.10.1/domains.html">0.10.1</a>
               <a href="0.10.0/domains.html">0.10.0</a>
               <a href="0.9.8/domains.html">0.9.8</a>
@@ -307,6 +308,25 @@ multiple responses and Rasa will randomly pick one of them, e.g.:</p>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Hey,</span><span class="nv"> </span><span class="s">{name}.</span><span class="nv"> </span><span class="s">How</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">day</span><span class="nv"> </span><span class="s">going?&quot;</span>
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="ignoring-entities-for-certain-intents">
+<h2>Ignoring entities for certain intents<a class="headerlink" href="#ignoring-entities-for-certain-intents" title="Permalink to this headline">¶</a></h2>
+<p>If you want entities to be ignored for certain intents, you can add the <code class="docutils literal notranslate"><span class="pre">use_entities:</span> <span class="pre">false</span></code>
+parameter to the intent in your domain file like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">intents</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">greet</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">use_entities</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+<p>This means that entities for those intents will be unfeaturized and therefore
+will not impact the next action predictions. This is useful when you have
+an intent where you don’t care about the entities being picked up. If you list
+your intents as normal without this flag, the entities will be featurized as normal.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you really want these entities not to influence action prediction we
+suggest you make the slots with the same name of type <code class="docutils literal notranslate"><span class="pre">unfeaturized</span></code></p>
 </div>
 </div>
 </div>
