@@ -130,7 +130,7 @@ class DialogueStateTracker(object):
     def should_be_featurized(self):
         if self.active_plan is None:
             return True
-        elif self.latest_action_name == 'activate_plan':
+        elif 'activate' in self.latest_action_name:
             return True
         else:
             return False

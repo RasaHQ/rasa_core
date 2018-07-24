@@ -523,13 +523,16 @@ class TemplateDomain(Domain):
 
     @staticmethod
     def instantiate_plans(plans):
-        plan_name = plans['name']
-        required_slots = plans['required_slots']
-        finish_action = plans['finish_action']
-        details_intent = plans['details_intent']
-        rules = plans['rules']
-        plan = SimpleForm(plan_name, required_slots, finish_action, exit_dict=plans['exit_dict'], chitchat_dict=plans['chitchat_dict'], details_intent=details_intent, rules=rules)
-        return plan
+        plans_dict = {}
+        for name, plan in plans.items():
+            plan_name = name
+            required_slots = plan['required_slots']
+            finish_action = plan['finish_action']
+            details_intent = plan['details_intent']
+            rules = plan.get('rules', {})
+            subject = plan.get('subject', None)
+            plans_dict[plan_name] = SimpleForm(plan_name, required_slots, finish_action, exit_dict=plan['exit_dict'], chitchat_dict=plan['chitchat_dict'], details_intent=details_intent, rules=rules, subject=subject)
+        return plans_dict
 
     def _slot_definitions(self):
         return {slot.name: slot.persistence_info() for slot in self.slots}
@@ -547,7 +550,7 @@ class TemplateDomain(Domain):
             "actions": self._action_classes,  # class names of the actions
             "action_names": action_names,  # names in stories
             "action_factory": self._factory_name,
-            "plans": self._plans.as_dict()
+            "plans": {key: plan.as_dict() for key, plan in self._plans.items()}
         }
         return domain_data
 

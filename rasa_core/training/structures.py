@@ -133,10 +133,11 @@ class StoryStep(object):
                     result += "    - {}\n".format(s.as_story_string())
             elif isinstance(s, Event):
                 converted = s.as_story_string()
-                if converted and not plan_active:
-                    result += "    - {}\n".format(s.as_story_string())
-                elif converted == 'deactivate_plan':
-                    result += "    - {}\n".format(s.as_story_string())
+                if converted:
+                    if not plan_active:
+                        result += "    - {}\n".format(s.as_story_string())
+                    elif 'deactivate_plan' in converted:
+                        result += "    - {}\n".format(s.as_story_string())
             else:
                 raise Exception("Unexpected element in story step: "
                                 "{}".format(s))
