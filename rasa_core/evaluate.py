@@ -197,11 +197,10 @@ def run_story_evaluation(resource_name, policy_model_path,
                                                               policy_model_path,
                                                               nlu_model_path,
                                                               max_stories)
-    if out_file_plot:
-        plot_story_evaluation(test_y, preds, out_file_plot)
-
     log_failed_stories(failed_stories, out_file_stories)
 
+    if out_file_plot:
+        plot_story_evaluation(test_y, preds, out_file_plot)
 
 def plot_story_evaluation(test_y, preds, out_file):
     """Plot the results. of story evaluation"""

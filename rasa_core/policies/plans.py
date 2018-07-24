@@ -4,6 +4,7 @@
 import numpy as np
 from rasa_core.actions import Action
 from rasa_core.events import Event, SlotSet
+from rasa_core.utils import class_from_module_path
 import logging
 
 
@@ -36,6 +37,73 @@ class Plan(object):
         return "Plan('{}')".format(self.name)
 
 
+class TreePlan(Plan):
+    def __init__(self, name, branches_list, start_checkpoint, exit_dict=None, chitchat_dict=None):
+        self.name = name
+        self.branches_list = branches_list
+        self.branches = self._prepare_branches(branches_list)
+        self.exit_dict = exit_dict
+        self.chitchat_dict = chitchat_dict
+        self.start_checkpoint = start_checkpoint
+        self.current_branch = self.branches[start_checkpoint]()
+        self.current_generator = None
+        self.last_question = None
+        self.payload = []
+
+    def _prepare_branches(self, branches_list):
+        branch_dict = {}
+        for branch in branches_list:
+            branch_obj = class_from_module_path(branch)
+            branch_dict[branch_obj.name] = branch_obj
+        return branch_dict
+
+    def next_action_idx(self, tracker, domain):
+        intent = tracker.latest_message.parse_data['intent']['name'].replace('plan_', '', 1)
+        if self.current_generator is None:
+            self.current_generator = self.current_branch.logic(tracker)
+        if "utter_ask_" in tracker.latest_action_name or tracker.latest_action_name in self.exit_dict.values():
+            self.next_thing = None
+            return domain.index_for_action('action_listen')
+        # for v0.1 lets assume that the entities are same as slots so they are already set
+        if intent in self.exit_dict.keys():
+            # actions in this dict should deactivate this plan in the tracker
+            self.next_thing = None
+            return domain.index_for_action(self.exit_dict[intent])
+        elif intent in self.chitchat_dict.keys() and tracker.latest_action_name not in self.chitchat_dict.values():
+            return domain.index_for_action(self.chitchat_dict[intent])
+
+        if self.payload == []:
+            self.payload = next(self.current_generator)
+
+        self.next_thing = self.payload.pop(0)
+
+        if self.next_thing.startswith('BRANCH_'):
+            self.current_branch = self.branches[self.next_thing[7:]]()
+            self.current_generator =self.current_branch.logic(tracker)
+            return self.next_action_idx(tracker, domain)
+
+        if self.next_thing.startswith('ACTION_'):
+            return domain.index_for_action(self.next_thing[7:])
+
+        if self.next_thing.startswith('SLOT_'):
+            self.last_question = self.next_thing[5:]
+            return domain.index_for_action("utter_ask_{}".format(self.last_question))
+
+        if self.next_thing == 'QUIT_PLAN':
+            self.next_thing = None
+            return domain.index_for_action(self.finish_action)
+
+    def as_dict(self):
+        return {
+                "name": self.name,
+                "branches_list": self.branches_list,
+                "exit_dict": self.exit_dict,
+                "chitchat_dict": self.chitchat_dict,
+                "start_checkpoint": self.start_checkpoint,
+                "type": 'TreePlan'
+                }
+
+
 class SimpleForm(Plan):
     def __init__(self, name, required_slots, finish_action, optional_slots=None, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None, subject=None):
         self.name = name
@@ -51,7 +119,6 @@ class SimpleForm(Plan):
         self.rules_yaml = rules
         self.rules = self._process_rules(self.rules_yaml)
         self.subject = subject
-
         self.last_question = None
 
     def _process_rules(self, rules):
@@ -113,7 +180,8 @@ class SimpleForm(Plan):
                 "chitchat_dict": self.chitchat_dict,
                 "details_intent": self.details_intent,
                 "rules": self.rules_yaml,
-                "subject": self.subject}
+                "subject": self.subject,
+                "type": 'SimpleForm'}
 
 
 class ActivatePlan(Action):
@@ -174,3 +242,9 @@ class EndPlan(Event):
 
     def as_story_string(self):
         return None
+
+
+class Branch(object):
+    def logic(self, tracker):
+        # type: (DialogueStateTracker)
+        raise NotImplementedError
