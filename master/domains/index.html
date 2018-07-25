@@ -290,14 +290,14 @@ like this:</p>
 
    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
       <span class="c1"># send utter default template to user</span>
-      <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">)</span>
+      <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">)</span>
       <span class="c1"># ... other code</span>
       <span class="k">return</span> <span class="p">[]</span>
 </pre></div>
 </div>
 <p>If the template contains variables denoted with <code class="docutils literal notranslate"><span class="pre">{my_variable}</span></code> you can supply
 values for the fields by passing them as key word arguments to <code class="docutils literal notranslate"><span class="pre">utter_template</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span> <span class="n">my_variable</span><span class="o">=</span><span class="s2">&quot;my text&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">my_variable</span><span class="o">=</span><span class="s2">&quot;my text&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
