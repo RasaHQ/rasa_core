@@ -318,14 +318,13 @@ multiple responses and Rasa will randomly pick one of them, e.g.:</p>
 <p>If you want entities to be ignored for certain intents, you can add the <code class="docutils literal notranslate"><span class="pre">use_entities:</span> <span class="pre">false</span></code>
 parameter to the intent in your domain file like this:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">intents</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">greet</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">use_entities</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">greet</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{</span><span class="nv">use_entities</span><span class="p p-Indicator">:</span> <span class="nv">false</span><span class="p p-Indicator">}</span>
 </pre></div>
 </div>
 <p>This means that entities for those intents will be unfeaturized and therefore
 will not impact the next action predictions. This is useful when you have
 an intent where you don’t care about the entities being picked up. If you list
-your intents as normal without this flag, the entities will be featurized as normal.</p>
+your intents as normal without this parameter, the entities will be featurized as normal.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">If you really want these entities not to influence action prediction we
