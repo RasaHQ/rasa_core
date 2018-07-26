@@ -240,7 +240,7 @@ and save it in a file called <code class="docutils literal notranslate"><span cl
   - utter_goodbye
 """
 %store stories_md > stories.md</pre>
-  <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
+  <script src="/_static/juniper.min.js"></script>
   <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
 </div>
 <div class="section" id="define-a-domain">
@@ -284,7 +284,7 @@ templates:
   - text: "Bye"
 """
 %store domain_yml > domain.yml</pre>
-  <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
+  <script src="/_static/juniper.min.js"></script>
   <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
 <p>So what do the different parts mean?</p>
 <table border="1" class="docutils">
@@ -333,7 +333,7 @@ into <code class="docutils literal notranslate"><span class="pre">models/dialogu
 
 
   <pre data-executable>!python -m rasa_core.train -d domain.yml -s stories.md -o models/dialogue</pre>
-  <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
+  <script src="/_static/juniper.min.js"></script>
   <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
 </div>
 <div class="section" id="talking-to-your-bot">
@@ -355,7 +355,7 @@ Give it a try by sending the message <code class="docutils literal notranslate">
 from rasa_core.channels.console import ConsoleInputChannel
 agent = Agent.load('models/dialogue')
 agent.handle_channel(ConsoleInputChannel())</pre>
-  <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
+  <script src="/_static/juniper.min.js"></script>
   <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
 </div>
 <div class="section" id="add-nlu">
@@ -423,7 +423,7 @@ Let’s create some intent examples in a file called <code class="docutils liter
 - so sad
 """
 %store nlu_md > nlu.md</pre>
-  <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
+  <script src="/_static/juniper.min.js"></script>
   <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
 <p>Furthermore, we need a configuration file, <code class="docutils literal notranslate"><span class="pre">nlu_config.yml</span></code>, for the
 NLU model:</p>
@@ -434,7 +434,7 @@ language: en
 pipeline: tensorflow_embedding
 """
 %store nlu_config > nlu_config.yml</pre>
-  <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
+  <script src="/_static/juniper.min.js"></script>
   <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
 <p>We can now train an NLU model using our examples (make sure to
 <a class="reference external" href="http://rasa.com/docs/nlu/installation/">install Rasa NLU</a>
@@ -443,7 +443,7 @@ first).</p>
 
 
   <pre data-executable>!python -m rasa_nlu.train -c nlu_config.yml --data nlu.md -o models --fixed_model_name nlu --project current --verbose</pre>
-  <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
+  <script src="/_static/juniper.min.js"></script>
   <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
 <p>to train our NLU model. A new directory <code class="docutils literal notranslate"><span class="pre">models/current/nlu</span></code> should have been
 created containing the NLU model. Note that <code class="docutils literal notranslate"><span class="pre">current</span></code> stands for project name,
@@ -470,7 +470,7 @@ both Rasa Core and Rasa NLU models!</p>
 from rasa_core.channels.console import ConsoleInputChannel
 agent = Agent.load('models/dialogue', interpreter='models/current/nlu')
 agent.handle_channel(ConsoleInputChannel())</pre>
-  <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
+  <script src="/_static/juniper.min.js"></script>
   <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
 <p>Congratulations 🚀! You just built a bot from scratch,
 powered entirely by machine learning.
