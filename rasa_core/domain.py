@@ -517,7 +517,8 @@ class TemplateDomain(Domain):
                 start_checkpoint = plan['start_checkpoint']
                 exit_dict = plan['exit_dict']
                 chitchat_dict = plan['chitchat_dict']
-                plans_dict[plan_name] = TreePlan(name, branches, start_checkpoint, exit_dict, chitchat_dict)
+                finish_action = plan['finish_action']
+                plans_dict[plan_name] = TreePlan(name, branches, start_checkpoint, finish_action, exit_dict, chitchat_dict,)
             elif plan['type'] == 'SimpleForm':
                 required_slots = plan['required_slots']
                 finish_action = plan['finish_action']

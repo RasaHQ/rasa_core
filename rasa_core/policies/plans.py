@@ -38,7 +38,7 @@ class Plan(object):
 
 
 class TreePlan(Plan):
-    def __init__(self, name, branches_list, start_checkpoint, exit_dict=None, chitchat_dict=None):
+    def __init__(self, name, branches_list, start_checkpoint, finish_action, exit_dict=None, chitchat_dict=None):
         self.name = name
         self.branches_list = branches_list
         self.branches = self._prepare_branches(branches_list)
@@ -48,7 +48,9 @@ class TreePlan(Plan):
         self.current_branch = self.branches[start_checkpoint]()
         self.current_generator = None
         self.last_question = None
+        self.finish_action = finish_action
         self.payload = []
+        self.complete = False
 
     def _prepare_branches(self, branches_list):
         branch_dict = {}
@@ -59,8 +61,6 @@ class TreePlan(Plan):
 
     def next_action_idx(self, tracker, domain):
         intent = tracker.latest_message.parse_data['intent']['name'].replace('plan_', '', 1)
-        if self.current_generator is None:
-            self.current_generator = self.current_branch.logic(tracker)
         if "utter_ask_" in tracker.latest_action_name or tracker.latest_action_name in self.exit_dict.values():
             self.next_thing = None
             return domain.index_for_action('action_listen')
@@ -73,25 +73,33 @@ class TreePlan(Plan):
             return domain.index_for_action(self.chitchat_dict[intent])
 
         if self.payload == []:
-            self.payload = next(self.current_generator)
+            self.payload = self.current_branch.logic(tracker)
+
+        if tracker.current_slot_values().get(self.last_question) is None and self.last_question is not None:
+            return domain.index_for_action("utter_ask_{}".format(self.last_question))
 
         self.next_thing = self.payload.pop(0)
-
+        print(self.next_thing)
         if self.next_thing.startswith('BRANCH_'):
             self.current_branch = self.branches[self.next_thing[7:]]()
-            self.current_generator =self.current_branch.logic(tracker)
             return self.next_action_idx(tracker, domain)
 
         if self.next_thing.startswith('ACTION_'):
+            print(self.next_thing[7:])
             return domain.index_for_action(self.next_thing[7:])
 
         if self.next_thing.startswith('SLOT_'):
             self.last_question = self.next_thing[5:]
+            print(self.last_question)
             return domain.index_for_action("utter_ask_{}".format(self.last_question))
 
         if self.next_thing == 'QUIT_PLAN':
             self.next_thing = None
             return domain.index_for_action(self.finish_action)
+
+        if self.next_thing == 'PLAN_COMPLETE':
+            self.complete = True
+            return self.next_action_idx(tracker, domain)
 
     def as_dict(self):
         return {
@@ -100,8 +108,12 @@ class TreePlan(Plan):
                 "exit_dict": self.exit_dict,
                 "chitchat_dict": self.chitchat_dict,
                 "start_checkpoint": self.start_checkpoint,
-                "type": 'TreePlan'
+                "type": 'TreePlan',
+                "finish_action": self.finish_action
                 }
+
+    def check_complete(self, tracker):
+        return self.complete
 
 
 class SimpleForm(Plan):
@@ -146,6 +158,13 @@ class SimpleForm(Plan):
         current_filled_slots = [key for key, value in tracker.current_slot_values().items() if value is not None]
         still_to_ask = list(set(self.current_required) - set(current_filled_slots))
         return still_to_ask
+
+    def check_complete(self, tracker):
+        unfilled = self.check_unfilled_slots(tracker)
+        if len(unfilled) == 0:
+            return True
+        else:
+            return False
 
     def next_action_idx(self, tracker, domain):
         # type: (DialogueStateTracker, Domain) -> int
@@ -205,11 +224,8 @@ class PlanComplete(Action):
         self._name = 'deactivate_plan'
 
     def run(self, dispatcher, tracker, domain):
-        unfilled = tracker.active_plan.check_unfilled_slots(tracker)
-        if len(unfilled) == 0:
-            complete = True
-        else:
-            complete = False
+        complete = tracker.active_plan.check_complete(tracker)
+
         return [EndPlan(), SlotSet('active_plan', False), SlotSet('plan_complete', complete)]
 
     def name(self):
@@ -248,3 +264,7 @@ class Branch(object):
     def logic(self, tracker):
         # type: (DialogueStateTracker)
         raise NotImplementedError
+
+    def return_iterate(self, output):
+        self.step += 1
+        return output
