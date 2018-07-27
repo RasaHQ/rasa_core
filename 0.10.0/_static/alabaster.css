@@ -78,11 +78,11 @@ div.documentwrapper {
 }
 
 div.bodywrapper {
-    margin: 0 0 0 320px;
+    margin: 0 0 0 270px;
 }
 
 div.sphinxsidebar {
-    width: 320px;
+    width: 270px;
     font-size: 14px;
     line-height: 1.5;
     overflow-y: auto;
@@ -1286,4 +1286,12 @@ a.brand-link {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.03) !important;
     border: 1px solid #EFEFEF;
   }
+}
+
+div.redoc-wrap {
+    width: 100%;
+}
+
+div.api-content {
+    width: 100%;
 }
