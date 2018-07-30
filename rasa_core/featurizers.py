@@ -118,7 +118,6 @@ class BinarySingleStateFeaturizer(SingleStateFeaturizer):
                             "before encoding.")
         if state is None or None in state:
             return np.ones(self.num_features, dtype=np.int32) * -1
-        logger.debug(state)
         # we are going to use floats and convert to int later if possible
         used_features = np.zeros(self.num_features, dtype=np.float)
         using_only_ints = True
