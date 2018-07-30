@@ -37,11 +37,11 @@ class Plan(object):
 
 
 class SimpleForm(Plan):
-    def __init__(self, name, required_slots, finish_action, optional_slots=None, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None, subject=None):
+    def __init__(self, name, slot_dict, finish_action, optional_slots=None, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None, subject=None):
         self.name = name
-        self.required_slots = list(required_slots.keys())
-        self.slot_type_dict = required_slots
-        self.current_required = self.required_slots
+        self.slot_dict = slot_dict
+        self.current_required = list(self.slot_dict.keys())
+        self.required_slots = self.current_required
         self.optional_slots = optional_slots
         # exit dict is {exit_intent_name: exit_action_name}
         self.exit_dict = exit_dict
@@ -53,6 +53,7 @@ class SimpleForm(Plan):
         self.subject = subject
 
         self.last_question = None
+        self.queue = []
 
     def _process_rules(self, rules):
         rule_dict = {}
@@ -80,33 +81,56 @@ class SimpleForm(Plan):
         still_to_ask = list(set(self.current_required) - set(current_filled_slots))
         return still_to_ask
 
+    def _run_through_queue(self, domain):
+        if self.queue == []:
+            return None
+        else:
+            return domain.index_for_action(self.queue.pop(0))
+
+    def _make_question_queue(self, question):
+        queue = [self.slot_dict[question]['ask_utt'], 'action_listen']
+        if 'follow_up_action' in self.slot_dict[self.last_question].keys():
+            queue.append(self.slot_dict[self.last_question]['follow_up_action'])
+        return queue
+
+
     def next_action_idx(self, tracker, domain):
         # type: (DialogueStateTracker, Domain) -> int
+
+        out = self._run_through_queue(domain)
+        if out is not None:
+            return out
+
         intent = tracker.latest_message.parse_data['intent']['name'].replace('plan_', '', 1)
         self._update_requirements(tracker)
-        if "utter_ask_" in tracker.latest_action_name or tracker.latest_action_name in self.exit_dict.values():
-            return domain.index_for_action('action_listen')
+
         # for v0.1 lets assume that the entities are same as slots so they are already set
         if intent in self.exit_dict.keys():
             # actions in this dict should deactivate this plan in the tracker
-            return domain.index_for_action(self.exit_dict[intent])
+            self.queue = [self.exit_dict[intent]]
+            return self._run_through_queue(domain)
         elif intent in self.chitchat_dict.keys() and tracker.latest_action_name not in self.chitchat_dict.values():
-            return domain.index_for_action(self.chitchat_dict[intent])
+            self.queue = [self.chitchat_dict[intent]]
+            self.queue.append(self._make_question_queue(self.last_question))
+            return self._run_through_queue(domain)
         elif intent in self.details_intent and 'utter_explain' not in tracker.latest_action_name:
-            return domain.index_for_action("utter_explain_{}_{}".format(self.last_question, self.subject))
+            self.queue = [self.slot_dict[self.last_question]['clarify_utt']]
+            self.queue.append(self._make_question_queue(self.last_question))
+            return self._run_through_queue(domain)
 
         still_to_ask = self.check_unfilled_slots(tracker)
 
         if len(still_to_ask) == 0:
-            return domain.index_for_action(self.finish_action)
+            self.queue = [self.finish_action, 'action_listen']
+            return self._run_through_queue(domain)
         else:
-            if intent not in self.details_intent:
-                self.last_question = np.random.choice(still_to_ask)
-            return domain.index_for_action("utter_ask_{}".format(self.last_question))
+            self.last_question = np.random.choice(still_to_ask)
+            self.queue = self._make_question_queue(self.last_question)
+            return self._run_through_queue(domain)
 
     def as_dict(self):
         return {"name": self.name,
-                "required_slots": self.slot_type_dict,
+                "required_slots": self.slot_dict,
                 "optional_slots": self.optional_slots,
                 "finish_action": self.finish_action,
                 "exit_dict": self.exit_dict,

@@ -512,12 +512,12 @@ class TemplateDomain(Domain):
         plans_dict = {}
         for name, plan in plans.items():
             plan_name = name
-            required_slots = plan['required_slots']
+            slot_dictionary = plan['required_slots']
             finish_action = plan['finish_action']
             details_intent = plan['details_intent']
             rules = plan.get('rules', {})
             subject = plan.get('subject', None)
-            plans_dict[plan_name] = SimpleForm(plan_name, required_slots, finish_action, exit_dict=plan['exit_dict'], chitchat_dict=plan['chitchat_dict'], details_intent=details_intent, rules=rules, subject=subject)
+            plans_dict[plan_name] = SimpleForm(plan_name, slot_dictionary, finish_action, exit_dict=plan['exit_dict'], chitchat_dict=plan['chitchat_dict'], details_intent=details_intent, rules=rules, subject=subject)
         return plans_dict
 
     def _slot_definitions(self):
