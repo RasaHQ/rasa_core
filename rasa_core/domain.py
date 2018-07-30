@@ -234,6 +234,8 @@ class Domain(with_metaclass(abc.ABCMeta, object)):
         # be ignored for the current intent
         for entity in tracker.latest_message.entities:
             intent_name = tracker.latest_message.intent.get("name")
+            if intent_name.startswith('plan_'):
+                break
             should_use_entity = self._intents[intent_name]['use_entities']
             if should_use_entity:
                 key = "entity_{0}".format(entity["entity"])

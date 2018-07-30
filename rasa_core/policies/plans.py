@@ -48,12 +48,20 @@ class SimpleForm(Plan):
         self.chitchat_dict = chitchat_dict
         self.finish_action = finish_action
         self.details_intent = details_intent
+        self._validate_slots()
         self.rules_yaml = rules
         self.rules = self._process_rules(self.rules_yaml)
         self.subject = subject
 
         self.last_question = None
         self.queue = []
+
+    def _validate_slots(self):
+        for slot, values in self.slot_dict.items():
+            if 'ask_utt' not in list(values.keys()):
+                logger.error('ask_utt not found for {} in plan {}. An utterance is required to ask for a certain slot'.format(slot, self.name))
+            if 'clarify_utt' not in list(values.keys()) and self.details_intent is not None:
+                logger.warning('clarify_utt not found for {} in plan {}, even though {} is listed as a details intent.'.format(slot, self.name, self.details_intent))
 
     def _process_rules(self, rules):
         rule_dict = {}
@@ -87,35 +95,48 @@ class SimpleForm(Plan):
         else:
             return domain.index_for_action(self.queue.pop(0))
 
-    def _make_question_queue(self, question):
+    def _question_queue(self, question):
         queue = [self.slot_dict[question]['ask_utt'], 'action_listen']
         if 'follow_up_action' in self.slot_dict[self.last_question].keys():
             queue.append(self.slot_dict[self.last_question]['follow_up_action'])
         return queue
 
 
+    def _details_queue(self, intent, tracker):
+        self.queue = [self.slot_dict[self.last_question]['clarify_utt']]
+        self.queue.extend(self._question_queue(self.last_question))
+
+    def _chitchat_queue(self, intent, tracker):
+        self.queue = [self.chitchat_dict[intent]]
+        self.queue.extend(self._question_queue(self.last_question))
+
+    def _exit_queue(self, intent, tracker):
+        self.queue = [self.exit_dict[intent]]
+
+    def _decide_next_question(self, still_to_ask, tracker):
+        return np.random.choice(still_to_ask)
+
     def next_action_idx(self, tracker, domain):
         # type: (DialogueStateTracker, Domain) -> int
 
         out = self._run_through_queue(domain)
         if out is not None:
+            # still actions in queue
             return out
 
         intent = tracker.latest_message.parse_data['intent']['name'].replace('plan_', '', 1)
         self._update_requirements(tracker)
 
-        # for v0.1 lets assume that the entities are same as slots so they are already set
         if intent in self.exit_dict.keys():
             # actions in this dict should deactivate this plan in the tracker
-            self.queue = [self.exit_dict[intent]]
+            self._exit_queue(intent, tracker)
             return self._run_through_queue(domain)
+
         elif intent in self.chitchat_dict.keys() and tracker.latest_action_name not in self.chitchat_dict.values():
-            self.queue = [self.chitchat_dict[intent]]
-            self.queue.append(self._make_question_queue(self.last_question))
+            self._chitchat_queue(intent, tracker)
             return self._run_through_queue(domain)
         elif intent in self.details_intent and 'utter_explain' not in tracker.latest_action_name:
-            self.queue = [self.slot_dict[self.last_question]['clarify_utt']]
-            self.queue.append(self._make_question_queue(self.last_question))
+            self._details_queue(intent, tracker)
             return self._run_through_queue(domain)
 
         still_to_ask = self.check_unfilled_slots(tracker)
@@ -124,8 +145,8 @@ class SimpleForm(Plan):
             self.queue = [self.finish_action, 'action_listen']
             return self._run_through_queue(domain)
         else:
-            self.last_question = np.random.choice(still_to_ask)
-            self.queue = self._make_question_queue(self.last_question)
+            self.last_question = self._decide_next_question(still_to_ask, tracker)
+            self.queue = self._question_queue(self.last_question)
             return self._run_through_queue(domain)
 
     def as_dict(self):
