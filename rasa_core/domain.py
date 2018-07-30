@@ -262,7 +262,6 @@ class Domain(with_metaclass(abc.ABCMeta, object)):
             elif latest_msg.intent.get("name"):
                 intent_id = "intent_{}".format(latest_msg.intent["name"])
                 state_dict[intent_id] = latest_msg.intent.get("confidence", 1.0)
-        # print(state_dict,'===========\n\n\n\n\n')
         return state_dict
 
     def get_prev_action_states(self, tracker):
