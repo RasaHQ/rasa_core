@@ -4,7 +4,8 @@
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "action_listen",
-      "unpredictable": false
+      "unpredictable": false,
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.UserUttered",
@@ -39,27 +40,32 @@
             "value": "central"
           }
         ]
-      }
+      },
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.SlotSet",
       "value": "holger",
-      "key": "name"
+      "key": "name",
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_greet",
-      "unpredictable": false
+      "unpredictable": false,
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.SlotSet",
       "value": "holger",
-      "key": "name"
+      "key": "name",
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "action_listen",
-      "unpredictable": false
+      "unpredictable": false,
+      "plan_flag": false
     }
   ],
   "name": "enter_name"

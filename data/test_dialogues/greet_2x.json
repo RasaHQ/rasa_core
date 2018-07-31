@@ -16,12 +16,15 @@
         "text": "/greet",
         "entities": []
       },
-      "text": "/greet"
+      "text": "/greet",
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_greet",
-      "unpredictable": false
+      "unpredictable": false,
+      "plan_flag": false
+
     },
     {
       "py/object": "rasa_core.events.UserUttered",
@@ -38,12 +41,14 @@
         "text": "/greet",
         "entities": []
       },
-      "text": "/greet"
+      "text": "/greet",
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_greet",
-      "unpredictable": false
+      "unpredictable": false,
+      "plan_flag": false
     }
   ],
   "name": "hello_world_2x"
