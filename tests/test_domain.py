@@ -179,7 +179,7 @@ config:
   store_entities_as_slots: true
 entities: []
 intents: []
-plans:
+plans: []
 slots: {}
 templates:
   utter_greet:
