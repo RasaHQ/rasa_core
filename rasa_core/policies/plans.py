@@ -37,12 +37,11 @@ class Plan(object):
 
 
 class SimpleForm(Plan):
-    def __init__(self, name, slot_dict, finish_action, optional_slots=None, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None, subject=None):
+    def __init__(self, name, slot_dict, finish_action, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None):
         self.name = name
         self.slot_dict = slot_dict
-        self.current_required = list(self.slot_dict.keys())
-        self.required_slots = self.current_required
-        self.optional_slots = optional_slots
+
+        self.required_slots = list(self.slot_dict.keys())
         # exit dict is {exit_intent_name: exit_action_name}
         self.exit_dict = exit_dict
         self.chitchat_dict = chitchat_dict
@@ -51,10 +50,10 @@ class SimpleForm(Plan):
         self._validate_slots()
         self.rules_yaml = rules
         self.rules = self._process_rules(self.rules_yaml)
-        self.subject = subject
 
         self.last_question = None
         self.queue = []
+        self.current_required = self.required_slots
 
     def _validate_slots(self):
         for slot, values in self.slot_dict.items():
@@ -152,70 +151,8 @@ class SimpleForm(Plan):
     def as_dict(self):
         return {"name": self.name,
                 "required_slots": self.slot_dict,
-                "optional_slots": self.optional_slots,
                 "finish_action": self.finish_action,
                 "exit_dict": self.exit_dict,
                 "chitchat_dict": self.chitchat_dict,
                 "details_intent": self.details_intent,
-                "rules": self.rules_yaml,
-                "subject": self.subject}
-
-
-class ActivatePlan(Action):
-    def __init__(self):
-        self._name = 'activate_plan'
-
-    def run(self, dispatcher, tracker, domain):
-        """Simple run implementation uttering a (hopefully defined) template."""
-        # tracker.activate_plan(domain)
-        return [StartPlan(domain), SlotSet('active_plan', True)]
-
-    def name(self):
-        return self._name
-
-    def __str__(self):
-        return "ActivatePlan('{}')".format(self.name())
-
-
-class PlanComplete(Action):
-    def __init__(self):
-        self._name = 'deactivate_plan'
-
-    def run(self, dispatcher, tracker, domain):
-        unfilled = tracker.active_plan.check_unfilled_slots(tracker)
-        if len(unfilled) == 0:
-            complete = True
-        else:
-            complete = False
-        return [EndPlan(), SlotSet('active_plan', False), SlotSet('plan_complete', complete)]
-
-    def name(self):
-        return self._name
-
-    def __str__(self):
-        return "PlanComplete('{}')".format(self.name())
-
-
-class StartPlan(Event):
-    def __init__(self, domain, plan_name):
-        super(StartPlan).__init__()
-        self.plan = domain._plans.get(plan_name, [])
-        if self.plan == []:
-            logger.error("Tried to set non existent plan '{}'. Make sure you "
-                         "added all your plans to your domain file."
-                         "".format(plan_name))
-
-    def apply_to(self, tracker):
-        # type: (DialogueStateTracker) -> None
-        tracker.activate_plan(self.plan)
-
-    def as_story_string(self):
-        return None
-
-
-class EndPlan(Event):
-    def apply_to(self, tracker):
-        tracker.deactivate_plan()
-
-    def as_story_string(self):
-        return None
+                "rules": self.rules_yaml}

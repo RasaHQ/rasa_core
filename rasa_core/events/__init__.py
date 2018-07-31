@@ -756,3 +756,27 @@ class AgentUttered(Event):
         except KeyError as e:
             raise ValueError("Failed to parse agent uttered event. "
                              "{}".format(e))
+
+class StartPlan(Event):
+    def __init__(self, domain, plan_name):
+        super(StartPlan).__init__()
+        self.plan = domain._plans.get(plan_name, [])
+        if self.plan == []:
+            logger.error("Tried to set non existent plan '{}'. Make sure you "
+                         "added all your plans to your domain file."
+                         "".format(plan_name))
+
+    def apply_to(self, tracker):
+        # type: (DialogueStateTracker) -> None
+        tracker.activate_plan(self.plan)
+
+    def as_story_string(self):
+        return None
+
+
+class EndPlan(Event):
+    def apply_to(self, tracker):
+        tracker.deactivate_plan()
+
+    def as_story_string(self):
+        return None

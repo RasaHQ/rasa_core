@@ -25,7 +25,7 @@ ACTION_DEFAULT_FALLBACK_NAME = "action_default_fallback"
 
 class Action(object):
     """Next action to be taken in response to a dialogue state."""
-
+    activate_plan = False
     def name(self):
         # type: () -> Text
         """Unique identifier of this simple action."""
@@ -123,3 +123,7 @@ class ActionDefaultFallback(Action):
                                       silent_fail=True)
 
         return [UserUtteranceReverted()]
+
+
+class ActionStartPlan(Action):
+    activate_plan = True

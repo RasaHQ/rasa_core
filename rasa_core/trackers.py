@@ -13,12 +13,14 @@ import typing
 from typing import Generator, Dict, Text, Any, Optional, Iterator
 from typing import List
 
+
 from rasa_core import utils
 from rasa_core import events
 from rasa_core.conversation import Dialogue
 from rasa_core.events import UserUttered, ActionExecuted, \
     Event, SlotSet, Restarted, ActionReverted, UserUtteranceReverted, \
-    BotUttered, TopicSet
+    BotUttered, TopicSet, StartPlan
+
 
 logger = logging.getLogger(__name__)
 
@@ -127,10 +129,10 @@ class DialogueStateTracker(object):
     def deactivate_plan(self):
         self.active_plan = None
 
-    def should_be_featurized(self):
+    def should_be_featurized(self, domain):
         if self.active_plan is None:
             return True
-        elif 'activate' in self.latest_action_name:
+        elif domain.action_for_name(self.latest_action_name).activate_plan is True:
             return True
         else:
             return False
