@@ -296,7 +296,7 @@ class Domain(with_metaclass(abc.ABCMeta, object)):
         # type: (DialogueStateTracker) -> List[Dict[Text, float]]
         """Array of states for each state of the trackers history."""
         return [self.get_active_states(tr) for tr in
-                tracker.generate_all_prior_trackers() if tr.should_be_featurized()]
+                tracker.generate_all_prior_trackers() if tr.should_be_featurized(self)]
 
     def slots_for_entities(self, entities):
         if self.store_entities_as_slots:
@@ -509,7 +509,8 @@ class TemplateDomain(Domain):
         self._factory_name = action_factory
         self._actions = self.instantiate_actions(
                 action_factory, action_classes, action_names, templates)
-        self._plans = self.instantiate_plans(plans)
+        self._plans_list = plans
+        self._plans = self.instantiate_plans_objects(plans)
         super(TemplateDomain, self).__init__(**kwargs)
 
     @staticmethod
@@ -522,7 +523,7 @@ class TemplateDomain(Domain):
         return actions
 
     @staticmethod
-    def instantiate_plans(plans):
+    def instantiate_plans_yaml(plans):
         plans_dict = {}
         for name, plan in plans.items():
             plan_name = name
@@ -530,8 +531,15 @@ class TemplateDomain(Domain):
             finish_action = plan['finish_action']
             details_intent = plan['details_intent']
             rules = plan.get('rules', {})
-            subject = plan.get('subject', None)
-            plans_dict[plan_name] = SimpleForm(plan_name, slot_dictionary, finish_action, exit_dict=plan['exit_dict'], chitchat_dict=plan['chitchat_dict'], details_intent=details_intent, rules=rules, subject=subject)
+            plans_dict[plan_name] = SimpleForm(plan_name, slot_dictionary, finish_action, exit_dict=plan['exit_dict'], chitchat_dict=plan['chitchat_dict'], details_intent=details_intent, rules=rules)
+        return plans_dict
+
+    @staticmethod
+    def instantiate_plans_objects(plans):
+        plans_dict = {}
+        for plan in plans:
+            cls = utils.class_from_module_path(plan)()
+            plans_dict[cls.name] = cls
         return plans_dict
 
     def _slot_definitions(self):
@@ -550,7 +558,7 @@ class TemplateDomain(Domain):
             "actions": self._action_classes,  # class names of the actions
             "action_names": action_names,  # names in stories
             "action_factory": self._factory_name,
-            "plans": {key: plan.as_dict() for key, plan in self._plans.items()}
+            "plans": self._plans_list
         }
         return domain_data
 
