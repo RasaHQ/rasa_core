@@ -78,11 +78,11 @@ div.documentwrapper {
 }
 
 div.bodywrapper {
-    margin: 0 0 0 320px;
+    margin: 0 0 0 270px;
 }
 
 div.sphinxsidebar {
-    width: 320px;
+    width: 270px;
     font-size: 14px;
     line-height: 1.5;
     overflow-y: auto;
@@ -456,16 +456,24 @@ div.body p, div.body dd, div.body li {
   -moz-border-radius: 8px;
   border-radius: 8px;
   padding: 24px;
-  min-height: 150px;
+  min-height: 170px;
 }
 
 .card h4 {
-  margin-top: 0;
+  margin-top: 0!important;
 }
 
 a.card-link {
     text-decoration: none;
     color: #617287
+}
+
+.card img {
+    height: 50px;
+}
+
+.card p {
+  min-height: 2em;
 }
 
 a.card-link .card:hover {
@@ -1081,6 +1089,7 @@ nav#breadcrumbs li+li:before {
 
 a.brand-link {
     text-decoration: none;
+    margin-right: 200px;
 }
 
 .nav-top .nav {
@@ -1124,8 +1133,14 @@ a.brand-link {
     flex-flow: wrap;
 }
 
+
 .column {
     flex: 0 0 calc(50% - 24px);
+    align-self: flex-start;
+}
+
+.column.tiny {
+    flex: 0 0 calc(50% - 154px);
     align-self: flex-start;
 }
 
@@ -1286,4 +1301,45 @@ a.brand-link {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.03) !important;
     border: 1px solid #EFEFEF;
   }
+}
+
+div.redoc-wrap {
+    width: 100%;
+}
+
+div.api-content {
+    width: 100%;
+}
+
+input.jp-Stdin-input {
+    height: 1.5em;
+    width: 80%;
+    border-radius: 8px;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 18px;
+    background-color: #fff;
+    color: #617287;   
+}
+input.jp-Stdin-input:focus {
+    outline:none;
+}
+.search.ds-input {
+    height: 1.5em;
+    vertical-align: middle!important;
+    width: 250px;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 18px;
+}
+.search.ds-input:focus {
+    outline: none;
+}
+
+#understanding-the-rasa-stack > a > img {
+    margin-top: 40px;
+    margin-bottom: 50px;
+}
+
+#rasa-platform > a > img {
+    margin-top: 40px;
+    margin-bottom: 50px;
 }
