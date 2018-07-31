@@ -4,7 +4,8 @@
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "action_listen",
-      "unpredictable": false
+      "unpredictable": false,
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.UserUttered",
@@ -23,12 +24,14 @@
                            {"confidence": 0.1707, "name": "affirm"}],
         "entities": []
       },
-      "text": "hi"
+      "text": "hi",
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_greet",
-      "unpredictable": false
+      "unpredictable": false,
+      "plan_flag": false
     }
   ],
   "name": "nlu dialogue"

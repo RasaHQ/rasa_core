@@ -16,16 +16,19 @@
         "text": "/ask_question",
         "entities": []
       },
-      "text": "/ask_question"
+      "text": "/ask_question",
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_answer_question",
-      "unpredictable": false
+      "unpredictable": false,
+      "plan_flag": false
     },
     {
       "py/object": "rasa_core.events.TopicSet",
-      "topic": "question"
+      "topic": "question",
+      "plan_flag": false
     }
   ],
   "name": "topic_question"
