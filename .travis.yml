@@ -9,14 +9,6 @@ python:
 - '3.5'
 - '3.6'
 
-# The below lines are a workaround to get python 3.7 support to work.
-# Remove when Travis officially supports 3.7
-matrix:
-   include:
-    - python: 3.7
-      dist: xenial
-      sudo: true
-
 install:
 - sudo apt-get update
 - sudo apt-get install graphviz graphviz-dev
@@ -34,6 +26,11 @@ after_success:
 - coveralls
 jobs:
   include:
+    # The below lines are a workaround to get python 3.7 support to work.
+    # Remove when Travis officially supports 3.7
+  - python: 3.7
+    dist: xenial
+    sudo: true
   - stage: docs
     if: fork = false AND branch = "master"
     install:
