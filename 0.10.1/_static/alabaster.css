@@ -1089,7 +1089,6 @@ nav#breadcrumbs li+li:before {
 
 a.brand-link {
     text-decoration: none;
-    margin-right: 200px;
 }
 
 .nav-top .nav {
@@ -1328,8 +1327,14 @@ input.jp-Stdin-input:focus {
     vertical-align: middle!important;
     width: 250px;
     font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
+    padding: 4px 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    border: 1px solid #E8E8E8;
 }
+
 .search.ds-input:focus {
     outline: none;
 }
