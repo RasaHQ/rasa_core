@@ -21,24 +21,30 @@
     <link rel="next" title="Installation" href="../installation/" />
     <link rel="prev" title="The Rasa Core dialogue engine" href="../" />
    
+    
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-  <meta name="description" content="">
-  <meta property="og:title" content="" />
+  <meta itemprop="image" content="https://rasa.com/assets/img/facebook-og.png">
+  <meta property="og:title" content="Quickstart" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="" />
-  <meta property="og:url" content="" />
-  <meta property="og:description" content="" />
+  <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
+  <meta property="og:url" content=""https://rasa.com/docs/"quickstart" />
+  
+    <meta name="description" content="None" />
+    <meta itemprop="description" content="None">
+    <meta name="twitter:description" content="None" />
+    <meta property="og:description" content="None" />
+  
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@Rasa_HQ">
-  <meta name="twitter:title" content="">
-  <meta name="twitter:description" content="">
+  <meta name="twitter:title" content="Quickstart">
   <meta name="twitter:creator" content="@Rasa_HQ">
-  <meta name="twitter:image" content="">
+  <meta name="twitter:image" content="https://rasa.com/assets/img/facebook-og.png">
     
   <link rel="stylesheet" href="../_static/xq-light.css" type="text/css" />
   <link rel="stylesheet" href="../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
   <script defer type="text/javascript" src="../_static/config.js"></script>
   <script defer type="text/javascript" src="../_static/klaro.js"></script>
+  <script type="text/javascript" src="https://storage.googleapis.com/docs-theme/clipboard.min.js"></script>
   
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" /> 
@@ -246,8 +252,26 @@ and save it in a file called <code class="docutils literal notranslate"><span cl
 """
 %store stories_md > stories.md</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
-  <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
-</div>
+  <script>
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
+    document.addEventListener('', event => {
+      if (event.detail.status == 'executing') {
+        console.error("");
+	console.error(JSON.stringify(event));
+        console.error(event.currentTarget)
+        gtag('event', 'execute-code-snippet', {
+          'event_category': 'code',
+          'event_label': ""
+        });
+      }
+      if (event.detail.status == 'failed') {
+        gtag('event', e.action, {
+          'event_category': 'code',
+          'event_label': e.text
+        });
+      }
+    })
+  </script></div>
 <div class="section" id="define-a-domain">
 <h2>2. Define a Domain<a class="headerlink" href="#define-a-domain" title="Permalink to this headline">¶</a></h2>
 <p>The next thing we need to do is define a <code class="docutils literal notranslate"><span class="pre">Domain</span></code>.
@@ -290,8 +314,26 @@ templates:
 """
 %store domain_yml > domain.yml</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
-  <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
-<p>So what do the different parts mean?</p>
+  <script>
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
+    document.addEventListener('', event => {
+      if (event.detail.status == 'executing') {
+        console.error("");
+	console.error(JSON.stringify(event));
+        console.error(event.currentTarget)
+        gtag('event', 'execute-code-snippet', {
+          'event_category': 'code',
+          'event_label': ""
+        });
+      }
+      if (event.detail.status == 'failed') {
+        gtag('event', e.action, {
+          'event_category': 'code',
+          'event_label': e.text
+        });
+      }
+    })
+  </script><p>So what do the different parts mean?</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="13%" />
@@ -339,8 +381,26 @@ into <code class="docutils literal notranslate"><span class="pre">models/dialogu
 
   <pre data-executable>!python -m rasa_core.train -d domain.yml -s stories.md -o models/dialogue</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
-  <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
-</div>
+  <script>
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
+    document.addEventListener('', event => {
+      if (event.detail.status == 'executing') {
+        console.error("");
+	console.error(JSON.stringify(event));
+        console.error(event.currentTarget)
+        gtag('event', 'execute-code-snippet', {
+          'event_category': 'code',
+          'event_label': ""
+        });
+      }
+      if (event.detail.status == 'failed') {
+        gtag('event', e.action, {
+          'event_category': 'code',
+          'event_label': e.text
+        });
+      }
+    })
+  </script></div>
 <div class="section" id="talking-to-your-bot">
 <h2>4. Talking To Your Bot<a class="headerlink" href="#talking-to-your-bot" title="Permalink to this headline">¶</a></h2>
 <p>Now we can use that trained dialogue model to run our bot.
@@ -361,8 +421,26 @@ from rasa_core.channels.console import ConsoleInputChannel
 agent = Agent.load('models/dialogue')
 agent.handle_channel(ConsoleInputChannel())</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
-  <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
-</div>
+  <script>
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
+    document.addEventListener('', event => {
+      if (event.detail.status == 'executing') {
+        console.error("");
+	console.error(JSON.stringify(event));
+        console.error(event.currentTarget)
+        gtag('event', 'execute-code-snippet', {
+          'event_category': 'code',
+          'event_label': ""
+        });
+      }
+      if (event.detail.status == 'failed') {
+        gtag('event', e.action, {
+          'event_category': 'code',
+          'event_label': e.text
+        });
+      }
+    })
+  </script></div>
 <div class="section" id="add-nlu">
 <h2>5. Add NLU<a class="headerlink" href="#add-nlu" title="Permalink to this headline">¶</a></h2>
 <p>Of course you want your bot to understand real language, not just structured input.</p>
@@ -429,8 +507,26 @@ Let’s create some intent examples in a file called <code class="docutils liter
 """
 %store nlu_md > nlu.md</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
-  <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
-<p>Furthermore, we need a configuration file, <code class="docutils literal notranslate"><span class="pre">nlu_config.yml</span></code>, for the
+  <script>
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
+    document.addEventListener('', event => {
+      if (event.detail.status == 'executing') {
+        console.error("");
+	console.error(JSON.stringify(event));
+        console.error(event.currentTarget)
+        gtag('event', 'execute-code-snippet', {
+          'event_category': 'code',
+          'event_label': ""
+        });
+      }
+      if (event.detail.status == 'failed') {
+        gtag('event', e.action, {
+          'event_category': 'code',
+          'event_label': e.text
+        });
+      }
+    })
+  </script><p>Furthermore, we need a configuration file, <code class="docutils literal notranslate"><span class="pre">nlu_config.yml</span></code>, for the
 NLU model:</p>
 
 
@@ -440,8 +536,26 @@ pipeline: tensorflow_embedding
 """
 %store nlu_config > nlu_config.yml</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
-  <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
-<p>We can now train an NLU model using our examples (make sure to
+  <script>
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
+    document.addEventListener('', event => {
+      if (event.detail.status == 'executing') {
+        console.error("");
+	console.error(JSON.stringify(event));
+        console.error(event.currentTarget)
+        gtag('event', 'execute-code-snippet', {
+          'event_category': 'code',
+          'event_label': ""
+        });
+      }
+      if (event.detail.status == 'failed') {
+        gtag('event', e.action, {
+          'event_category': 'code',
+          'event_label': e.text
+        });
+      }
+    })
+  </script><p>We can now train an NLU model using our examples (make sure to
 <a class="reference external" href="http://nlu.rasa.com/installation.html#setting-up-rasa-nlu">install Rasa NLU</a>
 first).</p>
 <p>Let’s run</p>
@@ -449,8 +563,26 @@ first).</p>
 
   <pre data-executable>!python -m rasa_nlu.train -c nlu_config.yml --data nlu.md -o models --fixed_model_name nlu --project current --verbose</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
-  <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
-<p>to train our NLU model. A new directory <code class="docutils literal notranslate"><span class="pre">models/current/nlu</span></code> should have been
+  <script>
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
+    document.addEventListener('', event => {
+      if (event.detail.status == 'executing') {
+        console.error("");
+	console.error(JSON.stringify(event));
+        console.error(event.currentTarget)
+        gtag('event', 'execute-code-snippet', {
+          'event_category': 'code',
+          'event_label': ""
+        });
+      }
+      if (event.detail.status == 'failed') {
+        gtag('event', e.action, {
+          'event_category': 'code',
+          'event_label': e.text
+        });
+      }
+    })
+  </script><p>to train our NLU model. A new directory <code class="docutils literal notranslate"><span class="pre">models/current/nlu</span></code> should have been
 created containing the NLU model. Note that <code class="docutils literal notranslate"><span class="pre">current</span></code> stands for project name,
 since this is specified in the train command.</p>
 <div class="admonition note">
@@ -476,8 +608,26 @@ from rasa_core.channels.console import ConsoleInputChannel
 agent = Agent.load('models/dialogue', interpreter='models/current/nlu')
 agent.handle_channel(ConsoleInputChannel())</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
-  <script>new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'binder', isolateCells: false , theme: 'xq-light' })</script>
-<p>Congratulations 🚀! You just built a bot from scratch,
+  <script>
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
+    document.addEventListener('', event => {
+      if (event.detail.status == 'executing') {
+        console.error("");
+	console.error(JSON.stringify(event));
+        console.error(event.currentTarget)
+        gtag('event', 'execute-code-snippet', {
+          'event_category': 'code',
+          'event_label': ""
+        });
+      }
+      if (event.detail.status == 'failed') {
+        gtag('event', e.action, {
+          'event_category': 'code',
+          'event_label': e.text
+        });
+      }
+    })
+  </script><p>Congratulations 🚀! You just built a bot from scratch,
 powered entirely by machine learning.
 Why not play around with the code above?</p>
 <ol class="arabic simple">
@@ -583,6 +733,19 @@ this:</p>
     gtag('js', new Date());
     gtag('config', 'UA-87333416-1', {
       'anonymize_ip': true,
+    });
+  </script>
+  <script type="text/javascript">
+    var clipboard = new ClipboardJS('.copyable');
+    clipboard.on('success', function(e) {
+      console.error("CLICK");
+      gtag('event', e.action, {
+        'event_category': 'code',
+        'event_label': e.text
+      });
+    });
+    clipboard.on('error', function(e) {
+      console.log(e);
     });
   </script>
   </body>
