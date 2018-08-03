@@ -250,7 +250,7 @@ you should store it as a slot. Slot information is always available for every fe
                 [--epochs EPOCHS] [--validation_split VALIDATION_SPLIT]
                 [--batch_size BATCH_SIZE] [--online]
                 [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
-                [--debug] [-v]
+                [--url URL] [--debug] [-v]
 
 trains a dialogue model
 
@@ -277,6 +277,8 @@ optional arguments:
                         their connections between story blocks in a file
                         called `story_blocks_connections.pdf`.
   --dump_stories        If enabled, save flattened stories to a file
+  --url URL             If supplied, downloads a story file from a URL and
+                        trains on it
   --debug               Print lots of debugging statements. Sets logging level
                         to DEBUG
   -v, --verbose         Be verbose. Sets logging level to INFO
