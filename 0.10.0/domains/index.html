@@ -141,6 +141,7 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../0.10.3/domains.html">0.10.3</a>
               <a href="../0.10.2/domains.html">0.10.2</a>
               <a href="../0.10.1/domains.html">0.10.1</a>
               <a href="domains.html">0.10.0</a>
@@ -176,7 +177,7 @@
 
 
 
-    <p class="scv-banner"><a href="../0.10.2/domains.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.10.2.</a></p>
+    <p class="scv-banner"><a href="../0.10.3/domains.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.10.3.</a></p>
 <div class="section" id="domain-format">
 <span id="domain"></span><h1>Domain Format<a class="headerlink" href="#domain-format" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">Domain</span></code> defines the universe in which your bot operates.
@@ -362,11 +363,16 @@ multiple responses and Rasa will randomly pick one of them, e.g.:</p>
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
-      console.error("CLICK");
       gtag('event', e.action, {
         'event_category': 'code',
         'event_label': e.text
       });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
     });
     clipboard.on('error', function(e) {
       console.log(e);

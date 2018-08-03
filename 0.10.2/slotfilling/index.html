@@ -141,6 +141,7 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../0.10.3/slotfilling.html">0.10.3</a>
               <a href="slotfilling.html">0.10.2</a>
               <a href="../0.10.1/slotfilling.html">0.10.1</a>
               <a href="../0.10.0/slotfilling.html">0.10.0</a>
@@ -171,9 +172,12 @@
   
 
 
+    
+    
 
 
 
+    <p class="scv-banner"><a href="../0.10.3/slotfilling.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.10.3.</a></p>
 <div class="section" id="slot-filling">
 <span id="slotfilling"></span><h1>Slot Filling<a class="headerlink" href="#slot-filling" title="Permalink to this headline">¶</a></h1>
 <p>One of the most common conversation patterns
@@ -395,11 +399,16 @@ It’s easiest to add stories for each of these.</p>
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
-      console.error("CLICK");
       gtag('event', e.action, {
         'event_category': 'code',
         'event_label': e.text
       });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
     });
     clipboard.on('error', function(e) {
       console.log(e);

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Quickstart &#8212; Rasa Core 0.10.2 documentation</title>
+    <title>Quickstart</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
@@ -27,7 +27,7 @@
   <meta property="og:title" content="Quickstart" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
-  <meta property="og:url" content=""https://rasa.com/docs/"quickstart" />
+  <meta property="og:url" content="https://rasa.com/docs/core/quickstart" />
   
     <meta name="description" content="None" />
     <meta itemprop="description" content="None">
@@ -134,13 +134,14 @@
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.2
+        v: 0.10.3
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="0.10.3/quickstart.html">0.10.3</a>
               <a href="0.10.2/quickstart.html">0.10.2</a>
               <a href="0.10.1/quickstart.html">0.10.1</a>
               <a href="0.10.0/quickstart.html">0.10.0</a>
@@ -250,15 +251,15 @@ and save it in a file called <code class="docutils literal notranslate"><span cl
 %store stories_md > stories.md</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
-    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
-    document.addEventListener('', event => {
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-write-stories' })
+    document.addEventListener('core-write-stories', event => {
       if (event.detail.status == 'executing') {
-        console.error("");
+        console.error("core-write-stories");
 	console.error(JSON.stringify(event));
         console.error(event.currentTarget)
         gtag('event', 'execute-code-snippet', {
           'event_category': 'code',
-          'event_label': ""
+          'event_label': "core-write-stories"
         });
       }
       if (event.detail.status == 'failed') {
@@ -312,15 +313,15 @@ templates:
 %store domain_yml > domain.yml</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
-    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
-    document.addEventListener('', event => {
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-write-domain' })
+    document.addEventListener('core-write-domain', event => {
       if (event.detail.status == 'executing') {
-        console.error("");
+        console.error("core-write-domain");
 	console.error(JSON.stringify(event));
         console.error(event.currentTarget)
         gtag('event', 'execute-code-snippet', {
           'event_category': 'code',
-          'event_label': ""
+          'event_label': "core-write-domain"
         });
       }
       if (event.detail.status == 'failed') {
@@ -379,15 +380,15 @@ into <code class="docutils literal notranslate"><span class="pre">models/dialogu
   <pre data-executable>!python -m rasa_core.train -d domain.yml -s stories.md -o models/dialogue</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
-    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
-    document.addEventListener('', event => {
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-train-core' })
+    document.addEventListener('core-train-core', event => {
       if (event.detail.status == 'executing') {
-        console.error("");
+        console.error("core-train-core");
 	console.error(JSON.stringify(event));
         console.error(event.currentTarget)
         gtag('event', 'execute-code-snippet', {
           'event_category': 'code',
-          'event_label': ""
+          'event_label': "core-train-core"
         });
       }
       if (event.detail.status == 'failed') {
@@ -413,21 +414,42 @@ Give it a try by sending the message <code class="docutils literal notranslate">
 <p>If you are running the cells here in the docs, run this cell:</p>
 
 
-  <pre data-executable>from rasa_core.agent import Agent
-from rasa_core.channels.console import ConsoleInputChannel
+  <pre data-executable>import IPython
+from IPython.display import clear_output
+from rasa_core.agent import Agent
+import time
+
+messages = ["Hi! you can chat in this window. Type 'stop' to end the conversation."]
 agent = Agent.load('models/dialogue')
-agent.handle_channel(ConsoleInputChannel())</pre>
+
+def chatlogs_html(messages):
+    messages_html = "".join(["&lt;p&gt;{}&lt;/p&gt;".format(m) for m in messages])
+    chatbot_html = """&lt;div class="chat-window" {}&lt;/div&gt;""".format(messages_html)
+    return chatbot_html
+
+
+while True:
+    clear_output()
+    display(IPython.display.HTML(chatlogs_html(messages)))
+    time.sleep(0.3)
+    a = input()
+    messages.append(a)
+    if a == 'stop':
+        break
+    responses = agent.handle_message(a)
+    for r in responses:
+        messages.append(r.get("text"))</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
-    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
-    document.addEventListener('', event => {
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-chat-without-nlu' })
+    document.addEventListener('core-chat-without-nlu', event => {
       if (event.detail.status == 'executing') {
-        console.error("");
+        console.error("core-chat-without-nlu");
 	console.error(JSON.stringify(event));
         console.error(event.currentTarget)
         gtag('event', 'execute-code-snippet', {
           'event_category': 'code',
-          'event_label': ""
+          'event_label': "core-chat-without-nlu"
         });
       }
       if (event.detail.status == 'failed') {
@@ -505,15 +527,15 @@ Let’s create some intent examples in a file called <code class="docutils liter
 %store nlu_md > nlu.md</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
-    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
-    document.addEventListener('', event => {
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-write-nlu-data' })
+    document.addEventListener('core-write-nlu-data', event => {
       if (event.detail.status == 'executing') {
-        console.error("");
+        console.error("core-write-nlu-data");
 	console.error(JSON.stringify(event));
         console.error(event.currentTarget)
         gtag('event', 'execute-code-snippet', {
           'event_category': 'code',
-          'event_label': ""
+          'event_label': "core-write-nlu-data"
         });
       }
       if (event.detail.status == 'failed') {
@@ -534,15 +556,15 @@ pipeline: tensorflow_embedding
 %store nlu_config > nlu_config.yml</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
-    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
-    document.addEventListener('', event => {
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-write-nlu-config' })
+    document.addEventListener('core-write-nlu-config', event => {
       if (event.detail.status == 'executing') {
-        console.error("");
+        console.error("core-write-nlu-config");
 	console.error(JSON.stringify(event));
         console.error(event.currentTarget)
         gtag('event', 'execute-code-snippet', {
           'event_category': 'code',
-          'event_label': ""
+          'event_label': "core-write-nlu-config"
         });
       }
       if (event.detail.status == 'failed') {
@@ -561,15 +583,15 @@ first).</p>
   <pre data-executable>!python -m rasa_nlu.train -c nlu_config.yml --data nlu.md -o models --fixed_model_name nlu --project current --verbose</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
-    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
-    document.addEventListener('', event => {
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-train-nlu' })
+    document.addEventListener('core-train-nlu', event => {
       if (event.detail.status == 'executing') {
-        console.error("");
+        console.error("core-train-nlu");
 	console.error(JSON.stringify(event));
         console.error(event.currentTarget)
         gtag('event', 'execute-code-snippet', {
           'event_category': 'code',
-          'event_label': ""
+          'event_label': "core-train-nlu"
         });
       }
       if (event.detail.status == 'failed') {
@@ -606,15 +628,15 @@ agent = Agent.load('models/dialogue', interpreter='models/current/nlu')
 agent.handle_channel(ConsoleInputChannel())</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
-    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: '' })
-    document.addEventListener('', event => {
+    new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-chat-with-nlu' })
+    document.addEventListener('core-chat-with-nlu', event => {
       if (event.detail.status == 'executing') {
-        console.error("");
+        console.error("core-chat-with-nlu");
 	console.error(JSON.stringify(event));
         console.error(event.currentTarget)
         gtag('event', 'execute-code-snippet', {
           'event_category': 'code',
-          'event_label': ""
+          'event_label': "core-chat-with-nlu"
         });
       }
       if (event.detail.status == 'failed') {
@@ -735,11 +757,16 @@ this:</p>
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
-      console.error("CLICK");
       gtag('event', e.action, {
         'event_category': 'code',
         'event_label': e.text
       });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
     });
     clipboard.on('error', function(e) {
       console.log(e);

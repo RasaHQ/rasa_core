@@ -141,6 +141,7 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../0.10.3/connectors.html">0.10.3</a>
               <a href="../0.10.2/connectors.html">0.10.2</a>
               <a href="../0.10.1/connectors.html">0.10.1</a>
               <a href="connectors.html">0.10.0</a>
@@ -176,7 +177,7 @@
 
 
 
-    <p class="scv-banner"><a href="../0.10.2/connectors.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.10.2.</a></p>
+    <p class="scv-banner"><a href="../0.10.3/connectors.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.10.3.</a></p>
 <div class="section" id="chat-voice-platforms">
 <span id="connectors"></span><h1><a class="toc-backref" href="#id8">Chat &amp; Voice platforms</a><a class="headerlink" href="#chat-voice-platforms" title="Permalink to this headline">¶</a></h1>
 <p>Here’s how to connect your conversational AI to the outside world.</p>
@@ -579,11 +580,16 @@ to use when sending messages back to the user.</p>
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
-      console.error("CLICK");
       gtag('event', e.action, {
         'event_category': 'code',
         'event_label': e.text
       });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
     });
     clipboard.on('error', function(e) {
       console.log(e);

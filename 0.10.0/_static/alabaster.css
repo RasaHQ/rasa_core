@@ -1361,3 +1361,16 @@ div .copyable {
 .copyable.button{
     margin-top: -12px;
 }
+
+.copyable.confirm {
+    opacity: 0;
+    -webkit-transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
+    margin-top: -18px;
+    color: #03C3FF;
+    cursor: default;
+}
+
+.copyable.confirm.visible {
+    opacity: 1;
+}

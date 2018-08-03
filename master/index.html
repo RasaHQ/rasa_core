@@ -140,6 +140,7 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../0.10.3/index.html">0.10.3</a>
               <a href="../0.10.2/index.html">0.10.2</a>
               <a href="../0.10.1/index.html">0.10.1</a>
               <a href="../0.10.0/index.html">0.10.0</a>
@@ -175,7 +176,7 @@
 
 
 
-    <p class="scv-banner"><a href="../0.10.2/index.html"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.10.2.</a></p>
+    <p class="scv-banner"><a href="../0.10.3/index.html"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.10.3.</a></p>
 <div class="section" id="the-rasa-core-dialogue-engine">
 <h1>The Rasa Core dialogue engine<a class="headerlink" href="#the-rasa-core-dialogue-engine" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
@@ -262,11 +263,16 @@ You can build a full example without installing anything, just go to the quickst
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
-      console.error("CLICK");
       gtag('event', e.action, {
         'event_category': 'code',
         'event_label': e.text
       });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
     });
     clipboard.on('error', function(e) {
       console.log(e);

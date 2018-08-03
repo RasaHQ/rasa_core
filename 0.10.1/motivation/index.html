@@ -139,6 +139,7 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../0.10.3/motivation.html">0.10.3</a>
               <a href="../0.10.2/motivation.html">0.10.2</a>
               <a href="motivation.html">0.10.1</a>
               <a href="../0.10.0/motivation.html">0.10.0</a>
@@ -174,7 +175,7 @@
 
 
 
-    <p class="scv-banner"><a href="../0.10.2/motivation.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.10.2.</a></p>
+    <p class="scv-banner"><a href="../0.10.3/motivation.html"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.10.3.</a></p>
 <div class="section" id="motivation">
 <span id="id1"></span><h1>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="where-rasa-core-fits-in">
@@ -284,11 +285,16 @@ Try the tutorials!</div></blockquote>
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
-      console.error("CLICK");
       gtag('event', e.action, {
         'event_category': 'code',
         'event_label': e.text
       });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
     });
     clipboard.on('error', function(e) {
       console.log(e);

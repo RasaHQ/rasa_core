@@ -141,6 +141,7 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../0.10.3/customactions.html">0.10.3</a>
               <a href="../0.10.2/customactions.html">0.10.2</a>
               <a href="../0.10.1/customactions.html">0.10.1</a>
               <a href="../0.10.0/customactions.html">0.10.0</a>
@@ -176,7 +177,7 @@
 
 
 
-    <p class="scv-banner"><a href="../0.10.2/customactions.html"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.10.2.</a></p>
+    <p class="scv-banner"><a href="../0.10.3/customactions.html"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.10.3.</a></p>
 <div class="section" id="custom-actions">
 <span id="customactions"></span><h1>Custom Actions<a class="headerlink" href="#custom-actions" title="Permalink to this headline">¶</a></h1>
 <p>There are two kinds of actions in Rasa Core.
@@ -284,11 +285,16 @@ to the user. Use <code class="docutils literal notranslate"><span class="pre">di
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
-      console.error("CLICK");
       gtag('event', e.action, {
         'event_category': 'code',
         'event_label': e.text
       });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
     });
     clipboard.on('error', function(e) {
       console.log(e);

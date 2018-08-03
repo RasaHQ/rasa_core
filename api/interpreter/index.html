@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Interpreters &#8212; Rasa Core 0.10.2 documentation</title>
+    <title>Interpreters</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/banner.css" type="text/css" />
@@ -27,7 +27,7 @@
   <meta property="og:title" content="Interpreters" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
-  <meta property="og:url" content=""https://rasa.com/docs/"api/interpreter" />
+  <meta property="og:url" content="https://rasa.com/docs/core/api/interpreter" />
   
     <meta name="description" content="None" />
     <meta itemprop="description" content="None">
@@ -134,13 +134,14 @@
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.2
+        v: 0.10.3
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../0.10.3/api/interpreter.html">0.10.3</a>
               <a href="../0.10.2/api/interpreter.html">0.10.2</a>
               <a href="../0.10.1/api/interpreter.html">0.10.1</a>
               <a href="../0.10.0/api/interpreter.html">0.10.0</a>
@@ -283,11 +284,16 @@ the same type you can use</p>
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
-      console.error("CLICK");
       gtag('event', e.action, {
         'event_category': 'code',
         'event_label': e.text
       });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
     });
     clipboard.on('error', function(e) {
       console.log(e);
