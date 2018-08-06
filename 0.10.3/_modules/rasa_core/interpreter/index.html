@@ -252,25 +252,41 @@
             <span class="k">return</span> <span class="p">[]</span>
 
     <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_confidence</span><span class="p">(</span><span class="n">confidence_str</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; float</span>
+        <span class="k">if</span> <span class="n">confidence_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">1.0</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">confidence_str</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Invalid to parse confidence value in line &quot;</span>
+                           <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;. Make sure the intent confidence is an &quot;</span>
+                           <span class="s2">&quot;@ followed by a decimal number. &quot;</span>
+                           <span class="s2">&quot;Error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">confidence_str</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">extract_intent_and_entities</span><span class="p">(</span><span class="n">user_input</span><span class="p">):</span>
         <span class="c1"># type: (Text) -&gt; object</span>
         <span class="sd">&quot;&quot;&quot;Parse the user input using regexes to extract intent &amp; entities.&quot;&quot;&quot;</span>
 
         <span class="n">prefixes</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">RegexInterpreter</span><span class="o">.</span><span class="n">allowed_prefixes</span><span class="p">())</span>
         <span class="c1"># the regex matches &quot;slot{&quot;a&quot;: 1}&quot;</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^[&#39;</span><span class="o">+</span><span class="n">prefixes</span><span class="o">+</span><span class="s1">&#39;]?([^{]+)([{].+)?&#39;</span><span class="p">,</span> <span class="n">user_input</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^[&#39;</span><span class="o">+</span><span class="n">prefixes</span><span class="o">+</span><span class="s1">&#39;]?([^{@]+)(@[0-9\.]+)?([{].+)?&#39;</span><span class="p">,</span> <span class="n">user_input</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">event_name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="n">entities</span> <span class="o">=</span> <span class="n">RegexInterpreter</span><span class="o">.</span><span class="n">_parse_parameters</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
-                                                          <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
-                                                          <span class="n">m</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+            <span class="n">confidence</span> <span class="o">=</span> <span class="n">RegexInterpreter</span><span class="o">.</span><span class="n">_parse_confidence</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">entities</span> <span class="o">=</span> <span class="n">RegexInterpreter</span><span class="o">.</span><span class="n">_parse_parameters</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+                                                          <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+                                                          <span class="n">m</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
                                                           <span class="n">user_input</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">entities</span>
+            <span class="k">return</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">entities</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Failed to parse intent end entities from &quot;</span>
                            <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;. &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_input</span><span class="p">))</span>
-            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="p">[]</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">deprecated_extraction</span><span class="p">(</span><span class="n">user_input</span><span class="p">):</span>
@@ -297,7 +313,7 @@
                             <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)}</span>
                         <span class="n">entities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="n">intent</span><span class="p">,</span> <span class="n">entities</span>
+            <span class="k">return</span> <span class="n">intent</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">entities</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
 
@@ -316,18 +332,18 @@
         <span class="sd">&quot;&quot;&quot;Parse a text message.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_using_deprecated_format</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-            <span class="n">intent</span><span class="p">,</span> <span class="n">entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deprecated_extraction</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">intent</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deprecated_extraction</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">intent</span><span class="p">,</span> <span class="n">entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_intent_and_entities</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">intent</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_intent_and_entities</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
             <span class="s1">&#39;intent&#39;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">intent</span><span class="p">,</span>
-                <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="n">confidence</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="s1">&#39;intent_ranking&#39;</span><span class="p">:</span> <span class="p">[{</span>
                 <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">intent</span><span class="p">,</span>
-                <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="n">confidence</span><span class="p">,</span>
             <span class="p">}],</span>
             <span class="s1">&#39;entities&#39;</span><span class="p">:</span> <span class="n">entities</span><span class="p">,</span>
         <span class="p">}</span>
