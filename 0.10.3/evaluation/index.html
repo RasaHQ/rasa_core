@@ -189,27 +189,22 @@ We count any story as <cite>failed</cite> if at least one of the actions was pre
 The confusion matrix shows, for each action in your domain, how often that action
 was predicted, and how often an incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] -s STORIES [-m MAX_STORIES] -d CORE [-u NLU]
-                   [-o OUTPUT] [--failed FAILED] [--debug] [-v]
-
-evaluates a dialogue model
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -s STORIES, --stories STORIES
-                        file or folder containing stories to evaluate on
-  -m MAX_STORIES, --max_stories MAX_STORIES
-                        maximum number of stories to test on
-  -d CORE, --core CORE  core model to run with the server
-  -u NLU, --nlu NLU     nlu model to run with the server. None for regex
-                        interpreter
-  -o OUTPUT, --output OUTPUT
-                        output path for the created evaluation plot. If set to
-                        Noneor an empty string, no plot will be generated.
-  --failed FAILED       output path for the failed stories
-  --debug               Print lots of debugging statements. Sets logging level
-                        to DEBUG
-  -v, --verbose         Be verbose. Sets logging level to INFO
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+  File &quot;/opt/python/2.7.14/lib/python2.7/runpy.py&quot;, line 174, in _run_module_as_main
+    &quot;__main__&quot;, fname, loader, pkg_name)
+  File &quot;/opt/python/2.7.14/lib/python2.7/runpy.py&quot;, line 72, in _run_code
+    exec code in run_globals
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/evaluate.py&quot;, line 19, in &lt;module&gt;
+    from rasa_core.agent import Agent
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/agent.py&quot;, line 23, in &lt;module&gt;
+    from rasa_core.processor import MessageProcessor
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/processor.py&quot;, line 32, in &lt;module&gt;
+    from rasa_core.tracker_store import TrackerStore
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/tracker_store.py&quot;, line 13, in &lt;module&gt;
+    from rasa_core.broker import EventChannel
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/broker.py&quot;, line 8, in &lt;module&gt;
+    import pika
+ImportError: No module named pika
 </pre></div>
 </div>
 </div>
