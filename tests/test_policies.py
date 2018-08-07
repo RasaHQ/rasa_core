@@ -24,8 +24,9 @@ from tests.conftest import DEFAULT_DOMAIN_PATH, DEFAULT_STORIES_FILE
 from rasa_core.featurizers import (
     MaxHistoryTrackerFeaturizer,
     BinarySingleStateFeaturizer, FullDialogueTrackerFeaturizer)
-from rasa_core.events import ActionExecuted
+from rasa_core.events import ActionExecuted, UserUttered
 from tests.utilities import read_dialogue_file
+from data.test_plans.default import StartTestPlan
 
 
 def train_trackers(domain):
@@ -291,3 +292,18 @@ class TestSklearnPolicy(PolicyTestCollection):
         policy = self.create_policy(featurizer=featurizer, shuffle=False)
         # does not raise
         policy.train(trackers, domain=default_domain)
+
+class TestSimpleForm(object):
+    def test_simple_form(self):
+        forms_domain = TemplateDomain.load('data/test_domains/default_with_form.yml')
+        new_tracker = DialogueStateTracker(UserMessage.DEFAULT_SENDER_ID, forms_domain.slots)
+        start_action = StartTestPlan()
+        evs = start_action.run(None, new_tracker, forms_domain)
+        utter_ev = UserUttered('hello', intent={'name':'greet', 'confidence':0.1})
+        new_tracker.update(utter_ev)
+        for ev in evs:
+            new_tracker.update(ev)
+        print(new_tracker.active_plan)
+        assert new_tracker.active_plan is not None
+        next_idx = new_tracker.active_plan.next_action_idx(new_tracker, forms_domain)
+        assert forms_domain.action_for_index(next_idx).name() in ['utter_ask_people', 'utter_ask_location']

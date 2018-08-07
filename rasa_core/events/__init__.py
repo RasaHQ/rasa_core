@@ -757,6 +757,7 @@ class AgentUttered(Event):
             raise ValueError("Failed to parse agent uttered event. "
                              "{}".format(e))
 
+
 class StartPlan(Event):
     def __init__(self, domain, plan_name):
         super(StartPlan).__init__()
