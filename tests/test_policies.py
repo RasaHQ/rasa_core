@@ -302,8 +302,8 @@ class TestSimpleForm(object):
                                            forms_domain.slots)
         start_action = StartTestPlan()
         evs = start_action.run(None, new_tracker, forms_domain)
-        utter_ev = UserUttered('hello', intent={'name':'greet',
-                                                'confidence':0.1})
+        utter_ev = UserUttered('hello', intent={'name': 'greet',
+                                                'confidence': 0.1})
         new_tracker.update(utter_ev)
         for ev in evs:
             new_tracker.update(ev)
