@@ -57,9 +57,12 @@ class TestPlan(SimpleForm):
 
         details_intent = "utter_ask_details"
 
-        rules = {"cuisine":{"mcdonalds": {'need':['location'], 'lose':['people', 'price']}}}
+        rules = {"cuisine": {"mcdonalds":
+                             {'need': ['location'], 'lose': ['people']}}}
 
-        super(TestPlan, self).__init__(name, slot_dict, finish_action, exit_dict, chitchat_dict, details_intent, rules)
+        super(TestPlan, self).__init__(name, slot_dict, finish_action,
+                                       exit_dict, chitchat_dict,
+                                       details_intent, rules)
 
 class StartTestPlan(ActionStartPlan):
 

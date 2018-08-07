@@ -296,15 +296,20 @@ class TestSklearnPolicy(PolicyTestCollection):
 
 class TestSimpleForm(object):
     def test_simple_form(self):
-        forms_domain = TemplateDomain.load('data/test_domains/default_with_form.yml')
-        new_tracker = DialogueStateTracker(UserMessage.DEFAULT_SENDER_ID, forms_domain.slots)
+        domain_file = 'data/test_domains/default_with_form.yml'
+        forms_domain = TemplateDomain.load(domain_file)
+        new_tracker = DialogueStateTracker(UserMessage.DEFAULT_SENDER_ID,
+                                           forms_domain.slots)
         start_action = StartTestPlan()
         evs = start_action.run(None, new_tracker, forms_domain)
-        utter_ev = UserUttered('hello', intent={'name':'greet', 'confidence':0.1})
+        utter_ev = UserUttered('hello', intent={'name':'greet',
+                                                'confidence':0.1})
         new_tracker.update(utter_ev)
         for ev in evs:
             new_tracker.update(ev)
         print(new_tracker.active_plan)
         assert new_tracker.active_plan is not None
-        next_idx = new_tracker.active_plan.next_action_idx(new_tracker, forms_domain)
-        assert forms_domain.action_for_index(next_idx).name() in ['utter_ask_people', 'utter_ask_location']
+        next_idx = new_tracker.active_plan.next_action_idx(new_tracker,
+                                                           forms_domain)
+        next_action = forms_domain.action_for_index(next_idx).name()
+        assert next_action in ['utter_ask_people', 'utter_ask_location']
