@@ -30,7 +30,7 @@ actions:
   - utter_goodbye
   - utter_ask_people
   - utter_ask_location
-  - tests.conftest.default.StartTestPlan
+  - tests.conftest.StartTestPlan
   - tests.conftest.StopPlan
 
 plans:
