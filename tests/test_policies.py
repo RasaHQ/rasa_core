@@ -293,6 +293,7 @@ class TestSklearnPolicy(PolicyTestCollection):
         # does not raise
         policy.train(trackers, domain=default_domain)
 
+
 class TestSimpleForm(object):
     def test_simple_form(self):
         forms_domain = TemplateDomain.load('data/test_domains/default_with_form.yml')
