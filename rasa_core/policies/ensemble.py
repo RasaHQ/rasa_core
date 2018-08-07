@@ -85,12 +85,17 @@ class PolicyEnsemble(object):
 
         This should be overwritten by more advanced policies to use ML to
         predict the action. Returns the index of the next action"""
-        probabilities = self.probabilities_using_best_policy(tracker, domain)
-        max_index = int(np.argmax(probabilities))
-        logger.debug("Predicted next action '{}' with prob {:.2f}.".format(
-                domain.action_for_index(max_index).name(),
-                probabilities[max_index]))
-        return max_index
+        if tracker.active_plan is not None:
+            idx = tracker.active_plan.next_action_idx(tracker, domain)
+            logger.debug("Plan {} predicted next action {}".format(tracker.active_plan.name, domain.action_for_index(idx)))
+            return idx
+        else:
+            probabilities = self.probabilities_using_best_policy(tracker, domain)
+            max_index = int(np.argmax(probabilities))
+            logger.debug("Predicted next action '{}' with prob {:.2f}.".format(
+                    domain.action_for_index(max_index).name(),
+                    probabilities[max_index]))
+            return max_index
 
     def _max_histories(self):
         # type: () -> List[Optional[int]]
@@ -206,24 +211,6 @@ class PolicyEnsemble(object):
 
 class SimplePolicyEnsemble(PolicyEnsemble):
 
-    def predict_next_action(self, tracker, domain):
-        # type: (DialogueStateTracker, Domain) -> int
-        """Predicts the next action the bot should take after seeing x.
-
-        This should be overwritten by more advanced policies to use ML to
-        predict the action. Returns the index of the next action"""
-        if tracker.active_plan is not None:
-            idx = tracker.active_plan.next_action_idx(tracker, domain)
-            logger.debug("Plan {} predicted next action {}".format(tracker.active_plan.name, domain.action_for_index(idx)))
-            return idx
-        else:
-            probabilities = self.probabilities_using_best_policy(tracker, domain)
-            max_index = int(np.argmax(probabilities))
-            logger.debug("Predicted next action '{}' with prob {:.2f}.".format(
-                    domain.action_for_index(max_index).name(),
-                    probabilities[max_index]))
-            return max_index
-
     def probabilities_using_best_policy(self, tracker, domain):
         # type: (DialogueStateTracker, Domain) -> List[float]
         result = None
@@ -242,5 +229,3 @@ class SimplePolicyEnsemble(PolicyEnsemble):
         logger.debug("Predicted next action using {}"
                      "".format(best_policy_name))
         return result
-
-# class PolicyEnsembleWithPlans(SimplePolicyEnsemble):

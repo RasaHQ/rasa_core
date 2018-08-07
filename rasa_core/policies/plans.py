@@ -59,7 +59,7 @@ class SimpleForm(Plan):
         for slot, values in self.slot_dict.items():
             if 'ask_utt' not in list(values.keys()):
                 logger.error('ask_utt not found for {} in plan {}. An utterance is required to ask for a certain slot'.format(slot, self.name))
-            if 'clarify_utt' not in list(values.keys()) and self.details_intent is not None:
+            if 'clarify_utt' not in list(values.keys()) and self.details_intent not in [None, []]:
                 logger.warning('clarify_utt not found for {} in plan {}, even though {} is listed as a details intent.'.format(slot, self.name, self.details_intent))
 
     def _process_rules(self, rules):
@@ -81,11 +81,16 @@ class SimpleForm(Plan):
                     all_add.extend(add)
                 if take is not None:
                     all_take.extend(take)
-        self.current_required = list(set(self.required_slots+all_add)-set(all_take))
+        self.current_required = self._prioritise_questions(list(set(self.required_slots+all_add)-set(all_take)))
+
+    def _prioritise_questions(self, slots):
+        return sorted(slots, key=lambda l: self.slot_dict[l].get('priority', 1E5))
+
 
     def check_unfilled_slots(self, tracker):
         current_filled_slots = [key for key, value in tracker.current_slot_values().items() if value is not None]
         still_to_ask = list(set(self.current_required) - set(current_filled_slots))
+        still_to_ask = self._prioritise_questions(still_to_ask)
         return still_to_ask
 
     def _run_through_queue(self, domain):
@@ -102,25 +107,28 @@ class SimpleForm(Plan):
 
 
     def _details_queue(self, intent, tracker):
+        # details will perform the clarify utterance and then ask the question again
         self.queue = [self.slot_dict[self.last_question]['clarify_utt']]
         self.queue.extend(self._question_queue(self.last_question))
 
     def _chitchat_queue(self, intent, tracker):
+        # chitchat queue will perform the chitchat action and return to the last question
         self.queue = [self.chitchat_dict[intent]]
         self.queue.extend(self._question_queue(self.last_question))
 
     def _exit_queue(self, intent, tracker):
+        # If the exit dict is called, the plan will be deactivated
         self.queue = [self.exit_dict[intent]]
 
     def _decide_next_question(self, still_to_ask, tracker):
-        return np.random.choice(still_to_ask)
+        return still_to_ask[0]
 
     def next_action_idx(self, tracker, domain):
         # type: (DialogueStateTracker, Domain) -> int
 
         out = self._run_through_queue(domain)
         if out is not None:
-            # still actions in queue
+            # There are still actions in the queue
             return out
 
         intent = tracker.latest_message.parse_data['intent']['name'].replace('plan_', '', 1)
@@ -134,7 +142,7 @@ class SimpleForm(Plan):
         elif intent in self.chitchat_dict.keys() and tracker.latest_action_name not in self.chitchat_dict.values():
             self._chitchat_queue(intent, tracker)
             return self._run_through_queue(domain)
-        elif intent in self.details_intent and 'utter_explain' not in tracker.latest_action_name:
+        elif intent == self.details_intent and tracker.latest_action_name != self.slot_dict[self.last_question].get('clarify_utt', None):
             self._details_queue(intent, tracker)
             return self._run_through_queue(domain)
 
