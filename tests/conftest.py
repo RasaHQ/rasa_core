@@ -42,6 +42,7 @@ class CustomSlot(Slot):
     def as_feature(self):
         return [0.5]
 
+
 class TestPlan(SimpleForm):
     def __init__(self):
         name = 'restaurant_plan'
@@ -64,6 +65,7 @@ class TestPlan(SimpleForm):
                                        exit_dict, chitchat_dict,
                                        details_intent, rules)
 
+
 class StartTestPlan(ActionStartPlan):
 
     def __init__(self):
@@ -78,6 +80,7 @@ class StartTestPlan(ActionStartPlan):
 
     def __str__(self):
         return "ActivatePlan('{}')".format(self.name())
+
 
 class StopPlan(Action):
     def __init__(self):
