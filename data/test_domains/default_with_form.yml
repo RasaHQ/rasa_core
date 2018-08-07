@@ -1,0 +1,37 @@
+intents:
+ - greet
+ - default
+ - goodbye
+
+slots:
+  cuisine:
+    type: text
+  location:
+    type: text
+
+entities:
+ - name
+
+templates:
+  utter_greet:
+    - hey there!
+  utter_goodbye:
+    - goodbye :(
+  utter_default:
+    - default message
+  utter_ask_people:
+    - how many people?
+  utter_ask_location:
+    - where do you want it?
+
+actions:
+  - utter_default
+  - utter_greet
+  - utter_goodbye
+  - utter_ask_people
+  - utter_ask_location
+  - data.test_plans.default.StartTestPlan
+  - data.test_plans.default.StopPlan
+
+plans:
+  - data.test_plans.default.TestPlan

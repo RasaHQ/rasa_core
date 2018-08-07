@@ -62,7 +62,8 @@ class SimpleForm(Plan):
             if 'clarify_utt' not in list(values.keys()) and self.details_intent not in [None, []]:
                 logger.warning('clarify_utt not found for {} in plan {}, even though {} is listed as a details intent.'.format(slot, self.name, self.details_intent))
 
-    def _process_rules(self, rules):
+    @staticmethod
+    def _process_rules(rules):
         rule_dict = {}
         for slot, values in rules.items():
             for value, rules in values.items():
@@ -86,7 +87,6 @@ class SimpleForm(Plan):
     def _prioritise_questions(self, slots):
         return sorted(slots, key=lambda l: self.slot_dict[l].get('priority', 1E5))
 
-
     def check_unfilled_slots(self, tracker):
         current_filled_slots = [key for key, value in tracker.current_slot_values().items() if value is not None]
         still_to_ask = list(set(self.current_required) - set(current_filled_slots))
@@ -104,7 +104,6 @@ class SimpleForm(Plan):
         if 'follow_up_action' in self.slot_dict[self.last_question].keys():
             queue.append(self.slot_dict[self.last_question]['follow_up_action'])
         return queue
-
 
     def _details_queue(self, intent, tracker):
         # details will perform the clarify utterance and then ask the question again
