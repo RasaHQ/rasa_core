@@ -760,7 +760,7 @@ class AgentUttered(Event):
 
 class StartPlan(Event):
     def __init__(self, domain, plan_name):
-        super(StartPlan).__init__()
+        super(StartPlan, self).__init__()
         self.plan = domain._plans.get(plan_name, [])
         if self.plan == []:
             logger.error("Tried to set non existent plan '{}'. Make sure you "
