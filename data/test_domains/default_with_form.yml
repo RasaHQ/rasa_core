@@ -30,8 +30,8 @@ actions:
   - utter_goodbye
   - utter_ask_people
   - utter_ask_location
-  - data.test_plans.default.StartTestPlan
-  - data.test_plans.default.StopPlan
+  - tests.conftest.default.StartTestPlan
+  - tests.conftest.StopPlan
 
 plans:
-  - data.test_plans.default.TestPlan
+  - tests.conftest.TestPlan

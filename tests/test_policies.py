@@ -26,7 +26,7 @@ from rasa_core.featurizers import (
     BinarySingleStateFeaturizer, FullDialogueTrackerFeaturizer)
 from rasa_core.events import ActionExecuted, UserUttered
 from tests.utilities import read_dialogue_file
-from data.test_plans.default import StartTestPlan
+from tests.conftest import StartTestPlan
 
 
 def train_trackers(domain):
