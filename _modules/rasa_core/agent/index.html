@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/button.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
@@ -127,14 +126,15 @@
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.3
+        v: 0.10.4
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
-              <a href="../../../0.10.3/_modules/rasa_core/agent/">0.10.3</a>
+              <a href="../../../0.10.4/_modules/rasa_core/agent/">0.10.4</a>
+              <a href="../../../0.10.3/index/">0.10.3</a>
               <a href="../../../0.10.2/index/">0.10.2</a>
               <a href="../../../0.10.1/index/">0.10.1</a>
               <a href="../../../0.10.0/index/">0.10.0</a>
@@ -194,7 +194,6 @@
 <span class="kn">from</span> <span class="nn">rasa_core.processor</span> <span class="k">import</span> <span class="n">MessageProcessor</span>
 <span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">InMemoryTrackerStore</span><span class="p">,</span> <span class="n">TrackerStore</span>
 <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
-<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -226,7 +225,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span> <span class="o">=</span> <span class="n">NaturalLanguageGenerator</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_tracker_store</span><span class="p">(</span>
                 <span class="n">tracker_store</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_of_last_train</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Agent.load"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.load">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
@@ -437,7 +435,6 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Agent trainer got kwargs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
         <span class="n">check_domain_sanity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_of_last_train</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -469,7 +466,6 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Agent online trainer got kwargs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
         <span class="n">check_domain_sanity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_of_last_train</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">ensemble</span> <span class="o">=</span> <span class="n">OnlinePolicyEnsemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span>
@@ -567,9 +563,9 @@
             <span class="k">return</span> <span class="n">domain</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Invalid param `domain`. Expected a path to a domain &quot;</span>
-                <span class="s2">&quot;specification or a domain instance. But got &quot;</span>
-                <span class="s2">&quot;type &#39;</span><span class="si">{}</span><span class="s2">&#39; with value &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">domain</span><span class="p">),</span> <span class="n">domain</span><span class="p">))</span>
+                    <span class="s2">&quot;Invalid param `domain`. Expected a path to a domain &quot;</span>
+                    <span class="s2">&quot;specification or a domain instance. But got &quot;</span>
+                    <span class="s2">&quot;type &#39;</span><span class="si">{}</span><span class="s2">&#39; with value &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">domain</span><span class="p">),</span> <span class="n">domain</span><span class="p">))</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_tracker_store</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>

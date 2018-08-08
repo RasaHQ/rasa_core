@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/banner.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/button.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
@@ -134,13 +133,14 @@
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.3
+        v: 0.10.4
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href="../../0.10.4/api/interpreter/">0.10.4</a>
               <a href="../../0.10.3/api/interpreter/">0.10.3</a>
               <a href="../../0.10.2/api/interpreter/">0.10.2</a>
               <a href="../../0.10.1/api/interpreter/">0.10.1</a>
@@ -242,6 +242,15 @@ the same type you can use</p>
 </pre></div>
 </div>
 <p>Which corresponds to a message <code class="docutils literal notranslate"><span class="pre">&quot;I</span> <span class="pre">want</span> <span class="pre">to</span> <span class="pre">add</span> <span class="pre">milk</span> <span class="pre">and</span> <span class="pre">salt</span> <span class="pre">to</span> <span class="pre">my</span> <span class="pre">list&quot;</span></code>.</p>
+<p>If you want to specify the intent confidence you can use</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/deny@0.825
+</pre></div>
+</div>
+<p>Which feeds the intent <code class="docutils literal notranslate"><span class="pre">greet</span></code> with confidence <code class="docutils literal notranslate"><span class="pre">0.825</span></code>.  Combining confidence
+and entities</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/add_to_shopping_list@0.825<span class="o">{</span><span class="s2">&quot;item&quot;</span>: <span class="o">[</span><span class="s2">&quot;milk&quot;</span>, <span class="s2">&quot;salt&quot;</span><span class="o">]}</span>
+</pre></div>
+</div>
 </div>
 </div>
 
