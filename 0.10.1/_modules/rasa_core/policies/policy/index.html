@@ -272,30 +272,6 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
                                   <span class="s2">&quot;to train.&quot;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_training_data_for_continue_training</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">batch_size</span><span class="p">,</span>  <span class="c1"># type: int</span>
-            <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
-            <span class="n">domain</span>  <span class="c1"># type: Domain</span>
-    <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; DialogueTrainingData</span>
-        <span class="sd">&quot;&quot;&quot;Creates training_data for `continue_training` by</span>
-<span class="sd">            taking the new labelled example training_trackers[-1:]</span>
-<span class="sd">            and inserting it in batch_size-1 parts of the old training data,</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-        <span class="n">num_samples</span> <span class="o">=</span> <span class="n">batch_size</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">num_prev_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-
-        <span class="n">sampled_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_prev_examples</span><span class="p">),</span>
-                                       <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                       <span class="n">size</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span>
-                                                <span class="n">num_prev_examples</span><span class="p">))</span>
-        <span class="n">trackers</span> <span class="o">=</span> <span class="p">[</span><span class="n">training_trackers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sampled_idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">training_trackers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize_for_training</span><span class="p">(</span><span class="n">trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">continue_training</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># type: (List[DialogueStateTracker], Domain, **Any) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Continues training an already trained policy.</span>
