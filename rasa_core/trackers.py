@@ -113,7 +113,6 @@ class DialogueStateTracker(object):
     def past_states(self, domain):
         # type: (Domain) -> deque
         """Generate the past states of this tracker based on the history."""
-
         generated_states = domain.states_for_tracker_history(self)
         return deque((frozenset(s.items()) for s in generated_states))
 
@@ -132,7 +131,7 @@ class DialogueStateTracker(object):
     def should_be_featurized(self, domain):
         if self.active_plan is None:
             return True
-        elif domain.action_for_name(self.latest_action_name).activate_plan is True:
+        elif domain.action_for_name(self.latest_action_name).plan_flag == 'activate':
             return True
         else:
             return False

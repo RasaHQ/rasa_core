@@ -766,6 +766,7 @@ class StartPlan(Event):
             logger.error("Tried to set non existent plan '{}'. Make sure you "
                          "added all your plans to your domain file."
                          "".format(plan_name))
+        self.plan_flag = True
 
     def apply_to(self, tracker):
         # type: (DialogueStateTracker) -> None

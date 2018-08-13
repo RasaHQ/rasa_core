@@ -149,6 +149,7 @@ class MemoizationPolicy(Policy):
         (trackers_as_states,
          trackers_as_actions) = self.featurizer.training_states_and_actions(
                                     training_trackers, domain)
+        print(trackers_as_states)
         self._add(trackers_as_states, trackers_as_actions, domain)
         logger.info("Memorized {} unique action examples."
                     "".format(len(self.lookup)))
@@ -192,6 +193,7 @@ class MemoizationPolicy(Policy):
 
         tracker_as_states = self.featurizer.prediction_states(
                                 [tracker], domain)
+        print(tracker_as_states)
         states = tracker_as_states[0]
         logger.debug("Current tracker state {}".format(states))
         recalled = self.recall(states, tracker, domain)

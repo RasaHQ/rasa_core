@@ -251,7 +251,6 @@ class Domain(with_metaclass(abc.ABCMeta, object)):
 
         latest_msg = tracker.latest_message
 
-
         if 'plan_flag' not in latest_msg.parse_data:
             if "intent_ranking" in latest_msg.parse_data:
                 for intent in latest_msg.parse_data["intent_ranking"]:

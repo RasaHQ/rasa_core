@@ -162,6 +162,14 @@ class StoryStep(object):
                 events.append(ActionExecuted(ACTION_LISTEN_NAME))
                 events.append(e)
                 events.extend(domain.slots_for_entities(e.entities))
+            if isinstance(e, ActionExecuted):
+                plan_flag = domain.action_for_name(e.action_name).plan_flag
+                e.plan_flag = plan_flag
+                events.append(e)
+                if plan_flag == 'deactivate':
+                    events.append(UserUttered('e', intent={'name': 'greet'},
+                                              parse_data={'intent': {'name': 'greet'},
+                                                          'text': 'e', 'plan_flag': True}))
             else:
                 events.append(e)
 
@@ -185,7 +193,6 @@ class Story(object):
     @staticmethod
     def from_events(events):
         """Create a story from a list of events."""
-
         story_step = StoryStep()
         for event in events:
             story_step.add_event(event)

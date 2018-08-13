@@ -37,7 +37,7 @@ class Plan(object):
 
 
 class SimpleForm(Plan):
-    def __init__(self, name, slot_dict, finish_action, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None):
+    def __init__(self, name, slot_dict, finish_action, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None, max_turns=10, failure_action=None):
         self.name = name
         self.slot_dict = slot_dict
 
@@ -54,6 +54,12 @@ class SimpleForm(Plan):
         self.last_question = None
         self.queue = []
         self.current_required = self.required_slots
+        self.max_turns = max_turns
+        self.current_failures = 0
+        if failure_action is None:
+            self.failure_action = finish_action
+        else:
+            self.failure_action = failure_action
 
     def _validate_slots(self):
         for slot, values in self.slot_dict.items():
@@ -129,6 +135,10 @@ class SimpleForm(Plan):
         if out is not None:
             # There are still actions in the queue
             return out
+        self.current_failures += 1
+        if self.current_failures > self.max_turns:
+            self.queue = [self.failure_action, self.finish_action]
+            return self._run_through_queue(domain)
 
         intent = tracker.latest_message.parse_data['intent']['name'].replace('plan_', '', 1)
         self._update_requirements(tracker)
@@ -162,4 +172,5 @@ class SimpleForm(Plan):
                 "exit_dict": self.exit_dict,
                 "chitchat_dict": self.chitchat_dict,
                 "details_intent": self.details_intent,
-                "rules": self.rules_yaml}
+                "rules": self.rules_yaml,
+                "max_turns": self.max_turns}
