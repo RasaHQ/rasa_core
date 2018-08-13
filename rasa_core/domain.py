@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 PREV_PREFIX = 'prev_'
 
-from rasa_core.policies.plans import SimpleForm
+from rasa_core.policies.forms import SimpleForm
 
 def check_domain_sanity(domain):
     """Makes sure the domain is properly configured.
@@ -234,7 +234,7 @@ class Domain(with_metaclass(abc.ABCMeta, object)):
         # be ignored for the current intent
         for entity in tracker.latest_message.entities:
             intent_name = tracker.latest_message.intent.get("name")
-            if intent_name.startswith('plan_'):
+            if intent_name.startswith('form_'):
                 break
             should_use_entity = self._intents[intent_name]['use_entities']
             if should_use_entity:
@@ -251,7 +251,7 @@ class Domain(with_metaclass(abc.ABCMeta, object)):
 
         latest_msg = tracker.latest_message
 
-        if 'plan_flag' not in latest_msg.parse_data:
+        if 'form_flag' not in latest_msg.parse_data:
             if "intent_ranking" in latest_msg.parse_data:
                 for intent in latest_msg.parse_data["intent_ranking"]:
                     if intent.get("name"):
@@ -414,7 +414,7 @@ class TemplateDomain(Domain):
         if not action_factory:
             action_factory = data.get("action_factory", None)
         slots = cls.collect_slots(data.get("slots", {}))
-        plans = data.get("plans", {})
+        forms = data.get("forms", {})
         additional_arguments = data.get("config", {})
         intents = cls.collect_intents(data.get("intents", {}))
         return cls(
@@ -425,7 +425,7 @@ class TemplateDomain(Domain):
             data.get("actions", []),
             data.get("action_names", []),
             action_factory,
-            plans,
+            forms,
             **additional_arguments
         )
 
@@ -497,7 +497,7 @@ class TemplateDomain(Domain):
         return templates
 
     def __init__(self, intents, entities, slots, templates, action_classes,
-                 action_names, action_factory, plans, **kwargs):
+                 action_names, action_factory, forms, **kwargs):
         self._intents = intents
         self._entities = entities
         self._slots = slots
@@ -507,8 +507,8 @@ class TemplateDomain(Domain):
         self._factory_name = action_factory
         self._actions = self.instantiate_actions(
                 action_factory, action_classes, action_names, templates)
-        self._plans_list = plans
-        self._plans = self.instantiate_plans_objects(plans)
+        self._forms_list = forms
+        self._forms = self.instantiate_forms_objects(forms)
         super(TemplateDomain, self).__init__(**kwargs)
 
     @staticmethod
@@ -521,12 +521,12 @@ class TemplateDomain(Domain):
         return actions
 
     @staticmethod
-    def instantiate_plans_objects(plans):
-        plans_dict = {}
-        for plan in plans:
-            cls = utils.class_from_module_path(plan)()
-            plans_dict[cls.name] = cls
-        return plans_dict
+    def instantiate_forms_objects(forms):
+        forms_dict = {}
+        for form in forms:
+            cls = utils.class_from_module_path(form)()
+            forms_dict[cls.name] = cls
+        return forms_dict
 
     def _slot_definitions(self):
         return {slot.name: slot.persistence_info() for slot in self.slots}
@@ -544,7 +544,7 @@ class TemplateDomain(Domain):
             "actions": self._action_classes,  # class names of the actions
             "action_names": action_names,  # names in stories
             "action_factory": self._factory_name,
-            "plans": self._plans_list
+            "forms": self._forms_list
         }
         return domain_data
 

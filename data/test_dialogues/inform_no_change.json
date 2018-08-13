@@ -18,19 +18,19 @@
         "entities": []
       },
       "text": "/inform_addresschange",
-      "plan_flag": null
+      "form_flag": null
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_bot_taking_over",
       "unpredictable": false,
-      "plan_flag": null
+      "form_flag": null
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_ask_for_address_change",
       "unpredictable": false,
-      "plan_flag": null
+      "form_flag": null
     },
     {
       "py/object": "rasa_core.events.UserUttered",
@@ -48,13 +48,13 @@
         "entities": []
       },
       "text": "/deny",
-      "plan_flag": null
+      "form_flag": null
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_no_address_change",
       "unpredictable": false,
-      "plan_flag": null
+      "form_flag": null
     }
   ]
 }

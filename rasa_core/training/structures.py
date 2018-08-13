@@ -16,7 +16,7 @@ from typing import \
 from rasa_core import utils
 from rasa_core.actions.action import ACTION_LISTEN_NAME
 from rasa_core.conversation import Dialogue
-from rasa_core.events import UserUttered, ActionExecuted, Event, SlotSet, StartPlan, EndPlan
+from rasa_core.events import UserUttered, ActionExecuted, Event, SlotSet, StartForm, EndForm
 
 if typing.TYPE_CHECKING:
     from rasa_core.domain import Domain
@@ -104,7 +104,7 @@ class StoryStep(object):
     def as_story_string(self, flat=False):
         # if the result should be flattened, we
         # will exclude the caption and any checkpoints.
-        plan_active = False
+        form_active = False
         if flat:
             result = ""
         else:
@@ -114,15 +114,15 @@ class StoryStep(object):
                     result += "> {}\n".format(s.as_story_string())
         for s in self.events:
             if isinstance(s, UserUttered):
-                if not plan_active:
+                if not form_active:
                     result += "* {}\n".format(s.as_story_string())
-            elif isinstance(s, StartPlan):
-                plan_active = True
+            elif isinstance(s, StartForm):
+                form_active = True
                 converted = s.as_story_string()
                 if converted:
                     result += "    - {}\n".format(s.as_story_string())
-            elif isinstance(s, EndPlan):
-                plan_active = False
+            elif isinstance(s, EndForm):
+                form_active = False
                 converted = s.as_story_string()
                 if converted:
                     result += "    - {}\n".format(s.as_story_string())
@@ -133,9 +133,9 @@ class StoryStep(object):
             elif isinstance(s, Event):
                 converted = s.as_story_string()
                 if converted:
-                    if not plan_active:
+                    if not form_active:
                         result += "    - {}\n".format(s.as_story_string())
-                    elif 'deactivate_plan' in converted:
+                    elif 'deactivate_form' in converted:
                         result += "    - {}\n".format(s.as_story_string())
             else:
                 raise Exception("Unexpected element in story step: "
@@ -163,13 +163,13 @@ class StoryStep(object):
                 events.append(e)
                 events.extend(domain.slots_for_entities(e.entities))
             elif isinstance(e, ActionExecuted):
-                plan_flag = domain.action_for_name(e.action_name).plan_flag
-                e.plan_flag = plan_flag
+                form_flag = domain.action_for_name(e.action_name).form_flag
+                e.form_flag = form_flag
                 events.append(e)
-                if plan_flag == 'deactivate':
+                if form_flag == 'deactivate':
                     events.append(UserUttered('e', intent={'name': 'greet'},
                                               parse_data={'intent': {'name': 'greet'},
-                                                          'text': 'e', 'plan_flag': True}))
+                                                          'text': 'e', 'form_flag': True}))
             else:
                 events.append(e)
 

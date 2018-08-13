@@ -26,7 +26,7 @@ from rasa_core.featurizers import (
     BinarySingleStateFeaturizer, FullDialogueTrackerFeaturizer)
 from rasa_core.events import ActionExecuted, UserUttered
 from tests.utilities import read_dialogue_file
-from tests.conftest import StartTestPlan
+from tests.conftest import StartTestForm
 
 
 def train_trackers(domain):
@@ -300,16 +300,16 @@ class TestSimpleForm(object):
         forms_domain = TemplateDomain.load(domain_file)
         new_tracker = DialogueStateTracker(UserMessage.DEFAULT_SENDER_ID,
                                            forms_domain.slots)
-        start_action = StartTestPlan()
+        start_action = StartTestForm()
         evs = start_action.run(None, new_tracker, forms_domain)
         utter_ev = UserUttered('hello', intent={'name': 'greet',
                                                 'confidence': 0.1})
         new_tracker.update(utter_ev)
         for ev in evs:
             new_tracker.update(ev)
-        print(new_tracker.active_plan)
-        assert new_tracker.active_plan is not None
-        next_idx = new_tracker.active_plan.next_action_idx(new_tracker,
+        print(new_tracker.active_form)
+        assert new_tracker.active_form is not None
+        next_idx = new_tracker.active_form.next_action_idx(new_tracker,
                                                            forms_domain)
         next_action = forms_domain.action_for_index(next_idx).name()
         assert next_action in ['utter_ask_people', 'utter_ask_location']

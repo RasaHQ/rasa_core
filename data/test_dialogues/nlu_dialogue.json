@@ -5,7 +5,7 @@
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "action_listen",
       "unpredictable": false,
-      "plan_flag": null
+      "form_flag": null
     },
     {
       "py/object": "rasa_core.events.UserUttered",
@@ -25,13 +25,13 @@
         "entities": []
       },
       "text": "hi",
-      "plan_flag": null
+      "form_flag": null
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_greet",
       "unpredictable": false,
-      "plan_flag": null
+      "form_flag": null
     }
   ],
   "name": "nlu dialogue"

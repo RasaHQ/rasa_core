@@ -57,7 +57,7 @@ class Event(object):
 
     def __init__(self, timestamp=None):
         self.timestamp = timestamp if timestamp else time.time()
-        self.plan_flag = False
+        self.form_flag = False
 
     def __ne__(self, other):
         # Not strictly necessary, but to avoid having both x==y and x!=y
@@ -210,9 +210,9 @@ class UserUttered(Event):
 
     def apply_to(self, tracker):
         # type: (DialogueStateTracker) -> None
-        if self.plan_flag is True and not self.intent['name'].startswith('plan_'):
-            self.intent['name'] = 'plan_{}'.format(self.intent['name'])
-            self.parse_data['plan_flag'] = True
+        if self.form_flag is True and not self.intent['name'].startswith('form_'):
+            self.intent['name'] = 'form_{}'.format(self.intent['name'])
+            self.parse_data['form_flag'] = True
         tracker.latest_message = self
 
 
@@ -757,27 +757,27 @@ class AgentUttered(Event):
                              "{}".format(e))
 
 
-class StartPlan(Event):
-    def __init__(self, domain, plan_name):
-        super(StartPlan, self).__init__()
-        self.plan = domain._plans.get(plan_name, [])
-        if self.plan == []:
-            logger.error("Tried to set non existent plan '{}'. Make sure you "
-                         "added all your plans to your domain file."
-                         "".format(plan_name))
-        self.plan_flag = True
+class StartForm(Event):
+    def __init__(self, domain, form_name):
+        super(StartForm, self).__init__()
+        self.form = domain._forms.get(form_name, [])
+        if self.form == []:
+            logger.error("Tried to set non existent form '{}'. Make sure you "
+                         "added all your forms to your domain file."
+                         "".format(form_name))
+        self.form_flag = True
 
     def apply_to(self, tracker):
         # type: (DialogueStateTracker) -> None
-        tracker.activate_plan(self.plan)
+        tracker.activate_form(self.form)
 
     def as_story_string(self):
         return None
 
 
-class EndPlan(Event):
+class EndForm(Event):
     def apply_to(self, tracker):
-        tracker.deactivate_plan()
+        tracker.deactivate_form()
 
     def as_story_string(self):
         return None

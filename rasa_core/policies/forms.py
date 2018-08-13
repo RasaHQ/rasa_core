@@ -5,13 +5,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class Plan(object):
+class Form(object):
     """Next action to be taken in response to a dialogue state."""
 
     def next_action_idx(self, tracker, domain):
         # type: (DialogueStateTracker, Domain) -> List[Event]
         """
-        Choose an action idx given the current state of the tracker and the plan.
+        Choose an action idx given the current state of the tracker and the form.
 
         Args:
             tracker (DialogueStateTracker): the state tracker for the current user.
@@ -27,10 +27,10 @@ class Plan(object):
         raise NotImplementedError
 
     def __str__(self):
-        return "Plan('{}')".format(self.name)
+        return "Form('{}')".format(self.name)
 
 
-class SimpleForm(Plan):
+class SimpleForm(Form):
     def __init__(self, name, slot_dict, finish_action, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None, max_turns=10, failure_action=None):
         self.name = name
         self.slot_dict = slot_dict
@@ -42,7 +42,6 @@ class SimpleForm(Plan):
         self._validate_slots()
         self.rules_yaml = rules
         self.rules = self._process_rules(self.rules_yaml)
-
 
         self.last_question = None
         self.queue = []
@@ -57,9 +56,9 @@ class SimpleForm(Plan):
     def _validate_slots(self):
         for slot, values in self.slot_dict.items():
             if 'ask_utt' not in list(values.keys()):
-                logger.error('ask_utt not found for {} in plan {}. An utterance is required to ask for a certain slot'.format(slot, self.name))
+                logger.error('ask_utt not found for {} in form {}. An utterance is required to ask for a certain slot'.format(slot, self.name))
             if 'clarify_utt' not in list(values.keys()) and self.details_intent not in [None, []]:
-                logger.warning('clarify_utt not found for {} in plan {}, even though {} is listed as a details intent.'.format(slot, self.name, self.details_intent))
+                logger.warning('clarify_utt not found for {} in form {}, even though {} is listed as a details intent.'.format(slot, self.name, self.details_intent))
 
     @staticmethod
     def _process_rules(rules):
@@ -117,7 +116,7 @@ class SimpleForm(Plan):
         self.queue.extend(self._question_queue(self.last_question))
 
     def _exit_queue(self, intent, tracker):
-        # If the exit dict is called, the plan will be deactivated
+        # If the exit dict is called, the form will be deactivated
         self.queue = [self.exit_dict[intent]]
 
     def _decide_next_question(self, still_to_ask, tracker):
@@ -135,11 +134,11 @@ class SimpleForm(Plan):
             self.queue = [self.failure_action, self.finish_action]
             return self._run_through_queue(domain)
 
-        intent = tracker.latest_message.parse_data['intent']['name'].replace('plan_', '', 1)
+        intent = tracker.latest_message.parse_data['intent']['name'].replace('form_', '', 1)
         self._update_requirements(tracker)
 
         if intent in self.exit_dict.keys():
-            # actions in this dict should deactivate this plan in the tracker
+            # actions in this dict should deactivate this form in the tracker
             self._exit_queue(intent, tracker)
             return self._run_through_queue(domain)
 

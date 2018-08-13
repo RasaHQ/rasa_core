@@ -85,9 +85,9 @@ class PolicyEnsemble(object):
 
         This should be overwritten by more advanced policies to use ML to
         predict the action. Returns the index of the next action"""
-        if tracker.active_plan is not None:
-            idx = tracker.active_plan.next_action_idx(tracker, domain)
-            logger.debug("Plan {} predicted next action {}".format(tracker.active_plan.name, domain.action_for_index(idx)))
+        if tracker.active_form is not None:
+            idx = tracker.active_form.next_action_idx(tracker, domain)
+            logger.debug("Form {} predicted next action {}".format(tracker.active_form.name, domain.action_for_index(idx)))
             return idx
         else:
             probabilities = self.probabilities_using_best_policy(tracker, domain)

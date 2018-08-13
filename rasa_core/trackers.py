@@ -19,7 +19,7 @@ from rasa_core import events
 from rasa_core.conversation import Dialogue
 from rasa_core.events import UserUttered, ActionExecuted, \
     Event, SlotSet, Restarted, ActionReverted, UserUtteranceReverted, \
-    BotUttered, TopicSet, StartPlan
+    BotUttered, TopicSet, StartForm
 
 
 logger = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ class DialogueStateTracker(object):
         self.latest_message = None
         # Stores the most recent message sent by the user
         self.latest_bot_utterance = None
-        self.active_plan = None
+        self.active_form = None
         self._reset()
 
     ###
@@ -121,17 +121,17 @@ class DialogueStateTracker(object):
         """Return the currently set values of the slots"""
         return {key: slot.value for key, slot in self.slots.items()}
 
-    def activate_plan(self, plan):
-        # type: (Plan) -> ()
-        self.active_plan = plan
+    def activate_form(self, form):
+        # type: (Form) -> ()
+        self.active_form = form
 
-    def deactivate_plan(self):
-        self.active_plan = None
+    def deactivate_form(self):
+        self.active_form = None
 
     def should_be_featurized(self, domain):
-        if self.active_plan is None:
+        if self.active_form is None:
             return True
-        elif domain.action_for_name(self.latest_action_name).plan_flag == 'activate':
+        elif domain.action_for_name(self.latest_action_name).form_flag == 'activate':
             return True
         else:
             return False
@@ -297,8 +297,8 @@ class DialogueStateTracker(object):
         if not isinstance(event, Event):  # pragma: no cover
             raise ValueError("event to log must be an instance "
                              "of a subclass of Event.")
-        if self.active_plan is not None:
-            event.plan_flag = True
+        if self.active_form is not None:
+            event.form_flag = True
         self.events.append(event)
         event.apply_to(self)
 

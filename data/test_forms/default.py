@@ -1,6 +1,6 @@
-from rasa_core.policies.plans import SimpleForm
-from rasa_core.events import SlotSet, StartPlan, EndPlan
-from rasa_core.actions import ActionStartPlan, Action, ActionEndPlan
+from rasa_core.policies.forms import SimpleForm
+from rasa_core.events import SlotSet, StartForm, EndForm
+from rasa_core.actions import ActionStartForm, Action, ActionEndForm
 
 
 class TestPlan(SimpleForm):
@@ -22,14 +22,14 @@ class TestPlan(SimpleForm):
 
         super(TestPlan, self).__init__(name, slot_dict, finish_action, exit_dict, chitchat_dict, details_intent, rules)
 
-class StartTestPlan(ActionStartPlan):
+class StartTestPlan(ActionStartForm):
 
     def __init__(self):
         self._name = 'activate_restaurant'
 
     def run(self, dispatcher, tracker, domain):
         """Simple run implementation uttering a (hopefully defined) template."""
-        return [StartPlan(domain, 'restaurant_plan')]
+        return [StartForm(domain, 'restaurant_plan')]
 
     def name(self):
         return self._name
@@ -37,7 +37,7 @@ class StartTestPlan(ActionStartPlan):
     def __str__(self):
         return "ActivatePlan('{}')".format(self.name())
 
-class StopPlan(ActionEndPlan):
+class StopPlan(ActionEndForm):
     def __init__(self):
         self._name = 'deactivate_plan'
 
@@ -47,7 +47,7 @@ class StopPlan(ActionEndPlan):
             complete = True
         else:
             complete = False
-        return [EndPlan(), SlotSet('plan_complete', complete)]
+        return [EndForm(), SlotSet('plan_complete', complete)]
 
     def name(self):
         return self._name

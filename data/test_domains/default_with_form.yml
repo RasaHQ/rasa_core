@@ -30,8 +30,8 @@ actions:
   - utter_goodbye
   - utter_ask_people
   - utter_ask_location
-  - tests.conftest.StartTestPlan
-  - tests.conftest.StopPlan
+  - tests.conftest.StartTestForm
+  - tests.conftest.StopForm
 
-plans:
-  - tests.conftest.TestPlan
+forms:
+  - tests.conftest.TestForm

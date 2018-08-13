@@ -25,7 +25,7 @@ ACTION_DEFAULT_FALLBACK_NAME = "action_default_fallback"
 
 class Action(object):
     """Next action to be taken in response to a dialogue state."""
-    plan_flag = None
+    form_flag = None
 
     def name(self):
         # type: () -> Text
@@ -126,8 +126,9 @@ class ActionDefaultFallback(Action):
         return [UserUtteranceReverted()]
 
 
-class ActionStartPlan(Action):
-    plan_flag = 'activate'
+class ActionStartForm(Action):
+    form_flag = 'activate'
 
-class ActionEndPlan(Action):
-    plan_flag = 'deactivate'
+
+class ActionEndForm(Action):
+    form_flag = 'deactivate'
