@@ -162,7 +162,7 @@ class StoryStep(object):
                 events.append(ActionExecuted(ACTION_LISTEN_NAME))
                 events.append(e)
                 events.extend(domain.slots_for_entities(e.entities))
-            if isinstance(e, ActionExecuted):
+            elif isinstance(e, ActionExecuted):
                 plan_flag = domain.action_for_name(e.action_name).plan_flag
                 e.plan_flag = plan_flag
                 events.append(e)

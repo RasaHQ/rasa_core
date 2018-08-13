@@ -17,18 +17,18 @@
         "entities": []
       },
       "text": "/ask_question",
-      "plan_flag": false
+      "plan_flag": null
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_answer_question",
       "unpredictable": false,
-      "plan_flag": false
+      "plan_flag": null
     },
     {
       "py/object": "rasa_core.events.TopicSet",
       "topic": "question",
-      "plan_flag": false
+      "plan_flag": null
     }
   ],
   "name": "topic_question"
