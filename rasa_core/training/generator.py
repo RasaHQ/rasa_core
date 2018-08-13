@@ -473,6 +473,7 @@ class TrainingDataGenerator(object):
                 if isinstance(event, (ActionReverted, UserUtteranceReverted)):
                     new_trackers.append(tracker.copy())
                 tracker.update(event)
+
         trackers.extend(new_trackers)
 
         return trackers

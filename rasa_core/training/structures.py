@@ -193,6 +193,7 @@ class Story(object):
     @staticmethod
     def from_events(events):
         """Create a story from a list of events."""
+
         story_step = StoryStep()
         for event in events:
             story_step.add_event(event)

@@ -1,6 +1,6 @@
 from rasa_core.policies.plans import SimpleForm
 from rasa_core.events import SlotSet, StartPlan, EndPlan
-from rasa_core.actions import ActionStartPlan, Action
+from rasa_core.actions import ActionStartPlan, Action, ActionEndPlan
 
 
 class TestPlan(SimpleForm):
@@ -37,7 +37,7 @@ class StartTestPlan(ActionStartPlan):
     def __str__(self):
         return "ActivatePlan('{}')".format(self.name())
 
-class StopPlan(Action):
+class StopPlan(ActionEndPlan):
     def __init__(self):
         self._name = 'deactivate_plan'
 

@@ -1,14 +1,8 @@
-
-# from rasa_core.trackers import DialogueStateTracker
-# from rasa_core.domain import Domain
-import numpy as np
-from rasa_core.actions import Action
-from rasa_core.events import Event, SlotSet
+from rasa_core.events import Event
 import logging
 
 
 logger = logging.getLogger(__name__)
-
 
 
 class Plan(object):
@@ -40,9 +34,7 @@ class SimpleForm(Plan):
     def __init__(self, name, slot_dict, finish_action, exit_dict=None, chitchat_dict=None, details_intent=None, rules=None, max_turns=10, failure_action=None):
         self.name = name
         self.slot_dict = slot_dict
-
         self.required_slots = list(self.slot_dict.keys())
-        # exit dict is {exit_intent_name: exit_action_name}
         self.exit_dict = exit_dict
         self.chitchat_dict = chitchat_dict
         self.finish_action = finish_action
@@ -50,6 +42,7 @@ class SimpleForm(Plan):
         self._validate_slots()
         self.rules_yaml = rules
         self.rules = self._process_rules(self.rules_yaml)
+
 
         self.last_question = None
         self.queue = []
@@ -91,9 +84,11 @@ class SimpleForm(Plan):
         self.current_required = self._prioritise_questions(list(set(self.required_slots+all_add)-set(all_take)))
 
     def _prioritise_questions(self, slots):
+        #type: (list) -> (list)
         return sorted(slots, key=lambda l: self.slot_dict[l].get('priority', 1E5))
 
     def check_unfilled_slots(self, tracker):
+        #type: (DialogueStateTracker) -> ([str])
         current_filled_slots = [key for key, value in tracker.current_slot_values().items() if value is not None]
         still_to_ask = list(set(self.current_required) - set(current_filled_slots))
         still_to_ask = self._prioritise_questions(still_to_ask)

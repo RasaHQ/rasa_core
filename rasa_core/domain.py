@@ -257,7 +257,6 @@ class Domain(with_metaclass(abc.ABCMeta, object)):
                     if intent.get("name"):
                         intent_id = "intent_{}".format(intent["name"])
                         state_dict[intent_id] = intent["confidence"]
-
             elif latest_msg.intent.get("name"):
                 intent_id = "intent_{}".format(latest_msg.intent["name"])
                 state_dict[intent_id] = latest_msg.intent.get("confidence", 1.0)
@@ -418,7 +417,6 @@ class TemplateDomain(Domain):
         plans = data.get("plans", {})
         additional_arguments = data.get("config", {})
         intents = cls.collect_intents(data.get("intents", {}))
-
         return cls(
             intents,
             data.get("entities", []),
@@ -521,18 +519,6 @@ class TemplateDomain(Domain):
         actions = Domain.DEFAULT_ACTIONS[:] + custom_actions
         ensure_action_name_uniqueness(actions)
         return actions
-
-    @staticmethod
-    def instantiate_plans_yaml(plans):
-        plans_dict = {}
-        for name, plan in plans.items():
-            plan_name = name
-            slot_dictionary = plan['required_slots']
-            finish_action = plan['finish_action']
-            details_intent = plan['details_intent']
-            rules = plan.get('rules', {})
-            plans_dict[plan_name] = SimpleForm(plan_name, slot_dictionary, finish_action, exit_dict=plan['exit_dict'], chitchat_dict=plan['chitchat_dict'], details_intent=details_intent, rules=rules)
-        return plans_dict
 
     @staticmethod
     def instantiate_plans_objects(plans):

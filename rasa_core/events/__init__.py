@@ -211,7 +211,6 @@ class UserUttered(Event):
     def apply_to(self, tracker):
         # type: (DialogueStateTracker) -> None
         if self.plan_flag is True and not self.intent['name'].startswith('plan_'):
-            # self.parse_data['intent']['name'] = 'plan_{}'.format(self.parse_data['intent']['name'])
             self.intent['name'] = 'plan_{}'.format(self.intent['name'])
             self.parse_data['plan_flag'] = True
         tracker.latest_message = self

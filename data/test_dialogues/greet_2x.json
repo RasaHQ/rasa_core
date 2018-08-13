@@ -17,13 +17,13 @@
         "entities": []
       },
       "text": "/greet",
-      "plan_flag": false
+      "plan_flag": null
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_greet",
       "unpredictable": false,
-      "plan_flag": false
+      "plan_flag": null
 
     },
     {
@@ -42,13 +42,13 @@
         "entities": []
       },
       "text": "/greet",
-      "plan_flag": false
+      "plan_flag": null
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",
       "action_name": "utter_greet",
       "unpredictable": false,
-      "plan_flag": false
+      "plan_flag": null
     }
   ],
   "name": "hello_world_2x"

@@ -88,12 +88,9 @@ class MessageProcessor(object):
         # preprocess message if necessary
         if self.message_preprocessor is not None:
             message.text = self.message_preprocessor(message.text)
-
         # we have a Tracker instance for each user
         # which maintains conversation state
         tracker = self._get_tracker(message.sender_id)
-        if message.text == '/export':
-            print(tracker.export_stories())
         self._handle_message_with_tracker(message, tracker)
         self._predict_and_execute_next_action(message, tracker)
         # save tracker state to continue conversation from this state
@@ -110,6 +107,7 @@ class MessageProcessor(object):
         # pre-process message if necessary
         if self.message_preprocessor is not None:
             message.text = self.message_preprocessor(message.text)
+
         # we have a Tracker instance for each user
         # which maintains conversation state
         tracker = self._get_tracker(message.sender_id)
