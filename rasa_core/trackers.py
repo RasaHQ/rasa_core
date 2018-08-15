@@ -74,6 +74,7 @@ class DialogueStateTracker(object):
         self.latest_message = None
         # Stores the most recent message sent by the user
         self.latest_bot_utterance = None
+        self.active_form = None
         self._reset()
 
     ###
@@ -104,20 +105,41 @@ class DialogueStateTracker(object):
             "latest_message": self.latest_message.parse_data,
             "latest_event_time": latest_event_time,
             "paused": self.is_paused(),
-            "events": evts
+            "events": evts,
+            "active_form": self.active_form
         }
 
     def past_states(self, domain):
         # type: (Domain) -> deque
         """Generate the past states of this tracker based on the history."""
-
         generated_states = domain.states_for_tracker_history(self)
+        print(generated_states)
+
         return deque((frozenset(s.items()) for s in generated_states))
 
     def current_slot_values(self):
         # type: () -> Dict[Text, Any]
         """Return the currently set values of the slots"""
         return {key: slot.value for key, slot in self.slots.items()}
+
+    def activate_form(self, form):
+        # type: (Form) -> ()
+        self.active_form = form
+
+    def deactivate_form(self):
+        self.active_form = None
+
+    def should_be_featurized(self, domain):
+        try:
+            print(self.events[-1])
+        except:
+            pass
+        if self.active_form is None:
+            return True
+        elif self.events[-1].form_flag is not None:
+            return True
+        else:
+            return False
 
     def get_slot(self, key):
         # type: (Text) -> Optional[Any]
