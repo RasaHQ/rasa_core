@@ -16,7 +16,7 @@ from typing import Optional, List, Dict, Any
 from typing import Text
 
 from rasa_core.actions import Action
-from rasa_core.actions.action import ActionRestart, ACTION_LISTEN_NAME
+from rasa_core.actions.action import ActionRestart, ACTION_LISTEN_NAME,RemoteAction
 from rasa_core.channels import UserMessage, InputChannel, channel
 from rasa_core.channels import CollectingOutputChannel
 from rasa_core.dispatcher import Dispatcher
@@ -73,6 +73,8 @@ class MessageProcessor(object):
 
         # preprocess message if necessary
         tracker = self.log_message(message)
+        if message.text == '/export':
+            print(tracker.export_stories())
         self._predict_and_execute_next_action(message, tracker)
         # save tracker state to continue conversation from this state
         self._save_tracker(tracker)
@@ -88,13 +90,20 @@ class MessageProcessor(object):
         # we have a Tracker instance for each user
         # which maintains conversation state
         tracker = self._get_tracker(sender_id)
-        probabilities = self._get_next_action_probabilities(tracker)
-        # save tracker state to continue conversation from this state
-        self._save_tracker(tracker)
-        scores = [{"action": a, "score": p}
-                  for a, p in zip(self.domain.action_names, probabilities)]
-        return {"scores": scores,
-                "tracker": tracker.current_state(should_include_events=True)}
+        if tracker.active_form is not None:
+            scores = [{"action": a, "score": 0}
+                      for a in self.domain.action_names]
+            scores[0]['plan_action'] = 1
+            return {"scores": scores,
+                    "tracker": tracker.current_state(should_include_events=True)}
+        else:
+            probabilities = self._get_next_action_probabilities(tracker)
+            # save tracker state to continue conversation from this state
+            self._save_tracker(tracker)
+            scores = [{"action": a, "score": p}
+                      for a, p in zip(self.domain.action_names, probabilities)]
+            return {"scores": scores,
+                    "tracker": tracker.current_state(should_include_events=True)}
 
     def log_message(self, message):
         # type: (UserMessage) -> DialogueStateTracker
@@ -130,6 +139,15 @@ class MessageProcessor(object):
         This should be overwritten by more advanced policies to use
         ML to predict the action. Returns the index of the next action."""
 
+        if tracker.active_form is not None:
+            logger.debug("Next action is decided by form {}".format(tracker.active_form))
+            follow_up_action = tracker.follow_up_action
+            if follow_up_action:
+                tracker.clear_follow_up_action()
+                return follow_up_action
+
+            else:
+                return RemoteAction("form_action", self.action_endpoint)
         probabilities = self._get_next_action_probabilities(tracker)
 
         max_index = int(np.argmax(probabilities))
@@ -215,10 +233,14 @@ class MessageProcessor(object):
         else:
             parse_data = self._parse_message(message)
 
+        if tracker.active_form is not None:
+            parse_data['in_form'] = True
+        else:
+            parse_data['in_form'] = False
         # don't ever directly mutate the tracker
         # - instead pass its events to log
         tracker.update(UserUttered(message.text, parse_data["intent"],
-                                   parse_data["entities"], parse_data))
+                                   parse_data["entities"], parse_data, in_form=parse_data['in_form']))
         # store all entities as slots
         for e in self.domain.slots_for_entities(parse_data["entities"]):
             tracker.update(e)

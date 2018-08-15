@@ -387,7 +387,7 @@ class Domain(object):
         # type: (DialogueStateTracker) -> List[Dict[Text, float]]
         """Array of states for each state of the trackers history."""
         return [self.get_active_states(tr) for tr in
-                tracker.generate_all_prior_trackers()]
+                tracker.generate_all_prior_trackers() if tr.should_be_featurized(self)]
 
     def slots_for_entities(self, entities):
         if self.store_entities_as_slots:

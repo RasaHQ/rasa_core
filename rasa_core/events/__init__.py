@@ -15,6 +15,7 @@ from builtins import str
 from typing import List, Dict, Text, Any
 
 from rasa_core import utils
+from rasa_core.actions.action import ActionListen
 
 if typing.TYPE_CHECKING:
     from rasa_core.trackers import DialogueStateTracker
@@ -29,7 +30,7 @@ def deserialise_events(serialized_events):
     Example format:
         [{"event": "slot", "value": 5, "name": "my_slot"}]
     """
-
+    print(serialized_events, 'summus')
     return [Event.from_parameters(e)
             for e in serialized_events
             if "event" in e]
@@ -54,6 +55,7 @@ class Event(object):
     how to update its state."""
 
     type_name = "event"
+    form_flag = None
 
     def __init__(self, timestamp=None):
         self.timestamp = timestamp if timestamp else time.time()
@@ -73,6 +75,7 @@ class Event(object):
 
     @staticmethod
     def from_parameters(parameters, default=None):
+        print(parameters)
         event_name = parameters.get("event")
         if event_name is not None:
             copied = parameters.copy()
@@ -133,11 +136,12 @@ class UserUttered(Event):
                  intent=None,
                  entities=None,
                  parse_data=None,
-                 timestamp=None):
+                 timestamp=None,
+                 in_form=None):
         self.text = text
         self.intent = intent if intent else {}
         self.entities = entities if entities else []
-
+        self.in_form = in_form
         if parse_data:
             self.parse_data = parse_data
         else:
@@ -145,6 +149,7 @@ class UserUttered(Event):
                 "intent": self.intent,
                 "entities": self.entities,
                 "text": text,
+                "in_form": in_form
             }
 
         super(UserUttered, self).__init__(timestamp)
@@ -153,7 +158,7 @@ class UserUttered(Event):
     def _from_parse_data(text, parse_data, timestamp=None):
         return UserUttered(text, parse_data["intent"], parse_data["entities"],
                            parse_data,
-                           timestamp)
+                           timestamp, parse_data.get('in_form'))
 
     def __hash__(self):
         return hash((self.text, self.intent.get("name"),
@@ -694,6 +699,7 @@ class ActionExecuted(Event):
         # type: (DialogueStateTracker) -> None
 
         tracker.latest_action_name = self.action_name
+        tracker.follow_up_action = None
 
 
 class AgentUttered(Event):
@@ -751,4 +757,66 @@ class AgentUttered(Event):
                                 parameters.get("timestamp"))
         except KeyError as e:
             raise ValueError("Failed to parse agent uttered event. "
+                             "{}".format(e))
+
+
+class StartForm(Event):
+    type_name = "start_form"
+    form_flag = 'activate'
+
+    def __init__(self, form_name, timestamp=None):
+        self.form = form_name
+        self.form_flag = 'activate'
+        super(StartForm, self).__init__(timestamp)
+
+    def apply_to(self, tracker):
+        # type: (DialogueStateTracker) -> None
+        tracker.activate_form(self.form)
+
+    def as_story_string(self):
+        return None
+
+    @classmethod
+    def _from_parameters(cls, parameters):
+        try:
+            return StartForm(parameters.get("form_name"),
+                                parameters.get("timestamp"))
+        except KeyError as e:
+            raise ValueError("Failed to parse StartForm event. "
+                             "{}".format(e))
+
+
+class EndForm(Event):
+    type_name = 'end_form'
+    form_flag='deactivate'
+    def apply_to(self, tracker):
+        tracker.deactivate_form()
+
+    def as_story_string(self):
+        return None
+
+    @classmethod
+    def _from_parameters(cls, parameters):
+        try:
+            return EndForm(parameters.get("timestamp"))
+        except KeyError as e:
+            raise ValueError("Failed to parse EndForm event. "
+                             "{}".format(e))
+
+
+class FormListen(Event):
+    type_name = 'form_listen'
+
+    def apply_to(self, tracker):
+        tracker.trigger_follow_up_action(ActionListen())
+
+    def as_story_string(self):
+        return None
+
+    @classmethod
+    def _from_parameters(cls, parameters):
+        try:
+            return FormListen(parameters.get("timestamp"))
+        except KeyError as e:
+            raise ValueError("Failed to parse FormListen event. "
                              "{}".format(e))
