@@ -20,6 +20,7 @@ from rasa_core.training.data import DialogueTrainingData
 
 from rasa_core.actions.action import ACTION_LISTEN_NAME
 from rasa_core.domain import PREV_PREFIX
+from rasa_core.constants import FORM_ACTION_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -398,7 +399,7 @@ class TrackerFeaturizer(object):
         (trackers_as_states,
          trackers_as_actions) = self.training_states_and_actions(trackers,
                                                                  domain)
-
+        trackers_as_states, trackers_as_actions = zip(*[(stat, act) for stat, act in zip(trackers_as_states, trackers_as_actions) if act[0] != FORM_ACTION_NAME])
         X, true_lengths = self._featurize_states(trackers_as_states)
         y = self._featurize_labels(trackers_as_actions, domain)
 
@@ -512,8 +513,10 @@ class FullDialogueTrackerFeaturizer(TrackerFeaturizer):
             if delete_first_state:
                 states = states[1:]
 
+
             trackers_as_states.append(states[:-1])
             trackers_as_actions.append(actions)
+
 
         self.max_len = self._calculate_max_len(trackers_as_actions)
         logger.debug("The longest dialogue has {} actions."

@@ -20,6 +20,7 @@ from rasa_core import utils
 from rasa_core.featurizers import \
     TrackerFeaturizer, MaxHistoryTrackerFeaturizer
 from rasa_core.events import ActionExecuted, SlotSet, UserUttered
+from rasa_core.constants import FORM_ACTION_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -149,6 +150,8 @@ class MemoizationPolicy(Policy):
         (trackers_as_states,
          trackers_as_actions) = self.featurizer.training_states_and_actions(
                                     training_trackers, domain)
+        trackers_as_states, trackers_as_actions = zip(*[(stat, act) for stat, act in zip(trackers_as_states, trackers_as_actions) if act[0] != FORM_ACTION_NAME])
+
         self._add(trackers_as_states, trackers_as_actions, domain)
         logger.info("Memorized {} unique action examples."
                     "".format(len(self.lookup)))

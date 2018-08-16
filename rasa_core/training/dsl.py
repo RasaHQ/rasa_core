@@ -21,6 +21,7 @@ from rasa_core.interpreter import RegexInterpreter
 from rasa_core.training.structures import (
     Checkpoint, STORY_START, StoryStep,
     GENERATED_CHECKPOINT_PREFIX, GENERATED_HASH_LENGTH)
+from rasa_core.constants import FORM_ACTION_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -237,6 +238,7 @@ class StoryFileReader(object):
                                    "Line Content: '{}'"
                                    "".format(line_num, line))
             except Exception as e:
+                print(e)
                 msg = "Error in line {}: {}".format(line_num, e.message)
                 logger.error(msg, exc_info=1)
                 raise ValueError(msg)
@@ -327,3 +329,7 @@ class StoryFileReader(object):
                 self.current_step_builder.add_event(p)
         else:
             self.current_step_builder.add_event(parsed)
+
+        if event_name in self.domain.form_start_actions:
+            self.current_step_builder.add_event(ActionExecuted(FORM_ACTION_NAME))
+            self.current_step_builder.add_event(UserUttered('blank', in_form=True))

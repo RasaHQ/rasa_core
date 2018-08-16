@@ -107,6 +107,7 @@ class Domain(object):
                 slots,
                 utter_templates,
                 data.get("actions", []),
+                data.get("form_start_actions", []),
                 **additional_arguments
         )
 
@@ -182,6 +183,7 @@ class Domain(object):
                  slots,  # type: List[Slot]
                  templates,  # type: Dict[Text, Any]
                  action_names,  # type: List[Text]
+                 form_start_action_names,
                  store_entities_as_slots=True,  # type: bool
                  restart_intent="restart"  # type: Text
                  ):
@@ -192,6 +194,7 @@ class Domain(object):
         self.slots = slots
         self.templates = templates
         self.action_names = action.default_action_names() + action_names
+        self.form_start_actions = form_start_action_names
 
         self.store_entities_as_slots = store_entities_as_slots
         self.restart_intent = restart_intent
@@ -325,7 +328,7 @@ class Domain(object):
 
         # Set all found entities with the state value 1.0, unless they should
         # be ignored for the current intent
-        for entity in tracker.latest_message.entities:
+        for entity in tracker.latest_message.entities and not tracker.latest_message.in_form:
             intent_name = tracker.latest_message.intent.get("name")
             intent_config = self.intent_config(intent_name)
             should_use_entity = intent_config.get('use_entities', True)
@@ -343,13 +346,13 @@ class Domain(object):
 
         latest_msg = tracker.latest_message
 
-        if "intent_ranking" in latest_msg.parse_data:
+        if "intent_ranking" in latest_msg.parse_data and not latest_msg.in_form:
             for intent in latest_msg.parse_data["intent_ranking"]:
                 if intent.get("name"):
                     intent_id = "intent_{}".format(intent["name"])
                     state_dict[intent_id] = intent["confidence"]
 
-        elif latest_msg.intent.get("name"):
+        elif latest_msg.intent.get("name") and not latest_msg.in_form:
             intent_id = "intent_{}".format(latest_msg.intent["name"])
             state_dict[intent_id] = latest_msg.intent.get("confidence", 1.0)
 
