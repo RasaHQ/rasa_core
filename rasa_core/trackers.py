@@ -113,7 +113,6 @@ class DialogueStateTracker(object):
         # type: (Domain) -> deque
         """Generate the past states of this tracker based on the history."""
         generated_states = domain.states_for_tracker_history(self)
-
         return deque((frozenset(s.items()) for s in generated_states))
 
     def current_slot_values(self):
