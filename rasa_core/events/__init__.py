@@ -30,7 +30,6 @@ def deserialise_events(serialized_events):
     Example format:
         [{"event": "slot", "value": 5, "name": "my_slot"}]
     """
-    print(serialized_events, 'summus')
     return [Event.from_parameters(e)
             for e in serialized_events
             if "event" in e]
@@ -75,7 +74,6 @@ class Event(object):
 
     @staticmethod
     def from_parameters(parameters, default=None):
-        print(parameters)
         event_name = parameters.get("event")
         if event_name is not None:
             copied = parameters.copy()

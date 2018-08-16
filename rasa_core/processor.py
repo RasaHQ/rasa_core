@@ -145,7 +145,6 @@ class MessageProcessor(object):
             if follow_up_action:
                 tracker.clear_follow_up_action()
                 return follow_up_action
-
             else:
                 return RemoteAction("form_action", self.action_endpoint)
         probabilities = self._get_next_action_probabilities(tracker)
