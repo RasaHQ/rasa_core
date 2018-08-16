@@ -17,6 +17,7 @@ from rasa_core import utils
 from rasa_core.actions.action import ACTION_LISTEN_NAME
 from rasa_core.conversation import Dialogue
 from rasa_core.events import UserUttered, ActionExecuted, Event
+from rasa_core.policies import FORM_ACTION_NAME
 
 if typing.TYPE_CHECKING:
     from rasa_core.domain import Domain
@@ -113,7 +114,10 @@ class StoryStep(object):
                     result += "> {}\n".format(s.as_story_string())
         for s in self.events:
             if isinstance(s, UserUttered):
-                result += "* {}\n".format(s.as_story_string())
+                if s.in_form is False:
+                    result += "* {}\n".format(s.as_story_string())
+            elif isinstance(s, ActionExecuted) and s.action_name == FORM_ACTION_NAME:
+                continue
             elif isinstance(s, Event):
                 converted = s.as_story_string()
                 if converted:

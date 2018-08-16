@@ -10,3 +10,5 @@ from rasa_core.policies.keras_policy import KerasPolicy
 from rasa_core.policies.memoization import \
     MemoizationPolicy, AugmentedMemoizationPolicy
 from rasa_core.policies.sklearn_policy import SklearnPolicy
+
+FORM_ACTION_NAME = 'form_action'
