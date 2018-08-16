@@ -196,6 +196,11 @@
     <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
     <span class="kn">from</span> <span class="nn">rasa_core.training.data</span> <span class="k">import</span> <span class="n">DialogueTrainingData</span>
 
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">tf</span> <span class="o">=</span> <span class="kc">None</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
@@ -210,6 +215,13 @@
     <span class="k">def</span> <span class="nf">_create_featurizer</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)</span> \
                <span class="k">if</span> <span class="n">featurizer</span> <span class="k">else</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_standard_featurizer</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check_tensorflow</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">tf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Failed to import `tensorflow`. &quot;</span>
+                              <span class="s2">&quot;Please install `tensorflow`. &quot;</span>
+                              <span class="s2">&quot;For example with `pip install tensorflow`.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># type: (Optional[TrackerFeaturizer]) -&gt; None</span>
@@ -271,6 +283,30 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
                                   <span class="s2">&quot;to train.&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_training_data_for_continue_training</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="p">,</span>  <span class="c1"># type: int</span>
+            <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
+            <span class="n">domain</span>  <span class="c1"># type: Domain</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; DialogueTrainingData</span>
+        <span class="sd">&quot;&quot;&quot;Creates training_data for `continue_training` by</span>
+<span class="sd">            taking the new labelled example training_trackers[-1:]</span>
+<span class="sd">            and inserting it in batch_size-1 parts of the old training data,</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+        <span class="n">num_samples</span> <span class="o">=</span> <span class="n">batch_size</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">num_prev_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="n">sampled_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_prev_examples</span><span class="p">),</span>
+                                       <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                       <span class="n">size</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span>
+                                                <span class="n">num_prev_examples</span><span class="p">))</span>
+        <span class="n">trackers</span> <span class="o">=</span> <span class="p">[</span><span class="n">training_trackers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sampled_idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">training_trackers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize_for_training</span><span class="p">(</span><span class="n">trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">continue_training</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># type: (List[DialogueStateTracker], Domain, **Any) -&gt; None</span>
