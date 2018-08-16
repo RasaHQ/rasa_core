@@ -9,6 +9,7 @@
     {
       "py/object": "rasa_core.events.UserUttered",
       "entities": [],
+      "in_form": null,
       "intent": {
         "name": "greet",
         "confidence": 1.0
@@ -24,6 +25,7 @@
         "entities": []
       },
       "text": "hi"
+
     },
     {
       "py/object": "rasa_core.events.ActionExecuted",

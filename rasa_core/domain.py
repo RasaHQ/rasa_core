@@ -183,7 +183,7 @@ class Domain(object):
                  slots,  # type: List[Slot]
                  templates,  # type: Dict[Text, Any]
                  action_names,  # type: List[Text]
-                 form_start_action_names,
+                 form_start_action_names = [],
                  store_entities_as_slots=True,  # type: bool
                  restart_intent="restart"  # type: Text
                  ):
@@ -328,13 +328,14 @@ class Domain(object):
 
         # Set all found entities with the state value 1.0, unless they should
         # be ignored for the current intent
-        for entity in tracker.latest_message.entities and not tracker.latest_message.in_form:
-            intent_name = tracker.latest_message.intent.get("name")
-            intent_config = self.intent_config(intent_name)
-            should_use_entity = intent_config.get('use_entities', True)
-            if should_use_entity:
-                key = "entity_{0}".format(entity["entity"])
-                state_dict[key] = 1.0
+        if not tracker.latest_message.in_form:
+            for entity in tracker.latest_message.entities:
+                intent_name = tracker.latest_message.intent.get("name")
+                intent_config = self.intent_config(intent_name)
+                should_use_entity = intent_config.get('use_entities', True)
+                if should_use_entity:
+                    key = "entity_{0}".format(entity["entity"])
+                    state_dict[key] = 1.0
 
         # Set all set slots with the featurization of the stored value
         for key, slot in tracker.slots.items():

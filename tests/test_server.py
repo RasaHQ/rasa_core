@@ -79,7 +79,8 @@ def test_requesting_non_existent_tracker(app):
                                   "timestamp": 1514764800}]
     assert content["latest_message"] == {"text": None,
                                          "intent": {},
-                                         "entities": []}
+                                         "entities": [],
+                                         "in_form": None}
 
 
 def test_respond(app):
