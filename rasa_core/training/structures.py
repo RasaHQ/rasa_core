@@ -17,7 +17,7 @@ from rasa_core import utils
 from rasa_core.actions.action import ACTION_LISTEN_NAME
 from rasa_core.conversation import Dialogue
 from rasa_core.events import UserUttered, ActionExecuted, Event
-from rasa_core.policies import FORM_ACTION_NAME
+from rasa_core.constants import FORM_ACTION_NAME
 
 if typing.TYPE_CHECKING:
     from rasa_core.domain import Domain
@@ -144,7 +144,8 @@ class StoryStep(object):
 
         for e in self.events:
             if isinstance(e, UserUttered):
-                events.append(ActionExecuted(ACTION_LISTEN_NAME))
+                if not e.text == 'blank':
+                    events.append(ActionExecuted(ACTION_LISTEN_NAME))
                 events.append(e)
                 events.extend(domain.slots_for_entities(e.entities))
             else:

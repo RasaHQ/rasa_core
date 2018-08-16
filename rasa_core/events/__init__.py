@@ -19,6 +19,7 @@ from rasa_core.actions.action import ActionListen
 
 if typing.TYPE_CHECKING:
     from rasa_core.trackers import DialogueStateTracker
+from rasa_core.constants import FORM_ACTION_NAME
 
 logger = logging.getLogger(__name__)
 
