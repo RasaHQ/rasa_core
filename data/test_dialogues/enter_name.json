@@ -8,6 +8,7 @@
     },
     {
       "py/object": "rasa_core.events.UserUttered",
+      "in_form": null,
       "entities": [
         {
           "entity": "name",

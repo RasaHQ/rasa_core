@@ -113,7 +113,8 @@ def test_remote_action_runs(default_dispatcher_collecting, default_domain):
             'latest_message': {
                 'entities': [],
                 'intent': {},
-                'text': None
+                'text': None,
+                'in_form': None
             },
             'sender_id': 'default',
             'paused': False,
@@ -164,13 +165,15 @@ def test_remote_action_logs_events(default_dispatcher_collecting,
             'latest_message': {
                 'entities': [],
                 'intent': {},
-                'text': None
+                'text': None,
+                "in_form": None
             },
             'sender_id': 'default',
             'paused': False,
             'latest_event_time': None,
             'slots': {'name': None},
-            'events': []
+            'events': [],
+            'active_form': None
         }
     }
 
