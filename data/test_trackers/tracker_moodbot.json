@@ -7,7 +7,6 @@
       "name": "mood_great"
     },
     "text": "/mood_great",
-    "in_form": null,
     "intent_ranking": [
       {
         "confidence": 0.60,
@@ -58,8 +57,7 @@
         ]
       },
       "event": "user",
-      "text": "/greet",
-      "in_form": null
+      "text": "/greet"
     },
     {
       "timestamp": 1517821726.200373,
@@ -96,8 +94,7 @@
         ]
       },
       "event": "user",
-      "text": "/mood_great",
-      "in_form": null
+      "text": "/mood_great"
     },
     {
       "timestamp": 1517821726.209908,
