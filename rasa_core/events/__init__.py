@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 from rasa_core.constants import FORM_ACTION_NAME
 from rasa_core.actions.action import ActionListen
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -667,7 +666,10 @@ class ActionExecuted(Event):
 
     def __init__(self, action_name, timestamp=None):
         self.action_name = action_name
-        self.unpredictable = False
+        if action_name is not FORM_ACTION_NAME:
+            self.unpredictable = False
+        else:
+            self.unpredictable = True
         super(ActionExecuted, self).__init__(timestamp)
 
     def __str__(self):
