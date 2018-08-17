@@ -399,7 +399,8 @@ class TrackerFeaturizer(object):
         (trackers_as_states,
          trackers_as_actions) = self.training_states_and_actions(trackers,
                                                                  domain)
-        trackers_as_states, trackers_as_actions = zip(*[(stat, act) for stat, act in zip(trackers_as_states, trackers_as_actions) if act[0] != FORM_ACTION_NAME])
+        if len(trackers_as_states) > 0:
+            trackers_as_states, trackers_as_actions = zip(*[(stat, act) for stat, act in zip(trackers_as_states, trackers_as_actions) if act[0] != FORM_ACTION_NAME])
         X, true_lengths = self._featurize_states(trackers_as_states)
         y = self._featurize_labels(trackers_as_actions, domain)
 

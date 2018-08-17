@@ -120,7 +120,8 @@ def test_remote_action_runs(default_dispatcher_collecting, default_domain):
             'paused': False,
             'latest_event_time': None,
             'slots': {'name': None},
-            'events': []
+            'events': [],
+            'active_form': None
         }
     }
 
