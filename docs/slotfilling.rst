@@ -211,26 +211,79 @@ Forms object
 ~~~~~~~~~~~~
 
 The most simple format of Forms need only 4 things defined:
-1. `name`: the name of the Form
-2. `slot_dict`: a dictionary: `{'FIRST_SLOT_NAME': {'ask_utt': 'WHICH_UTTERANCE_ASKS_FOR_SLOT'}, 'SECOND_SLOT_NAME':.. }`, which ties together slot names and utterances. The bot will continue to ask about the unfilled slots until all the slots are filled or the form is otherwise exited.
-3. `finish_action`: this is the name of the action that will be called when all of the relevant slots are filled. This action must return a EndPlan event but can do anything else alongside it.
-4. `exit_dict`: the exit dict is a set of {'intent':'action'} pairs which describe what the bot should do in certain situations where the form should be exited.
 
+1. ``name``: the name of the Form
 
-### stories
-We also need to let Rasa Core predict when to activate the Forms. We do this by defining an action (in this bot example `activate_restaurant` and `activate_hotel`) which contains a StartPlan event. We then write stories where this action is triggered:
+2. ``slot_dict``: a dictionary: ``{'FIRST_SLOT_NAME': {'ask_utt': 'WHICH_UTTERANCE_ASKS_FOR_SLOT'}, 'SECOND_SLOT_NAME':.. }``, which ties together slot names and utterances. The bot will continue to ask about the unfilled slots until all the slots are filled or the form is otherwise exited.
+
+3. ``finish_action``: this is the name of the action that will be called when all of the relevant slots are filled. This action must return a ``EndForm`` event but can do anything else alongside it.
+
+4. ``exit_dict``: the exit dict is a set of {'intent':'action'} pairs which describe what the bot should do in certain situations where the form should be exited.
+
+This is currently defined as a python object. An example of the Form object defined in the ``rasa_pysdk/examples/formbot`` is:
+
+.. code-block:: python
+
+    class RestaurantForm(SimpleForm):
+        def __init__(self):
+            name = 'restaurant_form'
+            slot_dict = {
+                         "price": {
+                                   "ask_utt": "utter_ask_price",
+                                   "clarify_utt": "utter_explain_price_restaurant",
+                                   "priority":0
+                                   },
+                         "cuisine": {
+                                     "ask_utt": "utter_ask_cuisine",
+                                     "clarify_utt": "utter_explain_cuisine_restaurant"
+                                     },
+                         "people": {
+                                    "ask_utt": "utter_ask_people",
+                                    "clarify_utt": "utter_explain_people_restaurant"
+                                    },
+                         "location": {
+                                      "ask_utt": "utter_ask_location",
+                                      "clarify_utt": "utter_explain_location_restaurant"
+                                      }
+                         }
+
+            finish_action = "deactivate_form"
+
+            exit_dict = {
+                         "goodbye": "deactivate_form",
+                         "request_hotel": "deactivate_form_switch"
+                         }
+
+            chitchat_dict = {"chitchat": "utter_chitchat"}
+
+            details_intent = "utter_ask_details"
+
+            rules = {
+                     "cuisine":{
+                                "mcdonalds": {
+                                              'need':['location'],
+                                              'lose':['people', 'price']
+                                             }
+                                }
+                    }
+
+            failure_action = 'utter_human_hand_off'
+            super(RestaurantForm, self).__init__(name, slot_dict, finish_action, exit_dict, chitchat_dict, details_intent, rules, failure_action=failure_action)
+The extra arguments not defined above are defined below, but are optional.
+Stories
+~~~~~~~
+
+We also need to let Rasa Core predict when to activate the Forms. We do this by defining an action (in this bot example ``activate_restaurant`` and ``activate_hotel``) which contains a ``StartForm`` event. We then write stories where this action is triggered:
 
 .. code-block:: md
 
     ## Generated Story 6817547858592778997
     * request_restaurant
         - activate_restaurant
-        - slot{"active_plan": true}
         - slot{"switch": false}
         - slot{"cuisine": "mexican"}
-        - deactivate_plan
-        - slot{"active_plan": false}
-        - slot{"plan_complete": false}
+        - deactivate_form
+        - slot{"form_complete": false}
         - utter_happy
     * chitchat
         - utter_chitchat
@@ -238,28 +291,42 @@ We also need to let Rasa Core predict when to activate the Forms. We do this by 
         - activate_hotel
 
 
-which allows core to predict when to activate the restaurant. Using a combination of the finish_action or exit_dict one can featurize the way that the plan finished. In this case, we set a slot to say after an exit whether the form had been completed or not ('plan_complete'). It is important to note that *how* the slots were filled within the plan is not featurized. Simply which slots are filled at the time of the plan's deactivation is relevant and helps downstream core predictions. We see above an example of a story where the form has not been filled and the user has exited. We also have a story where the slots of the form have all been filled:
+which allows core to predict when to activate the restaurant. Using a combination of the ``finish_action`` or ``exit_dict`` one can featurize the way that the form finished. In this case, we set a slot to say after an exit whether the form had been completed or not (``form_complete``). It is important to note that *how* the slots were filled within the form is not featurized. Simply which slots are filled at the time of the form's deactivation is relevant and helps downstream core predictions. We see above an example of a story where the form has not been filled and the user has exited. We also have a story where the slots of the form have all been filled:
 
 .. code-block:: md
 
     ## Generated Story 7536939952037997255
     * request_restaurant
         - activate_restaurant
-        - slot{"active_plan": true}
         - slot{"switch": false}
         - slot{"location": "mcdonalds"}
         - slot{"price": "high"}
         - slot{"cuisine": "mcdonalds"}
-        - deactivate_plan
-        - slot{"active_plan": false}
-        - slot{"plan_complete": true}
+        - deactivate_form
+        - slot{"form_complete": true}
         - utter_filled_slots
         - utter_suggest_restaurant
     * affirm
         - utter_book_restaurant
 
 
-We see in this case since the `plan_complete` slot is set to true, we follow a different path when exiting.
+We see in this case since the ``form_complete`` slot is set to true, we follow a different path when exiting.
+
+``StartForm`` event
+~~~~~~~~~~~~~~~~~~~
+To tell the tracker that you need the form to take over predictions of actions, you have to pass a ``StartForm`` event.
+The way we do that in the formbot example is to have an action which is predicted such as:
+
+.. code-block:: python
+
+    class StartFormAction(Action):
+        def name(self):
+            return "start_restaurant"
+
+        def run(self, dispatcher, tracker, domain, executor):
+            return [StartForm("restaurant_form")]
+Once this event is passed, the policy will be informed that it shouldn't use the predictions of the normal policy but
+instead should look for a form known in this case as ``"restaurant_form"`` with the name which is defined above.
 
 Example output
 ^^^^^^^^^^^^^^
@@ -274,14 +341,14 @@ Here is an example of the debug log for a forms bot.
     2018-08-01 09:50:12 DEBUG    rasa_core.policies.memoization  - There is a memorised next action '48'
     2018-08-01 09:50:12 DEBUG    rasa_core.policies.ensemble  - Predicted next action using policy_0_MemoizationPolicy
     2018-08-01 09:50:12 DEBUG    rasa_core.policies.ensemble  - Predicted next action 'activate_restaurant' with prob 1.00.
-    2018-08-01 09:50:12 DEBUG    rasa_core.processor  - Action 'activate_restaurant' ended with events '['<rasa_core.events.StartPlan object at 0x123fc92b0>', 'SlotSet(key: active_plan, value: True)', 'SlotSet(key: switch, value: False)', 'SlotSet(key: plan_complete, value: False)']'
-    2018-08-01 09:50:12 DEBUG    rasa_core.policies.ensemble  - Plan restaurant_plan predicted next action UtterAction('utter_ask_price')
+    2018-08-01 09:50:12 DEBUG    rasa_core.processor  - Action 'activate_restaurant' ended with events '['<rasa_core.events.StartForm object at 0x123fc92b0>' 'SlotSet(key: switch, value: False)', 'SlotSet(key: form_complete, value: False)']'
+    2018-08-01 09:50:12 DEBUG    rasa_core.policies.ensemble  - Form restaurant_form predicted next action UtterAction('utter_ask_price')
     What price range?
 
-The key lines to note are the rasa_core.policies.ensemble lines. The activation of the Form is predicted by the memoization policy and then the subsequent question asking is predicted by the Form. This will be the case until a StopPlan object is passed again.
+The key lines to note are the rasa_core.policies.ensemble lines. The activation of the Form is predicted by the memoization policy and then the subsequent question asking is predicted by the Form. This will be the case until a StopForm object is passed again.
 
-Complicated
-~~~~~~~~~~~
+Optional arguments
+~~~~~~~~~~~~~~~~~~
 
 Advanced Forms object
 ^^^^^^^^^^^^^^^^^^^^^
@@ -289,7 +356,7 @@ There is added functionality which can be used:
 1. ``name`` - as above
 2. ``slot_dict``: We can augment the dictionaries we assign to our slots like so:
 ``slot_dict = {'FIRST_SLOT_NAME': {'ask_utt': 'WHICH_UTTERANCE_ASKS_FOR_SLOT', "clarify_utt": 'WHICH_UTTERANCE_EXPLAINS_SLOT', "follow_up_action": "WHICH_ACTION_SHOULD_BE_PERFORMED_AFTER_USER_REPLIES"}, ...}``
-    - ``follow_up_action`` will be performed after the user responds to ``'ask_utt'``. This can be useful in some cases where you would like to ask a yes/no question. You can then have an action to deal with affirm/deny, such as `SpaAnswerParse` in `plan_actions.py`
+    - ``follow_up_action`` will be performed after the user responds to ``'ask_utt'``. This can be useful in some cases where you would like to ask a yes/no question. You can then have an action to deal with affirm/deny, such as `SpaAnswerParse` in `form_actions.py`
     - ``clarify_utt`` will be said if the user asks for clarification, with ``details_intent`` (explained below)
     - ``priority``: the lower the value of the priority, the sooner this question will be asked. i.e. if you would like a question to be asked first, set it to `priority`:0
 3. ``finish_action``: as above
@@ -303,68 +370,79 @@ The Forms need to be made as objects and then referenced in the domain (see doma
 
 Advanced stories
 ^^^^^^^^^^^^^^^^
-In the example here the slots for location/price/cuisine etc. are unfeaturized, so adding another slot within the plan would not require rewriting the stories. Therefore to Rasa core the above story is equivalent to:
+In the example here the slots for location/price/cuisine etc. are unfeaturized, so adding another slot within the form would not require rewriting the stories. Therefore to Rasa core the above story is equivalent to:
 
 .. code-block:: md
 
     ## Generated Story 7536939952037997255
     * request_restaurant
         - activate_restaurant
-        - slot{"active_plan": true}
         - slot{"switch": false}
-        - deactivate_plan
-        - slot{"active_plan": false}
-        - slot{"plan_complete": true}
+        - deactivate_form
+        - slot{"form_complete": true}
         - utter_filled_slots
         - utter_suggest_restaurant
     * affirm
         - utter_book_restaurant
 
-Therefore it is useful being deliberate about which slots you featurize and which you don't. I.e. like in this case, if the slots you want to fill are only relevant as arguments to an api-call, then it is advised to not featurize the slots and instead include an action which checks if all the slots are filled, such as `DeactivatePlan` in `plan_actions.py` and then store the result of this in a slot which will be featurized.
+Therefore it is useful being deliberate about which slots you featurize and which you don't. I.e. like in this case, if the slots you want to fill are only relevant as arguments to an api-call, then it is advised to not featurize the slots and instead include an action which checks if all the slots are filled, such as ``DeactivateForm`` in ``form_actions.py`` and then store the result of this in a slot which will be featurized.
 
 
 How does it work really?
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is worthwhile taking a brief look at the Form object to understand the workflow and how the different arguments interact with one another. The full object is in rasa_core.policies.plans, but you can get an idea just from looking at the `next_action_idx` function:
+It is worthwhile taking a brief look at the Form object to understand the workflow and how the different arguments interact with one another. The full object is in rasa_core.policies.forms, but you can get an idea just from looking at the ``next_action_idx`` function:
 
-.. code-block:: md
+.. code-block:: python
 
-    def next_action_idx(self, tracker, domain):
+    def next_action(self, tracker, domain):
         # type: (DialogueStateTracker, Domain) -> int
 
         out = self._run_through_queue(domain)
         if out is not None:
-            # still actions in queue
+            # There are still actions in the queue, do the next one
             return out
 
-        intent = tracker.latest_message.parse_data['intent']['name'].replace('plan_', '', 1)
+        self.current_failures += 1
+        if self.current_failures > self.max_turns:
+            self.queue = [self.failure_action, self.finish_action]
+            return self._run_through_queue(domain)
+
+        intent = tracker.latest_message['intent']['name']
         self._update_requirements(tracker)
 
         if intent in self.exit_dict.keys():
-            # actions in this dict should deactivate this plan in the tracker
+            # actions in this dict should deactivate this form in the tracker
             self._exit_queue(intent, tracker)
             return self._run_through_queue(domain)
 
-        elif intent in self.chitchat_dict.keys() and tracker.latest_action_name not in self.chitchat_dict.values():
+        elif intent in self.chitchat_dict.keys():
             self._chitchat_queue(intent, tracker)
             return self._run_through_queue(domain)
-        elif intent in self.details_intent and 'utter_explain' not in tracker.latest_action_name:
+
+        elif self.details_intent and intent == self.details_intent:
             self._details_queue(intent, tracker)
             return self._run_through_queue(domain)
 
         still_to_ask = self.check_unfilled_slots(tracker)
 
         if len(still_to_ask) == 0:
-            self.queue = [self.finish_action, 'action_listen']
+            # if all the slots have been filled then queue finish actions
+            self.queue = [self.finish_action]
             return self._run_through_queue(domain)
         else:
+            # otherwise just ask to fill slots
             self.last_question = self._decide_next_question(still_to_ask, tracker)
             self.queue = self._question_queue(self.last_question)
             return self._run_through_queue(domain)
+Forms work by queueing up a list of actions as soon as it is the bot's turn to speak again. There are several "queues" of actions that can be lined up. The most common one will be the ``_question_queue`` which contains the ``ask_utt`` for an unfilled slot and then listens (If there is a ``follow_up_acton`` the queue will have that action appended after the ``action_listen`` and will be the first action done before a new queue is made). Another queue is the finish queue, which will take the action listed as ``finish_action`` and execute it. The chitchat queue will, when presented with one of the keys of ``chitchat_dict``, perform the corresponding action and then repeat the question it previously asked. the details queue will perform the 'clarify_utt' action, say the previous question and then listen when being provided the ``details_intent``. The last queue is the exit dict which will, when presented with the intent key, perform the corresponding value action. The action itself must exit the Form by returning a ``StopForm`` event.
 
-Forms work by queueing up a list of actions as soon as it is the bot's turn to speak again. There are several "queues" of actions that can be lined up. The most common one will be the _question_queue which contains the `ask_utt` for an unfilled slot and then listens (If there is a `follow_up_acton` the queue will have that action appended after the action_listen and will be the first action done before a new queue is made). Another queue is the finish queue, which will take the action listed as `finish_action` and execute it. The chitchat queue will, when presented with one of the keys of `chitchat_dict`, perform the corresponding action and then repeat the question it previously asked. the details queue will perform the 'clarify_utt' action, say the previous question and then listen when being provided the `details_intent`. The last queue is the exit dict which will, when presented with the intent key, perform the corresponding value action. The action itself must exit the Form by returning a StopPlan event.
-
-We intend plans to be used as a majority slot-filling exercise, which means that all intents are ignored except in the cases that:
+We intend forms to be used as a majority slot-filling exercise, which means that all intents are ignored except in the cases that:
 - your ``follow_up_action`` explicitly deals with the intent
 - any intent which is in ``[exit_dict.keys(), chitchat_dict.keys(), details_intent]`` is detected.
+
+
+Example
+-------
+
+To see the forms in action or use them yourself, check out the formbot in ``rasa_core_sdk/examples/formbot``.
