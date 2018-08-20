@@ -90,20 +90,13 @@ class MessageProcessor(object):
         # we have a Tracker instance for each user
         # which maintains conversation state
         tracker = self._get_tracker(sender_id)
-        if tracker.active_form is not None:
-            scores = [{"action": a, "score": 0}
-                      for a in self.domain.action_names]
-            scores[0]['plan_action'] = 1
-            return {"scores": scores,
-                    "tracker": tracker.current_state(should_include_events=True)}
-        else:
-            probabilities = self._get_next_action_probabilities(tracker)
-            # save tracker state to continue conversation from this state
-            self._save_tracker(tracker)
-            scores = [{"action": a, "score": p}
-                      for a, p in zip(self.domain.action_names, probabilities)]
-            return {"scores": scores,
-                    "tracker": tracker.current_state(should_include_events=True)}
+        probabilities = self._get_next_action_probabilities(tracker)
+        # save tracker state to continue conversation from this state
+        self._save_tracker(tracker)
+        scores = [{"action": a, "score": p}
+                  for a, p in zip(self.domain.action_names, probabilities)]
+        return {"scores": scores,
+                "tracker": tracker.current_state(should_include_events=True)}
 
     def log_message(self, message):
         # type: (UserMessage) -> DialogueStateTracker
@@ -139,14 +132,6 @@ class MessageProcessor(object):
         This should be overwritten by more advanced policies to use
         ML to predict the action. Returns the index of the next action."""
 
-        if tracker.active_form is not None:
-            logger.debug("Next action is decided by form {}".format(tracker.active_form))
-            follow_up_action = tracker.follow_up_action
-            if follow_up_action:
-                tracker.clear_follow_up_action()
-                return follow_up_action
-            else:
-                return RemoteAction("form_action", self.action_endpoint)
         probabilities = self._get_next_action_probabilities(tracker)
 
         max_index = int(np.argmax(probabilities))

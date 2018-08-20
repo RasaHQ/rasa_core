@@ -19,6 +19,7 @@ import rasa_core
 from rasa_core import utils, training, constants
 from rasa_core.events import SlotSet, ActionExecuted
 from rasa_core.featurizers import MaxHistoryTrackerFeaturizer
+from rasa_core.constants import FORM_ACTION_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -225,4 +226,18 @@ class SimplePolicyEnsemble(PolicyEnsemble):
             result = result / np.linalg.norm(result)
         logger.debug("Predicted next action using {}"
                      "".format(best_policy_name))
+        return result
+
+
+class FormPolicyEnsemble(SimplePolicyEnsemble):
+
+    def probabilities_using_best_policy(self, tracker, domain):
+        if tracker.active_form is not None:
+            logger.debug("Next action is decided by form {}".format(tracker.active_form))
+            result = [0] * domain.num_actions
+            result[domain.index_for_action(FORM_ACTION_NAME)] = 1.00
+        else:
+            result = super(FormPolicyEnsemble,
+                           self).probabilities_using_best_policy(tracker,
+                                                                 domain)
         return result
