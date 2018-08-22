@@ -195,6 +195,7 @@ This is currently defined as a python object. An example of the Form object defi
             super(RestaurantForm, self).__init__(name, slot_dict, finish_action,
                                                  exit_dict, chitchat_dict, details_intent,
                                                  rules, failure_action=failure_action)
+                                                 
 The extra arguments not defined above are defined below, but are optional.
 
 Stories
