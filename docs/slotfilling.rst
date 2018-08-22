@@ -147,7 +147,7 @@ Forms object
 
 The simplest form has 4 things defined:
 
-1. ``name``: the name of the Form
+1. ``name``: the name of the Form.
 
 2. ``fields``: a dictionary: ``{'FIRST_SLOT_NAME': {'ask_utt': 'WHICH_UTTERANCE_ASKS_FOR_SLOT'}, 'SECOND_SLOT_NAME':.. }``, which ties together slot names and utterances. The bot will continue to ask about the unfilled slots until all the slots are filled, or if the user asks to stop.
 
@@ -270,6 +270,30 @@ The way we do that in the formbot example is to have an action which is predicte
 Once this event is passed, the policy will be informed that it shouldn't use the predictions of the normal policy but
 instead should look for a form known in this case as ``"restaurant_form"`` with the name which is defined above.
 
+``EndForm`` event
+~~~~~~~~~~~~~~~~~
+At the end of the form, we need to pass an event to the tracker to tell it to deactivate the current form. We can also
+use the action where this happens to send meaningful information about how the form ended to the tracker. Take the formbot example:
+
+.. code-block:: python
+
+    class EndFormAction(Action):
+        def name(self):
+            return "end_form"
+
+        def run(self, dispatcher, tracker, domain, executor):
+            form = executor.forms[tracker.active_form]
+            still_to_go = form.check_unfilled_slots(tracker)
+            complete = len(still_to_go) == 0
+            return [SlotSet('form_complete', complete), EndForm()]
+
+In this case, when this action is predicted -- which is every time the form is exited -- the slots which are required to be filled
+by the form will be checked. In this case if there remain unfilled slots then the ``form_complete`` slot will be set to ``False``,
+and if all required slots have been filled then it will be set to ``True``. This can influence how the flow of the conversation will
+continue. For example in this case the form can be reactivated if it was not initially completed, whereas when it is completed the bot will tell the user it has booked a table.
+
+It is also possible to do more complicated things with this form deactivation action. If there are multiple ways that the form may end
+
 Example output
 ^^^^^^^^^^^^^^
 Here is an example of the debug log for a forms bot.
@@ -296,19 +320,19 @@ Advanced Forms object
 ^^^^^^^^^^^^^^^^^^^^^
 There is added functionality which can be used:
 
-1. ``name`` - as above
+1. ``name`` - as above.
 2. ``fields``: We can augment the dictionaries we assign to our slots like so:
 ``fields = {'FIRST_SLOT_NAME': {'ask_utt': 'WHICH_UTTERANCE_ASKS_FOR_SLOT', "clarify_utt": 'WHICH_UTTERANCE_EXPLAINS_SLOT', "follow_up_action": "WHICH_ACTION_SHOULD_BE_PERFORMED_AFTER_USER_REPLIES"}, ...}``
     - ``follow_up_action`` will be performed after the user responds to ``'ask_utt'``. This can be useful in some cases where you would like to ask a yes/no question. You can then have an action to deal with affirm/deny, such as `SpaAnswerParse` in `form_actions.py`
-    - ``clarify_utt`` will be said if the user asks for clarification, with ``details_intent`` (explained below)
-    - ``priority``: the lower the value of the priority, the sooner this question will be asked. i.e. if you would like a question to be asked first, set it to ``"priority":0``
-3. ``finish_action``: as above
-4. ``breakout_intents``: as above
+    - ``clarify_utt`` will be said if the user asks for clarification, with ``details_intent`` (explained below).
+    - ``priority``: the lower the value of the priority, the sooner this question will be asked. i.e. if you would like a question to be asked first, set it to ``"priority":0``.
+3. ``finish_action``: as above.
+4. ``breakout_intents``: as above.
 5. ``chitchat_intents``: another {"intent":"action"} dictionary, however in this case the bot, when detecting the relevant intent, will do the corresponding action and then repeat their original question. OPTIONAL
 6. ``details_intent``: The intent which is asking for details about the previous question in the form fill. If the bot detects the details intent it will try to execute ``fields['CURRENT_SLOT_NAME']['clarify_utt']``. OPTIONAL
 7. ``rules``: a dictionary, defined as ``{slot:{value:{keep:[slot,slot2], lose:[slot3]},...}, ...}`` which, when matching slot/value pairs will alter which slots need to be filled to trigger the finish action of the Form. This is implemented in the restaurant form OPTIONAL
-8. ``max_turns``: the maximum number of turns without completion that the bot will do before exiting with ``failure_action``. Defaults to 10
-9. ``failure_action``: action which will occur when the maximum number of turns has been passed. This defaults to the finish_action but can be set to be anything
+8. ``max_turns``: the maximum number of turns without completion that the bot will do before exiting with ``failure_action``. Defaults to 10.
+9. ``failure_action``: action which will occur when the maximum number of turns has been passed. This defaults to the finish_action but can be set to be anything.
 
 The Forms need to be made as objects and then referenced in the domain (see domain.yml here). Core will trigger the Form when your activate action is predicted, and stories/featurizer will ignore the intents/actions carried out within the Form, with the exception of slot setting.
 
@@ -415,7 +439,7 @@ It is worthwhile taking a brief look at the Form object to understand the workfl
 Forms work by queueing up a list of actions as soon as it is the bot's turn to speak again. There are several "queues" of actions that can be lined up. The most common one will be the ``_question_queue`` which contains the ``ask_utt`` for an unfilled slot and then listens (If there is a ``follow_up_acton`` the queue will have that action appended after the ``action_listen`` and will be the first action done before a new queue is made). Another queue is the finish queue, which will take the action listed as ``finish_action`` and execute it. The chitchat queue will, when presented with one of the keys of ``chitchat_intents``, perform the corresponding action and then repeat the question it previously asked. the details queue will perform the 'clarify_utt' action, say the previous question and then listen when being provided the ``details_intent``. The last queue is the exit dict which will, when presented with the intent key, perform the corresponding value action. The action itself must exit the Form by returning a ``StopForm`` event.
 
 We intend forms to be used as a majority slot-filling exercise, which means that all intents are ignored except in the cases that:
-- your ``follow_up_action`` explicitly deals with the intent
+- your ``follow_up_action`` explicitly deals with the intent.
 - any intent which is in ``[breakout_intents.keys(), chitchat_intents.keys(), details_intent]`` is detected.
 
 
