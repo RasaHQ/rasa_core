@@ -238,7 +238,6 @@ class StoryFileReader(object):
                                    "Line Content: '{}'"
                                    "".format(line_num, line))
             except Exception as e:
-                print(e)
                 msg = "Error in line {}: {}".format(line_num, e.message)
                 logger.error(msg, exc_info=1)
                 raise ValueError(msg)

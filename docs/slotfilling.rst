@@ -282,7 +282,6 @@ We also need to let Rasa Core predict when to activate the Forms. We do this by 
         - activate_restaurant
         - slot{"switch": false}
         - slot{"cuisine": "mexican"}
-        - deactivate_form
         - slot{"form_complete": false}
         - utter_happy
     * chitchat
@@ -302,7 +301,6 @@ which allows core to predict when to activate the restaurant. Using a combinatio
         - slot{"location": "mcdonalds"}
         - slot{"price": "high"}
         - slot{"cuisine": "mcdonalds"}
-        - deactivate_form
         - slot{"form_complete": true}
         - utter_filled_slots
         - utter_suggest_restaurant
@@ -378,7 +376,6 @@ In the example here the slots for location/price/cuisine etc. are unfeaturized, 
     * request_restaurant
         - activate_restaurant
         - slot{"switch": false}
-        - deactivate_form
         - slot{"form_complete": true}
         - utter_filled_slots
         - utter_suggest_restaurant

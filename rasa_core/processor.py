@@ -73,8 +73,6 @@ class MessageProcessor(object):
 
         # preprocess message if necessary
         tracker = self.log_message(message)
-        if message.text == '/export':
-            print(tracker.export_stories())
         self._predict_and_execute_next_action(message, tracker)
         # save tracker state to continue conversation from this state
         self._save_tracker(tracker)
