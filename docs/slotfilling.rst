@@ -113,99 +113,22 @@ So don't try to cover every possiblity in your hand-written stories before givin
 Real user behavior will always surprise you! 
 
 
-Slot Filling with a ``FormAction``
-----------------------------------
-
-If you need to collect multiple pieces of information in a row, it is sometimes easier
-to create a ``FormAction``.
-This lets you have a single action that is called multiple times, rather than separate actions for each question,
-e.g. ``utter_ask_cuisine``, ``utter_ask_numpeople``, in a restaurant bot. 
-
-
-.. note::
-    You don't *have* to use a ``FormAction`` to do slot filling! It just means you need 
-    fewer stories to get the initial flow working. 
-
-A form action has a set of required fields, which you define for the class:
-
-.. literalinclude:: ../tests/test_forms.py
-   :pyobject: ActionSearchRestaurants
-
-
-
-The way this works is that every time you call this action, it will pick one of the 
-``REQUIRED_FIELDS`` that's still missing and ask the user for it. You can also ask a yes/no
-question with a ``BooleanFormField``.
-
-The form action will set a slot called ``requested_slot`` to keep track if what it has asked the user.
-So a story will look something like this:
-
-.. code-block:: md
-
-   * request_restaurant
-        - action_restaurant_form
-        - slot{"requested_slot": "people"}
-   * inform{"number": 3}
-        - action_restaurant_form
-        - slot{"people": 3}
-        - slot{"requested_slot": "cuisine"}
-   * inform{"cuisine": "chinese"}
-        - action_restaurant_form
-        - slot{"cuisine": "chinese"}
-        - slot{"requested_slot": "vegetarian"}
-   * deny
-        - action_restaurant_form
-        - slot{"vegetarian": false}
-
-Some important things to consider:
-
-- The ``submit()`` method is called when the action is run and all slots are filled, in this case after the ``deny`` intent.
-  If you are just collecting some information and don't need to make an API call at the end, your ``submit()`` method
-  should just ``return []``.
-- Your domain needs to have a slot called ``requested_slot``. You can make this an unfeaturized slot.
-- You need to define utterances for asking for each slot in your domain, e.g. ``utter_ask_{slot_name}``.
-- We strongly recommend that you create these stories using interactive learning, because if you
-  type these by hand you will probably forget to include the lines for the ``requested_slot``.
-- Any slots that are already set won't be asked for. E.g. if someone says "I'd like a vegetarian Chinese restaurant for 8 people" the ``submit`` function should get called right away.
-
-
-Form Fields and Free-text Input
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The pre-defined ``FormField`` types are:
-
-- ``EntityFormField(entity_name, slot_name)``, which will
-  look for an entity called ``entity_name`` to fill a slot ``slot_name``.
-- ``BooleanFormField(slot_name, affirm_intent, deny_intent)``, which looks for the intents ``affirm_intent``
-  and ``deny_intent`` to fill a boolean slot called ``slot_name``.
-- ``FreeTextFormField(slot_name)``, which will use the next user utterance to fill the text slot ``slot_name``.
-
-For any subclass of  ``FormField``, its ``validate()`` method will be called before setting it 
-as a slot. By default this just checks that the value isn't ``None``, but if you want to check 
-the value against a DB, or check a pattern is matched, you can do so by defining your own class
-like ``MyCustomFormField`` and overriding the ``validate()`` method.
-
-.. warning:: 
-
-   The ``FreeTextFormField`` class will just extract the user message as a value.
-   However, there is currently no way to write a 'wildcard' intent in Rasa Core stories as of now. 
-   Typically your NLU model will assign this free-text input to 2-3 different intents. 
-   It's easiest to add stories for each of these. 
-
 Slot Filling with Forms
 -----------------------
 
-Another alternative is to use Forms, an object which supercedes the policy ensemble and carries out deterministic logic for the purpose of filling slots.
+An alternative to writing stories directly is to use Forms, an object which bypasses the policy ensemble and carries out strict logic for the purpose of filling slots.
 
-This is an extension on the ``FormAction`` for a number of reasons:
+This is preferable to writing stories to fill forms because:
 
-- It no longer requires a change in stories if the structure of the form is changed. I.e. if an extra slot is required to be filled then the flow can be changed simply by editing an object instead of rewriting stories.
+- It doesn't require rewriting stories if the structure of the form is changed. I.e. if an extra slot is required to be filled then the flow can be changed simply by editing an object instead of rewriting stories.
 
 - The intent is ignored except for in specific cases where the user does not want to fill out the form. (for example if they say goodbye).
 
 - There can be conditional logic on key-value pairs. So if a certain slot is set by the questioning, the remaining slots to be filled can be altered.
 
 - The bot has explicit handling of chitchat and asking for details which can be customized by the user.
+
+NOTE: The Forms object is in beta, and has not undergone rigorous external testing. If you find any bugs or have any feature requests, please raise an issue in this repo.
 
 Forms object
 ~~~~~~~~~~~~
@@ -218,7 +141,7 @@ The most simple format of Forms need only 4 things defined:
 
 3. ``finish_action``: this is the name of the action that will be called when all of the relevant slots are filled. This action must return a ``EndForm`` event but can do anything else alongside it.
 
-4. ``exit_dict``: the exit dict is a set of {'intent':'action'} pairs which describe what the bot should do in certain situations where the form should be exited.
+4. ``exit_dict``: the exit dict is a set of ``{'intent':'action'}`` pairs which describe what the bot should do in certain situations where the form should be exited.
 
 This is currently defined as a python object. An example of the Form object defined in the ``rasa_pysdk/examples/formbot`` is:
 
@@ -268,8 +191,12 @@ This is currently defined as a python object. An example of the Form object defi
                     }
 
             failure_action = 'utter_human_hand_off'
-            super(RestaurantForm, self).__init__(name, slot_dict, finish_action, exit_dict, chitchat_dict, details_intent, rules, failure_action=failure_action)
+
+            super(RestaurantForm, self).__init__(name, slot_dict, finish_action,
+                                                 exit_dict, chitchat_dict, details_intent,
+                                                 rules, failure_action=failure_action)
 The extra arguments not defined above are defined below, but are optional.
+
 Stories
 ~~~~~~~
 
@@ -290,7 +217,9 @@ We also need to let Rasa Core predict when to activate the Forms. We do this by 
         - activate_hotel
 
 
-which allows core to predict when to activate the restaurant. Using a combination of the ``finish_action`` or ``exit_dict`` one can featurize the way that the form finished. In this case, we set a slot to say after an exit whether the form had been completed or not (``form_complete``). It is important to note that *how* the slots were filled within the form is not featurized. Simply which slots are filled at the time of the form's deactivation is relevant and helps downstream core predictions. We see above an example of a story where the form has not been filled and the user has exited. We also have a story where the slots of the form have all been filled:
+which allows core to predict when to activate the form. Using a combination of the ``finish_action`` or ``exit_dict`` you can tell core to act differently dependent on the way that the form finished. In this case, we set a slot to say after an exit whether the form had been completed or not (``form_complete``).
+It is important to note that *how* the slots were filled within the form does not get noticed by core. The only thing that matters is which slots are filled at the time of the form's deactivation and these influence downstream core predictions. We see above an example of a story where the form has not been filled and the user has exited.
+ We also have a story where the slots of the form have all been filled:
 
 .. code-block:: md
 
@@ -298,7 +227,7 @@ which allows core to predict when to activate the restaurant. Using a combinatio
     * request_restaurant
         - activate_restaurant
         - slot{"switch": false}
-        - slot{"location": "mcdonalds"}
+        - slot{"location": "Berlin"}
         - slot{"price": "high"}
         - slot{"cuisine": "mcdonalds"}
         - slot{"form_complete": true}
@@ -323,6 +252,7 @@ The way we do that in the formbot example is to have an action which is predicte
 
         def run(self, dispatcher, tracker, domain, executor):
             return [StartForm("restaurant_form")]
+
 Once this event is passed, the policy will be informed that it shouldn't use the predictions of the normal policy but
 instead should look for a form known in this case as ``"restaurant_form"`` with the name which is defined above.
 
@@ -356,7 +286,7 @@ There is added functionality which can be used:
 ``slot_dict = {'FIRST_SLOT_NAME': {'ask_utt': 'WHICH_UTTERANCE_ASKS_FOR_SLOT', "clarify_utt": 'WHICH_UTTERANCE_EXPLAINS_SLOT', "follow_up_action": "WHICH_ACTION_SHOULD_BE_PERFORMED_AFTER_USER_REPLIES"}, ...}``
     - ``follow_up_action`` will be performed after the user responds to ``'ask_utt'``. This can be useful in some cases where you would like to ask a yes/no question. You can then have an action to deal with affirm/deny, such as `SpaAnswerParse` in `form_actions.py`
     - ``clarify_utt`` will be said if the user asks for clarification, with ``details_intent`` (explained below)
-    - ``priority``: the lower the value of the priority, the sooner this question will be asked. i.e. if you would like a question to be asked first, set it to `priority`:0
+    - ``priority``: the lower the value of the priority, the sooner this question will be asked. i.e. if you would like a question to be asked first, set it to ``"priority":0``
 3. ``finish_action``: as above
 4. ``exit_dict``: as above
 5. ``chitchat_dict``: another {"intent":"action"} dictionary, however in this case the bot, when detecting the relevant intent, will do the corresponding action and then repeat their original question. OPTIONAL
@@ -382,13 +312,46 @@ In the example here the slots for location/price/cuisine etc. are unfeaturized, 
     * affirm
         - utter_book_restaurant
 
-Therefore it is useful being deliberate about which slots you featurize and which you don't. I.e. like in this case, if the slots you want to fill are only relevant as arguments to an api-call, then it is advised to not featurize the slots and instead include an action which checks if all the slots are filled, such as ``DeactivateForm`` in ``form_actions.py`` and then store the result of this in a slot which will be featurized.
+Therefore it is useful being deliberate about which slots you featurize and which you don't. I.e. in this case, if the slots you want to fill are only relevant as arguments to an api-call, then it is advised to not featurize the slots and instead include an action which checks if all the slots are filled, such as ``DeactivateForm`` in ``form_actions.py`` and then store the result of this in a slot which will be featurized.
 
+Follow up actions
+^^^^^^^^^^^^^^^^^
 
-How does it work really?
-^^^^^^^^^^^^^^^^^^^^^^^^
+There are cases which are less straightforward than asking a question of what someone wants and they tell you what they want in full text. For example, if we include another question: "Would you like vegetarian options at the restaurant?"
+the user will not likely say "yes, vegetarian options", they are more likely to say "yes" or "no". For cases like this we use something known as a ``follow_up_action``. An example of how this is defined in the form object is:
 
-It is worthwhile taking a brief look at the Form object to understand the workflow and how the different arguments interact with one another. The full object is in rasa_core.policies.forms, but you can get an idea just from looking at the ``next_action_idx`` function:
+.. code-block:: python
+        fields = { ...,
+                "vegetarian": {
+                    "ask_utt": "utter_ask_vegetarian",
+                    "clarify_utt": "utter_explain_vegetarian",
+                    "follow_up_action": "vegetarian_parse"}
+                }
+
+In this form, whenever the ``ask_utt`` is performed, the next action after the user's message will always be the ``follow_up_action``, in this case ``"vegetarian_parse"``.
+
+The code for this follow up action is then:
+
+.. code-block:: python
+    class VegetarianParse(Action):
+        def name(self):
+            return "vegetarian_parse"
+
+        def run(self, dispatcher, tracker, domain, executor):
+            latest_intent = tracker.latest_message['intent']['name']
+            if latest_intent == 'affirm':
+                return [SlotSet('vegetarian', True)]
+            elif latest_intent == 'deny':
+                return [SlotSet('vegetarian', False)]
+            else:
+                return []
+
+This action picks up the most recent intent and sets a slot dependent on it. This will also allow the plan to move on to the next question.
+
+How does it work?
+^^^^^^^^^^^^^^^^^
+
+It is worthwhile taking a brief look at the Form object to understand the workflow and how the different arguments interact with one another. The full object is in ``rasa_core.policies.forms``, but you can get an idea just from looking at the ``next_action_idx`` function:
 
 .. code-block:: python
 
@@ -432,6 +395,7 @@ It is worthwhile taking a brief look at the Form object to understand the workfl
             self.last_question = self._decide_next_question(still_to_ask, tracker)
             self.queue = self._question_queue(self.last_question)
             return self._run_through_queue(domain)
+
 Forms work by queueing up a list of actions as soon as it is the bot's turn to speak again. There are several "queues" of actions that can be lined up. The most common one will be the ``_question_queue`` which contains the ``ask_utt`` for an unfilled slot and then listens (If there is a ``follow_up_acton`` the queue will have that action appended after the ``action_listen`` and will be the first action done before a new queue is made). Another queue is the finish queue, which will take the action listed as ``finish_action`` and execute it. The chitchat queue will, when presented with one of the keys of ``chitchat_dict``, perform the corresponding action and then repeat the question it previously asked. the details queue will perform the 'clarify_utt' action, say the previous question and then listen when being provided the ``details_intent``. The last queue is the exit dict which will, when presented with the intent key, perform the corresponding value action. The action itself must exit the Form by returning a ``StopForm`` event.
 
 We intend forms to be used as a majority slot-filling exercise, which means that all intents are ignored except in the cases that:
