@@ -215,10 +215,8 @@ class MessageProcessor(object):
         else:
             parse_data = self._parse_message(message)
 
-        if tracker.active_form is not None:
-            parse_data['in_form'] = True
-        else:
-            parse_data['in_form'] = False
+        parse_data['in_form'] = tracker.active_form is not None
+
         # don't ever directly mutate the tracker
         # - instead pass its events to log
         tracker.update(UserUttered(message.text, parse_data["intent"],

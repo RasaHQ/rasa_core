@@ -665,10 +665,7 @@ class ActionExecuted(Event):
 
     def __init__(self, action_name, timestamp=None):
         self.action_name = action_name
-        if action_name is not FORM_ACTION_NAME:
-            self.unpredictable = False
-        else:
-            self.unpredictable = True
+        self.unpredictable = action_name == FORM_ACTION_NAME
         super(ActionExecuted, self).__init__(timestamp)
 
     def __str__(self):
@@ -698,7 +695,6 @@ class ActionExecuted(Event):
 
     def apply_to(self, tracker):
         # type: (DialogueStateTracker) -> None
-
         tracker.latest_action_name = self.action_name
         tracker.follow_up_action = None
 
