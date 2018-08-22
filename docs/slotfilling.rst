@@ -371,46 +371,46 @@ It is worthwhile taking a brief look at the Form object to understand the workfl
 
 .. code-block:: python
 
-    def next_action(self, tracker, domain):
-        # type: (DialogueStateTracker, Domain) -> int
+    def next_action(self, tracker):
+        # type: (DialogueStateTracker) -> int
 
-        out = self._run_through_queue(domain)
+        out = self._run_through_queue()
         if out is not None:
             # There are still actions in the queue, do the next one
             return out
 
-        self.current_failures += 1
-        if self.current_failures > self.max_turns:
-            self.queue = [self.failure_action, self.finish_action]
-            return self._run_through_queue(domain)
-
-        intent = tracker.latest_message['intent']['name']
         self._update_requirements(tracker)
-
-        if intent in self.breakout_intents.keys():
-            # actions in this dict should deactivate this form in the tracker
-            self._exit_queue(intent, tracker)
-            return self._run_through_queue(domain)
-
-        elif intent in self.chitchat_intents.keys():
-            self._chitchat_queue(intent, tracker)
-            return self._run_through_queue(domain)
-
-        elif self.details_intent and intent == self.details_intent:
-            self._details_queue(intent, tracker)
-            return self._run_through_queue(domain)
-
         still_to_ask = self.check_unfilled_slots(tracker)
 
         if len(still_to_ask) == 0:
             # if all the slots have been filled then queue finish actions
             self.queue = [self.finish_action]
-            return self._run_through_queue(domain)
-        else:
-            # otherwise just ask to fill slots
-            self.last_question = self._decide_next_question(still_to_ask, tracker)
-            self.queue = self._question_queue(self.last_question)
-            return self._run_through_queue(domain)
+            return self._run_through_queue()
+
+        self.current_failures += 1
+        if self.current_failures > self.max_turns:
+            self.queue = [self.failure_action]
+            return self._run_through_queue()
+
+        intent = tracker.latest_message['intent']['name']
+
+        if intent in self.breakout_intents.keys():
+            # actions in this dict should deactivate this form in the tracker
+            self._exit_queue(intent, tracker)
+            return self._run_through_queue()
+
+        elif intent in self.chitchat_intents.keys():
+            self._chitchat_queue(intent, tracker)
+            return self._run_through_queue()
+
+        elif self.details_intent and intent == self.details_intent:
+            self._details_queue(intent, tracker)
+            return self._run_through_queue()
+
+        # otherwise just ask to fill slots
+        self.last_question = self._decide_next_question(still_to_ask, tracker)
+        self.queue = self._question_queue(self.last_question)
+        return self._run_through_queue()
 
 Forms work by queueing up a list of actions as soon as it is the bot's turn to speak again. There are several "queues" of actions that can be lined up. The most common one will be the ``_question_queue`` which contains the ``ask_utt`` for an unfilled slot and then listens (If there is a ``follow_up_acton`` the queue will have that action appended after the ``action_listen`` and will be the first action done before a new queue is made). Another queue is the finish queue, which will take the action listed as ``finish_action`` and execute it. The chitchat queue will, when presented with one of the keys of ``chitchat_intents``, perform the corresponding action and then repeat the question it previously asked. the details queue will perform the 'clarify_utt' action, say the previous question and then listen when being provided the ``details_intent``. The last queue is the exit dict which will, when presented with the intent key, perform the corresponding value action. The action itself must exit the Form by returning a ``StopForm`` event.
 
