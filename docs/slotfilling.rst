@@ -116,34 +116,47 @@ Real user behavior will always surprise you!
 Slot Filling with Forms
 -----------------------
 
-An alternative to writing stories directly is to use Forms, an object which bypasses the policy ensemble and carries out strict logic for the purpose of filling slots.
+If you have a fixed set of questions to ask and don't need much flexibility, you can use the ``Form`` object.
+A ``Form`` follows a few simple rules to fill a set of slots.
 
-This is preferable to writing stories to fill forms because:
+Some reasons you might want to use forms:
 
-- It doesn't require rewriting stories if the structure of the form is changed. I.e. if an extra slot is required to be filled then the flow can be changed simply by editing an object instead of rewriting stories.
+- If you expect the structure of your form to change over time.
+  If you want to add, change, or remove a slot from your form in the future, you don't have to
+  change your stories at all when you use a form.
+ 
+- In many cases, it can be tricky to get Rasa NLU to predict the correct intent
+  when a person is just providing the value of a slot. In forms, the intent is ignored 
+  except in specific cases where the user does not want to fill out the form. (for example if they say goodbye).
 
-- The intent is ignored except for in specific cases where the user does not want to fill out the form. (for example if they say goodbye).
 
-- There can be conditional logic on key-value pairs. So if a certain slot is set by the questioning, the remaining slots to be filled can be altered.
+.. note:: Forms should be considered a beta feature. 
+   If you find any bugs or have any feature requests, please raise an issue in this repo.
+   Forms are currently only available in Python. 
+
+Some more things you can do with forms:
+
+- You can implement some conditional logic on key-value pairs. 
+  For example, you can ask a user if they are interested in a premium offer,
+  and ask for some additional information if they are. 
 
 - The bot has explicit handling of chitchat and asking for details which can be customized by the user.
-
-NOTE: The Forms object is in beta, and has not undergone rigorous external testing. If you find any bugs or have any feature requests, please raise an issue in this repo.
 
 Forms object
 ~~~~~~~~~~~~
 
-The most simple format of Forms need only 4 things defined:
+The simplest Form has 4 things defined:
 
 1. ``name``: the name of the Form
 
-2. ``slot_dict``: a dictionary: ``{'FIRST_SLOT_NAME': {'ask_utt': 'WHICH_UTTERANCE_ASKS_FOR_SLOT'}, 'SECOND_SLOT_NAME':.. }``, which ties together slot names and utterances. The bot will continue to ask about the unfilled slots until all the slots are filled or the form is otherwise exited.
+2. ``slot_dict``: a dictionary: ``{'FIRST_SLOT_NAME': {'ask_utt': 'WHICH_UTTERANCE_ASKS_FOR_SLOT'}, 'SECOND_SLOT_NAME':.. }``, which ties together slot names and utterances. The bot will continue to ask about the unfilled slots until all the slots are filled, or if the user asks to stop.
 
-3. ``finish_action``: this is the name of the action that will be called when all of the relevant slots are filled. This action must return a ``EndForm`` event but can do anything else alongside it.
+3. ``finish_action``: the name of the action that will be called when all of the relevant slots are filled. This action **must** return an ``EndForm`` event, but can do anything you want in addition (e.g. call an API and return ``SlotSet`` events).
 
 4. ``exit_dict``: the exit dict is a set of ``{'intent':'action'}`` pairs which describe what the bot should do in certain situations where the form should be exited.
 
-This is currently defined as a python object. An example of the Form object defined in the ``rasa_pysdk/examples/formbot`` is:
+To create a form, you have to create a python object.
+An example (see `here <https://github.com/RasaHQ/rasa_core_sdk/tree/master/examples/formbot>`_) is:
 
 .. code-block:: python
 
