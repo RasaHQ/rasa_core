@@ -337,7 +337,7 @@ Here we have a slot called <code class="docutils literal notranslate"><span clas
   <span class="n">utter_ack_findalternatives</span><span class="p">:</span>
     <span class="o">-</span> <span class="s2">&quot;ok let me see what else there is&quot;</span>
   <span class="n">utter_ack_makereservation</span><span class="p">:</span>
-    <span class="o">-</span> <span class="n">text</span><span class="p">:</span> <span class="s2">&quot;ok making a reservation&quot;</span>
+    <span class="o">-</span> <span class="n">text</span><span class="p">:</span> <span class="s2">&quot;ok making a reservation for restaurant (price=</span><span class="si">{price}</span><span class="s2"> cuisine=</span><span class="si">{cuisine}</span><span class="s2">) in location=</span><span class="si">{location}</span><span class="s2"> for count=</span><span class="si">{people}</span><span class="s2">? &quot;</span>
       <span class="n">buttons</span><span class="p">:</span>
         <span class="o">-</span> <span class="n">title</span><span class="p">:</span> <span class="s2">&quot;thank you&quot;</span>
           <span class="n">payload</span><span class="p">:</span> <span class="s2">&quot;thank you&quot;</span>
@@ -348,7 +348,7 @@ Here we have a slot called <code class="docutils literal notranslate"><span clas
   <span class="n">utter_ask_location</span><span class="p">:</span>
     <span class="o">-</span> <span class="s2">&quot;where?&quot;</span>
   <span class="n">utter_ask_moreupdates</span><span class="p">:</span> 
-    <span class="o">-</span> <span class="s2">&quot;if you&#39;d like to modify anything else, please tell me what&quot;</span>
+    <span class="o">-</span> <span class="s2">&quot;if you&#39;d like to modify anything else, please tell me what. This is what I currently have: </span><span class="si">{location}</span><span class="s2"> (price: </span><span class="si">{price}</span><span class="s2">, cuisine: </span><span class="si">{cuisine}</span><span class="s2">) for </span><span class="si">{people}</span><span class="s2"> people.&quot;</span>
   <span class="n">utter_ask_numpeople</span><span class="p">:</span>
     <span class="o">-</span> <span class="s2">&quot;for how many people?&quot;</span>
   <span class="n">utter_ask_price</span><span class="p">:</span> 
