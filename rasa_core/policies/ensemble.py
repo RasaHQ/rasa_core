@@ -69,7 +69,7 @@ class PolicyEnsemble(object):
         return events_metadata
 
     def train(self, training_trackers, domain, **kwargs):
-        # type: (List[DialogueStateTracker], Domain, **Any) -> None
+        # type: (List[DialogueStateTracker], Domain, Any) -> None
         if training_trackers:
             for policy in self.policies:
                 policy.train(training_trackers, domain, **kwargs)
@@ -110,7 +110,7 @@ class PolicyEnsemble(object):
         return action_fingerprints
 
     def _persist_metadata(self, path, dump_flattened_stories=False):
-        # type: (Text) -> None
+        # type: (Text, bool) -> None
         """Persists the domain specification to storage."""
 
         # make sure the directory we persist to exists
@@ -143,7 +143,7 @@ class PolicyEnsemble(object):
             training.persist_data(self.training_trackers, training_data_path)
 
     def persist(self, path, dump_flattened_stories=False):
-        # type: (Text) -> None
+        # type: (Text, bool) -> None
         """Persists the policy to storage."""
 
         self._persist_metadata(path, dump_flattened_stories)
@@ -155,8 +155,8 @@ class PolicyEnsemble(object):
 
     @classmethod
     def load_metadata(cls, path):
-        matadata_path = os.path.join(path, 'policy_metadata.json')
-        with io.open(os.path.abspath(matadata_path)) as f:
+        metadata_path = os.path.join(path, 'policy_metadata.json')
+        with io.open(os.path.abspath(metadata_path)) as f:
             metadata = json.loads(f.read())
         return metadata
 
@@ -200,7 +200,7 @@ class PolicyEnsemble(object):
         return ensemble
 
     def continue_training(self, trackers, domain, **kwargs):
-        # type: (List[DialogueStateTracker], Domain, **Any) -> None
+        # type: (List[DialogueStateTracker], Domain, Any) -> None
 
         self.training_trackers.extend(trackers)
         for p in self.policies:

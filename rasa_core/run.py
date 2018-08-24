@@ -6,6 +6,9 @@ from __future__ import unicode_literals
 import argparse
 import logging
 from collections import namedtuple
+
+from flask import Flask
+from flask_cors import CORS
 from threading import Thread
 
 from builtins import str
@@ -19,6 +22,7 @@ from rasa_core.agent import Agent
 from rasa_core.channels import (
     console, RestInput, InputChannel,
     BUILTIN_CHANNELS)
+from rasa_core.constants import DOCS_BASE_URL
 from rasa_core.interpreter import (
     NaturalLanguageInterpreter)
 from rasa_core.utils import read_yaml_file
@@ -121,8 +125,8 @@ def _raise_missing_credentials_exception(channel):
                     "The argument should be a file path pointing to"
                     "a yml file containing the {} authentication"
                     "information. Details in the docs: "
-                    "https://core.rasa.com/connectors.html#{}-setup".
-                    format(channel, channel, channel_doc_link))
+                    "{}/connectors/#{}-setup".
+                    format(channel, channel, DOCS_BASE_URL, channel_doc_link))
 
 
 def _create_external_channels(channel, credentials_file):
@@ -227,12 +231,17 @@ def start_server(input_channels,
                  cors,
                  auth_token,
                  port,
-                 initial_agent):
+                 initial_agent,
+                 enable_api=True):
     """Run the agent."""
 
-    app = server.create_app(initial_agent,
-                            cors_origins=cors,
-                            auth_token=auth_token)
+    if enable_api:
+        app = server.create_app(initial_agent,
+                                cors_origins=cors,
+                                auth_token=auth_token)
+    else:
+        app = Flask(__name__)
+        CORS(app, resources={r"/*": {"origins": cors or ""}})
 
     if input_channels:
         rasa_core.channels.channel.register(input_channels,
@@ -255,12 +264,13 @@ def serve_application(initial_agent,
                       port=constants.DEFAULT_SERVER_PORT,
                       credentials_file=None,
                       cors=None,
-                      auth_token=None
+                      auth_token=None,
+                        enable_api=True
                       ):
     input_channels = create_http_input_channels(channel, credentials_file)
 
     http_server = start_server(input_channels, cors, auth_token,
-                               port, initial_agent)
+                               port, initial_agent, enable_api)
 
     if channel == "cmdline":
         start_cmdline_io(constants.DEFAULT_SERVER_URL, http_server.stop)
@@ -317,4 +327,5 @@ if __name__ == '__main__':
                       cmdline_args.port,
                       cmdline_args.credentials,
                       cmdline_args.cors,
-                      cmdline_args.auth_token)
+                      cmdline_args.auth_token,
+                      cmdline_args.enable_api)

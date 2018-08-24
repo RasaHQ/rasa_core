@@ -7,15 +7,17 @@ import logging
 
 import requests
 import typing
-from typing import List, Text, Optional
+from typing import List, Text, Optional, Dict, Any
 
 from rasa_core import events
+from rasa_core.constants import DOCS_BASE_URL
 from rasa_core.utils import EndpointConfig
 
 if typing.TYPE_CHECKING:
     from rasa_core.trackers import DialogueStateTracker
     from rasa_core.dispatcher import Dispatcher
     from rasa_core.events import Event
+    from rasa_core.domain import Domain
 
 logger = logging.getLogger(__name__)
 
@@ -27,18 +29,35 @@ ACTION_DEFAULT_FALLBACK_NAME = "action_default_fallback"
 
 
 def default_actions():
+    # type: () -> List[Action]
+    """List default actions."""
     return [ActionListen(), ActionRestart(), ActionDefaultFallback()]
 
 
 def default_action_names():
+    # type: () -> List[Text]
+    """List default action names."""
     return [a.name() for a in default_actions()]
 
 
-def num_default_actions():
-    return len(default_actions())
+def combine_user_with_default_actions(user_actions):
+    # remove all user actions that overwrite default actions
+    # this logic is a bit reversed, you'd think that we should remove
+    # the action name from the default action names if the user overwrites
+    # the action, but there are some locations in the code where we
+    # implicitly assume that e.g. "action_listen" is always at location
+    # 0 in this array. to keep it that way, we remove the duplicate
+    # action names from the users list instead of the defaults
+    unique_user_actions = [a
+                           for a in user_actions
+                           if a not in default_action_names()]
+    return default_action_names() + unique_user_actions
 
 
 def ensure_action_name_uniqueness(action_names):
+    # type: (List[Text]) -> None
+    """Check and raise an exception if there are two actions with same name."""
+
     unique_action_names = set()  # used to collect unique action names
     for a in action_names:
         if a in unique_action_names:
@@ -49,13 +68,13 @@ def ensure_action_name_uniqueness(action_names):
             unique_action_names.add(a)
 
 
-def action_from_name(name, action_endpoint):
-    # type: (Text, Optional[EndpointConfig]) -> Action
+def action_from_name(name, action_endpoint, user_actions):
+    # type: (Text, Optional[EndpointConfig], List[Text]) -> Action
     """Return an action instance for the name."""
 
     defaults = {a.name(): a for a in default_actions()}
 
-    if name in defaults:
+    if name in defaults and name not in user_actions:
         return defaults.get(name)
     elif name.startswith("utter_"):
         return UtterAction(name)
@@ -63,11 +82,12 @@ def action_from_name(name, action_endpoint):
         return RemoteAction(name, action_endpoint)
 
 
-def actions_from_names(action_names, action_endpoint):
-    # type: (List[Text], Optional[EndpointConfig]) -> List[Action]
+def actions_from_names(action_names, action_endpoint, user_actions):
+    # type: (List[Text], Optional[EndpointConfig], List[Text]) -> List[Action]
     """Converts the names of actions into class instances."""
 
-    return [action_from_name(name, action_endpoint) for name in action_names]
+    return [action_from_name(name, action_endpoint, user_actions)
+            for name in action_names]
 
 
 class Action(object):
@@ -85,19 +105,17 @@ class Action(object):
         Execute the side effects of this action.
 
         Args:
-            tracker (DialogueStateTracker): the state tracker for the current
-            user.
-                You can access slot values using ``tracker.get_slot(slot_name)``
-                and the most recent user message is
-                ``tracker.latest_message.text``.
             dispatcher (Dispatcher): the dispatcher which is used to send
-            messages back
-                to the user. Use ``dipatcher.utter_message()`` or any other
-                :class:`Dispatcher` method.
+                messages back to the user. Use ``dipatcher.utter_message()``
+                or any other :class:`Dispatcher` method.
+            tracker (DialogueStateTracker): the state tracker for the current
+                user. You can access slot values using
+                ``tracker.get_slot(slot_name)`` and the most recent user
+                message is ``tracker.latest_message.text``.
             domain (Domain): the bot's domain
 
         Returns:
-            List: A list of :class:`Event` instances
+            List[Event]: A list of :class:`Event` instances
         """
 
         raise NotImplementedError
@@ -183,6 +201,9 @@ class RemoteAction(Action):
         self.action_endpoint = action_endpoint
 
     def _action_call_format(self, tracker, domain):
+        # type: (DialogueStateTracker, Domain) -> Dict[Text, Any]
+        """Create the request json send to the action server."""
+
         tracker_state = tracker.current_state(
                 should_include_events=True,
                 should_ignore_restarts=True)
@@ -194,16 +215,60 @@ class RemoteAction(Action):
             "domain": domain.as_dict()
         }
 
+    @staticmethod
+    def action_response_format_spec():
+        """Expected response schema for an Action endpoint.
+
+        Used for validation of the response returned from the
+        Action endpoint."""
+        return {
+            "type": "object",
+            "properties": {
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "event": {"type": "string"}
+                        }
+                    }
+
+                },
+                "responses": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                    }
+                }
+            },
+        }
+
     def _validate_action_result(self, result):
-        # TODO: TB - make sure the json is valid
-        return True
+        from jsonschema import validate
+        from jsonschema import ValidationError
 
-    def _validate_events(self, evts):
-        # TODO: TB - make sure no invalid events are logged
-        # e.g. setting of non existent slots
-        return True
+        try:
+            validate(result, self.action_response_format_spec())
+            return True
+        except ValidationError as e:
+            e.message += (
+                ". Failed to validate Action server response from API, "
+                "make sure your response from the Action endpoint is valid. "
+                "For more information about the format visit "
+                "{}/customactions.html".format(DOCS_BASE_URL))
+            raise e
 
-    def _handle_responses(self, responses, dispatcher, tracker):
+    @staticmethod
+    def _utter_responses(responses,  # type: List[Dict[Text, Any]]
+                         dispatcher,  # type: Dispatcher
+                         tracker  # type: DialogueStateTracker
+                         ):
+        # type: (...) -> None
+        """Use the responses generated by the action endpoint and utter them.
+
+        Uses the normal dispatcher to utter the responses from the action
+        endpoint."""
+
         for response in responses:
             if "template" in response:
                 kwargs = response.copy()
@@ -230,12 +295,12 @@ class RemoteAction(Action):
         json = self._action_call_format(tracker, domain)
 
         if not self.action_endpoint:
-            # TODO: TB - add link to endpoint docs
             raise Exception("The model predicted the custom action '{}' "
                             "but you didn't configure an endpoint to "
                             "run this custom action. Please take a look at "
                             "the docs and set an endpoint configuration."
-                            "".format(self.name()))
+                            "{}/customactions.html"
+                            "".format(self.name(), DOCS_BASE_URL))
 
         try:
             response = self.action_endpoint.request(json=json, method="post")
@@ -265,11 +330,9 @@ class RemoteAction(Action):
         events_json = response_data.get("events", [])
         responses = response_data.get("responses", [])
 
-        self._handle_responses(responses, dispatcher, tracker)
+        self._utter_responses(responses, dispatcher, tracker)
 
         evts = events.deserialise_events(events_json)
-
-        self._validate_events(evts)
 
         return evts
 

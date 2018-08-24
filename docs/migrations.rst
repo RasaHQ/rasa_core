@@ -10,24 +10,28 @@ how you can migrate from one version to another.
 0.10.x to 0.11.0
 ----------------
 
+.. warning::
+
+    This is major new version with a lot of changes under the hood as well
+    as on the API level. Please take a careful look at the mentioned
+    before updating. Please make sure to
+    **retrain your models when switching to this version**.
+
 General
 ~~~~~~~
 - domain actions list now needs to always contain the actions names instead of
   the classpath
+- utter templates that should be used as actions, now need to start with
+  ``utter_``, otherwise the bot won't be able to find the action
 
-Changes to Input and Output Channels
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- webhook urls for all the channels changed. The URL's are now prefixed
-  with the channel name, e.g.
-  ``http://localhost:5005/webhooks/facebook/webhook``
-- ``rasa_core.channels.direct`` output channel package removed.
-  ``CollectingOutputChannel`` moved to ``rasa_core.channels.channel``
-- ``HttpInputComponent`` renamed to ``InputChannel`` & moved to
-  ``rasa_core.channels.channel.InputChannel``
-- removed package ``rasa_core.channels.rest``,
-  please use ``rasa_core.channels.RestInput`` instead
-- remove file input channel ``rasa_core.channels.file.FileInputChannel``
-- format of the ``credentials.yml`` used in the run / server scripts
+
+Webhooks
+~~~~~~~~
+- The endpoints for the webhooks changed. All webhooks are now at
+  ``/webhooks/CHANNEL_NAME/webhook``. For example, the webhook
+  to receive facebook messages on a local instance is now
+  ``http://localhost:5005/webhooks/facebook/webhook``.
+- format of the ``credentials.yml`` used in the ``run`` and ``server`` scripts
   has changed to allow for multiple channels in one file:
 
   The new format now contains the channels name first, e.g. for facebook:
@@ -39,6 +43,15 @@ Changes to Input and Output Channels
        secret: "3e34709d01ea89032asdebfe5a74518"
        page-access-token: "EAAbHPa7H9rEBAAuFk4Q3gPKbDedQnx4djJJ1JmQ7CAqO4iJKrQcNT0wtD"
 
+Changes to Input and Output Channels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- ``rasa_core.channels.direct`` output channel package removed.
+  ``CollectingOutputChannel`` moved to ``rasa_core.channels.channel``
+- ``HttpInputComponent`` renamed to ``InputChannel`` & moved to
+  ``rasa_core.channels.channel.InputChannel``
+- removed package ``rasa_core.channels.rest``,
+  please use ``rasa_core.channels.RestInput`` instead
+- remove file input channel ``rasa_core.channels.file.FileInputChannel``
 - signature of ``agent.handle_channel`` got renamed
   and the signature changed. here is an up to date example:
 

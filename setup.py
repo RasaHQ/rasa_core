@@ -24,7 +24,7 @@ tests_requires = [
     "matplotlib~=2.0",
     "pygraphviz~=1.0",
     "responses~=0.9.0",
-    "httpretty~=0.9.0"
+    "httpretty~=0.9.0",
 ]
 
 install_requires = [
@@ -57,6 +57,11 @@ install_requires = [
     "twilio~=6.0",
     "mattermostwrapper~=2.0",
     "colorhash~=1.0",
+    "jsonschema~=2.6",
+    "packaging~=17.0",
+    "gevent~=1.2",
+    "pyyaml~=3.12",
+    "pytz",
 ]
 
 extras_requires = {
@@ -104,5 +109,5 @@ setup(
 )
 
 print("\nWelcome to Rasa Core!")
-print("If any questions please visit documentation page https://core.rasa.com")
+print("If any questions please visit documentation page https://rasa.com/docs/core")
 print("or join community chat on https://gitter.im/RasaHQ/rasa_core")

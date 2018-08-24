@@ -3,24 +3,24 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import zlib
+from builtins import bytes
+
 import base64
 import io
 import json
 import logging
 import os
-import zlib
 import typing
 from tqdm import tqdm
-
-from builtins import bytes
 from typing import Optional, Any, Dict, List, Text
 
-from rasa_core.policies.policy import Policy
 from rasa_core import utils
 from rasa_core.featurizers import \
     TrackerFeaturizer, MaxHistoryTrackerFeaturizer
 from rasa_core.events import ActionExecuted, SlotSet, UserUttered
 from rasa_core.constants import FORM_ACTION_NAME
+from rasa_core.policies.policy import Policy
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +128,7 @@ class MemoizationPolicy(Policy):
                 else:
                     self.lookup[feature_key] = feature_item
             pbar.set_postfix({"# examples": "{:d}".format(
-                                                len(self.lookup))})
+                    len(self.lookup))})
 
     def _create_feature_key(self, states):
         feature_str = json.dumps(states, sort_keys=True).replace("\"", "")
@@ -141,7 +141,7 @@ class MemoizationPolicy(Policy):
     def train(self,
               training_trackers,  # type: List[DialogueStateTracker]
               domain,  # type: Domain
-              **kwargs  # type: **Any
+              **kwargs  # type: Any
               ):
         # type: (...) -> None
         """Trains the policy on given training trackers."""
@@ -149,7 +149,7 @@ class MemoizationPolicy(Policy):
 
         (trackers_as_states,
          trackers_as_actions) = self.featurizer.training_states_and_actions(
-                                    training_trackers, domain)
+            training_trackers, domain)
         trackers_as_states, trackers_as_actions = zip(*[(stat, act) for stat, act in zip(trackers_as_states, trackers_as_actions) if act[0] != FORM_ACTION_NAME])
 
         self._add(trackers_as_states, trackers_as_actions, domain)
@@ -157,12 +157,12 @@ class MemoizationPolicy(Policy):
                     "".format(len(self.lookup)))
 
     def continue_training(self, training_trackers, domain, **kwargs):
-        # type: (List[DialogueStateTracker], Domain, **Any) -> None
+        # type: (List[DialogueStateTracker], Domain, Any) -> None
 
         # add only the last tracker, because it is the only new one
         (trackers_as_states,
          trackers_as_actions) = self.featurizer.training_states_and_actions(
-                                    training_trackers[-1:], domain)
+                training_trackers[-1:], domain)
         self._add(trackers_as_states, trackers_as_actions,
                   domain, online=True)
 
@@ -194,7 +194,7 @@ class MemoizationPolicy(Policy):
             return result
 
         tracker_as_states = self.featurizer.prediction_states(
-                                [tracker], domain)
+                [tracker], domain)
         states = tracker_as_states[0]
         logger.debug("Current tracker state {}".format(states))
         recalled = self.recall(states, tracker, domain)

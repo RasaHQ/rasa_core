@@ -3,13 +3,13 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import time
+
 import io
 import json
 import logging
-import time
-
 from requests.exceptions import RequestException
-from typing import Text, List, Optional, Dict, Any
+from typing import Text, Optional, Dict, Any
 
 from rasa_core import utils
 from rasa_core.domain import Domain
@@ -108,9 +108,9 @@ class RasaCoreClient(object):
         if response.status_code == 200:
             return response.json()
         else:
-            logger.warn("Got a bad response from rasa core :( Status: {} "
-                        "Response: {}".format(response.status_code,
-                                              response.text))
+            logger.warning("Got a bad response from rasa core :( Status: {} "
+                           "Response: {}".format(response.status_code,
+                                                 response.text))
             return None
 
     def upload_model(self, model_dir, max_retries=1):
@@ -137,8 +137,8 @@ class RasaCoreClient(object):
                     logger.debug("Finished uploading")
                     return response.json()
             except RequestException as e:
-                logger.warn("Failed to send model upload request. "
-                            "{}".format(e))
+                logger.warning("Failed to send model upload request. "
+                               "{}".format(e))
 
             if max_retries > 0:
                 # some resting time before we try again - e.g. server
@@ -146,8 +146,8 @@ class RasaCoreClient(object):
                 time.sleep(2)
 
         if response:
-            logger.warn("Got a bad response from rasa core while uploading "
-                        "the model (Status: {} "
-                        "Response: {})".format(response.status_code,
-                                               response.text))
+            logger.warning("Got a bad response from rasa core while uploading "
+                           "the model (Status: {} "
+                           "Response: {})".format(response.status_code,
+                                                  response.text))
         return None

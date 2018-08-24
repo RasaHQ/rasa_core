@@ -7,20 +7,22 @@ Quickstart
 .. note::
 
     This tutorial will show you the different parts needed to build a bot.
-    You can run the code directly in the documentation, without installing anything!
-    If you would like to run this locally, go to the :ref:`installation` first.
+    You can run the code directly in the documentation, without
+    installing anything! If you would like to run this locally, go to
+    the :ref:`installation` first.
 
 
-In this tutorial you will create your first Rasa Core bot. You can run all of the
-code snippets in here directly, or you can install Rasa Core and run the examples on your
-own machine.
+In this tutorial you will create your first Rasa Core bot.
+You can run all of the code snippets in here directly, or
+you can install Rasa Core and run the examples on your own machine.
 
 
 Goal
 ^^^^
 
 
-The bot will ask you how you're doing, and send a picture to try and cheer you up if you are sad.
+The bot will ask you how you're doing, and send a picture to
+try and cheer you up if you are sad.
 
 
 .. image:: _static/images/mood_bot.png
@@ -36,7 +38,7 @@ write the first few examples ourselves to kick things off.
 In this very simple conversation, the user says hello to our bot, and the bot
 says hello back. This is how it looks as a story:
 
-.. code-block:: md
+.. code-block:: story
 
    ## story1
    * greet
@@ -55,9 +57,10 @@ like ``utter_greet``, but in general an action can do anything,
 including calling an API and interacting with the outside world.
 
 
-We've written some example stories below, which we can write to a file called stories.md
-If you are running this in the docs, it may take a few seconds to start up.
-If you are running locally, copy the text between the triple quotes (``"""``)
+We've written some example stories below, which we can write to a
+file called ``stories.md`` If you are running this in the docs, it
+may take a few seconds to start up. If you are running locally,
+copy the text between the triple quotes (``"""``)
 and save it in a file called ``stories.md``.
 
 .. runnable:: 
@@ -94,6 +97,8 @@ and save it in a file called ``stories.md``.
    """
    %store stories_md > stories.md
 
+   print("Done!")
+
 
 2. Define a Domain
 ^^^^^^^^^^^^^^^^^^
@@ -101,7 +106,8 @@ and save it in a file called ``stories.md``.
 The next thing we need to do is define a ``Domain``.
 The domain defines the universe your bot lives in.
 
-Here is an example domain for our bot which we'll write to a file called ``domain.yml``:
+Here is an example domain for our bot which we'll write to a
+file called ``domain.yml``:
 
 .. runnable:: 
    :description: core-write-domain
@@ -141,38 +147,46 @@ Here is an example domain for our bot which we'll write to a file called ``domai
    """
    %store domain_yml > domain.yml
 
+   print("Done!")
+
 
 
 So what do the different parts mean?
 
 
-+---------------+------------------------------------------------------------------------------------------------------+
-| ``actions``   | things your bot can do and say                                                                       |
-+---------------+------------------------------------------------------------------------------------------------------+
-| ``templates`` | template strings for the things your bot can say                                                     |
-+---------------+------------------------------------------------------------------------------------------------------+
-| ``intents``   | things you expect users to say. See `Rasa NLU <https://rasa.com/docs/nlu/>`_                         |
-+---------------+------------------------------------------------------------------------------------------------------+
-| ``entities``  | pieces of info you want to extract from messages. See `Rasa NLU <https://rasa.com/docs/nlu/>`_       |
-+---------------+------------------------------------------------------------------------------------------------------+
-| ``slots``     | information to keep track of during a conversation (e.g. a users age) - see :ref:`slots`             |
-+---------------+------------------------------------------------------------------------------------------------------+
++---------------+-------------------------------------------------------------+
+| ``intents``   | things you expect users to say. See                         |
+|               | `Rasa NLU <https://rasa.com/docs/nlu/>`_                    |
++---------------+-------------------------------------------------------------+
+| ``actions``   | things your bot can do and say                              |
++---------------+-------------------------------------------------------------+
+| ``templates`` | template strings for the things your bot can say            |
++---------------+-------------------------------------------------------------+
+| ``entities``  | pieces of info you want to extract from messages. See       |
+|               | `Rasa NLU <https://rasa.com/docs/nlu/>`_                    |
++---------------+-------------------------------------------------------------+
+| ``slots``     | information to keep track of during a conversation          |
+|               | (e.g. a users age) - see :ref:`slots`                       |
++---------------+-------------------------------------------------------------+
 
 
 **How does this fit together?**
-Rasa Core's job is to choose the right ``action`` to execute at each step of the
-conversation. Simple actions are just sending a message to a user. To do this,
-you need to provide a template with the same name in your domain file.
-See :ref:`customactions` for how to build more interesting actions.
+Rasa Core's job is to choose the right action to execute at each step
+of the conversation. Simple actions are just sending a message to a user.
+These simple actions are the ``actions`` in the domain, which start
+with ``utter_``. They will just respond with a message based on a template
+from the ``templates`` section. See :ref:`customactions` for how to build
+more interesting actions.
+
 In our simple example we don't need ``slots`` and ``entities``,
 so these aren't in the example domain.
 
-
 .. note::
 
-   There is one additional special action, ``ActionListen``, which means to stop taking
-   further actions until the user says something else.
-   You don't have to include it in your ``domain.yml``
+   There is one additional special action, ``ActionListen``,
+   which means to stop taking further actions until the user
+   says something else. You don't have to include it in
+   your ``domain.yml`` - it is an action included by default.
 
 
 3. Train a Dialogue Model
@@ -187,6 +201,8 @@ into ``models/dialogue``.
    :description: core-train-core
 
    !python -m rasa_core.train -d domain.yml -s stories.md -o models/dialogue
+
+   print("Finished training!")
 
 
 
@@ -313,6 +329,8 @@ Let's create some intent examples in a file called ``nlu.md``:
    """
    %store nlu_md > nlu.md
 
+   print("Done!")
+
 Furthermore, we need a configuration file, ``nlu_config.yml``, for the
 NLU model:
 
@@ -325,6 +343,7 @@ NLU model:
    """
    %store nlu_config > nlu_config.yml
 
+   print("Done!")
 
 We can now train an NLU model using our examples (make sure to
 `install Rasa NLU <http://rasa.com/docs/nlu/installation/>`_
@@ -368,8 +387,32 @@ If you are running the cells here in the docs, run this cell:
 .. runnable::
    :description: core-chat-with-nlu
 
-   from rasa_core.server import start_server
-   start_server('models/dialogue', interpreter='models/current/nlu')
+   import IPython
+   from IPython.display import clear_output
+   from rasa_core.agent import Agent
+   import time
+
+   messages = ["Hi! you can chat in this window. Type 'stop' to end the conversation."]
+   agent = Agent.load('models/dialogue', interpreter='models/current/nlu')
+
+   def chatlogs_html(messages):
+       messages_html = "".join(["&lt;p&gt;{}&lt;/p&gt;".format(m) for m in messages])
+       chatbot_html = """&lt;div class="chat-window" {}&lt;/div&gt;""".format(messages_html)
+       return chatbot_html
+
+
+   while True:
+       clear_output()
+       display(IPython.display.HTML(chatlogs_html(messages)))
+       time.sleep(0.3)
+       a = input()
+       messages.append(a)
+       if a == 'stop':
+           break
+       responses = agent.handle_message(a)
+       for r in responses:
+           messages.append(r.get("text"))
+
 
 Congratulations 🚀! You just built a bot from scratch,
 powered entirely by machine learning.
@@ -412,7 +455,7 @@ After setting that up, we can now run the bot using:
 .. code-block:: bash
 
    python -m rasa_core.run -d models/dialogue -u models/nlu/current \
-      --port 5002 --connector facebook --credentials credentials.yml
+      --port 5002--credentials credentials.yml
 
 and it will now handle messages users send to the Facebook page.
 

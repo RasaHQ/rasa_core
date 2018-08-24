@@ -102,7 +102,7 @@ class OutputChannel(object):
             self.send_text_with_buttons(recipient_id,
                                         message.get("text"),
                                         message.get("buttons"))
-        else:
+        elif message.get("text"):
             self.send_text_message(recipient_id,
                                    message.get("text"))
 
@@ -123,8 +123,15 @@ class OutputChannel(object):
 
         self.send_text_message(recipient_id, "Image: {}".format(image_url))
 
+    def send_attachment(self, recipient_id, attachment):
+        # type: (Text, Text) -> None
+        """Sends an attachment. Default will just post as a string."""
+
+        self.send_text_message(recipient_id,
+                               "Attachment: {}".format(attachment))
+
     def send_text_with_buttons(self, recipient_id, message, buttons, **kwargs):
-        # type: (Text, Text, List[Dict[Text, Any]], **Any) -> None
+        # type: (Text, Text, List[Dict[Text, Any]], Any) -> None
         """Sends buttons to the output.
 
         Default implementation will just post the buttons as a string."""
@@ -224,6 +231,7 @@ class RestInput(InputChannel):
     def _extract_sender(self, req):
         return req.json.get("sender", None)
 
+    # noinspection PyMethodMayBeStatic
     def _extract_message(self, req):
         return req.json.get("message", None)
 

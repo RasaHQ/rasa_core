@@ -38,9 +38,11 @@ from rasa_nlu.utils import is_url
 logger = logging.getLogger(__name__)
 
 if typing.TYPE_CHECKING:
+    # noinspection PyPep8Naming
     from rasa_core.nlg import NaturalLanguageGenerator as NLG
 
 if six.PY2:
+    # noinspection PyUnresolvedReferences
     from StringIO import StringIO as IOReader
 else:
     from io import BytesIO as IOReader
@@ -64,8 +66,9 @@ def load_from_server(interpreter=None,  # type: NaturalLanguageInterpreter
     try:
         _update_model_from_server(model_server, agent)
     except RequestException as e:
-        logger.warn("Could not retrieve model from server. Connection Error.  "
-                    "Running without a model. Server URL: `{}`\n".format(e))
+        logger.warning(
+                "Could not retrieve model from server. Connection Error.  "
+                "Running without a model. Server URL: `{}`\n".format(e))
 
     if wait_time_between_pulls:
         # continuously pull the model every `wait_time_between_pulls` seconds
@@ -123,11 +126,15 @@ def _pull_model_and_fingerprint(model_server, model_directory, fingerprint):
     <ETag> header which contains the model hash."""
     header = {"If-None-Match": fingerprint}
     try:
-        response = model_server.request(method="GET", headers=header)
+        logger.debug("Requesting model from server {}..."
+                     "".format(model_server.url))
+        response = model_server.request(method="GET",
+                                        headers=header,
+                                        timeout=30)
     except RequestException as e:
-        logger.warn("Tried to fetch model from server, but couldn't reach "
-                    "server. We'll retry later... Error: {}."
-                    "".format(e))
+        logger.warning("Tried to fetch model from server, but couldn't reach "
+                       "server. We'll retry later... Error: {}."
+                       "".format(e))
         return None
 
     if response.status_code == 204:
@@ -141,9 +148,9 @@ def _pull_model_and_fingerprint(model_server, model_directory, fingerprint):
                      "and tag combination yet.")
         return None
     elif response.status_code != 200:
-        logger.warn("Tried to fetch model from server, but server response "
-                    "status code is {}. We'll retry later..."
-                    "".format(response.status_code))
+        logger.warning("Tried to fetch model from server, but server response "
+                       "status code is {}. We'll retry later..."
+                       "".format(response.status_code))
         return None
 
     zip_ref = zipfile.ZipFile(IOReader(response.content))
@@ -182,8 +189,8 @@ class Agent(object):
             self,
             domain=None,  # type: Union[Text, Domain]
             policies=None,  # type: Union[PolicyEnsemble, List[Policy], None]
-            interpreter=None,  # type: NaturalLanguageInterpreter
-            generator=None,  # type: Union[EndpointConfig, NLG]
+            interpreter=None,  # type: Optional[NaturalLanguageInterpreter]
+            generator=None,  # type: Union[EndpointConfig, NLG, None]
             tracker_store=None,  # type: Optional[TrackerStore]
             action_endpoint=None,  # type: Optional[EndpointConfig]
             fingerprint=None  # type: Optional[Text]
@@ -193,12 +200,14 @@ class Agent(object):
         self.policy_ensemble = self._create_ensemble(policies)
 
         if not isinstance(interpreter, NaturalLanguageInterpreter):
-            logger.warning(
-                    "Passing a value for interpreter to an agent "
-                    "where the value is not an interpreter "
-                    "is deprecated. Construct the interpreter, before"
-                    "passing it to the agent, e.g. "
-                    "`interpreter = NaturalLanguageInterpreter.create(nlu)`.")
+            if interpreter is not None:
+                logger.warning(
+                        "Passing a value for interpreter to an agent "
+                        "where the value is not an interpreter "
+                        "is deprecated. Construct the interpreter, before"
+                        "passing it to the agent, e.g. "
+                        "`interpreter = NaturalLanguageInterpreter.create("
+                        "nlu)`.")
             interpreter = NaturalLanguageInterpreter.create(interpreter, None)
 
         self.interpreter = interpreter
@@ -228,14 +237,19 @@ class Agent(object):
 
     @classmethod
     def load(cls,
-             path=None,  # type: Text
-             interpreter=None,  # type: NaturalLanguageInterpreter
+             path,  # type: Text
+             interpreter=None,  # type: Optional[NaturalLanguageInterpreter]
              generator=None,  # type: Union[EndpointConfig, NLG]
              tracker_store=None,  # type: Optional[TrackerStore]
              action_endpoint=None,  # type: Optional[EndpointConfig]
              ):
         # type: (...) -> Agent
         """Load a persisted model from the passed path."""
+
+        if not path:
+            raise ValueError("You need to provide a valid directory where "
+                             "to load the agent from when calling "
+                             "`Agent.load`.")
 
         if os.path.isfile(path):
             raise ValueError("You are trying to load a MODEL from a file "
@@ -286,17 +300,19 @@ class Agent(object):
         processor = self._create_processor(message_preprocessor)
         return processor.handle_message(message)
 
+    # noinspection PyUnusedLocal
     def predict_next(
             self,
             sender_id,
             **kwargs
     ):
-        # type: (Text, **Any) -> Dict[Text, Any]
+        # type: (Text, Any) -> Dict[Text, Any]
         """Handle a single message."""
 
         processor = self._create_processor()
         return processor.predict_next(sender_id)
 
+    # noinspection PyUnusedLocal
     def log_message(
             self,
             message,  # type: UserMessage
@@ -347,8 +363,11 @@ class Agent(object):
         :Example:
 
             >>> from rasa_core.agent import Agent
+            >>> from rasa_core.interpreter import RasaNLUInterpreter
+            >>> interpreter = RasaNLUInterpreter(
+            ... "examples/restaurantbot/models/nlu/current")
             >>> agent = Agent.load("examples/restaurantbot/models/dialogue",
-            ... interpreter="examples/restaurantbot/models/nlu/current")
+            ... interpreter=interpreter)
             >>> agent.handle_text("hello")
             [u'how can I help you?']
 
@@ -388,7 +407,7 @@ class Agent(object):
                           trackers,
                           **kwargs
                           ):
-        # type: (List[DialogueStateTracker], **Any) -> None
+        # type: (List[DialogueStateTracker], Any) -> None
         self.policy_ensemble.continue_training(trackers,
                                                self.domain,
                                                **kwargs)
@@ -399,7 +418,6 @@ class Agent(object):
                   remove_duplicates=True,  # type: bool
                   unique_last_num_states=None,  # type: Optional[int]
                   augmentation_factor=20,  # type: int
-                  max_number_of_trackers=None,  # deprecated
                   tracker_limit=None,  # type: Optional[int]
                   use_story_concatenation=True,  # type: bool
                   debug_plots=False  # type: bool
@@ -437,7 +455,7 @@ class Agent(object):
 
         return training.load_data(resource_name, self.domain,
                                   remove_duplicates, unique_last_num_states,
-                                  augmentation_factor, max_number_of_trackers,
+                                  augmentation_factor,
                                   tracker_limit, use_story_concatenation,
                                   debug_plots)
 
@@ -459,7 +477,7 @@ class Agent(object):
                             "to `agent.train(...)` is not supported anymore. "
                             "Pass appropriate featurizer "
                             "directly to the policy instead. More info "
-                            "https://core.rasa.com/migrations.html#x-to-0-9-0")
+                            "https://rasa.com/docs/core/migrations.html#x-to-0-9-0")
 
         if isinstance(training_trackers, string_types):
             # the user most likely passed in a file name to load training
@@ -583,8 +601,11 @@ class Agent(object):
         # creates a processor
         self._ensure_agent_is_prepared()
         return MessageProcessor(
-                self.interpreter, self.policy_ensemble, self.domain,
-                self.tracker_store, self.nlg,
+                self.interpreter,
+                self.policy_ensemble,
+                self.domain,
+                self.tracker_store,
+                self.nlg,
                 action_endpoint=self.action_endpoint,
                 message_preprocessor=preprocessor)
 

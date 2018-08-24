@@ -74,6 +74,13 @@ def check_domain_sanity(domain):
             (duplicate_entities, "entities")]))
 
 
+DEFAULT_ACTION_TYPE = "default"
+
+REMOTE_ACTION_TYPE = "remote"
+
+ActionConfig = collections.namedtuple("ActionConfig", "name action_type")
+
+
 class Domain(object):
     """The domain specifies the universe in which the bot's policy acts.
 
@@ -193,8 +200,12 @@ class Domain(object):
         self.entities = entities
         self.slots = slots
         self.templates = templates
-        self.action_names = action.default_action_names() + action_names
         self.form_start_actions = form_start_action_names
+        # only includes custom actions and utterance actions
+        self.user_actions = action_names
+        # includes all actions (custom, utterance, and default actions)
+        self.action_names = action.combine_user_with_default_actions(
+                action_names)
 
         self.store_entities_as_slots = store_entities_as_slots
         self.restart_intent = restart_intent
@@ -221,7 +232,9 @@ class Domain(object):
         if action_name not in self.action_names:
             self._raise_action_not_found_exception(action_name)
 
-        return action.action_from_name(action_name, action_endpoint)
+        return action.action_from_name(action_name,
+                                       action_endpoint,
+                                       self.user_actions)
 
     def action_for_index(self, index, action_endpoint):
         # type: (int, Optional[EndpointConfig]) -> Optional[Action]
@@ -460,7 +473,6 @@ class Domain(object):
     def as_dict(self):
         additional_config = {
             "store_entities_as_slots": self.store_entities_as_slots}
-        action_names = self.action_names[action.num_default_actions():]
 
         return {
             "config": additional_config,
@@ -468,7 +480,7 @@ class Domain(object):
             "entities": self.entities,
             "slots": self._slot_definitions(),
             "templates": self.templates,
-            "actions": action_names,  # class names of the actions
+            "actions": self.user_actions,  # class names of the actions
         }
 
     def persist(self, filename):

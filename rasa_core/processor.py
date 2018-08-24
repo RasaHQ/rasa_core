@@ -3,22 +3,23 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import time
+
 import json
 import logging
-import time
-import warnings
-from types import LambdaType
-
 import numpy as np
+import warnings
 from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import UnknownTimeZoneError
+from types import LambdaType
 from typing import Optional, List, Dict, Any
 from typing import Text
 
 from rasa_core.actions import Action
-from rasa_core.actions.action import ActionRestart, ACTION_LISTEN_NAME,RemoteAction
+from rasa_core.actions.action import ActionRestart, ACTION_LISTEN_NAME, ACTION_RESTART_NAME, RemoteAction
 from rasa_core.channels import UserMessage, InputChannel, channel
 from rasa_core.channels import CollectingOutputChannel
+from rasa_core.channels import UserMessage
 from rasa_core.dispatcher import Dispatcher
 from rasa_core.domain import Domain
 from rasa_core.events import ReminderScheduled, Event
@@ -40,9 +41,9 @@ try:
     scheduler = BackgroundScheduler()
     scheduler.start()
 except UnknownTimeZoneError:
-    logger.warn("apscheduler failed to start. "
-                "This is probably because your system timezone is not set"
-                "Set it with e.g. echo \"Europe/Berlin\" > /etc/timezone")
+    logger.warning("apscheduler failed to start. "
+                   "This is probably because your system timezone is not set"
+                   "Set it with e.g. echo \"Europe/Berlin\" > /etc/timezone")
 
 
 class MessageProcessor(object):
@@ -142,14 +143,13 @@ class MessageProcessor(object):
         # type: (ReminderScheduled, Dispatcher) -> None
         """Handle a reminder that is triggered asynchronously."""
 
-        def has_message_after_reminder(tracker):
+        def has_message_after_reminder(evts):
             """If the user sent a message after the reminder got scheduled -
             it might be better to cancel it."""
 
-            for e in reversed(tracker.events):
-                if isinstance(e,
-                              ReminderScheduled) and e.name == \
-                        reminder_event.name:
+            for e in reversed(evts):
+                if (isinstance(e, ReminderScheduled) and
+                        e.name == reminder_event.name):
                     return False
                 elif isinstance(e, UserUttered):
                     return True
@@ -158,7 +158,7 @@ class MessageProcessor(object):
         tracker = self._get_tracker(dispatcher.sender_id)
 
         if (reminder_event.kill_on_user_message and
-                has_message_after_reminder(tracker)):
+                has_message_after_reminder(tracker.events)):
             logger.debug("Canceled reminder because it is outdated. "
                          "(event: {} id: {})".format(reminder_event.action_name,
                                                      reminder_event.name))
@@ -176,7 +176,8 @@ class MessageProcessor(object):
             # save tracker state to continue conversation from this state
             self._save_tracker(tracker)
 
-    def _log_slots(self, tracker):
+    @staticmethod
+    def _log_slots(tracker):
         # Log currently set slots
         slot_values = "\n".join(["\t{}: {}".format(s.name, s.value)
                                  for s in tracker.slots.values()])
@@ -260,13 +261,14 @@ class MessageProcessor(object):
         if (num_predicted_actions == self.max_number_of_predictions and
                 should_predict_another_action):
             # circuit breaker was tripped
-            logger.warn(
+            logger.warning(
                     "Circuit breaker tripped. Stopped predicting "
                     "more actions for sender '{}'".format(tracker.sender_id))
             if self.on_circuit_break:
                 # call a registered callback
                 self.on_circuit_break(tracker, dispatcher)
 
+    # noinspection PyUnusedLocal
     @staticmethod
     def should_predict_another_action(action_name, events):
         is_listen_action = action_name == ACTION_LISTEN_NAME
@@ -319,17 +321,17 @@ class MessageProcessor(object):
             if isinstance(e, SlotSet) and e.key not in slots_seen_during_train:
                 s = tracker.slots.get(e.key)
                 if s and s.has_features():
-                    logger.warn("Action '{0}' set a slot type '{1}' that "
-                                "it never set during the training. This "
-                                "can throw of the prediction. Make sure to "
-                                "include training examples in your stories "
-                                "for the different types of slots this "
-                                "action can return. Remember: you need to "
-                                "set the slots manually in the stories by "
-                                "adding '- slot{{\"{1}\": {2}}}' "
-                                "after the action."
-                                "".format(action_name, e.key,
-                                          json.dumps(e.value)))
+                    logger.warning(
+                            "Action '{0}' set a slot type '{1}' that "
+                            "it never set during the training. This "
+                            "can throw of the prediction. Make sure to "
+                            "include training examples in your stories "
+                            "for the different types of slots this "
+                            "action can return. Remember: you need to "
+                            "set the slots manually in the stories by "
+                            "adding '- slot{{\"{1}\": {2}}}' "
+                            "after the action."
+                            "".format(action_name, e.key, json.dumps(e.value)))
 
     @staticmethod
     def log_bot_utterances_on_tracker(tracker, dispatcher):
@@ -377,9 +379,9 @@ class MessageProcessor(object):
     def _save_tracker(self, tracker):
         self.tracker_store.save(tracker)
 
-    def _prob_array_for_action(self, action):
-        # type: (Action) -> Optional[List[float]]
-        idx = self.domain.index_for_action(action.name())
+    def _prob_array_for_action(self, action_name):
+        # type: (Text) -> Optional[List[float]]
+        idx = self.domain.index_for_action(action_name)
         if idx is not None:
             result = [0.0] * self.domain.num_actions
             result[idx] = 1.0
@@ -390,21 +392,21 @@ class MessageProcessor(object):
     def _get_next_action_probabilities(self, tracker):
         # type: (DialogueStateTracker) -> List[float]
 
-        follow_up_action = tracker.follow_up_action
-        if follow_up_action:
-            tracker.clear_follow_up_action()
-            result = self._prob_array_for_action(follow_up_action)
+        followup_action = tracker.followup_action
+        if followup_action:
+            tracker.clear_followup_action()
+            result = self._prob_array_for_action(followup_action)
             if result:
                 return result
             else:
                 logger.error(
                         "Trying to run unknown follow up action '{}'!"
                         "Instead of running that, we will ignore the action "
-                        "and predict the next action.".format(follow_up_action))
+                        "and predict the next action.".format(followup_action))
 
         if (tracker.latest_message.intent.get("name") ==
                 self.domain.restart_intent):
-            return self._prob_array_for_action(ActionRestart())
+            return self._prob_array_for_action(ACTION_RESTART_NAME)
 
         return self.policy_ensemble.probabilities_using_best_policy(
                 tracker, self.domain)

@@ -7,10 +7,9 @@ import logging
 import os
 import tempfile
 import zipfile
-from functools import wraps
-
 from flask import Flask, request, abort, Response, jsonify
 from flask_cors import CORS, cross_origin
+from functools import wraps
 from typing import List
 from typing import Text, Optional
 from typing import Union
@@ -19,6 +18,7 @@ from rasa_core import utils, constants
 from rasa_core.channels import (
     CollectingOutputChannel, UserMessage)
 from rasa_core.events import Event
+from rasa_core.interpreter import NaturalLanguageInterpreter
 from rasa_core.policies import PolicyEnsemble
 from rasa_core.trackers import DialogueStateTracker
 from rasa_core.version import __version__
@@ -132,7 +132,7 @@ def create_app(agent,
                             "messages": out.messages})
 
         except ValueError as e:
-            return Response(jsonify(error=e.message),
+            return Response(jsonify(error="".format(e)),
                             status=400,
                             content_type="application/json")
         except Exception as e:
@@ -153,8 +153,13 @@ def create_app(agent,
         request_params = request.get_json(force=True)
         evt = Event.from_parameters(request_params)
         tracker = agent.tracker_store.get_or_create_tracker(sender_id)
-        tracker.update(evt)
-        agent.tracker_store.save(tracker)
+        if evt:
+            tracker.update(evt)
+            agent.tracker_store.save(tracker)
+        else:
+            logger.warning(
+                    "Append event called, but could not extract a "
+                    "valid event. Request JSON: {}".format(request_params))
         return jsonify(tracker.current_state(should_include_events=True))
 
     @app.route("/conversations/<sender_id>/tracker/events",
@@ -269,7 +274,7 @@ def create_app(agent,
         sender = request_params.get("sender")
         parse_data = request_params.get("parse_data")
 
-        # TODO: TB - implement properly for agent / bot
+        # TODO: implement properly for agent / bot
         if sender != "user":
             return Response(jsonify(error="Currently, only user messages can "
                                           "be passed to this endpoint. "
@@ -363,10 +368,10 @@ def create_app(agent,
 
         try:
             # Fetches the appropriate bot response in a json format
-            responses = agent.continue_training([tracker],
-                                                epochs=epochs,
-                                                batch_size=batch_size)
-            return jsonify(responses)
+            agent.continue_training([tracker],
+                                    epochs=epochs,
+                                    batch_size=batch_size)
+            return '', 204
 
         except Exception as e:
             logger.exception("Caught an exception during prediction.")
@@ -385,3 +390,39 @@ def create_app(agent,
         })
 
     return app
+
+
+if __name__ == '__main__':
+    # Running as standalone python application
+    from rasa_core import run
+
+    arg_parser = run.create_argument_parser()
+    cmdline_args = arg_parser.parse_args()
+
+    logging.getLogger('werkzeug').setLevel(logging.WARN)
+    logging.getLogger('matplotlib').setLevel(logging.WARN)
+
+    utils.configure_colored_logging(cmdline_args.loglevel)
+    utils.configure_file_logging(cmdline_args.loglevel,
+                                 cmdline_args.log_file)
+
+    logger.warning("USING `rasa_core.server` is deprecated and will be "
+                   "removed in the future. Use `rasa_core.run --enable_api` "
+                   "instead.")
+
+    logger.info("Rasa process starting")
+
+    _endpoints = run.read_endpoints(cmdline_args.endpoints)
+    _interpreter = NaturalLanguageInterpreter.create(cmdline_args.nlu,
+                                                     _endpoints.nlu)
+    _agent = run.load_agent(cmdline_args.core,
+                            interpreter=_interpreter,
+                            endpoints=_endpoints)
+
+    run.serve_application(_agent,
+                          cmdline_args.connector,
+                          cmdline_args.port,
+                          cmdline_args.credentials,
+                          cmdline_args.cors,
+                          cmdline_args.auth_token,
+                          cmdline_args.enable_api)

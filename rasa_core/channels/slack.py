@@ -8,7 +8,7 @@ import logging
 
 from flask import Blueprint, request, jsonify, make_response, Response
 from slackclient import SlackClient
-from typing import Text, Optional
+from typing import Text, Optional, List
 
 from rasa_core.channels.channel import UserMessage, OutputChannel
 from rasa_core.channels import InputChannel
@@ -40,12 +40,21 @@ class SlackBot(SlackClient, OutputChannel):
         image_attachment = [{"image_url": image_url,
                              "text": message}]
         recipient = self.slack_channel or recipient_id
-        super(SlackBot, self).api_call("chat.postMessage",
-                                       channel=recipient,
-                                       as_user=True,
-                                       attachments=image_attachment)
+        return super(SlackBot, self).api_call("chat.postMessage",
+                                              channel=recipient,
+                                              as_user=True,
+                                              attachments=image_attachment)
 
-    def _convert_to_slack_buttons(self, buttons):
+    def send_attachment(self, recipient_id, attachment, message=""):
+        recipient = self.slack_channel or recipient_id
+        return super(SlackBot, self).api_call("chat.postMessage",
+                                              channel=recipient,
+                                              as_user=True,
+                                              text=message,
+                                              attachments=attachment)
+
+    @staticmethod
+    def _convert_to_slack_buttons(buttons):
         return [{"text": b['title'],
                  "name": b['payload'],
                  "type": "button"} for b in buttons]
@@ -54,14 +63,14 @@ class SlackBot(SlackClient, OutputChannel):
         recipient = self.slack_channel or recipient_id
 
         if len(buttons) > 5:
-            logger.warn("Slack API currently allows only up to 5 buttons. "
-                        "If you add more, all will be ignored.")
+            logger.warning("Slack API currently allows only up to 5 buttons. "
+                           "If you add more, all will be ignored.")
             return self.send_text_message(recipient, message)
 
         button_attachment = [{"fallback": message,
                               "callback_id": message.replace(' ', '_')[:20],
                               "actions": self._convert_to_slack_buttons(
-                                  buttons)}]
+                                      buttons)}]
 
         super(SlackBot, self).api_call("chat.postMessage",
                                        channel=recipient,
@@ -160,17 +169,17 @@ class SlackInput(InputChannel):
                                          {"content_type": "application/json"})
                 elif self._is_user_message(output):
                     return self.process_message(
-                        on_new_message,
-                        text=output['event']['text'],
-                        sender_id=output.get('event').get('user'))
+                            on_new_message,
+                            text=output['event']['text'],
+                            sender_id=output.get('event').get('user'))
             elif request.form:
                 output = dict(request.form)
                 if self._is_button_reply(output):
                     return self.process_message(
-                        on_new_message,
-                        text=self._get_button_reply(output),
-                        sender_id=json.loads(
-                            output['payload'][0]).get('user').get('id'))
+                            on_new_message,
+                            text=self._get_button_reply(output),
+                            sender_id=json.loads(
+                                    output['payload'][0]).get('user').get('id'))
 
             return make_response()
 

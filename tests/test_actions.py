@@ -34,9 +34,9 @@ def test_text_format():
            "UtterAction('my_action_name')"
 
 
-def test_action_factory_module_import():
+def test_action_instantiation_from_names():
     instantiated_actions = action.actions_from_names(
-            ["random_name", "utter_test"], None)
+            ["random_name", "utter_test"], None, ["random_name", "utter_test"])
     assert len(instantiated_actions) == 2
     assert isinstance(instantiated_actions[0], RemoteAction)
     assert instantiated_actions[0].name() == "random_name"
@@ -63,22 +63,13 @@ def test_domain_action_instantiation():
     assert instantiated_actions[4].name() == "utter_test"
 
 
-def test_action_factory_fails_on_duplicated_actions():
+def test_domain_fails_on_duplicated_actions():
     with pytest.raises(ValueError):
         Domain(intent_properties={},
                entities=[],
                slots=[],
                templates={},
                action_names=["random_name", "random_name"])
-
-
-def test_action_factory_fails_on_duplicated_builtin_actions():
-    with pytest.raises(ValueError):
-        Domain(intent_properties={},
-               entities=[],
-               slots=[],
-               templates={},
-               action_names=["action_listen", "random_name"])
 
 
 def test_remote_action_runs(default_dispatcher_collecting, default_domain):
@@ -119,6 +110,7 @@ def test_remote_action_runs(default_dispatcher_collecting, default_domain):
             'sender_id': 'default',
             'paused': False,
             'latest_event_time': None,
+            'followup_action': 'action_listen',
             'slots': {'name': None},
             'events': [],
             'active_form': None
@@ -171,6 +163,7 @@ def test_remote_action_logs_events(default_dispatcher_collecting,
             },
             'sender_id': 'default',
             'paused': False,
+            'followup_action': 'action_listen',
             'latest_event_time': None,
             'slots': {'name': None},
             'events': [],
