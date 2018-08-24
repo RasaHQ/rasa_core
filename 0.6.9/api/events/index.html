@@ -473,6 +473,33 @@ how to update its state.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="rasa_core.events.FollowupAction">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">FollowupAction</code><span class="sig-paren">(</span><em>name</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#FollowupAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.FollowupAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Enqueue a followup action.</p>
+<dl class="method">
+<dt id="rasa_core.events.FollowupAction.apply_to">
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#FollowupAction.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.FollowupAction.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.FollowupAction.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#FollowupAction.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.FollowupAction.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.events.FollowupAction.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#FollowupAction.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.FollowupAction.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.FollowupAction.type_name">
+<code class="descname">type_name</code><em class="property"> = u'followup'</em><a class="headerlink" href="#rasa_core.events.FollowupAction.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="rasa_core.events.ReminderScheduled">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ReminderScheduled</code><span class="sig-paren">(</span><em>action_name</em>, <em>trigger_date_time</em>, <em>name=None</em>, <em>kill_on_user_message=True</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ReminderScheduled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ReminderScheduled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
@@ -571,34 +598,6 @@ that <code class="docutils literal notranslate"><span class="pre">tracker.slots[
 </dd></dl>
 
 <dl class="class">
-<dt id="rasa_core.events.TopicSet">
-<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">TopicSet</code><span class="sig-paren">(</span><em>topic</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#TopicSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.TopicSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
-<p>The topic of conversation has changed.</p>
-<p>As a side effect self.topic will be pushed on to <code class="docutils literal notranslate"><span class="pre">Tracker.topic_stack</span></code>.</p>
-<dl class="method">
-<dt id="rasa_core.events.TopicSet.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#TopicSet.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.TopicSet.apply_to" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.events.TopicSet.as_dict">
-<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#TopicSet.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.TopicSet.as_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.events.TopicSet.as_story_string">
-<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#TopicSet.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.TopicSet.as_story_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="rasa_core.events.TopicSet.type_name">
-<code class="descname">type_name</code><em class="property"> = u'topic'</em><a class="headerlink" href="#rasa_core.events.TopicSet.type_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="rasa_core.events.UserUtteranceReverted">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">UserUtteranceReverted</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#UserUtteranceReverted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUtteranceReverted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
@@ -662,7 +661,7 @@ and the bot is waiting for a new user message.</p>
 <dd><p>Convert a list of dictionaries to a list of corresponding events.</p>
 <dl class="docutils">
 <dt>Example format:</dt>
-<dd>[{“event”: “set_slot”, “value”: 5, “name”: “my_slot”}]</dd>
+<dd>[{“event”: “slot”, “value”: 5, “name”: “my_slot”}]</dd>
 </dl>
 </dd></dl>
 

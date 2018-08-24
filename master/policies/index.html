@@ -100,7 +100,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,6 +126,8 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
@@ -201,13 +202,13 @@ training a model on that data.</p>
 <h3>Data Augmentation<a class="headerlink" href="#data-augmentation" title="Permalink to this headline">¶</a></h3>
 <p>By default, Rasa Core will create longer stories by randomly glueing together
 the ones in your stories file. This is because if you have stories like:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gh">#</span> thanks
-<span class="k">*</span> thankyou
-   <span class="k">-</span> utter_youarewelcome
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># thanks
+* thankyou
+   - utter_youarewelcome
 
-<span class="gh">#</span> bye
-<span class="k">*</span> goodbye
-   <span class="k">-</span> utter_goodbye
+# bye
+* goodbye
+   - utter_goodbye
 </pre></div>
 </div>
 <p>You actually want to teach your policy to <strong>ignore</strong> the dialogue history
@@ -232,12 +233,12 @@ by passing it to your policy’s <code class="xref py py-class docutils literal 
 <p>As an example, let’s say you have an <code class="docutils literal notranslate"><span class="pre">out_of_scope</span></code> intent which describes off-topic
 user messages. If your bot sees this intent multiple times in a row, you might want to
 tell the user what you <cite>can</cite> help them with. So your story might look like this:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="k">*</span> out_of_scope
-   <span class="k">-</span> utter_default
-<span class="k">*</span> out_of_scope
-   <span class="k">-</span> utter_default
-<span class="k">*</span> out_of_scope
-   <span class="k">-</span> utter_help_message
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>* out_of_scope
+   - utter_default
+* out_of_scope
+   - utter_default
+* out_of_scope
+   - utter_help_message
 </pre></div>
 </div>
 <p>For Rasa Core to learn this pattern, the <code class="docutils literal notranslate"><span class="pre">max_history</span></code> has to be <cite>at least</cite> <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
@@ -247,40 +248,22 @@ you should store it as a slot. Slot information is always available for every fe
 </div>
 <div class="section" id="training-script-options">
 <h3>Training Script Options<a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] -s STORIES -o OUT -d DOMAIN [-u NLU] [--history HISTORY]
-                [--epochs EPOCHS] [--validation_split VALIDATION_SPLIT]
-                [--batch_size BATCH_SIZE] [--online]
-                [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
-                [--debug] [-v]
-
-trains a dialogue model
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -s STORIES, --stories STORIES
-                        file or folder containing the training stories
-  -o OUT, --out OUT     directory to persist the trained model in
-  -d DOMAIN, --domain DOMAIN
-                        domain specification yaml file
-  -u NLU, --nlu NLU     trained nlu model
-  --history HISTORY     max history to use of a story
-  --epochs EPOCHS       number of epochs to train the model
-  --validation_split VALIDATION_SPLIT
-                        Percentage of training samples used for validation,
-                        0.1 by default
-  --batch_size BATCH_SIZE
-                        number of training samples to put into one training
-                        batch
-  --online              enable online training
-  --augmentation AUGMENTATION
-                        how much data augmentation to use during training
-  --debug_plots         If enabled, will create plots showing checkpoints and
-                        their connections between story blocks in a file
-                        called `story_blocks_connections.pdf`.
-  --dump_stories        If enabled, save flattened stories to a file
-  --debug               Print lots of debugging statements. Sets logging level
-                        to DEBUG
-  -v, --verbose         Be verbose. Sets logging level to INFO
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+  File &quot;/opt/python/2.7.14/lib/python2.7/runpy.py&quot;, line 174, in _run_module_as_main
+    &quot;__main__&quot;, fname, loader, pkg_name)
+  File &quot;/opt/python/2.7.14/lib/python2.7/runpy.py&quot;, line 72, in _run_code
+    exec code in run_globals
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/train.py&quot;, line 11, in &lt;module&gt;
+    from rasa_core.agent import Agent
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/agent.py&quot;, line 33, in &lt;module&gt;
+    from rasa_core.processor import MessageProcessor
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/processor.py&quot;, line 35, in &lt;module&gt;
+    from rasa_core.tracker_store import TrackerStore
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/tracker_store.py&quot;, line 17, in &lt;module&gt;
+    from rasa_core.broker import EventChannel
+  File &quot;/home/travis/build/RasaHQ/rasa_core/rasa_core/broker.py&quot;, line 7, in &lt;module&gt;
+    import pika
+ImportError: No module named pika
 </pre></div>
 </div>
 </div>

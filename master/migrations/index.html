@@ -17,7 +17,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
-    <link rel="next" title="Change Log" href="../changelog/" />
+    <link rel="next" title="Event Brokers" href="../brokers/" />
     <link rel="prev" title="Featurization" href="../api/featurizer/" />
    
     
@@ -100,7 +100,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,6 +126,8 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
@@ -183,6 +184,88 @@
 <span id="migration"></span><h1>Migration Guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h1>
 <p>This page contains information about changes between major versions and
 how you can migrate from one version to another.</p>
+<div class="section" id="x-to-0-11-0">
+<h2>0.10.x to 0.11.0<a class="headerlink" href="#x-to-0-11-0" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is major new version with a lot of changes under the hood as well
+as on the API level. Please take a careful look at the mentioned
+before updating. Please make sure to
+<strong>retrain your models when switching to this version</strong>.</p>
+</div>
+<div class="section" id="general">
+<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>domain actions list now needs to always contain the actions names instead of
+the classpath</li>
+<li>utter templates that should be used as actions, now need to start with
+<code class="docutils literal notranslate"><span class="pre">utter_</span></code>, otherwise the bot won’t be able to find the action</li>
+</ul>
+</div>
+<div class="section" id="webhooks">
+<h3>Webhooks<a class="headerlink" href="#webhooks" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">The endpoints for the webhooks changed. All webhooks are now at
+<code class="docutils literal notranslate"><span class="pre">/webhooks/CHANNEL_NAME/webhook</span></code>. For example, the webhook
+to receive facebook messages on a local instance is now
+<code class="docutils literal notranslate"><span class="pre">http://localhost:5005/webhooks/facebook/webhook</span></code>.</p>
+</li>
+<li><p class="first">format of the <code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code> used in the <code class="docutils literal notranslate"><span class="pre">run</span></code> and <code class="docutils literal notranslate"><span class="pre">server</span></code> scripts
+has changed to allow for multiple channels in one file:</p>
+<p>The new format now contains the channels name first, e.g. for facebook:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">facebook</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">verify</span><span class="p p-Indicator">:</span> <span class="s">&quot;rasa-bot&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">secret</span><span class="p p-Indicator">:</span> <span class="s">&quot;3e34709d01ea89032asdebfe5a74518&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">page-access-token</span><span class="p p-Indicator">:</span> <span class="s">&quot;EAAbHPa7H9rEBAAuFk4Q3gPKbDedQnx4djJJ1JmQ7CAqO4iJKrQcNT0wtD&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="changes-to-input-and-output-channels">
+<h3>Changes to Input and Output Channels<a class="headerlink" href="#changes-to-input-and-output-channels" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">rasa_core.channels.direct</span></code> output channel package removed.
+<code class="docutils literal notranslate"><span class="pre">CollectingOutputChannel</span></code> moved to <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.channel</span></code></p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">HttpInputComponent</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">InputChannel</span></code> &amp; moved to
+<code class="docutils literal notranslate"><span class="pre">rasa_core.channels.channel.InputChannel</span></code></p>
+</li>
+<li><p class="first">If you wrote your own custom input channel, make sure to inherit from
+<code class="docutils literal notranslate"><span class="pre">InputChannel</span></code> instead of <a href="#id1"><span class="problematic" id="id2">``</span></a>HttpInputComponent.</p>
+</li>
+<li><p class="first">removed package <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.rest</span></code>,
+please use <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.RestInput</span></code> instead</p>
+</li>
+<li><p class="first">remove file input channel <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.file.FileInputChannel</span></code></p>
+</li>
+<li><p class="first">signature of <code class="docutils literal notranslate"><span class="pre">agent.handle_channel</span></code> got renamed
+and the signature changed. here is an up to date example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.facebook</span> <span class="kn">import</span> <span class="n">FacebookInput</span>
+
+<span class="n">input_channel</span> <span class="o">=</span> <span class="n">FacebookInput</span><span class="p">(</span><span class="n">fb_verify</span><span class="o">=</span><span class="s2">&quot;VERIFY&quot;</span><span class="p">,</span>
+                              <span class="n">fb_secret</span><span class="o">=</span><span class="s2">&quot;SECRET&quot;</span><span class="p">,</span>
+                              <span class="n">fb_access_token</span><span class="o">=</span><span class="s2">&quot;ACCESS_TOKEN&quot;</span><span class="p">)</span>
+<span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="n">port</span><span class="o">=</span><span class="mi">5005</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">If you wrote your own custom output channel, make sure to split messages
+on double new lines if you like (the <code class="docutils literal notranslate"><span class="pre">InputChannel</span></code> you inherit from
+doesn’t do this anymore), e.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">send_text_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_id</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="c1"># type: (Text, Text) -&gt; None</span>
+    <span class="sd">&quot;&quot;&quot;Send a message through this channel.&quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">message_part</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">):</span>
+      <span class="c1"># self.send would be the actual communication to e.g. facebook</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">recipient_id</span><span class="p">,</span> <span class="n">message_part</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="x-to-0-10-0">
 <h2>0.9.x to 0.10.0<a class="headerlink" href="#x-to-0-10-0" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
@@ -233,7 +316,7 @@ well as the configuration and metadata). Please make sure to retrain
 a model before trying to use it with this improved version.</p>
 </div>
 <ul>
-<li><p class="first">loading data should be done either using</p>
+<li><p class="first">loading data should be done either using:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core</span> <span class="kn">import</span> <span class="n">training</span>
 
 <span class="n">training_data</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
@@ -280,7 +363,7 @@ present in an utterance</p>
 <div class="section" id="x-to-0-8-0">
 <h2>0.7.x to 0.8.0<a class="headerlink" href="#x-to-0-8-0" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first">Credentials for the facebook connector changed. Instead of providing</p>
+<li><p class="first">Credentials for the facebook connector changed. Instead of providing:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># OLD FORMAT</span>
 <span class="l l-Scalar l-Scalar-Plain">verify</span><span class="p p-Indicator">:</span> <span class="s">&quot;rasa-bot&quot;</span>
 <span class="l l-Scalar l-Scalar-Plain">secret</span><span class="p p-Indicator">:</span> <span class="s">&quot;3e34709d01ea89032asdebfe5a74518&quot;</span>
@@ -309,7 +392,7 @@ changed to:</p>
 </li>
 <li><p class="first">Story file format changed from <code class="docutils literal notranslate"><span class="pre">*</span> <span class="pre">_intent_greet[name=Rasa]</span></code>
 to <code class="docutils literal notranslate"><span class="pre">*</span> <span class="pre">intent_greet{&quot;name&quot;:</span> <span class="pre">&quot;Rasa&quot;}</span></code> (old format is still supported but
-deprecated). Instead of writing</p>
+deprecated). Instead of writing:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gu">##</span> story_07715946                     &lt;!-- name of the story - just for debugging --&gt;
 <span class="k">*</span> _greet
    <span class="k">-</span> action_ask_howcanhelp

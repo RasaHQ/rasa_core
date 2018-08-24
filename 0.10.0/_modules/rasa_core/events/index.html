@@ -187,7 +187,7 @@
 <span class="kn">import</span> <span class="nn">jsonpickle</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
 
@@ -202,12 +202,21 @@
     <span class="sd">&quot;&quot;&quot;Convert a list of dictionaries to a list of corresponding events.</span>
 
 <span class="sd">    Example format:</span>
-<span class="sd">        [{&quot;event&quot;: &quot;set_slot&quot;, &quot;value&quot;: 5, &quot;name&quot;: &quot;my_slot&quot;}]</span>
+<span class="sd">        [{&quot;event&quot;: &quot;slot&quot;, &quot;value&quot;: 5, &quot;name&quot;: &quot;my_slot&quot;}]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="p">[</span><span class="n">Event</span><span class="o">.</span><span class="n">from_parameters</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">serialized_events</span>
-            <span class="k">if</span> <span class="s2">&quot;event&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="p">]</span>
+    <span class="n">deserialised</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">serialized_events</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;event&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">from_parameters</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+                <span class="n">deserialised</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Ignoring event (</span><span class="si">{}</span><span class="s2">) while deserialising &quot;</span>
+                               <span class="s2">&quot;events. Couldn&#39;t parse it.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">deserialised</span>
 
 
 <span class="k">def</span> <span class="nf">first_key</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">default_key</span><span class="p">):</span>
@@ -242,18 +251,32 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">from_story_string</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">from_story_string</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span>  <span class="c1"># type: Text</span>
+                          <span class="n">parameters</span><span class="p">,</span>  <span class="c1"># type: Dict[Text, Any]</span>
+                          <span class="n">default</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Type[Event]]</span>
+                          <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Optional[Event]</span>
         <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">resolve_by_type</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any], Optional[Type[Event]]) -&gt; Optional[Event]</span>
+
         <span class="n">event_name</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;event&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">event_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">copied</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="k">del</span> <span class="n">copied</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">]</span>
+
             <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">resolve_by_type</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">_from_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -281,12 +304,15 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">resolve_by_type</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># type: (Text, Optional[Text]) -&gt; Optional[Type[Event]]</span>
         <span class="sd">&quot;&quot;&quot;Returns a slots class by its type name.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">all_subclasses</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">type_name</span> <span class="o">==</span> <span class="n">type_name</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">cls</span>
-        <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">type_name</span> <span class="o">==</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># backwards compatibility to support old TopicSet evts</span>
+        <span class="k">elif</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">default</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown event name &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
@@ -385,7 +411,8 @@
     <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
 
-        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="bp">self</span></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">clear_followup_action</span><span class="p">()</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -445,60 +472,6 @@
                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse bot uttered event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
-
-
-<span class="c1"># TODO: DEPRECATED - remove in version 0.10.0</span>
-<span class="c1"># noinspection PyProtectedMember</span>
-<span class="k">class</span> <span class="nc">TopicSet</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The topic of conversation has changed.</span>
-
-<span class="sd">    As a side effect self.topic will be pushed on to ``Tracker.topic_stack``.&quot;&quot;&quot;</span>
-
-    <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;topic&quot;</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">topic</span> <span class="o">=</span> <span class="n">topic</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">TopicSet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;TopicSet(topic: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TopicSet</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">topic</span>
-
-    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}</span><span class="s2">[</span><span class="si">{props}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
-        <span class="n">topic</span> <span class="o">=</span> <span class="n">first_key</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">default_key</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">topic</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">TopicSet</span><span class="p">(</span><span class="n">topic</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">TopicSet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
-        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">})</span>
-        <span class="k">return</span> <span class="n">d</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">TopicSet</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;topic&quot;</span><span class="p">),</span>
-                            <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse set topic event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="k">pass</span>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -584,9 +557,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
 
     <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ActionListen</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="n">ActionListen</span><span class="p">()</span></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_follow_up_action</span><span class="p">(</span><span class="n">ACTION_LISTEN_NAME</span><span class="p">)</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -702,7 +675,7 @@
         <span class="k">return</span> <span class="n">d</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_trigger_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date_time</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_trigger_time</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">date_time</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_time</span><span class="p">[:</span><span class="mi">19</span><span class="p">],</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S&#39;</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
@@ -774,6 +747,47 @@
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
             <span class="n">tracker</span><span class="o">.</span><span class="n">export_stories_to_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+
+<span class="c1"># noinspection PyProtectedMember</span>
+<span class="k">class</span> <span class="nc">FollowupAction</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Enqueue a followup action.&quot;&quot;&quot;</span>
+
+    <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;followup&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FollowupAction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">FollowupAction</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">action_name</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;FollowupAction(action: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">props</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">})</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}{props}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="n">props</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FollowupAction</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
+                              <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">FollowupAction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+        <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_follow_up_action</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -868,7 +882,8 @@
     <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
 
-        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">clear_followup_action</span><span class="p">()</span></div>
 
 
 <span class="k">class</span> <span class="nc">AgentUttered</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>

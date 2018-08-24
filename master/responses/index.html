@@ -100,7 +100,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,6 +126,8 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
@@ -184,7 +185,7 @@
 <p>If you want your bot to respond to user messages, you need to manage
 the bots responses. In the training data for your bot,
 <a class="reference internal" href="../stories/#stories"><span class="std std-ref">your stories</span></a>, you specify the actions your bot
-executes when he encounters the dialogue example. These actions
+should execute. These actions
 can use utterances to send messages back to the user.</p>
 <p>There are two ways to manage these utterances:</p>
 <ol class="arabic simple">
@@ -218,10 +219,10 @@ available entities, slots and intents.</p>
 
 <span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">utter_greet</span><span class="p p-Indicator">:</span>
-    <span class="p p-Indicator">-</span> <span class="s">&quot;hey</span><span class="nv"> </span><span class="s">there</span><span class="nv"> </span><span class="s">{name}!&quot;</span>    <span class="c1"># variable will be filled by slot with the same name or by custom code</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;hey</span><span class="nv"> </span><span class="s">there</span><span class="nv"> </span><span class="s">{name}!&quot;</span>  <span class="c1"># {name} will be filled by slot (same name) or by custom action code</span>
   <span class="l l-Scalar l-Scalar-Plain">utter_goodbye</span><span class="p p-Indicator">:</span>
     <span class="p p-Indicator">-</span> <span class="s">&quot;goodbye</span><span class="nv"> </span><span class="s">😢&quot;</span>
-    <span class="p p-Indicator">-</span> <span class="s">&quot;bye</span><span class="nv"> </span><span class="s">bye</span><span class="nv"> </span><span class="s">😢&quot;</span>              <span class="c1"># multiple templates will allow the bot to randomly pick from them</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;bye</span><span class="nv"> </span><span class="s">bye</span><span class="nv"> </span><span class="s">😢&quot;</span>   <span class="c1"># multiple templates - bot will randomly pick one of them</span>
   <span class="l l-Scalar l-Scalar-Plain">utter_default</span><span class="p p-Indicator">:</span>
     <span class="p p-Indicator">-</span> <span class="s">&quot;default</span><span class="nv"> </span><span class="s">message&quot;</span>
 
@@ -262,7 +263,12 @@ or <code class="docutils literal notranslate"><span class="pre">server</span></c
 </pre></div>
 </div>
 <p>and you can use this file like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.server --endpoints endpoints.yml -d examples/babi/models/policy/current -u examples/babi/models/nlu/current_py2 -o out.log
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.run <span class="se">\</span>
+   --enable_api <span class="se">\</span>
+   -d examples/babi/models/policy/current <span class="se">\</span>
+   -u examples/babi/models/nlu/current_py2 <span class="se">\</span>
+   -o out.log <span class="se">\</span>
+   --endpoints endpoints.yml
 </pre></div>
 </div>
 <p>The body of the <code class="docutils literal notranslate"><span class="pre">POST</span></code> request sent to the endpoint will look
@@ -328,6 +334,7 @@ like this:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hey there&quot;</span><span class="p">,</span>
     <span class="nt">&quot;buttons&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;image&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="nt">&quot;elements&quot;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="nt">&quot;attachments&quot;</span><span class="p">:</span> <span class="p">[]</span>
 <span class="p">}</span>

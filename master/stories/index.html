@@ -100,7 +100,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,6 +126,8 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
@@ -192,62 +193,81 @@ been part of one large file.</p>
 </div>
 <div class="section" id="format">
 <h2>Format<a class="headerlink" href="#format" title="Permalink to this headline">¶</a></h2>
-<p>Here’s an example from the <a class="reference external" href="https://research.fb.com/downloads/babi/">bAbI</a> data (converted into Rasa stories):</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gu">##</span> story_07715946    &lt;!-- name of the story - just for debugging --&gt;
-<span class="k">*</span> greet
-   <span class="k">-</span> action_ask_howcanhelp
-<span class="k">*</span> inform{&quot;location&quot;: &quot;rome&quot;, &quot;price&quot;: &quot;cheap&quot;}  &lt;!-- user utterance, in format intent{entities} --&gt;
-   <span class="k">-</span> action_on_it
-   <span class="k">-</span> action_ask_cuisine
-<span class="k">*</span> inform{&quot;cuisine&quot;: &quot;spanish&quot;}
-   <span class="k">-</span> action_ask_numpeople        &lt;!-- action that the bot should execute --&gt;
-<span class="k">*</span> inform{&quot;people&quot;: &quot;six&quot;}
-   <span class="k">-</span> action_ack_dosearch
+<p>Here’s an example from the <a class="reference external" href="https://research.fb.com/downloads/babi/">bAbI</a>
+data (converted into Rasa stories):</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## story_07715946    &lt;!-- name of the story - just for debugging --&gt;
+* greet
+   - action_ask_howcanhelp
+* inform{&quot;location&quot;: &quot;rome&quot;, &quot;price&quot;: &quot;cheap&quot;}  &lt;!-- user utterance, in format intent{entities} --&gt;
+   - action_on_it
+   - action_ask_cuisine
+* inform{&quot;cuisine&quot;: &quot;spanish&quot;}
+   - action_ask_numpeople        &lt;!-- action that the bot should execute --&gt;
+* inform{&quot;people&quot;: &quot;six&quot;}
+   - action_ack_dosearch
 </pre></div>
 </div>
-<p>This is what we call a <strong>story</strong>. A story starts with a name preceded by two
-hashes <code class="docutils literal notranslate"><span class="pre">##</span> <span class="pre">story_03248462</span></code>.
-You can call the story anything you like, but it can be very useful for debugging
-to give them descriptive names!
-The end of a story is denoted by a newline, and then a new story starts again with <code class="docutils literal notranslate"><span class="pre">##</span></code>.</p>
+<p>This is what we call a <strong>story</strong>.</p>
+<ul class="simple">
+<li>A story starts with a name preceded by two hashes <code class="docutils literal notranslate"><span class="pre">##</span> <span class="pre">story_03248462</span></code>.
+You can call the story anything you like, but it can be very useful for
+debugging to give them descriptive names!</li>
+<li>The end of a story is denoted by a newline, and then a new story
+starts again with <code class="docutils literal notranslate"><span class="pre">##</span></code>.</li>
+<li>Messages sent by the user are shown as lines starting with <code class="docutils literal notranslate"><span class="pre">*</span></code>
+in the format <code class="docutils literal notranslate"><span class="pre">intent{&quot;entity1&quot;:</span> <span class="pre">&quot;value&quot;,</span> <span class="pre">&quot;entity2&quot;:</span> <span class="pre">&quot;value&quot;}</span></code>.</li>
+<li>Actions executed by the bot are shown as lines starting with <code class="docutils literal notranslate"><span class="pre">-</span></code>
+and contain the name of the action.</li>
+<li>Events returned by an action are on lines immediately after that
+action. For example, if an action returns a <code class="docutils literal notranslate"><span class="pre">SetSlot</span></code> event,
+this is shown as the line <code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">slot{&quot;slot_name&quot;:</span> <span class="pre">&quot;value&quot;}</span></code></li>
+</ul>
 </div>
 <div class="section" id="checkpoints">
 <h2>Checkpoints<a class="headerlink" href="#checkpoints" title="Permalink to this headline">¶</a></h2>
-<p>You can use <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">checkpoints</span></code> to modularize and simplify your training data.
-Checkpoints can be useful, but <strong>do not overuse them</strong>. Using lots of checkpoints
-can quickly make your example stories hard to understand. It makes sense to use them
-if a story block is repeated very often in different stories, but stories <em>without</em>
-checkpoints are easier to read and write.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gu">##</span> first story
-<span class="k">*</span> hello
-   <span class="k">-</span> action_ask_user_question
-<span class="k">&gt; </span><span class="ge">check_asked_question</span>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">checkpoints</span></code> to modularize and simplify your training
+data. Checkpoints can be useful, but <strong>do not overuse them</strong>. Using
+lots of checkpoints can quickly make your example stories hard to
+understand. It makes sense to use them if a story block is repeated
+very often in different stories, but stories <em>without</em> checkpoints
+are easier to read and write. Here is an example story file which
+contains checkpoints:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## first story
+* hello
+   - action_ask_user_question
+&gt; check_asked_question
 
-<span class="gu">##</span> user affirms question
-<span class="k">&gt; </span><span class="ge">check_asked_question</span>
-<span class="k">*</span> affirm
-  <span class="k">-</span> action_handle_affirmation
+## user affirms question
+&gt; check_asked_question
+* affirm
+  - action_handle_affirmation
 
-<span class="gu">##</span> user denies question
-<span class="k">&gt; </span><span class="ge">check_asked_question</span>
-<span class="k">*</span> deny
-  <span class="k">-</span> action_handle_denial
+## user denies question
+&gt; check_asked_question
+* deny
+  - action_handle_denial
 </pre></div>
 </div>
 </div>
 <div class="section" id="or-statements">
 <h2><code class="docutils literal notranslate"><span class="pre">OR</span></code> Statements<a class="headerlink" href="#or-statements" title="Permalink to this headline">¶</a></h2>
-<p>Another way to write shorter stories, or to handle multiple intents the same way, is
-to use an <code class="docutils literal notranslate"><span class="pre">OR</span></code> statement. For example if you ask the user to confirm something,
-and we want to treat the <code class="docutils literal notranslate"><span class="pre">affirm</span></code> and <code class="docutils literal notranslate"><span class="pre">thankyou</span></code> intents in the same way.
-The story below will be converted into two stories at training time.
-Just like checkpoints, <code class="docutils literal notranslate"><span class="pre">OR</span></code> statements can be useful, but if you are using
-a lot of them, it is probably better to restructure your domain and/or intents.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gu">##</span> story
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Adding lines to your stories with many <code class="docutils literal notranslate"><span class="pre">OR</span></code> statements
+will slow down training.</p>
+</div>
+<p>Another way to write shorter stories, or to handle multiple intents
+the same way, is to use an <code class="docutils literal notranslate"><span class="pre">OR</span></code> statement. For example if you ask
+the user to confirm something, and we want to treat the <code class="docutils literal notranslate"><span class="pre">affirm</span></code>
+and <code class="docutils literal notranslate"><span class="pre">thankyou</span></code> intents in the same way. The story below will be
+converted into two stories at training time. Just like checkpoints,
+<code class="docutils literal notranslate"><span class="pre">OR</span></code> statements can be useful, but if you are using a lot of them,
+it is probably better to restructure your domain and/or intents:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## story
 ...
-  <span class="k">-</span> utter_ask_confirm
-<span class="k">*</span> affirm OR thankyou
-  <span class="k">-</span> action_handle_affirmation
+  - utter_ask_confirm
+* affirm OR thankyou
+  - action_handle_affirmation
 </pre></div>
 </div>
 </div>

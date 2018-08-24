@@ -100,7 +100,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,6 +126,8 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
@@ -252,7 +253,7 @@ pip install pygraphviz --install-option<span class="o">=</span><span class="s2">
 </div>
 <p>As soon as this is installed you can visualize stories with this command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/concertbot/
-python -m rasa_core.visualize -d concert_domain.yml -s data/stories.md -o graph.png
+python -m rasa_core.visualize -d domain.yml -s data/stories.md -o graph.png
 </pre></div>
 </div>
 <p>This will run through the stories of the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example in
@@ -271,7 +272,7 @@ create a <code class="docutils literal notranslate"><span class="pre">visualize.
 <span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;concert_domain.yml&quot;</span><span class="p">,</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span>
                   <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">KerasPolicy</span><span class="p">()])</span>
 
     <span class="n">agent</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="s2">&quot;data/stories.md&quot;</span><span class="p">,</span>

@@ -100,7 +100,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,6 +126,8 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
@@ -183,8 +184,8 @@
 <span id="domain"></span><h1>Domain Format<a class="headerlink" href="#domain-format" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">Domain</span></code> defines the universe in which your bot operates.
 It specifies the <code class="docutils literal notranslate"><span class="pre">intents</span></code>, <code class="docutils literal notranslate"><span class="pre">entities</span></code>, <code class="docutils literal notranslate"><span class="pre">slots</span></code>, and <code class="docutils literal notranslate"><span class="pre">actions</span></code>
-your bot should know about.
-Optionally, it can also include <code class="docutils literal notranslate"><span class="pre">templates</span></code> for the things your bot can say.</p>
+your bot should know about. Optionally, it can also include <code class="docutils literal notranslate"><span class="pre">templates</span></code>
+for the things your bot can say.</p>
 <p>As an example, the <code class="docutils literal notranslate"><span class="pre">DefaultDomain</span></code> has the following yaml definition:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># all hashtags are comments :)</span>
 <span class="l l-Scalar l-Scalar-Plain">intents</span><span class="p p-Indicator">:</span>
@@ -208,10 +209,10 @@ Optionally, it can also include <code class="docutils literal notranslate"><span
 
 <span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">utter_greet</span><span class="p p-Indicator">:</span>
-    <span class="p p-Indicator">-</span> <span class="s">&quot;hey</span><span class="nv"> </span><span class="s">there</span><span class="nv"> </span><span class="s">{name}!&quot;</span>    <span class="c1"># variable will be filled by slot with the same name or by custom code</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;hey</span><span class="nv"> </span><span class="s">there</span><span class="nv"> </span><span class="s">{name}!&quot;</span>  <span class="c1"># {name} will be filled by slot (same name) or by custom action code</span>
   <span class="l l-Scalar l-Scalar-Plain">utter_goodbye</span><span class="p p-Indicator">:</span>
     <span class="p p-Indicator">-</span> <span class="s">&quot;goodbye</span><span class="nv"> </span><span class="s">😢&quot;</span>
-    <span class="p p-Indicator">-</span> <span class="s">&quot;bye</span><span class="nv"> </span><span class="s">bye</span><span class="nv"> </span><span class="s">😢&quot;</span>              <span class="c1"># multiple templates will allow the bot to randomly pick from them</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;bye</span><span class="nv"> </span><span class="s">bye</span><span class="nv"> </span><span class="s">😢&quot;</span>   <span class="c1"># multiple templates - bot will randomly pick one of them</span>
   <span class="l l-Scalar l-Scalar-Plain">utter_default</span><span class="p p-Indicator">:</span>
     <span class="p p-Indicator">-</span> <span class="s">&quot;default</span><span class="nv"> </span><span class="s">message&quot;</span>
 
@@ -222,9 +223,22 @@ Optionally, it can also include <code class="docutils literal notranslate"><span
 </pre></div>
 </div>
 <p><strong>What does this mean?</strong></p>
-<p>Your NLU model will define the <code class="docutils literal notranslate"><span class="pre">intents</span></code> and <code class="docutils literal notranslate"><span class="pre">entities</span></code> that you need to include
-in the domain.</p>
-<p><code class="docutils literal notranslate"><span class="pre">slots</span></code> are the things you want to keep track of during a conversation, see <a class="reference internal" href="../slots/#slots"><span class="std std-ref">Using Slots</span></a> .</p>
+<p>Your NLU model will define the <code class="docutils literal notranslate"><span class="pre">intents</span></code> and <code class="docutils literal notranslate"><span class="pre">entities</span></code> that you
+need to include in the domain.</p>
+<p><code class="docutils literal notranslate"><span class="pre">slots</span></code> are the things you want to keep track of during a conversation,
+see <a class="reference internal" href="../slots/#slots"><span class="std std-ref">Using Slots</span></a> . A categorical slot called <code class="docutils literal notranslate"><span class="pre">risk_level</span></code> would be
+defined like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+   <span class="l l-Scalar l-Scalar-Plain">risk_level</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical</span>
+      <span class="l l-Scalar l-Scalar-Plain">values</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">low</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">medium</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">high</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../api/slots_api/#slot-types"><span class="std std-ref">Here</span></a> is the full list of slot types defined by
+Rasa Core, along with syntax for including them in your domain file.</p>
 <p><code class="docutils literal notranslate"><span class="pre">actions</span></code> are the things your bot can actually do.
 For example, an <code class="docutils literal notranslate"><span class="pre">action</span></code> can:</p>
 <ul class="simple">
@@ -232,33 +246,73 @@ For example, an <code class="docutils literal notranslate"><span class="pre">act
 <li>make an external API call</li>
 <li>query a database</li>
 </ul>
-<p>see <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Custom Actions</span></a></p>
+<p>see <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a></p>
 <p>For a more complete example domain, check the <a class="reference internal" href="../quickstart/"><span class="doc">Quickstart</span></a>.</p>
 <div class="section" id="custom-actions-and-slots">
 <h2>Custom Actions and Slots<a class="headerlink" href="#custom-actions-and-slots" title="Permalink to this headline">¶</a></h2>
-<p>To reference custom actions and slots in your domain,
-you need to reference them by their module path.
+<p>To reference slots in your domain, you need to reference them by
+their <strong>module path</strong>. To reference custom actions, use their <strong>name</strong>.
 For example, if you have a module called <code class="docutils literal notranslate"><span class="pre">my_actions</span></code> containing
-a class <code class="docutils literal notranslate"><span class="pre">MyAwesomeAction</span></code>, and module <code class="docutils literal notranslate"><span class="pre">my_slots</span></code> containing <code class="docutils literal notranslate"><span class="pre">MyAwesomeSlot</span></code>,
-you would add these lines to the domain file:</p>
+a class <code class="docutils literal notranslate"><span class="pre">MyAwesomeAction</span></code>, and module <code class="docutils literal notranslate"><span class="pre">my_slots</span></code> containing
+<code class="docutils literal notranslate"><span class="pre">MyAwesomeSlot</span></code>, you would add these lines to the domain file:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">my_actions.MyAwesomeAction</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">my_custom_action</span>
   <span class="l l-Scalar l-Scalar-Plain">...</span>
 
 <span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">my_slots.MyAwesomeSlot</span>
 </pre></div>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">name</span></code> function of <code class="docutils literal notranslate"><span class="pre">MyAwesomeAction</span></code> needs to return
+<code class="docutils literal notranslate"><span class="pre">my_custom_action</span></code> in this example (for more details,
+see <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>).</p>
 </div>
 <div class="section" id="utterance-templates">
 <span id="utter-templates"></span><h2>Utterance templates<a class="headerlink" href="#utterance-templates" title="Permalink to this headline">¶</a></h2>
-<p>Utterance templates are messages the bot will send back to the user. Either
-automatically by an action with the same name as the utterance (e.g. in the
-above example the <code class="docutils literal notranslate"><span class="pre">utter_default</span></code> template and action) or by an action with
-custom code.</p>
+<p>Utterance templates are messages the bot will send back to the user. There are
+two ways to use these templates:</p>
+<ol class="arabic">
+<li><p class="first">if the name of the template starts with <code class="docutils literal notranslate"><span class="pre">utter_</span></code>, the utterance can
+directly be used like an action. You would add the utterance template
+to the domain</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_greet</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Hey!</span><span class="nv"> </span><span class="s">How</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you?&quot;</span>
+</pre></div>
+</div>
+<p>Afterwards, you can use the template as if it were an action in the
+stories:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## greet the user
+* intent_greet
+  - utter_greet
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">utter_greet</span></code> is run as an action, it will send the message from
+the template back to the user.</p>
+</li>
+<li><p class="first">You can use the templates to generate response messages from your
+custom actions using the dispatcher:
+<code class="docutils literal notranslate"><span class="pre">dispatcher.utter_template(&quot;utter_greet&quot;)</span></code>.
+This allows you to separate the logic of generating
+the messages from the actual copy. In you custom action code, you can
+send a message based on the template like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core_sdk.actions</span> <span class="kn">import</span> <span class="n">Action</span>
+
+<span class="k">class</span> <span class="nc">ActionGreet</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="s1">&#39;action_greet&#39;</span>
+
+  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+      <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_greet&quot;</span><span class="p">)</span>
+      <span class="k">return</span> <span class="p">[]</span>
+</pre></div>
+</div>
+</li>
+</ol>
 <div class="section" id="images-and-buttons">
 <h3>Images and Buttons<a class="headerlink" href="#images-and-buttons" title="Permalink to this headline">¶</a></h3>
-<p>Templates defined in a domains yaml file can contain images and buttons as well:</p>
+<p>Templates defined in a domains yaml file can contain images and
+buttons as well:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">utter_greet</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Hey!</span><span class="nv"> </span><span class="s">How</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you?&quot;</span>
@@ -284,8 +338,8 @@ the command line.</p>
 <h3>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h3>
 <p>You can also use <strong>variables</strong> in your templates to insert information
 collected during the dialogue. You can either do that in your custom python
-code or by using the automatic slot filling mechanism. E.g if you got a template
-like this:</p>
+code or by using the automatic slot filling mechanism. E.g if you
+got a template like this:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">utter_greet</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;Hey,</span><span class="nv"> </span><span class="s">{name}.</span><span class="nv"> </span><span class="s">How</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you?&quot;</span>
@@ -305,8 +359,9 @@ like this:</p>
       <span class="k">return</span> <span class="p">[]</span>
 </pre></div>
 </div>
-<p>If the template contains variables denoted with <code class="docutils literal notranslate"><span class="pre">{my_variable}</span></code> you can supply
-values for the fields by passing them as key word arguments to <code class="docutils literal notranslate"><span class="pre">utter_template</span></code>:</p>
+<p>If the template contains variables denoted with <code class="docutils literal notranslate"><span class="pre">{my_variable}</span></code>
+you can supply values for the fields by passing them as key word
+arguments to <code class="docutils literal notranslate"><span class="pre">utter_template</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">my_variable</span><span class="o">=</span><span class="s2">&quot;my text&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -325,8 +380,9 @@ multiple responses and Rasa will randomly pick one of them, e.g.:</p>
 </div>
 <div class="section" id="ignoring-entities-for-certain-intents">
 <h2>Ignoring entities for certain intents<a class="headerlink" href="#ignoring-entities-for-certain-intents" title="Permalink to this headline">¶</a></h2>
-<p>If you want entities to be ignored for certain intents, you can add the <code class="docutils literal notranslate"><span class="pre">use_entities:</span> <span class="pre">false</span></code>
-parameter to the intent in your domain file like this:</p>
+<p>If you want entities to be ignored for certain intents, you can
+add the <code class="docutils literal notranslate"><span class="pre">use_entities:</span> <span class="pre">false</span></code> parameter to the intent in your domain
+file like this:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">intents</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">greet</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{</span><span class="nv">use_entities</span><span class="p p-Indicator">:</span> <span class="nv">false</span><span class="p p-Indicator">}</span>
 </pre></div>
@@ -334,7 +390,8 @@ parameter to the intent in your domain file like this:</p>
 <p>This means that entities for those intents will be unfeaturized and therefore
 will not impact the next action predictions. This is useful when you have
 an intent where you don’t care about the entities being picked up. If you list
-your intents as normal without this parameter, the entities will be featurized as normal.</p>
+your intents as normal without this parameter, the entities will be
+featurized as normal.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">If you really want these entities not to influence action prediction we

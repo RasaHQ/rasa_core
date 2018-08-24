@@ -210,7 +210,14 @@
 
 <div class="viewcode-block" id="Slot.as_feature"><a class="viewcode-back" href="../../../api/slots_api/#rasa_core.slots.Slot.as_feature">[docs]</a>    <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Each slot type needs to specify how its &quot;</span>
-                                  <span class="s2">&quot;value can be converted to a feature.&quot;</span><span class="p">)</span></div>
+                                  <span class="s2">&quot;value can be converted to a feature. Slot &quot;</span>
+                                  <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; is a generic slot that can not be used &quot;</span>
+                                  <span class="s2">&quot;for predictions. Make sure you add this &quot;</span>
+                                  <span class="s2">&quot;slot to your domain definition, specifying &quot;</span>
+                                  <span class="s2">&quot;the type of the slot. If you implemented &quot;</span>
+                                  <span class="s2">&quot;a custom slot type class, make sure to &quot;</span>
+                                  <span class="s2">&quot;implement `.as_feature()`.&quot;</span>
+                                  <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span>
@@ -266,10 +273,10 @@
 
         <span class="k">if</span> <span class="p">(</span><span class="n">initial_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
                 <span class="ow">not</span> <span class="p">(</span><span class="n">min_value</span> <span class="o">&lt;=</span> <span class="n">initial_value</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">)):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Float slot (&#39;</span><span class="si">{}</span><span class="s2">&#39;) created with an initial value </span><span class="si">{}</span><span class="s2">&quot;</span>
-                        <span class="s2">&quot;outside of configured min (</span><span class="si">{}</span><span class="s2">) and max (</span><span class="si">{}</span><span class="s2">) values.&quot;</span>
-                        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span>
-                                  <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Float slot (&#39;</span><span class="si">{}</span><span class="s2">&#39;) created with an initial value </span><span class="si">{}</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;outside of configured min (</span><span class="si">{}</span><span class="s2">) and max (</span><span class="si">{}</span><span class="s2">) values.&quot;</span>
+                           <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -362,7 +369,7 @@
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                             <span class="s2">&quot;Categorical slot &#39;</span><span class="si">{}</span><span class="s2">&#39; is set to a value (&#39;</span><span class="si">{}</span><span class="s2">&#39;) &quot;</span>
                             <span class="s2">&quot;that is not specified in the domain. &quot;</span>
                             <span class="s2">&quot;Value will be ignored and the slot will &quot;</span>

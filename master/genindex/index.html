@@ -94,7 +94,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -109,8 +109,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -121,6 +120,8 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
@@ -175,7 +176,6 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
- | <a href="#H"><strong>H</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
@@ -191,11 +191,9 @@
 </li>
       <li><a href="../api/events/#rasa_core.events.ActionExecuted">ActionExecuted (class in rasa_core.events)</a>
 </li>
-      <li><a href="../api/events/#rasa_core.events.ActionReverted">ActionReverted (class in rasa_core.events)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="../api/agent/#rasa_core.agent.Agent">Agent (class in rasa_core.agent)</a>
+      <li><a href="../api/events/#rasa_core.events.ActionReverted">ActionReverted (class in rasa_core.events)</a>
 </li>
       <li><a href="../api/events/#rasa_core.events.AllSlotsReset">AllSlotsReset (class in rasa_core.events)</a>
 </li>
@@ -211,7 +209,7 @@
     bool
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-bool">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-bool">command line option</a>
 </li>
       </ul></li>
   </ul></td>
@@ -228,30 +226,28 @@
     categorical
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-categorical">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-categorical">command line option</a>
 </li>
       </ul></li>
       <li>
     command line option
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-bool">bool</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-bool">bool</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-categorical">categorical</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-categorical">categorical</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-float">float</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-float">float</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-list">list</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-list">list</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-text">text</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-text">text</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-unfeaturized">unfeaturized</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-unfeaturized">unfeaturized</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.continue_message_handling">continue_message_handling() (rasa_core.agent.Agent method)</a>
-</li>
       <li><a href="../api/events/#rasa_core.events.ConversationPaused">ConversationPaused (class in rasa_core.events)</a>
 </li>
       <li><a href="../api/events/#rasa_core.events.ConversationResumed">ConversationResumed (class in rasa_core.events)</a>
@@ -294,9 +290,11 @@
     float
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-float">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-float">command line option</a>
 </li>
       </ul></li>
+      <li><a href="../api/events/#rasa_core.events.FollowupAction">FollowupAction (class in rasa_core.events)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -312,18 +310,6 @@
   </ul></td>
 </tr></table>
 
-<h2 id="H">H</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.handle_channel">handle_channel() (rasa_core.agent.Agent method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.handle_message">handle_message() (rasa_core.agent.Agent method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -331,15 +317,9 @@
     list
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-list">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-list">command line option</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.load">load() (rasa_core.agent.Agent class method)</a>
-</li>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.load_data">load_data() (rasa_core.agent.Agent method)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -354,8 +334,6 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.persist">persist() (rasa_core.agent.Agent method)</a>
-</li>
       <li><a href="../api/policy/#rasa_core.policies.Policy">Policy (class in rasa_core.policies)</a>
 </li>
       <li><a href="../api/policy/#rasa_core.policies.Policy.predict_action_probabilities">predict_action_probabilities() (rasa_core.policies.Policy method)</a>
@@ -390,8 +368,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="../api/events/#rasa_core.events.SlotSet">SlotSet (class in rasa_core.events)</a>
 </li>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.start_message_handling">start_message_handling() (rasa_core.agent.Agent method)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -402,19 +378,13 @@
     text
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-text">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-text">command line option</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.toggle_memoization">toggle_memoization() (rasa_core.agent.Agent method)</a>
+      <li><a href="../api/policy/#rasa_core.policies.Policy.train">train() (rasa_core.policies.Policy method)</a>
 </li>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.train">train() (rasa_core.agent.Agent method)</a>
-
-      <ul>
-        <li><a href="../api/policy/#rasa_core.policies.Policy.train">(rasa_core.policies.Policy method)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -425,7 +395,7 @@
     unfeaturized
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-unfeaturized">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-unfeaturized">command line option</a>
 </li>
       </ul></li>
   </ul></td>

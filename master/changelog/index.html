@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Getting Support" href="../support/" />
-    <link rel="prev" title="Migration Guide" href="../migrations/" />
+    <link rel="prev" title="Using Docker" href="../docker/" />
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -100,7 +100,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,6 +126,8 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
@@ -189,21 +190,53 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 <p class="first admonition-title">Note</p>
 <p class="last">This version is not yet released and is under active development.</p>
 </div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is major new version with a lot of changes under the hood as well
+as on the API level. Please take a careful look at the
+<a class="reference internal" href="../migrations/#migration"><span class="std std-ref">Migration Guide</span></a> guide before updating. You need to retrain your models.</p>
+</div>
 <div class="section" id="added">
 <h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>script parameter <code class="docutils literal notranslate"><span class="pre">--quiet</span></code> to set the log level to <code class="docutils literal notranslate"><span class="pre">WARNING</span></code></li>
+<li>information about the python version a model has been trained with to the
+model metadata</li>
 <li>more emoji support for PY2</li>
 <li>intent confidence support in RegexInterpreter</li>
 </ul>
 </div>
 <div class="section" id="changed">
 <h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>default log level for all scripts has been changed from <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> to
+<code class="docutils literal notranslate"><span class="pre">INFO</span></code>.</li>
+<li>format of the credentials file to allow specifying the credentials for
+multiple channels</li>
+<li>webhook URLs for the input channels have changed and need to be reset</li>
+<li>deprecated using <code class="docutils literal notranslate"><span class="pre">rasa_core.server</span></code> as a script - use
+<code class="docutils literal notranslate"><span class="pre">rasa_core.run</span> <span class="pre">--enable_api</span></code> instead</li>
+</ul>
 </div>
 <div class="section" id="removed">
 <h3>Removed<a class="headerlink" href="#removed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>removed the deprecated <code class="docutils literal notranslate"><span class="pre">TopicSet</span></code> event</li>
+<li>removed <code class="docutils literal notranslate"><span class="pre">tracker.follow_up_action</span></code> - use the <code class="docutils literal notranslate"><span class="pre">FollowupAction</span></code>
+event instead</li>
+<li>removed <code class="docutils literal notranslate"><span class="pre">action_factory:</span> <span class="pre">remote</span></code> from domain file - the domain is
+always run over http</li>
+<li>removed <code class="docutils literal notranslate"><span class="pre">OnlineLearningPolicy</span></code> - use the <code class="docutils literal notranslate"><span class="pre">training.online</span></code>
+script instead</li>
+</ul>
 </div>
 <div class="section" id="fixed">
 <h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>lots of type annotations</li>
+<li>some invalid documentation references</li>
+<li>changed all <code class="docutils literal notranslate"><span class="pre">logger.warn</span></code> to <code class="docutils literal notranslate"><span class="pre">logger.warning</span></code></li>
+</ul>
 </div>
 </div>
 <div class="section" id="id1">
@@ -277,6 +310,11 @@ the default is to ignore <code class="docutils literal notranslate"><span class=
 <li>added ability to create domain from yaml string and export a domain to a yaml string</li>
 <li>added server endpoint to fetch domain as json or yaml</li>
 <li>new default action ActionDefaultFallback</li>
+<li>event streaming to a <code class="docutils literal notranslate"><span class="pre">RabbitMQ</span></code> message broker using <code class="docutils literal notranslate"><span class="pre">Pika</span></code></li>
+<li>docs section on event brokers</li>
+<li><code class="docutils literal notranslate"><span class="pre">Agent()</span></code> class supports a <code class="docutils literal notranslate"><span class="pre">model_server</span></code> <code class="docutils literal notranslate"><span class="pre">EndpointConfig</span></code>, which it regularly queries to fetch dialogue models</li>
+<li>this can be used with <code class="docutils literal notranslate"><span class="pre">rasa_core.server</span></code> with the <code class="docutils literal notranslate"><span class="pre">--endpoint</span></code> option (the key for this the model server config is <code class="docutils literal notranslate"><span class="pre">model</span></code>)</li>
+<li>docs on model fetching from a URL</li>
 </ul>
 </div>
 <div class="section" id="id13">
@@ -654,7 +692,7 @@ wrong predictions</li>
 <li>renamed <code class="docutils literal notranslate"><span class="pre">rasa_dm.util</span></code> to <code class="docutils literal notranslate"><span class="pre">rasa_dm.utils</span></code></li>
 <li>renamed the whole package to <code class="docutils literal notranslate"><span class="pre">rasa_core</span></code> (so <code class="docutils literal notranslate"><span class="pre">rasa_dm</span></code> is gone!)</li>
 <li>renamed <code class="docutils literal notranslate"><span class="pre">Reminder</span></code> attribute <code class="docutils literal notranslate"><span class="pre">id</span></code> to <code class="docutils literal notranslate"><span class="pre">name</span></code></li>
-<li>a lot of documentation improvements. docs are now at <a class="reference external" href="https://core.rasa.com">https://core.rasa.com</a></li>
+<li>a lot of documentation improvements. docs are now at <a class="reference external" href="https://rasa.com/docs/core">https://rasa.com/docs/core</a></li>
 <li>use hashing when writing memorized turns into persistence - requires retraining of all models that are trained with a version prior to this</li>
 <li>changed <code class="docutils literal notranslate"><span class="pre">agent.handle_message(...)</span></code> interface for easier usage</li>
 </ul>

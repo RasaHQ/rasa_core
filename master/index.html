@@ -99,7 +99,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="responses/">Bot Responses</a></li>
@@ -114,8 +114,7 @@
 <li class="toctree-l1"><a class="reference internal" href="domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/tracker/">Dialogue State Tracker</a></li>
@@ -126,6 +125,8 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support/">Getting Support</a></li>
 </ul>
@@ -182,7 +183,7 @@
 <h1>The Rasa Core dialogue engine<a class="headerlink" href="#the-rasa-core-dialogue-engine" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This is the documentation for version 0.10.4 of Rasa Core. Make sure you select
+<p class="last">This is the documentation for version 0.11.0a1 of Rasa Core. Make sure you select
 the appropriate version of the documentation for your local installation!</p>
 </div>
 
@@ -199,10 +200,10 @@ in this documentation.</p>
   </div>
   <div class="chat-bubble bot">
     <p>Rather than a bunch of <code>if/else</code> statements, the logic of your bot is
-based on a probabilistic model trained on example conversations.</p>
+based on a machine learning model trained on example conversations.</p>
   </div>
   <div class="chat-bubble user">
-    <p>That sounds harder than writing a few <code>if</code> statements.</p>
+    <p>That sounds harder than writing a few if statements.</p>
   </div>
   <div class="chat-bubble bot">
     <p>In the beginning of a project, it seems easier to just hard code some logic.

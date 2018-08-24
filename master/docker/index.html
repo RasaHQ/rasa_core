@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Frequently Asked Questions</title>
+    <title>Using Docker</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
@@ -17,14 +17,16 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Change Log" href="../changelog/" />
+    <link rel="prev" title="Event Brokers" href="../brokers/" />
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
   <meta itemprop="image" content="https://rasa.com/assets/img/facebook-og.png">
-  <meta property="og:title" content="Frequently Asked Questions" />
+  <meta property="og:title" content="Using Docker" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
-  <meta property="og:url" content="https://rasa.com/docs/core/faq" />
+  <meta property="og:url" content="https://rasa.com/docs/core/docker" />
   
     <meta name="description" content="None" />
     <meta itemprop="description" content="None">
@@ -33,7 +35,7 @@
   
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@Rasa_HQ">
-  <meta name="twitter:title" content="Frequently Asked Questions">
+  <meta name="twitter:title" content="Using Docker">
   <meta name="twitter:creator" content="@Rasa_HQ">
   <meta name="twitter:image" content="https://rasa.com/assets/img/facebook-og.png">
     
@@ -98,7 +100,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -113,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -123,8 +124,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
@@ -139,11 +142,11 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
-              <a href="../../0.10.4/faq/">0.10.4</a>
-              <a href="../../0.10.3/faq/">0.10.3</a>
-              <a href="../../0.10.2/faq/">0.10.2</a>
-              <a href="../../0.10.1/faq/">0.10.1</a>
-              <a href="../../0.10.0/faq/">0.10.0</a>
+              <a href="../../0.10.4/index/">0.10.4</a>
+              <a href="../../0.10.3/index/">0.10.3</a>
+              <a href="../../0.10.2/index/">0.10.2</a>
+              <a href="../../0.10.1/index/">0.10.1</a>
+              <a href="../../0.10.0/index/">0.10.0</a>
               <a href="../../0.9.8/index/">0.9.8</a>
               <a href="../../0.8.6/index/">0.8.6</a>
               <a href="../../0.7.9/index/">0.7.9</a>
@@ -153,7 +156,7 @@
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
-              <a href="../../master/faq/">master</a>
+              <a href="../../master/docker/">master</a>
           </div>
         </div>
     </div>
@@ -176,9 +179,32 @@
 
 
 
-    <p class="scv-banner"><a href="../../0.10.4/faq/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.10.4.</a></p>
-<div class="section" id="frequently-asked-questions">
-<span id="faq"></span><h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
+    <p class="scv-banner"><b>Warning:</b> This document is for the development version of Rasa Core.</p>
+<div class="section" id="using-docker">
+<span id="docker"></span><h1>Using Docker<a class="headerlink" href="#using-docker" title="Permalink to this headline">¶</a></h1>
+<p>We provide a Dockerfile which allows you to build an image of Rasa Core
+with a simple command: <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">rasa_core</span> <span class="pre">.</span></code></p>
+<p>The default command of the resulting container starts the Rasa Core server
+with the <code class="docutils literal notranslate"><span class="pre">--core</span></code> and <code class="docutils literal notranslate"><span class="pre">--nlu</span></code> options. At this stage the container does not
+yet contain any models, so you have to mount them from a local folder into
+the container’s <code class="docutils literal notranslate"><span class="pre">/app/model/dialogue</span></code> or train them within the container.
+The full run command looks like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_DIALOGUE_MODEL_DIR&gt;,target<span class="o">=</span>/app/dialogue <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_NLU_MODEL_DIR&gt;,target<span class="o">=</span>/app/nlu <span class="se">\</span>
+   rasa_core
+</pre></div>
+</div>
+<p>You also have the option to use the container to train a model with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_STORIES_FILE&gt;/stories.md,target<span class="o">=</span>/app/stories.md <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;PATH_TO_DOMAIN_FILE&gt;/domain.yml,target<span class="o">=</span>/app/domain.yml <span class="se">\</span>
+   --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>&lt;OUT_PATH&gt;,target<span class="o">=</span>/app/out <span class="se">\</span>
+   rasa_core train
+</pre></div>
+</div>
+<p>You may in addition run any Rasa Core command inside the container with
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">rasa_core</span> <span class="pre">run</span> <span class="pre">[COMMAND]</span></code>.</p>
 </div>
 
 
