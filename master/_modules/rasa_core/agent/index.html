@@ -197,6 +197,7 @@
 <span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="n">DEFAULT_REQUEST_TIMEOUT</span>
 <span class="kn">from</span> <span class="nn">rasa_core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
 <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">check_domain_sanity</span>
+<span class="kn">from</span> <span class="nn">rasa_core.exceptions</span> <span class="k">import</span> <span class="n">AgentNotReady</span>
 <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span>
 <span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">Policy</span>
@@ -446,8 +447,11 @@
                    <span class="n">tracker_store</span><span class="o">=</span><span class="n">tracker_store</span><span class="p">,</span>
                    <span class="n">action_endpoint</span><span class="o">=</span><span class="n">action_endpoint</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<div class="viewcode-block" id="Agent.is_ready"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.is_ready">[docs]</a>    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if all necessary components are instantiated to use agent.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.handle_message"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_message">[docs]</a>    <span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -467,9 +471,11 @@
 
         <span class="k">def</span> <span class="nf">noop</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Ignoring message as there is no agent to handle it.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">noop</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">noop</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>  <span class="c1">#</span>
+
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">(</span><span class="n">message_preprocessor</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
@@ -571,6 +577,9 @@
 <span class="sd">        capabilities of an ensemble when ignoring memorized turns from the</span>
 <span class="sd">        training data.&quot;&quot;&quot;</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">:</span>
+            <span class="k">return</span>
+
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
             <span class="c1"># explicitly ignore inheritance (e.g. augmented memoization policy)</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="n">MemoizationPolicy</span><span class="p">:</span>
@@ -581,6 +590,11 @@
                           <span class="o">**</span><span class="n">kwargs</span>
                           <span class="p">):</span>
         <span class="c1"># type: (List[DialogueStateTracker], Any) -&gt; None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">AgentNotReady</span><span class="p">(</span><span class="s2">&quot;Can&#39;t continue training without a policy &quot;</span>
+                                <span class="s2">&quot;ensemble.&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">continue_training</span><span class="p">(</span><span class="n">trackers</span><span class="p">,</span>
                                                <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
                                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -644,13 +658,17 @@
 <span class="sd">                           trainer (e.g. keras parameters)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">AgentNotReady</span><span class="p">(</span><span class="s2">&quot;Can&#39;t train without a policy ensemble.&quot;</span><span class="p">)</span>
+
         <span class="c1"># deprecation tests</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;featurizer&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_history&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Passing `featurizer` and `max_history` &quot;</span>
                             <span class="s2">&quot;to `agent.train(...)` is not supported anymore. &quot;</span>
                             <span class="s2">&quot;Pass appropriate featurizer &quot;</span>
                             <span class="s2">&quot;directly to the policy instead. More info &quot;</span>
-                            <span class="s2">&quot;https://rasa.com/docs/core/migrations.html#x-to-0-9-0&quot;</span><span class="p">)</span>
+                            <span class="s2">&quot;https://rasa.com/docs/core/migrations.html#x-to&quot;</span>
+                            <span class="s2">&quot;-0-9-0&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
             <span class="c1"># the user most likely passed in a file name to load training</span>
@@ -727,6 +745,9 @@
         <span class="c1"># type: (Text, bool) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Persists this agent into a directory for later loading and usage.&quot;&quot;&quot;</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">AgentNotReady</span><span class="p">(</span><span class="s2">&quot;Can&#39;t persist without a policy ensemble.&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_model_directory</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">dump_flattened_stories</span><span class="p">)</span>
@@ -755,24 +776,24 @@
                           <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">nlu_training_data</span><span class="p">,</span>
                           <span class="n">should_merge_nodes</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_ensure_agent_is_prepared</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_ensure_agent_is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Checks that an interpreter and a tracker store are set.</span>
 
 <span class="sd">        Necessary before a processor can be instantiated from this agent.</span>
 <span class="sd">        Raises an exception if any argument is missing.&quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Agent needs to be prepared before usage. &quot;</span>
-                            <span class="s2">&quot;You need to set an interpreter as well &quot;</span>
-                            <span class="s2">&quot;as a tracker store.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">AgentNotReady</span><span class="p">(</span><span class="s2">&quot;Agent needs to be prepared before usage. &quot;</span>
+                                <span class="s2">&quot;You need to set an interpreter, a policy &quot;</span>
+                                <span class="s2">&quot;ensemble as well as a tracker store.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preprocessor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># type: (Optional[Callable[[Text], Text]]) -&gt; MessageProcessor</span>
         <span class="sd">&quot;&quot;&quot;Instantiates a processor based on the set state of the agent.&quot;&quot;&quot;</span>
         <span class="c1"># Checks that the interpreter and tracker store are set and</span>
         <span class="c1"># creates a processor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_agent_is_prepared</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_agent_is_ready</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">MessageProcessor</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="p">,</span>
@@ -806,10 +827,12 @@
             <span class="k">return</span> <span class="n">InMemoryTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_create_ensemble</span><span class="p">(</span><span class="n">policies</span><span class="p">):</span>
-        <span class="c1"># type: (Union[List[Policy], PolicyEnsemble, None]) -&gt; PolicyEnsemble</span>
+    <span class="k">def</span> <span class="nf">_create_ensemble</span><span class="p">(</span>
+            <span class="n">policies</span>  <span class="c1"># type: Union[List[Policy], PolicyEnsemble, None]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Optional[PolicyEnsemble]</span>
         <span class="k">if</span> <span class="n">policies</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SimplePolicyEnsemble</span><span class="p">([])</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">policies</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">SimplePolicyEnsemble</span><span class="p">(</span><span class="n">policies</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">policies</span><span class="p">,</span> <span class="n">PolicyEnsemble</span><span class="p">):</span>
