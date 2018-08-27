@@ -445,6 +445,9 @@
                         <span class="n">tracker</span><span class="p">,</span>
                         <span class="n">dispatcher</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">draft</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
                 <span class="k">del</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">draft</span> <span class="o">=</span> <span class="p">{}</span>
