@@ -235,7 +235,7 @@
 <div class="viewcode-block" id="DialogueStateTracker.from_dict"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.from_dict">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
                   <span class="n">sender_id</span><span class="p">,</span>  <span class="c1"># type: Text</span>
-                  <span class="n">dump_as_dict</span><span class="p">,</span>  <span class="c1"># type: List[Dict[Text, Any]]</span>
+                  <span class="n">events_as_dict</span><span class="p">,</span>  <span class="c1"># type: List[Dict[Text, Any]]</span>
                   <span class="n">slots</span><span class="p">,</span>  <span class="c1"># type: List[Slot]</span>
                   <span class="n">max_event_history</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[int]</span>
                   <span class="p">):</span>
@@ -245,7 +245,7 @@
 <span class="sd">        The dump should be an array of dumped events. When restoring</span>
 <span class="sd">        the tracker, these events will be replayed to recreate the state.&quot;&quot;&quot;</span>
 
-        <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">dump_as_dict</span><span class="p">)</span>
+        <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">events_as_dict</span><span class="p">)</span>
         <span class="n">tracker</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">slots</span><span class="p">,</span> <span class="n">max_event_history</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evts</span><span class="p">:</span>
             <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
