@@ -244,8 +244,9 @@ you should store it as a slot. Slot information is always available for every fe
 </div>
 <div class="section" id="training-script-options">
 <h3>Training Script Options<a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] -s STORIES -o OUT -d DOMAIN [-u NLU] [--history HISTORY]
-                [--epochs EPOCHS] [--validation_split VALIDATION_SPLIT]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] (-s STORIES | --url URL) -o OUT -d DOMAIN [-u NLU]
+                [--history HISTORY] [--epochs EPOCHS]
+                [--validation_split VALIDATION_SPLIT]
                 [--batch_size BATCH_SIZE] [--online]
                 [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
                 [--endpoints ENDPOINTS] [--nlu_threshold NLU_THRESHOLD]
@@ -259,6 +260,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -s STORIES, --stories STORIES
                         file or folder containing the training stories
+  --url URL             If supplied, downloads a story file from a URL and
+                        trains on it. Fetches the data by sending a GET
+                        request to the supplied URL.
   -o OUT, --out OUT     directory to persist the trained model in
   -d DOMAIN, --domain DOMAIN
                         domain specification yaml file
