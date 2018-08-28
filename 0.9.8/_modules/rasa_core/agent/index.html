@@ -266,18 +266,15 @@
                   <span class="n">tracker_store</span><span class="o">=</span><span class="n">tracker_store</span><span class="p">,</span>
                   <span class="n">action_endpoint</span><span class="o">=</span><span class="n">action_endpoint</span><span class="p">)</span>
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">_update_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;Could not retrieve model from server. Connection Error.  &quot;</span>
-                <span class="s2">&quot;Running without a model. Server URL: `</span><span class="si">{}</span><span class="s2">`</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-
     <span class="k">if</span> <span class="n">wait_time_between_pulls</span><span class="p">:</span>
         <span class="c1"># continuously pull the model every `wait_time_between_pulls` seconds</span>
         <span class="n">start_model_pulling_in_worker</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span>
                                       <span class="n">wait_time_between_pulls</span><span class="p">,</span>
                                       <span class="n">agent</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># just pull the model once</span>
+        <span class="n">_update_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">agent</span></div>
 
 
