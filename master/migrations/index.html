@@ -199,13 +199,16 @@ before updating. Please make sure to
 a second please take a minute to read all of them.</p>
 </div>
 <ul class="simple">
+<li>If you have custom actions, you now need to run a separate server to execute
+them. If your actions are written in python (in a file called actions.py) you
+can do this by running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">rasa_core_sdk.endpoint</span> <span class="pre">--actions</span> <span class="pre">actions</span></code>
+and specifying the action endpoint in the <code class="docutils literal notranslate"><span class="pre">endpoints.yml</span></code>
+For more information please read <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>.</li>
 <li>For your custom actions, the imports have changed from
 <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">rasa_core.actions</span> <span class="pre">import</span> <span class="pre">Action</span></code> to <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">rasa_core_sdk</span> <span class="pre">import</span> <span class="pre">Action</span></code> and
 from <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">rasa_core.events</span> <span class="pre">import</span> <span class="pre">*</span></code> to <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">rasa_core_sdk.events</span> <span class="pre">import</span> <span class="pre">*</span></code></li>
-<li>If you do have custom actions, you need to run a separate server for your
-actions: please read <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>.</li>
-<li>domain actions list now needs to always contain the actions names instead of
-the classpath</li>
+<li>The actions list in the domain now needs to always contain the actions names
+instead of the classpath (e.g. change <code class="docutils literal notranslate"><span class="pre">actions.ActionExample</span></code> to <code class="docutils literal notranslate"><span class="pre">action_example</span></code>)</li>
 <li>utter templates that should be used as actions, now need to start with
 <code class="docutils literal notranslate"><span class="pre">utter_</span></code>, otherwise the bot won’t be able to find the action</li>
 </ul>
