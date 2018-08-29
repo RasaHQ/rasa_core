@@ -195,11 +195,6 @@
     <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
     <span class="kn">from</span> <span class="nn">rasa_core.training.data</span> <span class="k">import</span> <span class="n">DialogueTrainingData</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">tf</span> <span class="o">=</span> <span class="kc">None</span>
-
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
@@ -214,13 +209,6 @@
     <span class="k">def</span> <span class="nf">_create_featurizer</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)</span> \
             <span class="k">if</span> <span class="n">featurizer</span> <span class="k">else</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_standard_featurizer</span><span class="p">()</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_check_tensorflow</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">tf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Failed to import `tensorflow`. &quot;</span>
-                              <span class="s2">&quot;Please install `tensorflow`. &quot;</span>
-                              <span class="s2">&quot;For example with `pip install tensorflow`.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># type: (Optional[TrackerFeaturizer]) -&gt; None</span>
