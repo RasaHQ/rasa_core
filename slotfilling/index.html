@@ -100,7 +100,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,19 +126,24 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.4
+        v: 0.11.1
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href=".././0.11.1/slotfilling/">0.11.1</a>
+              <a href=".././0.11.0/slotfilling/">0.11.0</a>
               <a href=".././0.10.4/slotfilling/">0.10.4</a>
               <a href=".././0.9.8/index/">0.9.8</a>
               <a href=".././0.8.6/index/">0.8.6</a>
@@ -185,62 +189,62 @@ This is also called <strong>slot filling</strong>.</p>
 need to know their location. Users might say that right away, e.g. <cite>What’s the weather in Caracas?</cite>
 When they don’t provide this information, you’ll have to ask them for it.
 We can provide two stories to Rasa Core, so that it can learn to handle both cases:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gh">#</span> story1
-<span class="k">*</span> ask_weather{&quot;location&quot;: &quot;Caracas&quot;}
-   <span class="k">-</span> action_weather_api
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story1
+* ask_weather{&quot;location&quot;: &quot;Caracas&quot;}
+   - action_weather_api
 
-<span class="gh">#</span> story2
-<span class="k">*</span> ask_weather
-   <span class="k">-</span> utter_ask_location
-<span class="k">*</span> inform{&quot;location&quot;: &quot;Caracas&quot;}
-   <span class="k">-</span> action_weather_api
+# story2
+* ask_weather
+   - utter_ask_location
+* inform{&quot;location&quot;: &quot;Caracas&quot;}
+   - action_weather_api
 </pre></div>
 </div>
 <p>Here we are assuming you have defined an <code class="docutils literal notranslate"><span class="pre">inform</span></code> intent, which captures the cases where a user
 is just providing information.</p>
-<p>But <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Custom Actions</span></a> can also set slots, and these can also influence the conversation.
+<p>But <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a> can also set slots, and these can also influence the conversation.
 For example, a location like <cite>San Jose</cite> could refer to multiple places, in this case, probably in
 Costa Rica 🇨🇷  or California 🇺🇸</p>
 <p>Let’s add a call to a location API to deal with this.
 Start by defining a <code class="docutils literal notranslate"><span class="pre">location_match</span></code> slot:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>slots:
-  location_match:
-    type: categorical
-    values:
-    <span class="k">-</span> zero
-    <span class="k">-</span> one
-    <span class="k">-</span> multiple
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">location_match</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical</span>
+    <span class="l l-Scalar l-Scalar-Plain">values</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">zero</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">one</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">multiple</span>
 </pre></div>
 </div>
 <p>And our location api action will have to use the API response to fill in this slot.
 It can <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">[SlotSet(&quot;location_match&quot;,</span> <span class="pre">value)]</span></code>, where <code class="docutils literal notranslate"><span class="pre">value</span></code> is one of <code class="docutils literal notranslate"><span class="pre">&quot;zero&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;one&quot;</span></code>, or
 <code class="docutils literal notranslate"><span class="pre">&quot;multiple&quot;</span></code>, depending on what the API sends back.</p>
 <p>We then define stories for each of these cases:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gh">#</span> story1
-<span class="k">*</span> ask_weather{&quot;location&quot;: &quot;Caracas&quot;}
-   <span class="k">-</span> action_location_api
-   <span class="k">-</span> slot{&quot;location_match&quot;: &quot;one&quot;}
-   <span class="k">-</span> action_weather_api
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story1
+* ask_weather{&quot;location&quot;: &quot;Caracas&quot;}
+   - action_location_api
+   - slot{&quot;location_match&quot;: &quot;one&quot;}
+   - action_weather_api
 
-<span class="gh">#</span> story2
-<span class="k">*</span> ask_weather
-   <span class="k">-</span> utter_ask_location
-<span class="k">*</span> inform{&quot;location&quot;: &quot;Caracas&quot;}
-   <span class="k">-</span> action_location_api
-<span class="hll">   <span class="k">-</span> slot{&quot;location_match&quot;: &quot;one&quot;}
-</span><span class="hll">   <span class="k">-</span> action_weather_api
+# story2
+* ask_weather
+   - utter_ask_location
+* inform{&quot;location&quot;: &quot;Caracas&quot;}
+   - action_location_api
+<span class="hll">   - slot{&quot;location_match&quot;: &quot;one&quot;}
+</span><span class="hll">   - action_weather_api
 </span>
-<span class="gh">#</span> story3
-<span class="k">*</span> ask_weather{&quot;location&quot;: &quot;the Moon&quot;}
-   <span class="k">-</span> action_location_api
-<span class="hll">   <span class="k">-</span> slot{&quot;location_match&quot;: &quot;none&quot;}
-</span><span class="hll">   <span class="k">-</span> utter_location_not_found
+# story3
+* ask_weather{&quot;location&quot;: &quot;the Moon&quot;}
+   - action_location_api
+<span class="hll">   - slot{&quot;location_match&quot;: &quot;none&quot;}
+</span><span class="hll">   - utter_location_not_found
 </span>
-<span class="gh">#</span> story4
-<span class="k">*</span> ask_weather{&quot;location&quot;: &quot;San Jose&quot;}
-   <span class="k">-</span> action_location_api
-<span class="hll">   <span class="k">-</span> slot{&quot;location_match&quot;: &quot;multiple&quot;}
-</span><span class="hll">   <span class="k">-</span> utter_ask_which_location
+# story4
+* ask_weather{&quot;location&quot;: &quot;San Jose&quot;}
+   - action_location_api
+<span class="hll">   - slot{&quot;location_match&quot;: &quot;multiple&quot;}
+</span><span class="hll">   - utter_ask_which_location
 </span></pre></div>
 </div>
 <p>Now we’ve given Rasa Core a few examples of how to handle the different values
@@ -275,9 +279,9 @@ e.g. <code class="docutils literal notranslate"><span class="pre">utter_ask_cuis
 fewer stories to get the initial flow working.</p>
 </div>
 <p>A form action has a set of required fields, which you define for the class:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ActionSearchRestaurants</span><span class="p">(</span><span class="n">FormAction</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ActionSearchRestaurants</span><span class="p">(</span><span class="n">FormAction</span><span class="p">):</span>
 
-    <span class="n">RANDOMIZE</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">RANDOMIZE</span> <span class="o">=</span> <span class="bp">False</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">required_fields</span><span class="p">():</span>
@@ -303,20 +307,20 @@ fewer stories to get the initial flow working.</p>
 question with a <code class="docutils literal notranslate"><span class="pre">BooleanFormField</span></code>.</p>
 <p>The form action will set a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code> to keep track if what it has asked the user.
 So a story will look something like this:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="k">*</span> request_restaurant
-     <span class="k">-</span> action_restaurant_form
-     <span class="k">-</span> slot{&quot;requested_slot&quot;: &quot;people&quot;}
-<span class="k">*</span> inform{&quot;number&quot;: 3}
-     <span class="k">-</span> action_restaurant_form
-     <span class="k">-</span> slot{&quot;people&quot;: 3}
-     <span class="k">-</span> slot{&quot;requested_slot&quot;: &quot;cuisine&quot;}
-<span class="k">*</span> inform{&quot;cuisine&quot;: &quot;chinese&quot;}
-     <span class="k">-</span> action_restaurant_form
-     <span class="k">-</span> slot{&quot;cuisine&quot;: &quot;chinese&quot;}
-     <span class="k">-</span> slot{&quot;requested_slot&quot;: &quot;vegetarian&quot;}
-<span class="k">*</span> deny
-     <span class="k">-</span> action_restaurant_form
-     <span class="k">-</span> slot{&quot;vegetarian&quot;: false}
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>* request_restaurant
+     - action_restaurant_form
+     - slot{&quot;requested_slot&quot;: &quot;people&quot;}
+* inform{&quot;number&quot;: 3}
+     - action_restaurant_form
+     - slot{&quot;people&quot;: 3}
+     - slot{&quot;requested_slot&quot;: &quot;cuisine&quot;}
+* inform{&quot;cuisine&quot;: &quot;chinese&quot;}
+     - action_restaurant_form
+     - slot{&quot;cuisine&quot;: &quot;chinese&quot;}
+     - slot{&quot;requested_slot&quot;: &quot;vegetarian&quot;}
+* deny
+     - action_restaurant_form
+     - slot{&quot;vegetarian&quot;: false}
 </pre></div>
 </div>
 <p>Some important things to consider:</p>

@@ -94,7 +94,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -109,8 +109,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -121,20 +120,25 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.4
+        v: 0.11.1
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
-              <a href="./0.10.4/gen/">0.10.4</a>
+              <a href="./0.11.1/gen/">0.11.1</a>
+              <a href="./0.11.0/index/">0.11.0</a>
+              <a href="./0.10.4/index/">0.10.4</a>
               <a href="./0.9.8/index/">0.9.8</a>
               <a href="./0.8.6/index/">0.8.6</a>
               <a href="./0.7.9/index/">0.7.9</a>
@@ -209,7 +213,7 @@
     bool
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-bool">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-bool">command line option</a>
 </li>
       </ul></li>
   </ul></td>
@@ -226,24 +230,24 @@
     categorical
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-categorical">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-categorical">command line option</a>
 </li>
       </ul></li>
       <li>
     command line option
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-bool">bool</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-bool">bool</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-categorical">categorical</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-categorical">categorical</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-float">float</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-float">float</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-list">list</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-list">list</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-text">text</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-text">text</a>
 </li>
-        <li><a href="../slots/#cmdoption-arg-unfeaturized">unfeaturized</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-unfeaturized">unfeaturized</a>
 </li>
       </ul></li>
   </ul></td>
@@ -294,9 +298,11 @@
     float
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-float">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-float">command line option</a>
 </li>
       </ul></li>
+      <li><a href="../api/events/#rasa_core.events.FollowupAction">FollowupAction (class in rasa_core.events)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -341,7 +347,7 @@
     list
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-list">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-list">command line option</a>
 </li>
       </ul></li>
   </ul></td>
@@ -414,7 +420,7 @@
     text
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-text">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-text">command line option</a>
 </li>
       </ul></li>
   </ul></td>
@@ -437,7 +443,7 @@
     unfeaturized
 
       <ul>
-        <li><a href="../slots/#cmdoption-arg-unfeaturized">command line option</a>
+        <li><a href="../api/slots_api/#cmdoption-arg-unfeaturized">command line option</a>
 </li>
       </ul></li>
   </ul></td>

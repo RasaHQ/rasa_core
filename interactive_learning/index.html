@@ -100,7 +100,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,19 +126,24 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.4
+        v: 0.11.1
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href=".././0.11.1/interactive_learning/">0.11.1</a>
+              <a href=".././0.11.0/interactive_learning/">0.11.0</a>
               <a href=".././0.10.4/interactive_learning/">0.10.4</a>
               <a href=".././0.9.8/index/">0.9.8</a>
               <a href=".././0.8.6/index/">0.8.6</a>
@@ -175,170 +179,36 @@
 
 <div class="section" id="interactive-learning">
 <span id="id1"></span><h1>Interactive Learning<a class="headerlink" href="#interactive-learning" title="Permalink to this headline">¶</a></h1>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">We’re using this <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/master/examples/concertbot">Example Code on GitHub</a>.</p>
-</div>
-<div class="section" id="the-problem">
-<h2>The Problem<a class="headerlink" href="#the-problem" title="Permalink to this headline">¶</a></h2>
-<p>Your bot usually has well-defined goals it should reach when talking to a
-user. There are often numerous different ways the conversation could
-develop before reaching this final stage. We’ll teach you how to use
-Rasa Core to bootstrap full-blown conversations from minimal to no training
-data.</p>
-</div>
-<div class="section" id="the-bot">
-<h2>The Bot<a class="headerlink" href="#the-bot" title="Permalink to this headline">¶</a></h2>
-<p>Say you want to  build a bot that recommends concerts to go to. There is one
-goal: you know that at the end of the conversation you want your bot to
-make a recommendation. We’ll show how to implement context-aware behaviour
-without writing a flow chart. For example, if our user asks the question:
-<em>which of those has better reviews?</em>, our bot should know whether they want
-to compare <em>musicians</em> or <em>venues</em>.</p>
-<p>Head over to <code class="docutils literal notranslate"><span class="pre">examples/concertbot</span></code> for this example. Let’s go!</p>
-</div>
-<div class="section" id="the-domain">
-<h2>The Domain<a class="headerlink" href="#the-domain" title="Permalink to this headline">¶</a></h2>
-<p>We will keep the concert domain simple, and won’t add any slots just yet.
-We’ll also only support these intents:
-<code class="docutils literal notranslate"><span class="pre">&quot;greet&quot;,</span> <span class="pre">&quot;thankyou&quot;,</span> <span class="pre">&quot;goodbye&quot;,</span> <span class="pre">&quot;search_concerts&quot;,</span> <span class="pre">&quot;search_venues&quot;,</span>
-<span class="pre">&quot;compare_reviews&quot;</span></code>. Here is the domain definition (<code class="docutils literal notranslate"><span class="pre">concert_domain.yml</span></code>):</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">slots</span><span class="p">:</span>
-  <span class="n">concerts</span><span class="p">:</span>
-    <span class="nb">type</span><span class="p">:</span> <span class="nb">list</span>
-  <span class="n">venues</span><span class="p">:</span>
-    <span class="nb">type</span><span class="p">:</span> <span class="nb">list</span>
+<p>Interactive learning means giving feedback to your bot while you talk
+to it. It is a powerful tool! Interactive learning is a powerful way
+to explore what your bot can do, and the easiest way to fix any mistakes
+it makes. One advantage of machine learning based dialogue is that when
+your bot doesn’t know how to do something yet, you can just teach it!
+Some people are calling this <a class="reference external" href="https://tesla.com">Software 2.0</a>.</p>
+<div class="section" id="load-up-an-existing-bot">
+<h2>1. Load up an existing bot<a class="headerlink" href="#load-up-an-existing-bot" title="Permalink to this headline">¶</a></h2>
+<p>We have a basic working bot, and want to teach it by providing
+feedback on mistakes it makes.</p>
+<p>Run the following to start interactive learning:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core_sdk.endpoint --actions actions<span class="p">&amp;</span>
 
-<span class="n">intents</span><span class="p">:</span>
- <span class="o">-</span> <span class="n">greet</span>
- <span class="o">-</span> <span class="n">thankyou</span>
- <span class="o">-</span> <span class="n">goodbye</span>
- <span class="o">-</span> <span class="n">search_concerts</span>
- <span class="o">-</span> <span class="n">search_venues</span>
- <span class="o">-</span> <span class="n">compare_reviews</span>
-
-<span class="n">entities</span><span class="p">:</span>
- <span class="o">-</span> <span class="n">name</span>
-
-<span class="n">templates</span><span class="p">:</span>
-  <span class="n">utter_greet</span><span class="p">:</span>
-    <span class="o">-</span> <span class="s2">&quot;hey there!&quot;</span>
-  <span class="n">utter_goodbye</span><span class="p">:</span>
-    <span class="o">-</span> <span class="s2">&quot;goodbye :(&quot;</span>
-  <span class="n">utter_default</span><span class="p">:</span>
-    <span class="o">-</span> <span class="s2">&quot;default message&quot;</span>
-  <span class="n">utter_youarewelcome</span><span class="p">:</span>
-    <span class="o">-</span> <span class="s2">&quot;you&#39;re very welcome&quot;</span>
-
-<span class="n">actions</span><span class="p">:</span>
-  <span class="o">-</span> <span class="n">utter_default</span>
-  <span class="o">-</span> <span class="n">utter_greet</span>
-  <span class="o">-</span> <span class="n">utter_goodbye</span>
-  <span class="o">-</span> <span class="n">utter_youarewelcome</span>
-  <span class="o">-</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionSearchConcerts</span>
-  <span class="o">-</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionSearchVenues</span>
-  <span class="o">-</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionShowConcertReviews</span>
-  <span class="o">-</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionShowVenueReviews</span>
-</pre></div>
-</td></tr></table></div>
-</div>
-<div class="section" id="stateless-stories">
-<h2>Stateless Stories<a class="headerlink" href="#stateless-stories" title="Permalink to this headline">¶</a></h2>
-<p>We start by training a stateless model on some simple dialogues in the
-Rasa story format. This means we define conversations with
-one user utterance and only a few (typically one) bot action in response. We
-will use these stateless stories as a starting point for interactive learning.</p>
-<p>In many cases, simple training ‘conversations’ are just a single turn and
-response: “Hello” is always met with a greeting, “goodbye!” is always met
-with a sign-off, and the correct response to “thank you” is pretty much
-always “you’re welcome”.</p>
-<p>Below is an excerpt of the stories.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Notice that below, we’ve defined two stories, showing that
-<code class="docutils literal notranslate"><span class="pre">action_show_venue_reviews</span></code> and <code class="docutils literal notranslate"><span class="pre">action_show_concert_reviews</span></code>
-are both possible responses to the <code class="docutils literal notranslate"><span class="pre">compare_reviews</span></code> intent, but neither
-references any context. That comes later.</p>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gu">##</span> greet
-<span class="k">*</span> greet
-    <span class="k">-</span> utter_greet
-
-<span class="gu">##</span> happy
-<span class="k">*</span> thankyou
-    <span class="k">-</span> utter_youarewelcome
-...
-
-<span class="gu">##</span> compare_reviews_venues
-<span class="k">*</span> compare_reviews
-    <span class="k">-</span> action_show_venue_reviews
-
-<span class="gu">##</span> compare_reviews_concerts
-<span class="k">*</span> compare_reviews
-    <span class="k">-</span> action_show_concert_reviews
+python -m rasa_core.run <span class="se">\</span>
+  --interactive -d models/dialogue <span class="se">\</span>
+  --stories-out stories_interactive.md <span class="se">\</span>
+  -u models/default/nlu
 </pre></div>
 </div>
-</div>
-<div class="section" id="id2">
-<h2>Interactive Learning<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>Run the script <code class="docutils literal notranslate"><span class="pre">train_online.py</span></code>. This first creats a stateless policy by combining the stories
-we’ve provided into longer dialogues, and then trains the policy on that
-dataset.</p>
-<p>It then runs the bot so that you can provide feedback to train it (this is
-where the learning <em>becomes interactive</em>):</p>
-<p><strong>Happy paths</strong></p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">We haven’t connected an NLU tool here,
-so when you type messages to the bot you have to
-type the intent starting with a <code class="docutils literal notranslate"><span class="pre">/</span></code> (see <a class="reference internal" href="../api/interpreter/#fixed-intent-format"><span class="std std-ref">Buttons and other Structured Input</span></a>).
-If you want to use Rasa NLU / wit.ai / Lex you
-can just swap the <code class="docutils literal notranslate"><span class="pre">Interpreter</span></code> class in <code class="docutils literal notranslate"><span class="pre">run.py</span></code> and <code class="docutils literal notranslate"><span class="pre">train_online.py</span></code>.</p>
-</div>
-<p>We now start talking to the bot by directly entering the intents. For
-example, if we type <code class="docutils literal notranslate"><span class="pre">/greet</span></code>, we get the following prompt:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/greet
+<p>The first command starts the action server (see <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>).</p>
+<p>The second command starts the bot in interactive mode.
+In interactive mode, the bot will ask you to confirm it has chosen
+the right action before proceeding:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>hello
 ------
 Chat history:
 
      bot did:    None
      bot did:        action_listen
-     user said:      /greet
+     user said:      hello
 
              whose intent is:        greet
 
@@ -353,21 +223,23 @@ The bot wants to [utter_greet] due to the intent. Is this correct?
 </pre></div>
 </div>
 <p>This gives you all the info you should hopefully need to decide
-what the bot <em>should</em> have done. In this case, the bot chose the right
-action (‘utter_greet’), so we type <code class="docutils literal notranslate"><span class="pre">1</span></code> and hit enter.
-Then we type <code class="docutils literal notranslate"><span class="pre">1</span></code> again, because ‘action_listen’ is the correct action after greeting.
-We continue this loop until the bot chooses the wrong action.</p>
+what the bot <em>should</em> have done. In this case, the bot chose the
+right action (‘utter_greet’), so we type <code class="docutils literal notranslate"><span class="pre">1</span></code> and hit enter.
+Then we type <code class="docutils literal notranslate"><span class="pre">1</span></code> again, because ‘action_listen’ is the correct
+action after greeting. We continue this loop until the bot chooses
+the wrong action.</p>
 <p><strong>Providing feedback on errors</strong></p>
-<p>If you ask <code class="docutils literal notranslate"><span class="pre">/search_concerts</span></code>, the bot should suggest <code class="docutils literal notranslate"><span class="pre">action_search_concerts</span></code> and then <code class="docutils literal notranslate"><span class="pre">action_listen</span></code>.
-Now let’s ask it to <code class="docutils literal notranslate"><span class="pre">/compare_reviews</span></code>. The bot happens to choose the wrong one out of the two
-possibilities we wrote in the stories:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/compare_reviews
+<p>If you ask <code class="docutils literal notranslate"><span class="pre">/search_concerts</span></code>, the bot should suggest
+<code class="docutils literal notranslate"><span class="pre">action_search_concerts</span></code> and then <code class="docutils literal notranslate"><span class="pre">action_listen</span></code>.
+Now let’s ask it to <code class="docutils literal notranslate"><span class="pre">/compare_reviews</span></code>. The bot happens to choose
+the wrong one out of the two possibilities we wrote in the stories:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>which has better reviews?
 ------
 Chat history:
 
      bot did:        action_search_concerts
      bot did:        action_listen
-     user said:      /compare_reviews
+     user said:      which has better reviews?
 
                 whose intent is:     compare_reviews
 
@@ -383,7 +255,7 @@ The bot wants to [action_show_venue_reviews] due to the intent. Is this correct?
 </div>
 <p>Now we type <code class="docutils literal notranslate"><span class="pre">2</span></code>, because it chose the wrong action, and we get a new
 prompt asking for the correct one. This also shows the probabilities the
-model has assigned to each of the actions.</p>
+model has assigned to each of the actions:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>what is the next action for the bot?
 
      0                           action_listen    0.19
@@ -400,50 +272,11 @@ model has assigned to each of the actions.</p>
 </div>
 <p>In this case, the bot should <code class="docutils literal notranslate"><span class="pre">action_show_concert_reviews</span></code> (rather than venue
 reviews!) so we type <code class="docutils literal notranslate"><span class="pre">8</span></code> and hit enter.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The policy model will get updated <em>on-the-fly</em>,
-so that it’s less likely to make the same mistake again.
-You can also export all of the conversations you have with the bot so
-you can add these as training stories in the future.</p>
-</div>
 <p>Now we can keep talking to the bot for as long as we like to create a longer
 conversation. At any point you can type <code class="docutils literal notranslate"><span class="pre">0</span></code> and the bot will write the
 current conversation to a file and exit the conversation. Make sure to
 combine the dumped story with your original training data for the next
 training.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you run the bot with not enough training data, it might get <code class="docutils literal notranslate"><span class="pre">action_listen</span></code>
-as a most probable response to your input and therefore do nothing.
-If you continue to input something and get no answer, please head to
-interactive training and check if <code class="docutils literal notranslate"><span class="pre">action_listen</span></code> was chosen as a response.
-Correct the bot’s behaviour, add additional stories and run <code class="docutils literal notranslate"><span class="pre">train.py</span></code> then
-run the bot again.</p>
-</div>
-</div>
-<div class="section" id="motivation-why-interactive-learning">
-<h2>Motivation: Why Interactive Learning?<a class="headerlink" href="#motivation-why-interactive-learning" title="Permalink to this headline">¶</a></h2>
-<p>There are some complications to chatbot training which makes it more
-tricky than most machine learning problems.</p>
-<p>The first is that there are several ways of getting to the same goal, and
-they may all be equivalently good. Therefore it is wrong to say with
-certainty that given X, you should do Y, and if you do not do exactly Y then
-you are wrong. This is essentially what you do in a fully supervised
-learning case. We want the bot to be able to learn it can get to a
-successful state through a number of different means.</p>
-<p>Secondly, the utterances from users will be strongly affected by the
-actions of the bot. That means that a network trained on pre-collected
-data will suffer from <a class="reference external" href="https://arxiv.org/abs/1511.06732">exposure bias</a>.
-This is when a system is trained to make predictions but is never given the
-ability to train on its own predictions, instead being given the
-ground truth every time. This has been shown to have issues when trying
-to predict sequences of multiple steps into the future.</p>
-<p>Furthermore, from a practical perspective, Rasa Core developers should be
-able to train via the <a class="reference external" href="https://en.wikipedia.org/wiki/Wizard_of_Oz_experiment">Wizard of Oz</a> method. This means that if you want a
-bot to do a certain task, you can simply pretend to be a bot for a little
-while and at the end it will learn how to respond. This is a good way of
-learning how to make the conversation natural and flowing.</p>
 </div>
 </div>
 

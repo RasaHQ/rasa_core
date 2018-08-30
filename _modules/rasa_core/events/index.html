@@ -93,7 +93,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../responses/">Bot Responses</a></li>
@@ -108,8 +108,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/tracker/">Dialogue State Tracker</a></li>
@@ -120,20 +119,25 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support/">Getting Support</a></li>
 </ul>
 
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.4
+        v: 0.11.1
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
-              <a href="../../.././0.10.4/_modules/rasa_core/events/">0.10.4</a>
+              <a href="../../.././0.11.1/_modules/rasa_core/events/">0.11.1</a>
+              <a href="../../.././0.11.0/index/">0.11.0</a>
+              <a href="../../.././0.10.4/index/">0.10.4</a>
               <a href="../../.././0.9.8/index/">0.9.8</a>
               <a href="../../.././0.8.6/index/">0.8.6</a>
               <a href="../../.././0.7.9/index/">0.7.9</a>
@@ -739,7 +743,7 @@
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
-<span class="k">class</span> <span class="nc">FollowupAction</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
+<div class="viewcode-block" id="FollowupAction"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.FollowupAction">[docs]</a><span class="k">class</span> <span class="nc">FollowupAction</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Enqueue a followup action.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;followup&quot;</span>
@@ -776,7 +780,7 @@
 
     <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_follow_up_action</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_follow_up_action</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>

@@ -100,7 +100,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,19 +126,24 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.4
+        v: 0.11.1
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href=".././0.11.1/quickstart/">0.11.1</a>
+              <a href=".././0.11.0/quickstart/">0.11.0</a>
               <a href=".././0.10.4/quickstart/">0.10.4</a>
               <a href=".././0.9.8/index/">0.9.8</a>
               <a href=".././0.8.6/index/">0.8.6</a>
@@ -178,15 +182,17 @@
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This tutorial will show you the different parts needed to build a bot.
-You can run the code directly in the documentation, without installing anything!
-If you would like to run this locally, go to the <a class="reference internal" href="../installation/#installation"><span class="std std-ref">Installation</span></a> first.</p>
+You can run the code directly in the documentation, without
+installing anything! If you would like to run this locally, go to
+the <a class="reference internal" href="../installation/#installation"><span class="std std-ref">Installation</span></a> first.</p>
 </div>
-<p>In this tutorial you will create your first Rasa Core bot. You can run all of the
-code snippets in here directly, or you can install Rasa Core and run the examples on your
-own machine.</p>
+<p>In this tutorial you will create your first Rasa Core bot.
+You can run all of the code snippets in here directly, or
+you can install Rasa Core and run the examples on your own machine.</p>
 <div class="section" id="goal">
 <h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
-<p>Our bot will ask us you’re doing, and send a picture to try and cheer you up if you are sad.</p>
+<p>The bot will ask you how you’re doing, and send a picture to
+try and cheer you up if you are sad.</p>
 <img alt="../_images/mood_bot.png" src="../_images/mood_bot.png" />
 </div>
 <div class="section" id="write-stories">
@@ -196,9 +202,9 @@ Rasa Core works by learning from example conversations, and we’ll
 write the first few examples ourselves to kick things off.</p>
 <p>In this very simple conversation, the user says hello to our bot, and the bot
 says hello back. This is how it looks as a story:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gu">##</span> story1
-<span class="k">*</span> greet
-   <span class="k">-</span> utter_greet
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## story1
+* greet
+   - utter_greet
 </pre></div>
 </div>
 <p>A story starts with <code class="docutils literal notranslate"><span class="pre">##</span></code> followed by a name (the name is optional).
@@ -211,9 +217,10 @@ Lines that start with <code class="docutils literal notranslate"><span class="pr
 In this case all of our actions are just messages sent back to the user,
 like <code class="docutils literal notranslate"><span class="pre">utter_greet</span></code>, but in general an action can do anything,
 including calling an API and interacting with the outside world.</p>
-<p>We’ve written some example stories below, which we can write to a file called stories.md
-If you are running this in the docs, it may take a few seconds to start up.
-If you are running locally, copy the text between the triple quotes (<code class="docutils literal notranslate"><span class="pre">&quot;&quot;&quot;</span></code>)
+<p>We’ve written some example stories below, which we can write to a
+file called <code class="docutils literal notranslate"><span class="pre">stories.md</span></code> If you are running this in the docs, it
+may take a few seconds to start up. If you are running locally,
+copy the text between the triple quotes (<code class="docutils literal notranslate"><span class="pre">&quot;&quot;&quot;</span></code>)
 and save it in a file called <code class="docutils literal notranslate"><span class="pre">stories.md</span></code>.</p>
 
 
@@ -246,7 +253,9 @@ and save it in a file called <code class="docutils literal notranslate"><span cl
 * goodbye
   - utter_goodbye
 """
-%store stories_md > stories.md</pre>
+%store stories_md > stories.md
+
+print("Done!")</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
     new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-write-stories' })
@@ -272,7 +281,8 @@ and save it in a file called <code class="docutils literal notranslate"><span cl
 <h2>2. Define a Domain<a class="headerlink" href="#define-a-domain" title="Permalink to this headline">¶</a></h2>
 <p>The next thing we need to do is define a <code class="docutils literal notranslate"><span class="pre">Domain</span></code>.
 The domain defines the universe your bot lives in.</p>
-<p>Here is an example domain for our bot which we’ll write to a file called <code class="docutils literal notranslate"><span class="pre">domain.yml</span></code>:</p>
+<p>Here is an example domain for our bot which we’ll write to a
+file called <code class="docutils literal notranslate"><span class="pre">domain.yml</span></code>:</p>
 
 
   <pre data-executable>domain_yml = """
@@ -308,7 +318,9 @@ templates:
   utter_goodbye:
   - text: "Bye"
 """
-%store domain_yml > domain.yml</pre>
+%store domain_yml > domain.yml
+
+print("Done!")</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
     new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-write-domain' })
@@ -332,39 +344,45 @@ templates:
   </script><p>So what do the different parts mean?</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="13%" />
-<col width="87%" />
+<col width="20%" />
+<col width="80%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">actions</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">intents</span></code></td>
+<td>things you expect users to say. See
+<a class="reference external" href="https://rasa.com/docs/nlu/">Rasa NLU</a></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">actions</span></code></td>
 <td>things your bot can do and say</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">templates</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">templates</span></code></td>
 <td>template strings for the things your bot can say</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">intents</span></code></td>
-<td>things you expect users to say. See <a class="reference external" href="https://rasa.com/docs/nlu/">Rasa NLU</a></td>
-</tr>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">entities</span></code></td>
-<td>pieces of info you want to extract from messages. See <a class="reference external" href="https://rasa.com/docs/nlu/">Rasa NLU</a></td>
+<td>pieces of info you want to extract from messages. See
+<a class="reference external" href="https://rasa.com/docs/nlu/">Rasa NLU</a></td>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">slots</span></code></td>
-<td>information to keep track of during a conversation (e.g. a users age) - see <a class="reference internal" href="../slots/#slots"><span class="std std-ref">Using Slots</span></a></td>
+<td>information to keep track of during a conversation
+(e.g. a users age) - see <a class="reference internal" href="../slots/#slots"><span class="std std-ref">Using Slots</span></a></td>
 </tr>
 </tbody>
 </table>
 <p><strong>How does this fit together?</strong>
-Rasa Core’s job is to choose the right <code class="docutils literal notranslate"><span class="pre">action</span></code> to execute at each step of the
-conversation. Simple actions are just sending a message to a user. To do this,
-you need to provide a template with the same name in your domain file.
-See <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Custom Actions</span></a> for how to build more interesting actions.
-In our simple example we don’t need <code class="docutils literal notranslate"><span class="pre">slots</span></code> and <code class="docutils literal notranslate"><span class="pre">entities</span></code>,
+Rasa Core’s job is to choose the right action to execute at each step
+of the conversation. Simple actions are just sending a message to a user.
+These simple actions are the <code class="docutils literal notranslate"><span class="pre">actions</span></code> in the domain, which start
+with <code class="docutils literal notranslate"><span class="pre">utter_</span></code>. They will just respond with a message based on a template
+from the <code class="docutils literal notranslate"><span class="pre">templates</span></code> section. See <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a> for how to build
+more interesting actions.</p>
+<p>In our simple example we don’t need <code class="docutils literal notranslate"><span class="pre">slots</span></code> and <code class="docutils literal notranslate"><span class="pre">entities</span></code>,
 so these aren’t in the example domain.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">There is one additional special action, <code class="docutils literal notranslate"><span class="pre">ActionListen</span></code>, which means to stop taking
-further actions until the user says something else.
-You don’t have to include it in your <code class="docutils literal notranslate"><span class="pre">domain.yml</span></code></p>
+<p class="last">There is one additional special action, <code class="docutils literal notranslate"><span class="pre">ActionListen</span></code>,
+which means to stop taking further actions until the user
+says something else. You don’t have to include it in
+your <code class="docutils literal notranslate"><span class="pre">domain.yml</span></code> - it is an action included by default.</p>
 </div>
 </div>
 <div class="section" id="train-a-dialogue-model">
@@ -375,7 +393,9 @@ leave out the <code class="docutils literal notranslate"><span class="pre">!</sp
 into <code class="docutils literal notranslate"><span class="pre">models/dialogue</span></code>.</p>
 
 
-  <pre data-executable>!python -m rasa_core.train -d domain.yml -s stories.md -o models/dialogue</pre>
+  <pre data-executable>!python -m rasa_core.train -d domain.yml -s stories.md -o models/dialogue
+
+print("Finished training!")</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
     new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-train-core' })
@@ -410,6 +430,7 @@ Give it a try by sending the message <code class="docutils literal notranslate">
 </pre></div>
 </div>
 <p>If you are running the cells here in the docs, run this cell:</p>
+<p><strong>This will not work if you haven’t run the cells above!</strong></p>
 
 
   <pre data-executable>import IPython
@@ -522,7 +543,9 @@ Let’s create some intent examples in a file called <code class="docutils liter
 - extremly sad
 - so sad
 """
-%store nlu_md > nlu.md</pre>
+%store nlu_md > nlu.md
+
+print("Done!")</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
     new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-write-nlu-data' })
@@ -551,7 +574,9 @@ NLU model:</p>
 language: en
 pipeline: tensorflow_embedding
 """
-%store nlu_config > nlu_config.yml</pre>
+%store nlu_config > nlu_config.yml
+
+print("Done!")</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
     new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-write-nlu-config' })
@@ -618,12 +643,34 @@ both Rasa Core and Rasa NLU models!</p>
 </pre></div>
 </div>
 <p>If you are running the cells here in the docs, run this cell:</p>
+<p><strong>This will not work if you haven’t run the cells above!</strong></p>
 
 
-  <pre data-executable>from rasa_core.agent import Agent
-from rasa_core.channels.console import ConsoleInputChannel
+  <pre data-executable>import IPython
+from IPython.display import clear_output
+from rasa_core.agent import Agent
+import time
+
+messages = ["Hi! you can chat in this window. Type 'stop' to end the conversation."]
 agent = Agent.load('models/dialogue', interpreter='models/current/nlu')
-agent.handle_channel(ConsoleInputChannel())</pre>
+
+def chatlogs_html(messages):
+    messages_html = "".join(["&lt;p&gt;{}&lt;/p&gt;".format(m) for m in messages])
+    chatbot_html = """&lt;div class="chat-window" {}&lt;/div&gt;""".format(messages_html)
+    return chatbot_html
+
+
+while True:
+    clear_output()
+    display(IPython.display.HTML(chatlogs_html(messages)))
+    time.sleep(0.3)
+    a = input()
+    messages.append(a)
+    if a == 'stop':
+        break
+    responses = agent.handle_message(a)
+    for r in responses:
+        messages.append(r.get("text"))</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
     new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-chat-with-nlu' })
@@ -686,17 +733,18 @@ in the User Guide next.</p>
 <p>If you want to handle input from Facebook instead of the command line, you can
 specify that as part of the run command, after creating a credentials file
 containing the information to connect to facebook. Let’s put that
-into <code class="docutils literal notranslate"><span class="pre">fb_credentials.yml</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">verify</span><span class="p">:</span> <span class="s2">&quot;rasa-bot&quot;</span>
-<span class="n">secret</span><span class="p">:</span> <span class="s2">&quot;3e34709d01ea89032asdebfe5a74518&quot;</span>
-<span class="n">page</span><span class="o">-</span><span class="n">access</span><span class="o">-</span><span class="n">token</span><span class="p">:</span> <span class="s2">&quot;EAAbHPa7H9rEBAAuFk4Q3gPKbDedQnx4djJJ1JmQ7CAqO4iJKrQcNT0wtD&quot;</span>
+into <code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">facebook</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">verify</span><span class="p p-Indicator">:</span> <span class="s">&quot;rasa-bot&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">secret</span><span class="p p-Indicator">:</span> <span class="s">&quot;3e34709d01ea89032asdebfe5a74518&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">page-access-token</span><span class="p p-Indicator">:</span> <span class="s">&quot;EAAbHPa7H9rEBAAuFk4Q3gPKbDedQnx4djJJ1JmQ7CAqO4iJKrQcNT0wtD&quot;</span>
 </pre></div>
 </div>
 <p>If you are new to Facebook Messenger bots, head over to
-<a class="reference internal" href="../connectors/#facebook-connector"><span class="std std-ref">Facebook Messenger Setup</span></a> for an explanation of the different values.</p>
-<p>After setting that up, we can now run the bot using</p>
+<a class="reference internal" href="../connectors/#facebook-connector"><span class="std std-ref">Facebook Setup</span></a> for an explanation of the different values.</p>
+<p>After setting that up, we can now run the bot using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
-   --port <span class="m">5002</span> --connector facebook --credentials fb_credentials.yml
+   --port <span class="m">5002</span>--credentials credentials.yml
 </pre></div>
 </div>
 <p>and it will now handle messages users send to the Facebook page.</p>

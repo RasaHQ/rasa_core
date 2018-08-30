@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Slot Filling" href="../slotfilling/" />
-    <link rel="prev" title="Custom Actions" href="../customactions/" />
+    <link rel="prev" title="Actions" href="../customactions/" />
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -100,7 +100,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Custom Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -115,8 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../server/">Server Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../http/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
@@ -127,19 +126,24 @@
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.10.4
+        v: 0.11.1
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href=".././0.11.1/slots/">0.11.1</a>
+              <a href=".././0.11.0/slots/">0.11.0</a>
               <a href=".././0.10.4/slots/">0.10.4</a>
               <a href=".././0.9.8/index/">0.9.8</a>
               <a href=".././0.8.6/index/">0.8.6</a>
@@ -175,25 +179,27 @@
 
 <div class="section" id="using-slots">
 <span id="slots"></span><h1>Using Slots<a class="headerlink" href="#using-slots" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference internal" href="../api/slots_api/#slot-types"><span class="std std-ref">Here</span></a> is the full list of slot types defined by Rasa Core.</p>
 <p><strong>Slots are your bot’s memory.</strong> They act as a key-value store
 which can be used to store information the user provided (e.g their home city)
 as well as information gathered about the outside world (e.g. the result of a
 database query).</p>
 <p>Most of the time, you want slots to influence how the dialogue progresses.
 There are different slot types for different behaviors.</p>
-<p>For example, if your user has provided their home city, you might have a <code class="docutils literal notranslate"><span class="pre">text</span></code> slot
-called <code class="docutils literal notranslate"><span class="pre">home_city</span></code>. If the user asks for the weather, and you <em>don’t</em> know their home
-city, you will have to ask them for it. A <code class="docutils literal notranslate"><span class="pre">text</span></code> slot only tells Rasa Core whether
-the slot has a value. The specific value of a <code class="docutils literal notranslate"><span class="pre">text</span></code> slot
-(e.g. Bangalore or New York or Hong Kong) doesn’t make any difference.</p>
+<p>For example, if your user has provided their home city, you might
+have a <code class="docutils literal notranslate"><span class="pre">text</span></code> slot called <code class="docutils literal notranslate"><span class="pre">home_city</span></code>. If the user asks for the
+weather, and you <em>don’t</em> know their home city, you will have to ask
+them for it. A <code class="docutils literal notranslate"><span class="pre">text</span></code> slot only tells Rasa Core whether the slot
+has a value. The specific value of a <code class="docutils literal notranslate"><span class="pre">text</span></code> slot (e.g. Bangalore
+or New York or Hong Kong) doesn’t make any difference.</p>
 <p>If the value itself is important, use a <code class="docutils literal notranslate"><span class="pre">categorical</span></code> slot. There are
 also <code class="docutils literal notranslate"><span class="pre">boolean</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, and <code class="docutils literal notranslate"><span class="pre">list</span></code> slots.
 If you just want to store some data, but don’t want it to affect the flow
 of the conversation, use an <code class="docutils literal notranslate"><span class="pre">unfeaturized</span></code> slot.</p>
 <div class="section" id="how-rasa-uses-slots">
 <h2>How Rasa Uses Slots<a class="headerlink" href="#how-rasa-uses-slots" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="../api/policy/#rasa_core.policies.Policy" title="rasa_core.policies.Policy"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.policies.Policy</span></code></a> doesn’t have access to the value of your slots.
-It receives a <code class="docutils literal notranslate"><span class="pre">featurized</span></code> representation.
+<p>The <a class="reference internal" href="../api/policy/#rasa_core.policies.Policy" title="rasa_core.policies.Policy"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.policies.Policy</span></code></a> doesn’t have access to the
+value of your slots. It receives a <code class="docutils literal notranslate"><span class="pre">featurized</span></code> representation.
 As mentioned above, for a <code class="docutils literal notranslate"><span class="pre">text</span></code> slot the value is irrelevant.
 The policy just sees a <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">0</span></code> depending on whether it is set.</p>
 <p><strong>You should choose your slot types carefully!</strong></p>
@@ -201,52 +207,54 @@ The policy just sees a <code class="docutils literal notranslate"><span class="p
 <div class="section" id="how-slots-get-set">
 <h2>How Slots Get Set<a class="headerlink" href="#how-slots-get-set" title="Permalink to this headline">¶</a></h2>
 <p>You can provide an initial value for a slot in your domain file:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>slots:
-  name:
-    type: text
-    initial_value: &quot;human&quot;
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+    <span class="l l-Scalar l-Scalar-Plain">initial_value</span><span class="p p-Indicator">:</span> <span class="s">&quot;human&quot;</span>
 </pre></div>
 </div>
 <p>There are multiple ways that slots are set during a conversation:</p>
 <div class="section" id="slots-set-from-nlu">
 <h3>Slots Set from NLU<a class="headerlink" href="#slots-set-from-nlu" title="Permalink to this headline">¶</a></h3>
-<p>If your NLU model picks up an entity, and your domain contains a slot with the same name,
-the slot will be set automatically. For example:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gh">#</span> story_01
-<span class="k">*</span> greet{&quot;name&quot;: &quot;Ali&quot;}
-  <span class="k">-</span> slot{&quot;name&quot;: &quot;Ali&quot;}
-  <span class="k">-</span> utter_greet
+<p>If your NLU model picks up an entity, and your domain contains a
+slot with the same name, the slot will be set automatically. For example:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story_01
+* greet{&quot;name&quot;: &quot;Ali&quot;}
+  - slot{&quot;name&quot;: &quot;Ali&quot;}
+  - utter_greet
 </pre></div>
 </div>
-<p>In this case, you don’t have to include the <code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">slot{}</span></code> part in the story, because
-it is automatically picked up.</p>
+<p>In this case, you don’t have to include the <code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">slot{}</span></code> part in the
+story, because it is automatically picked up.</p>
 </div>
 <div class="section" id="slots-set-by-clicking-buttons">
 <h3>Slots Set By Clicking Buttons<a class="headerlink" href="#slots-set-by-clicking-buttons" title="Permalink to this headline">¶</a></h3>
 <p>You can use buttons as a shortcut.
-Rasa Core will send messages starting with a <code class="docutils literal notranslate"><span class="pre">/</span></code> to the <code class="xref py py-class docutils literal notranslate"><span class="pre">RegexInterpreter</span></code>,
-which expects NLU input in the same format as in story files, e.g. <code class="docutils literal notranslate"><span class="pre">/intent{entities}</span></code>.
-For example, if you let users choose a color by clicking a button, the button payloads
-might be <code class="docutils literal notranslate"><span class="pre">/choose{&quot;color&quot;:</span> <span class="pre">&quot;blue&quot;}</span></code> and <code class="docutils literal notranslate"><span class="pre">/choose{&quot;color&quot;:</span> <span class="pre">&quot;red&quot;}</span></code></p>
-<p>You can specify this in your domain file like this: (see details in <a class="reference internal" href="../domains/#domain"><span class="std std-ref">Domain Format</span></a>)</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>utter_ask_color:
-- text: &quot;what color would you like?&quot;
-  buttons:
-  - title: &quot;blue&quot;
-    payload: &quot;/choose{&quot;color&quot;: &quot;blue&quot;}&quot;
-  - title: &quot;red&quot;
-    payload: &quot;/choose{&quot;color&quot;: &quot;red&quot;}&quot;
+Rasa Core will send messages starting with a <code class="docutils literal notranslate"><span class="pre">/</span></code> to the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">RegexInterpreter</span></code>, which expects NLU input in the same format
+as in story files, e.g. <code class="docutils literal notranslate"><span class="pre">/intent{entities}</span></code>. For example, if you let
+users choose a color by clicking a button, the button payloads might
+be <code class="docutils literal notranslate"><span class="pre">/choose{&quot;color&quot;:</span> <span class="pre">&quot;blue&quot;}</span></code> and <code class="docutils literal notranslate"><span class="pre">/choose{&quot;color&quot;:</span> <span class="pre">&quot;red&quot;}</span></code>.</p>
+<p>You can specify this in your domain file like this:
+(see details in <a class="reference internal" href="../domains/#domain"><span class="std std-ref">Domain Format</span></a>)</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">utter_ask_color</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&quot;what</span><span class="nv"> </span><span class="s">color</span><span class="nv"> </span><span class="s">would</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">like?&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">buttons</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">title</span><span class="p p-Indicator">:</span> <span class="s">&quot;blue&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">payload</span><span class="p p-Indicator">:</span> <span class="s">&#39;/choose{&quot;color&quot;:</span><span class="nv"> </span><span class="s">&quot;blue&quot;}&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">title</span><span class="p p-Indicator">:</span> <span class="s">&quot;red&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">payload</span><span class="p p-Indicator">:</span> <span class="s">&#39;/choose{&quot;color&quot;:</span><span class="nv"> </span><span class="s">&quot;red&quot;}&#39;</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="slots-set-by-actions">
 <h3>Slots Set by Actions<a class="headerlink" href="#slots-set-by-actions" title="Permalink to this headline">¶</a></h3>
-<p>The second option is to set slots by returning events in <span class="xref std std-ref">custom_actions</span>.
+<p>The second option is to set slots by returning events in <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>.
 In this case, your stories need to include the slots.
 For example, you have a custom action to fetch a user’s profile, and
 you have a <code class="docutils literal notranslate"><span class="pre">categorical</span></code> slot called <code class="docutils literal notranslate"><span class="pre">account_type</span></code>.
-When the <code class="docutils literal notranslate"><span class="pre">fetch_profile</span></code> action is run, it returns a <a class="reference internal" href="../api/events/#rasa_core.events.SlotSet" title="rasa_core.events.SlotSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.SlotSet</span></code></a>
-event.</p>
+When the <code class="docutils literal notranslate"><span class="pre">fetch_profile</span></code> action is run, it returns a
+<a class="reference internal" href="../api/events/#rasa_core.events.SlotSet" title="rasa_core.events.SlotSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.SlotSet</span></code></a> event:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
    <span class="l l-Scalar l-Scalar-Plain">account_type</span><span class="p p-Indicator">:</span>
       <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical</span>
@@ -255,7 +263,8 @@ event.</p>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="kn">import</span> <span class="n">Action</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core_sdk.actions</span> <span class="kn">import</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">rasa_core_sdk.events</span> <span class="kn">import</span> <span class="n">SlotSet</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 
 <span class="k">class</span> <span class="nc">FetchProfileAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
@@ -268,17 +277,17 @@ event.</p>
         <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;account_type&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;account_type&quot;</span><span class="p">])]</span>
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gh">#</span> story_01
-<span class="k">*</span> greet
-  <span class="k">-</span> action_fetch_profile
-  <span class="k">-</span> slot{&quot;account_type&quot; : &quot;premium&quot;}
-  <span class="k">-</span> utter_welcome_premium
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story_01
+* greet
+  - action_fetch_profile
+  - slot{&quot;account_type&quot; : &quot;premium&quot;}
+  - utter_welcome_premium
 
-<span class="gh">#</span> story_02
-<span class="k">*</span> greet
-  <span class="k">-</span> action_fetch_profile
-  <span class="k">-</span> slot{&quot;account_type&quot; : &quot;basic&quot;}
-  <span class="k">-</span> utter_welcome_basic
+# story_02
+* greet
+  - action_fetch_profile
+  - slot{&quot;account_type&quot; : &quot;basic&quot;}
+  - utter_welcome_basic
 </pre></div>
 </div>
 <p>In this case you <strong>do</strong> have to include the <code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">slot{}</span></code> part in your stories.
@@ -294,25 +303,29 @@ stories using <a class="reference internal" href="../interactive_learning/#inter
 </div>
 <div class="section" id="custom-slot-types">
 <h2>Custom Slot Types<a class="headerlink" href="#custom-slot-types" title="Permalink to this headline">¶</a></h2>
-<p>Maybe your restaurant booking system can only handle bookings for up to 6 people.
-In this case you want the <em>value</em> of the slot to influence the
-next selected action (and not just whether it’s been specified).
-You can do this by defining a custom slot class.</p>
+<p>Maybe your restaurant booking system can only handle bookings
+for up to 6 people. In this case you want the <em>value</em> of the
+slot to influence the next selected action (and not just whether
+it’s been specified). You can do this by defining a custom slot class.</p>
 <p>In the code below, we define a slot class called <code class="docutils literal notranslate"><span class="pre">NumberOfPeopleSlot</span></code>.
 The featurization defines how the value of this slot gets converted to a vector
 to our machine learning model can deal with.
-Our slot has three possible “values”, which we can represent with a vector of length <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+Our slot has three possible “values”, which we can represent with
+a vector of length <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="26%" />
 <col width="74%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td colspan="2"><code class="docutils literal notranslate"><span class="pre">(0,0)</span></code>   | not yet set</td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">(0,0)</span></code></td>
+<td>not yet set</td>
 </tr>
-<tr class="row-even"><td colspan="2"><code class="docutils literal notranslate"><span class="pre">(1,0)</span></code>   | between 1 and 6</td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">(1,0)</span></code></td>
+<td>between 1 and 6</td>
 </tr>
-<tr class="row-odd"><td colspan="2"><code class="docutils literal notranslate"><span class="pre">(0,1)</span></code>   | more than 6</td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">(0,1)</span></code></td>
+<td>more than 6</td>
 </tr>
 </tbody>
 </table>
@@ -334,186 +347,17 @@ Our slot has three possible “values”, which we can represent with a vector o
 </pre></div>
 </div>
 <p>Now we also need some training stories, so that Rasa Core
-can learn from these how to handle the different situations.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="gh">#</span> story1
+can learn from these how to handle the different situations:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story1
 ...
-<span class="k">*</span> inform{&quot;people&quot;: &quot;3&quot;}
-<span class="k">-</span> action_book_table
+* inform{&quot;people&quot;: &quot;3&quot;}
+- action_book_table
 ...
-<span class="gh">#</span> story2
-<span class="k">*</span> inform{&quot;people&quot;: &quot;9&quot;}
-<span class="k">-</span> action_explain_table_limit
+# story2
+* inform{&quot;people&quot;: &quot;9&quot;}
+- action_explain_table_limit
 </pre></div>
 </div>
-</div>
-<div class="section" id="pre-defined-slot-types">
-<h2>Pre-defined Slot Types<a class="headerlink" href="#pre-defined-slot-types" title="Permalink to this headline">¶</a></h2>
-<p>Here are all of the predefined slot classes and what they’re useful for:</p>
-<dl class="option">
-<dt id="cmdoption-arg-text">
-<code class="descname">text</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-text" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">User preferences where you only care whether or not they’ve
-been specified.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
-   <span class="l l-Scalar l-Scalar-Plain">cuisine</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
-</pre></div>
-</div>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../api/slots_api/#rasa_core.slots.Slot" title="rasa_core.slots.Slot"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.slots.Slot</span></code></a>
-Results in the feature of the slot being set to <code class="docutils literal notranslate"><span class="pre">1</span></code> if any value is set.
-Otherwise the feature will be set to <code class="docutils literal notranslate"><span class="pre">0</span></code> (no value is set).</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="option">
-<dt id="cmdoption-arg-bool">
-<code class="descname">bool</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-bool" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">True or False</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
-   <span class="l l-Scalar l-Scalar-Plain">is_authenticated</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bool</span>
-</pre></div>
-</div>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">Checks if slot is set and if True</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="option">
-<dt id="cmdoption-arg-categorical">
-<code class="descname">categorical</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-categorical" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">Slots which can take one of N values</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
-   <span class="l l-Scalar l-Scalar-Plain">risk_level</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical</span>
-      <span class="l l-Scalar l-Scalar-Plain">values</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">low</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">medium</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">high</span>
-</pre></div>
-</div>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">Creates a one-hot encoding describing which of the <code class="docutils literal notranslate"><span class="pre">values</span></code> matched.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="option">
-<dt id="cmdoption-arg-float">
-<code class="descname">float</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-float" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">Continuous values</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
-   <span class="l l-Scalar l-Scalar-Plain">temperature</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">float</span>
-      <span class="l l-Scalar l-Scalar-Plain">min_value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">-100.0</span>
-      <span class="l l-Scalar l-Scalar-Plain">max_value</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">100.0</span>
-</pre></div>
-</div>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Defaults:</th><td class="field-body"><p class="first"><code class="docutils literal notranslate"><span class="pre">max_value=1.0</span></code>, <code class="docutils literal notranslate"><span class="pre">min_value=0.0</span></code></p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">All values below <code class="docutils literal notranslate"><span class="pre">min_value</span></code> will be treated as <code class="docutils literal notranslate"><span class="pre">min_value</span></code>, the same
-happens for values above <code class="docutils literal notranslate"><span class="pre">max_value</span></code>. Hence, if <code class="docutils literal notranslate"><span class="pre">max_value</span></code> is set to
-<code class="docutils literal notranslate"><span class="pre">1</span></code>, there is no difference between the slot values <code class="docutils literal notranslate"><span class="pre">2</span></code> and <code class="docutils literal notranslate"><span class="pre">3.5</span></code> in
-terms of featurization (e.g. both values will influence the dialogue in
-the same way and the model can not learn to differentiate between them).</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="option">
-<dt id="cmdoption-arg-list">
-<code class="descname">list</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-list" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">Lists of values</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
-   <span class="l l-Scalar l-Scalar-Plain">shopping_items</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">list</span>
-</pre></div>
-</div>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">The feature of this slot is set to <code class="docutils literal notranslate"><span class="pre">1</span></code> if a value with a list is set,
-where the list is not empty. If no value is set, or the empty list is the
-set value, the feature will be <code class="docutils literal notranslate"><span class="pre">0</span></code>. The <strong>length of the list stored in
-the slot does not influence the dialogue</strong>.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="option">
-<dt id="cmdoption-arg-unfeaturized">
-<code class="descname">unfeaturized</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-unfeaturized" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Use For:</th><td class="field-body"><p class="first">Data you want to store which shouldn’t influence the dialogue flow</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
-   <span class="l l-Scalar l-Scalar-Plain">internal_user_id</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unfeaturized</span>
-</pre></div>
-</div>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last">There will not be any featurization of this slot, hence its value does
-not influence the dialogue flow and is ignored when predicting the next
-action the bot should run.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 </div>
 
