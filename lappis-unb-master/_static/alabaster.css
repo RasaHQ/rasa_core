@@ -349,6 +349,14 @@ a.headerlink:hover {
     background: #EAEAEA;
 }
 
+a.headerlink {
+display:none;
+}
+
+a.headerlink::after {
+content: 'hello';
+}
+
 div.body p, div.body dd, div.body li {
     line-height: 1.5em;
 }
@@ -1341,11 +1349,6 @@ input.jp-Stdin-input:focus {
     margin-bottom: 50px;
 }
 
-#rasa-platform-everything-you-need-to-run-the-rasa-stack-in-the-enterprise > a.reference.internal.image-reference > img {
-    margin-top: 40px;
-    margin-bottom: 50px;
-}
-
 .copyable {
     float: left;
 }
@@ -1357,89 +1360,4 @@ div .copyable {
 
 .copyable.button{
     margin-top: -12px;
-}
-
-.copyable.confirm {
-    opacity: 0;
-    -webkit-transition: opacity 0.3s ease-in-out;
-    transition: opacity 0.3s ease-in-out;
-    margin-top: -18px;
-    color: #03C3FF;
-    cursor: default;
-}
-
-.copyable.confirm.visible {
-    opacity: 1;
-}
-
-#webchat {
-  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-}
- #webchat .widget-container {
-  margin: 0 24px 24px 0;
-}
- #webchat .conversation-container {
-  box-shadow: 0 1px 8px 0 rgba(122, 107, 107, 0.22);
-  -webkit-box-shadow: 0 1px 8px 0 rgba(122, 107, 107, 0.22);
-}
- #webchat p {
-  font-size: 14px;
-}
- #webchat .response {
-  background-color: #f4f7f9;
-  color: #617287;
-  border-radius: 10px;
-  padding: 15px;
-  max-width: 215px;
-}
- #webchat .conversation-container .header {
-  background-color: #7C00BC;
-  color: #fff;
-  padding: 16px 0 16px;
-}
- #webchat .launcher {
-  background-color: #7C00BC;
-  box-shadow: 0 1px 8px 0 rgba(40, 40, 40, 0.5);
-  -webkit-box-shadow: 0 1px 8px 0 rgba(40, 40, 40, 0.5);
-  height: 60px;
-  margin-top: 10px;
-  width: 60px;
-}
- #webchat .conversation-container .title {
-  color: #fff;
-  font-size: 24px;
-  margin: 0;
-  padding: 15px 0;
-}
- #webchat .message-text {
-  font-size: 14px;
-}
- #webchat .new-message {
-  font-size: 1.1em;
-  width: 100%;
-  border: 0;
-  background-color: #f4f7f9;
-  height: 30px;
-  padding-left: 15px;
-}
- #webchat .client {
-  background-color: #0084FF;
-  color: #fff;
-  border-radius: 10px;
-  padding: 8px 16px;
-  max-width: 215px;
-}
- #webchat .client>.message-text p {
-  color: #fff;
-}
- @media screen and (max-width: 800px) {
-  #webchat .conversation-container .close-button {
-    background-color: #7C00BC;
-    border: 0;
-    display: block;
-    position: absolute;
-    right: 10px;
-    top: 20px;
-    width: 40px;
-  }
 }
