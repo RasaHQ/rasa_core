@@ -349,14 +349,6 @@ a.headerlink:hover {
     background: #EAEAEA;
 }
 
-a.headerlink {
-display:none;
-}
-
-a.headerlink::after {
-content: 'hello';
-}
-
 div.body p, div.body dd, div.body li {
     line-height: 1.5em;
 }

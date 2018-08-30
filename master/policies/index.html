@@ -568,6 +568,79 @@ If constant <code class="docutils literal notranslate"><span class="pre">batch_s
 <p>These parameters can be passed to <code class="docutils literal notranslate"><span class="pre">Agent.train(...)</span></code> method.
 The default values are defined in <code class="docutils literal notranslate"><span class="pre">EmbeddingPolicy.defaults</span></code>:</p>
 </div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># nn architecture</span>
+        <span class="c1"># a list of hidden layers sizes before user embed layer</span>
+        <span class="c1"># number of hidden layers is equal to the length of this list</span>
+        <span class="s2">&quot;hidden_layers_sizes_a&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="c1"># a list of hidden layers sizes before bot embed layer</span>
+        <span class="c1"># number of hidden layers is equal to the length of this list</span>
+        <span class="s2">&quot;hidden_layers_sizes_b&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="c1"># number of units in rnn cell</span>
+        <span class="s2">&quot;rnn_size&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+
+        <span class="c1"># training parameters</span>
+        <span class="c1"># flag if to turn on layer normalization for lstm cell</span>
+        <span class="s2">&quot;layer_norm&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="c1"># initial and final batch sizes - batch size will be</span>
+        <span class="c1"># linearly increased for each epoch</span>
+        <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span>
+        <span class="c1"># number of epochs</span>
+        <span class="s2">&quot;epochs&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+
+        <span class="c1"># embedding parameters</span>
+        <span class="c1"># dimension size of embedding vectors</span>
+        <span class="s2">&quot;embed_dim&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="c1"># how similar the algorithm should try</span>
+        <span class="c1"># to make embedding vectors for correct actions</span>
+        <span class="s2">&quot;mu_pos&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>  <span class="c1"># should be 0.0 &lt; ... &lt; 1.0 for &#39;cosine&#39;</span>
+        <span class="c1"># maximum negative similarity for incorrect actions</span>
+        <span class="s2">&quot;mu_neg&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># should be -1.0 &lt; ... &lt; 1.0 for &#39;cosine&#39;</span>
+        <span class="c1"># the type of the similarity</span>
+        <span class="s2">&quot;similarity_type&quot;</span><span class="p">:</span> <span class="s1">&#39;cosine&#39;</span><span class="p">,</span>  <span class="c1"># string &#39;cosine&#39; or &#39;inner&#39;</span>
+        <span class="c1"># the number of incorrect actions, the algorithm will minimize</span>
+        <span class="c1"># their similarity to the user input during training</span>
+        <span class="s2">&quot;num_neg&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="c1"># flag if minimize only maximum similarity over incorrect actions</span>
+        <span class="s2">&quot;use_max_sim_neg&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># flag which loss function to use</span>
+
+        <span class="c1"># regularization</span>
+        <span class="c1"># the scale of L2 regularization</span>
+        <span class="s2">&quot;C2&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+        <span class="c1"># the scale of how important is to minimize the maximum similarity</span>
+        <span class="c1"># between embeddings of different actions</span>
+        <span class="s2">&quot;C_emb&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+        <span class="c1"># scale loss with inverse frequency of bot actions</span>
+        <span class="s2">&quot;scale_loss_by_action_counts&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+
+        <span class="c1"># dropout rate for user nn</span>
+        <span class="s2">&quot;droprate_a&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="c1"># dropout rate for bot nn</span>
+        <span class="s2">&quot;droprate_b&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="c1"># dropout rate for rnn</span>
+        <span class="s2">&quot;droprate_rnn&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+
+        <span class="c1"># attention parameters</span>
+        <span class="c1"># flag to use attention over user input</span>
+        <span class="c1"># as an input to rnn</span>
+        <span class="s2">&quot;attn_before_rnn&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="c1"># flag to use attention over prev bot actions</span>
+        <span class="c1"># and copy it to output bypassing rnn</span>
+        <span class="s2">&quot;attn_after_rnn&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+
+        <span class="c1"># flag to use `sparsemax` instead of `softmax` for attention</span>
+        <span class="s2">&quot;sparse_attention&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># flag to use sparsemax for probs</span>
+        <span class="c1"># the range of allowed location-based attention shifts</span>
+        <span class="s2">&quot;attn_shift_range&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># if None, set to mean dialogue length / 2</span>
+
+        <span class="c1"># visualization of accuracy</span>
+        <span class="c1"># how often calculate train accuracy</span>
+        <span class="s2">&quot;evaluate_every_num_epochs&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>  <span class="c1"># small values may hurt performance</span>
+        <span class="c1"># how many examples to use for calculation of train accuracy</span>
+        <span class="s2">&quot;evaluate_on_num_examples&quot;</span><span class="p">:</span> <span class="mi">100</span>  <span class="c1"># large values may hurt performance</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Parameter <code class="docutils literal notranslate"><span class="pre">mu_neg</span></code> is set to a negative value to mimic the original
@@ -631,6 +704,87 @@ See <a class="reference external" href="https://arxiv.org/abs/1709.03856">starsp
     clipboard.on('error', function(e) {
       console.log(e);
     });
+  </script>
+  
+  <!-- onsite anchor fix (otherwise anchors scroll to far) -->
+  <script>
+    /* Adapted from https://stackoverflow.com/a/13067009/1906073 */
+    (function(document, history, location) {
+      var HISTORY_SUPPORT = !!(history && history.pushState);
+
+      var anchorScrolls = {
+        ANCHOR_REGEX: /^#[^ ]+$/,
+        OFFSET_HEIGHT_PX: 66,
+
+        /**
+         * Establish events, and fix initial scroll position if a hash is provided.
+         */
+        init: function() {
+          this.scrollToCurrent();
+          $(window).on('hashchange', $.proxy(this, 'scrollToCurrent'));
+          $('body').on('click', 'a', $.proxy(this, 'delegateAnchors'));
+        },
+
+        /**
+         * Return the offset amount to deduct from the normal scroll position.
+         * Modify as appropriate to allow for dynamic calculations
+         */
+        getFixedOffset: function() {
+          return this.OFFSET_HEIGHT_PX;
+        },
+
+        /**
+         * If the provided href is an anchor which resolves to an element on the
+         * page, scroll to it.
+         * @param  {String} href
+         * @return {Boolean} - Was the href an anchor.
+         */
+        scrollIfAnchor: function(href, pushToHistory) {
+          var match, anchorOffset;
+
+          if(!this.ANCHOR_REGEX.test(href)) {
+            return false;
+          }
+
+          match = document.getElementById(href.slice(1));
+
+          if(match) {
+            anchorOffset = $(match).offset().top - this.getFixedOffset();
+            $('html, body').animate({ scrollTop: anchorOffset});
+
+            // Add the state to history as-per normal anchor links
+            if(HISTORY_SUPPORT && pushToHistory) {
+              history.pushState({}, document.title, location.pathname + href);
+            }
+          }
+
+          return !!match;
+        },
+        
+        /**
+         * Attempt to scroll to the current location's hash.
+         */
+        scrollToCurrent: function(e) { 
+          if(this.scrollIfAnchor(window.location.hash) && e) {
+            e.preventDefault();
+          }
+        },
+
+        /**
+         * If the click event's target was an anchor, fix the scroll position.
+         */
+        delegateAnchors: function(e) {
+          var elem = e.target;
+
+          if(this.scrollIfAnchor(elem.getAttribute('href'), true)) {
+            e.preventDefault();
+          }
+        }
+      };
+
+      $(document).ready($.proxy(anchorScrolls, 'init'));
+    })(window.document, window.history, window.location);
+
   </script>
   </body>
 </html>
