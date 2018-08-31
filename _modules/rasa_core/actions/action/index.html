@@ -428,7 +428,7 @@
                 <span class="s2">&quot;. Failed to validate Action server response from API, &quot;</span>
                 <span class="s2">&quot;make sure your response from the Action endpoint is valid. &quot;</span>
                 <span class="s2">&quot;For more information about the format visit &quot;</span>
-                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/customactions.html&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DOCS_BASE_URL</span><span class="p">))</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/customactions/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DOCS_BASE_URL</span><span class="p">))</span>
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="nd">@staticmethod</span>
@@ -474,8 +474,8 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The model predicted the custom action &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
                             <span class="s2">&quot;but you didn&#39;t configure an endpoint to &quot;</span>
                             <span class="s2">&quot;run this custom action. Please take a look at &quot;</span>
-                            <span class="s2">&quot;the docs and set an endpoint configuration.&quot;</span>
-                            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/customactions.html&quot;</span>
+                            <span class="s2">&quot;the docs and set an endpoint configuration. &quot;</span>
+                            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/customactions/&quot;</span>
                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">DOCS_BASE_URL</span><span class="p">))</span>
 
         <span class="k">try</span><span class="p">:</span>
