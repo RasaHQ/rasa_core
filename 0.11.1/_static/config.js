@@ -58,12 +58,20 @@ var klaroConfig = {
                 en : 'Collecting of visitor statistics',
             },
         },
+         googletagmanager: {
+            description: {
+                en : 'Enabling livechat',
+            },
+        },
       
         // The purposes will be displayed in the consent notice, make sure
         // to add translations for each purposes you give in the 'apps' section.
         purposes: {
             analytics : {
                 en : 'Analytics',
+            },
+            livechat:{
+                en: 'Live Chat',
             },
         
         },    
@@ -112,6 +120,19 @@ var klaroConfig = {
             // If "optOut" is set to true, Klaro will load this app even before
             // the user gave explicit consent. Not recommended.
             optOut : false,
+        },
+        {
+            name: 'googletagmanager',
+            default: 'true',
+            onlyOnce: 'true',
+            title: 'Google Tag Manager',
+            purposes: ['live chat'],
+            cookies: [/^_dc_gtm_*$/, 'googletagmanager_ignore'],
+            callback: function(consent, app){
+                console.log("User consent for app "+app.name+": consnet="+consent)
+            },
+            required : false,
+            optOut : false, 
         },
 
     ],

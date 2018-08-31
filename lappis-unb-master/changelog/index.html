@@ -19,6 +19,25 @@
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Getting Support" href="../support/" />
     <link rel="prev" title="Using Docker" href="../docker/" />
+
+<!-- Google Tag Manager -->
+<script> 
+  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
+</script>
+<!-- End Google Tag Manager -->
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -50,6 +69,10 @@
   
 
   </head><body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMHSZCS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <div class="nav-top">
   <a href="/docs" class="brand-link">
@@ -796,15 +819,101 @@ wrong predictions</li>
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
-      console.error("CLICK");
       gtag('event', e.action, {
         'event_category': 'code',
         'event_label': e.text
       });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
     });
     clipboard.on('error', function(e) {
       console.log(e);
     });
+  </script>
+  
+  <!-- onsite anchor fix (otherwise anchors scroll to far) -->
+  <script>
+    /* Adapted from https://stackoverflow.com/a/13067009/1906073 */
+    (function(document, history, location) {
+      var HISTORY_SUPPORT = !!(history && history.pushState);
+
+      var anchorScrolls = {
+        ANCHOR_REGEX: /^#[^ ]+$/,
+        OFFSET_HEIGHT_PX: 66,
+
+        /**
+         * Establish events, and fix initial scroll position if a hash is provided.
+         */
+        init: function() {
+          this.scrollToCurrent();
+          $(window).on('hashchange', $.proxy(this, 'scrollToCurrent'));
+          $('body').on('click', 'a', $.proxy(this, 'delegateAnchors'));
+        },
+
+        /**
+         * Return the offset amount to deduct from the normal scroll position.
+         * Modify as appropriate to allow for dynamic calculations
+         */
+        getFixedOffset: function() {
+          return this.OFFSET_HEIGHT_PX;
+        },
+
+        /**
+         * If the provided href is an anchor which resolves to an element on the
+         * page, scroll to it.
+         * @param  {String} href
+         * @return {Boolean} - Was the href an anchor.
+         */
+        scrollIfAnchor: function(href, pushToHistory) {
+          var match, anchorOffset;
+
+          if(!this.ANCHOR_REGEX.test(href)) {
+            return false;
+          }
+
+          match = document.getElementById(href.slice(1));
+
+          if(match) {
+            anchorOffset = $(match).offset().top - this.getFixedOffset();
+            $('html, body').animate({ scrollTop: anchorOffset});
+
+            // Add the state to history as-per normal anchor links
+            if(HISTORY_SUPPORT && pushToHistory) {
+              history.pushState({}, document.title, location.pathname + href);
+            }
+          }
+
+          return !!match;
+        },
+        
+        /**
+         * Attempt to scroll to the current location's hash.
+         */
+        scrollToCurrent: function(e) { 
+          if(this.scrollIfAnchor(window.location.hash) && e) {
+            e.preventDefault();
+          }
+        },
+
+        /**
+         * If the click event's target was an anchor, fix the scroll position.
+         */
+        delegateAnchors: function(e) {
+          var elem = e.target;
+
+          if(this.scrollIfAnchor(elem.getAttribute('href'), true)) {
+            e.preventDefault();
+          }
+        }
+      };
+
+      $(document).ready($.proxy(anchorScrolls, 'init'));
+    })(window.document, window.history, window.location);
+
   </script>
   </body>
 </html>
