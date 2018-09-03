@@ -238,6 +238,18 @@ instead of the classpath (e.g. change <code class="docutils literal notranslate"
 <code class="docutils literal notranslate"><span class="pre">utter_</span></code>, otherwise the bot won’t be able to find the action</li>
 </ul>
 </div>
+<div class="section" id="http-server-endpoints">
+<h3>HTTP Server endpoints<a class="headerlink" href="#http-server-endpoints" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>We removed <code class="docutils literal notranslate"><span class="pre">/parse</span></code> and <code class="docutils literal notranslate"><span class="pre">/continue</span></code> endpoints used for running actions
+remotely. This has been replaced by the action server that allows you
+to run your action code in any language. There are no replacement endpoints
+for these two, as the flow of information has been changed: Instead of you
+calling Rasa Core to update the tracker and receive the next action to be
+executed, Rasa Core will call your action server once it predicted an action.
+More information can be found in the updated docs for <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>.</li>
+</ul>
+</div>
 <div class="section" id="webhooks">
 <h3>Webhooks<a class="headerlink" href="#webhooks" title="Permalink to this headline">¶</a></h3>
 <ul>
