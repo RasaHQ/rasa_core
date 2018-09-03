@@ -261,6 +261,12 @@ has changed to allow for multiple channels in one file:</p>
 <div class="section" id="changes-to-input-and-output-channels">
 <h3>Changes to Input and Output Channels<a class="headerlink" href="#changes-to-input-and-output-channels" title="Permalink to this headline">¶</a></h3>
 <ul>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">ConsoleOutputChannel</span></code> and <code class="docutils literal notranslate"><span class="pre">ConsoleInputChannel</span></code> have been removed. Either
+use the <a class="reference external" href="https://github.com/RasaHQ/rasa_core/blob/master/rasa_core/run.py">run script</a>
+to run your bot on the cmdline, or adapt the <code class="docutils literal notranslate"><span class="pre">serve_application</span></code>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_core/blob/master/rasa_core/run.py#L260">function</a>
+to run from a python script.</p>
+</li>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">rasa_core.channels.direct</span></code> output channel package removed.
 <code class="docutils literal notranslate"><span class="pre">CollectingOutputChannel</span></code> moved to <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.channel</span></code></p>
 </li>
