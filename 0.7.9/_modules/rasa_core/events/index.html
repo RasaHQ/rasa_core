@@ -501,6 +501,9 @@
 <div class="viewcode-block" id="SlotSet"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.SlotSet">[docs]</a><span class="k">class</span> <span class="nc">SlotSet</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The user has specified their preference for the value of a ``slot``.</span>
 
+<span class="sd">    Every slot has a name and a value. This event can be used to set a</span>
+<span class="sd">    value for a slot on a conversation.</span>
+
 <span class="sd">    As a side effect the ``Tracker``&#39;s slots will be updated so</span>
 <span class="sd">    that ``tracker.slots[key]=value``.&quot;&quot;&quot;</span>
 
@@ -563,7 +566,9 @@
 <div class="viewcode-block" id="Restarted"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Restarted">[docs]</a><span class="k">class</span> <span class="nc">Restarted</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Conversation should start over &amp; history wiped.</span>
 
-<span class="sd">    As a side effect the ``Tracker`` will be reinitialised.&quot;&quot;&quot;</span>
+<span class="sd">    Instead of deleting all events, this event can be used to reset the</span>
+<span class="sd">    trackers state (e.g. ignoring any past user messages &amp; resetting all</span>
+<span class="sd">    the slots).&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;restart&quot;</span>
 
@@ -616,9 +621,11 @@
 
 <span class="c1"># noinspection PyProtectedMember</span>
 <div class="viewcode-block" id="AllSlotsReset"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.AllSlotsReset">[docs]</a><span class="k">class</span> <span class="nc">AllSlotsReset</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Conversation should start over &amp; history wiped.</span>
+    <span class="sd">&quot;&quot;&quot;All Slots are reset to their initial values.</span>
 
-<span class="sd">    As a side effect the ``Tracker`` will be reinitialised.&quot;&quot;&quot;</span>
+<span class="sd">    If you want to keep the dialogue history and only want to reset the</span>
+<span class="sd">    slots, you can use this event to set all the slots to their initial</span>
+<span class="sd">    values.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;reset_slots&quot;</span>
 
