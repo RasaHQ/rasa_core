@@ -326,10 +326,8 @@ action.</p>
 <dt id="rasa_core.events.AllSlotsReset">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">AllSlotsReset</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#AllSlotsReset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AllSlotsReset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
-<p>All Slots are reset to their initial values.</p>
-<p>If you want to keep the dialogue history and only want to reset the
-slots, you can use this event to set all the slots to their initial
-values.</p>
+<p>Conversation should start over &amp; history wiped.</p>
+<p>As a side effect the <code class="docutils literal notranslate"><span class="pre">Tracker</span></code> will be reinitialised.</p>
 <dl class="method">
 <dt id="rasa_core.events.AllSlotsReset.apply_to">
 <code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#AllSlotsReset.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AllSlotsReset.apply_to" title="Permalink to this definition">¶</a></dt>
@@ -530,9 +528,7 @@ at the trigger date.</p>
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">Restarted</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Restarted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Restarted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
 <p>Conversation should start over &amp; history wiped.</p>
-<p>Instead of deleting all events, this event can be used to reset the
-trackers state (e.g. ignoring any past user messages &amp; resetting all
-the slots).</p>
+<p>As a side effect the <code class="docutils literal notranslate"><span class="pre">Tracker</span></code> will be reinitialised.</p>
 <dl class="method">
 <dt id="rasa_core.events.Restarted.apply_to">
 <code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Restarted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Restarted.apply_to" title="Permalink to this definition">¶</a></dt>
@@ -555,8 +551,6 @@ the slots).</p>
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">SlotSet</code><span class="sig-paren">(</span><em>key</em>, <em>value=None</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#SlotSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.SlotSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
 <p>The user has specified their preference for the value of a <code class="docutils literal notranslate"><span class="pre">slot</span></code>.</p>
-<p>Every slot has a name and a value. This event can be used to set a
-value for a slot on a conversation.</p>
 <p>As a side effect the <code class="docutils literal notranslate"><span class="pre">Tracker</span></code>’s slots will be updated so
 that <code class="docutils literal notranslate"><span class="pre">tracker.slots[key]=value</span></code>.</p>
 <dl class="method">

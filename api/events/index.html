@@ -251,8 +251,6 @@ how to update its state.</p>
 <dt id="rasa_core.events.SlotSet">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">SlotSet</code><span class="sig-paren">(</span><em>key</em>, <em>value=None</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#SlotSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.SlotSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>The user has specified their preference for the value of a <code class="docutils literal notranslate"><span class="pre">slot</span></code>.</p>
-<p>Every slot has a name and a value. This event can be used to set a
-value for a slot on a conversation.</p>
 <p>As a side effect the <code class="docutils literal notranslate"><span class="pre">Tracker</span></code>’s slots will be updated so
 that <code class="docutils literal notranslate"><span class="pre">tracker.slots[key]=value</span></code>.</p>
 </dd></dl>
@@ -268,9 +266,7 @@ that <code class="docutils literal notranslate"><span class="pre">tracker.slots[
 <dt id="rasa_core.events.Restarted">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">Restarted</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Restarted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Restarted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Conversation should start over &amp; history wiped.</p>
-<p>Instead of deleting all events, this event can be used to reset the
-trackers state (e.g. ignoring any past user messages &amp; resetting all
-the slots).</p>
+<p>As a side effect the <code class="docutils literal notranslate"><span class="pre">Tracker</span></code> will be reinitialised.</p>
 </dd></dl>
 
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
@@ -285,10 +281,8 @@ the slots).</p>
 <dl class="class">
 <dt id="rasa_core.events.AllSlotsReset">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">AllSlotsReset</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#AllSlotsReset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AllSlotsReset" title="Permalink to this definition">¶</a></dt>
-<dd><p>All Slots are reset to their initial values.</p>
-<p>If you want to keep the dialogue history and only want to reset the
-slots, you can use this event to set all the slots to their initial
-values.</p>
+<dd><p>Conversation should start over &amp; history wiped.</p>
+<p>As a side effect the <code class="docutils literal notranslate"><span class="pre">Tracker</span></code> will be reinitialised.</p>
 </dd></dl>
 
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
