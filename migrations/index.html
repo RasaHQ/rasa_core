@@ -158,13 +158,14 @@
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.11.1
+        v: 0.11.2
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href=".././0.11.2/migrations/">0.11.2</a>
               <a href=".././0.11.1/migrations/">0.11.1</a>
               <a href=".././0.11.0/migrations/">0.11.0</a>
               <a href=".././0.10.4/migrations/">0.10.4</a>
@@ -235,6 +236,18 @@ instead of the classpath (e.g. change <code class="docutils literal notranslate"
 <code class="docutils literal notranslate"><span class="pre">utter_</span></code>, otherwise the bot won’t be able to find the action</li>
 </ul>
 </div>
+<div class="section" id="http-server-endpoints">
+<h3>HTTP Server endpoints<a class="headerlink" href="#http-server-endpoints" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>We removed <code class="docutils literal notranslate"><span class="pre">/parse</span></code> and <code class="docutils literal notranslate"><span class="pre">/continue</span></code> endpoints used for running actions
+remotely. This has been replaced by the action server that allows you
+to run your action code in any language. There are no replacement endpoints
+for these two, as the flow of information has been changed: Instead of you
+calling Rasa Core to update the tracker and receive the next action to be
+executed, Rasa Core will call your action server once it predicted an action.
+More information can be found in the updated docs for <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>.</li>
+</ul>
+</div>
 <div class="section" id="webhooks">
 <h3>Webhooks<a class="headerlink" href="#webhooks" title="Permalink to this headline">¶</a></h3>
 <ul>
@@ -258,6 +271,12 @@ has changed to allow for multiple channels in one file:</p>
 <div class="section" id="changes-to-input-and-output-channels">
 <h3>Changes to Input and Output Channels<a class="headerlink" href="#changes-to-input-and-output-channels" title="Permalink to this headline">¶</a></h3>
 <ul>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">ConsoleOutputChannel</span></code> and <code class="docutils literal notranslate"><span class="pre">ConsoleInputChannel</span></code> have been removed. Either
+use the <a class="reference external" href="https://github.com/RasaHQ/rasa_core/blob/master/rasa_core/run.py">run script</a>
+to run your bot on the cmdline, or adapt the <code class="docutils literal notranslate"><span class="pre">serve_application</span></code>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_core/blob/master/rasa_core/run.py#L260">function</a>
+to run from a python script.</p>
+</li>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">rasa_core.channels.direct</span></code> output channel package removed.
 <code class="docutils literal notranslate"><span class="pre">CollectingOutputChannel</span></code> moved to <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.channel</span></code></p>
 </li>

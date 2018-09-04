@@ -1,0 +1,522 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Slot Filling</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Bot Responses" href="../responses/" />
+    <link rel="prev" title="Using Slots" href="../slots/" />
+
+<!-- Google Tag Manager -->
+<script> 
+  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
+</script>
+<!-- End Google Tag Manager -->
+   
+    
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta itemprop="image" content="https://rasa.com/assets/img/facebook-og.png">
+  <meta property="og:title" content="Slot Filling" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
+  <meta property="og:url" content="https://rasa.com/docs/core/slotfilling" />
+  
+    <meta name="description" content="None" />
+    <meta itemprop="description" content="None">
+    <meta name="twitter:description" content="None" />
+    <meta property="og:description" content="None" />
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@Rasa_HQ">
+  <meta name="twitter:title" content="Slot Filling">
+  <meta name="twitter:creator" content="@Rasa_HQ">
+  <meta name="twitter:image" content="https://rasa.com/assets/img/facebook-og.png">
+    
+  <link rel="stylesheet" href="../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <script defer type="text/javascript" src="../_static/config.js"></script>
+  <script defer type="text/javascript" src="../_static/klaro.js"></script>
+  <script type="text/javascript" src="https://storage.googleapis.com/docs-theme/clipboard.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" /> 
+  
+
+  </head><body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMHSZCS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div class="nav-top">
+  <a href="/docs" class="brand-link">
+      <h1 class="brand">
+          <img src="../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+      </h1>
+      <span class="logo extension">docs</span>
+  </a>
+  
+  <ul class="nav">
+    <input type="text" class="search" placeholder="Search">
+    
+      
+        <li><a href=/docs/getting-started>Getting Started</a></li>
+      
+    
+      
+        <li><a href=/docs/nlu>NLU</a></li>
+      
+    
+      
+        <li class="active"><a href=/docs/core>Core</a></li>
+      
+    
+      
+        <li><a href=/docs/platform>Platform</a></li>
+      
+    
+    
+    <li>
+      <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Join Community</button></a>
+    </li>
+    
+  </ul>
+</div>
+
+  <div class="sidebar-extended"></div>
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fallbacks/">Fallback Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
+</ul>
+
+<div class="versions">
+    <div>
+      <span class="current-version">
+        v: 0.11.2
+      </span>
+    </div>
+    <div class="other-versions">
+        <div class="dropdown">
+          <button class="dropdown-btn">tags</button>
+          <div class="dropdown-content">
+              <a href="../../0.11.2/slotfilling/">0.11.2</a>
+              <a href="../../0.11.1/slotfilling/">0.11.1</a>
+              <a href="../../0.11.0/slotfilling/">0.11.0</a>
+              <a href="../../0.10.4/slotfilling/">0.10.4</a>
+              <a href="../../0.9.8/index/">0.9.8</a>
+              <a href="../../0.8.6/index/">0.8.6</a>
+              <a href="../../0.7.9/index/">0.7.9</a>
+              <a href="../../0.6.9/index/">0.6.9</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="dropdown-btn">tags</button>
+          <div class="dropdown-content">
+              <a href="../../lappis-unb-master/slotfilling/">lappis-unb-master</a>
+              <a href="../../master/slotfilling/">master</a>
+              <a href="../../tupac56-master/slotfilling/">tupac56-master</a>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+
+
+
+
+
+<div class="section" id="slot-filling">
+<span id="slotfilling"></span><h1>Slot Filling<a class="headerlink" href="#slot-filling" title="Permalink to this headline">¶</a></h1>
+<p>One of the most common conversation patterns
+is to collect a few pieces of information
+from a user in order to do something (book a restaurant, call an API, search a database, etc.).
+This is also called <strong>slot filling</strong>.</p>
+<div class="section" id="example-providing-the-weather">
+<h2>Example: Providing the Weather<a class="headerlink" href="#example-providing-the-weather" title="Permalink to this headline">¶</a></h2>
+<p>Let’s say you are building a weather bot ⛅️. If somebody asks you for the weather, you will
+need to know their location. Users might say that right away, e.g. <cite>What’s the weather in Caracas?</cite>
+When they don’t provide this information, you’ll have to ask them for it.
+We can provide two stories to Rasa Core, so that it can learn to handle both cases:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story1
+* ask_weather{&quot;location&quot;: &quot;Caracas&quot;}
+   - action_weather_api
+
+# story2
+* ask_weather
+   - utter_ask_location
+* inform{&quot;location&quot;: &quot;Caracas&quot;}
+   - action_weather_api
+</pre></div>
+</div>
+<p>Here we are assuming you have defined an <code class="docutils literal notranslate"><span class="pre">inform</span></code> intent, which captures the cases where a user
+is just providing information.</p>
+<p>But <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a> can also set slots, and these can also influence the conversation.
+For example, a location like <cite>San Jose</cite> could refer to multiple places, in this case, probably in
+Costa Rica 🇨🇷  or California 🇺🇸</p>
+<p>Let’s add a call to a location API to deal with this.
+Start by defining a <code class="docutils literal notranslate"><span class="pre">location_match</span></code> slot:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">location_match</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical</span>
+    <span class="l l-Scalar l-Scalar-Plain">values</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">zero</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">one</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">multiple</span>
+</pre></div>
+</div>
+<p>And our location api action will have to use the API response to fill in this slot.
+It can <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">[SlotSet(&quot;location_match&quot;,</span> <span class="pre">value)]</span></code>, where <code class="docutils literal notranslate"><span class="pre">value</span></code> is one of <code class="docutils literal notranslate"><span class="pre">&quot;zero&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;one&quot;</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">&quot;multiple&quot;</span></code>, depending on what the API sends back.</p>
+<p>We then define stories for each of these cases:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story1
+* ask_weather{&quot;location&quot;: &quot;Caracas&quot;}
+   - action_location_api
+   - slot{&quot;location_match&quot;: &quot;one&quot;}
+   - action_weather_api
+
+# story2
+* ask_weather
+   - utter_ask_location
+* inform{&quot;location&quot;: &quot;Caracas&quot;}
+   - action_location_api
+<span class="hll">   - slot{&quot;location_match&quot;: &quot;one&quot;}
+</span><span class="hll">   - action_weather_api
+</span>
+# story3
+* ask_weather{&quot;location&quot;: &quot;the Moon&quot;}
+   - action_location_api
+<span class="hll">   - slot{&quot;location_match&quot;: &quot;none&quot;}
+</span><span class="hll">   - utter_location_not_found
+</span>
+# story4
+* ask_weather{&quot;location&quot;: &quot;San Jose&quot;}
+   - action_location_api
+<span class="hll">   - slot{&quot;location_match&quot;: &quot;multiple&quot;}
+</span><span class="hll">   - utter_ask_which_location
+</span></pre></div>
+</div>
+<p>Now we’ve given Rasa Core a few examples of how to handle the different values
+that the <code class="docutils literal notranslate"><span class="pre">location_match</span></code> slot can take.
+Right now, we still only have four stories, which is not a lot of training data.
+<a class="reference internal" href="../interactive_learning/#interactive-learning"><span class="std std-ref">Interactive Learning</span></a> is agreat way to explore more conversations
+that aren’t in your stories already.
+The best way to improve your model is to test it yourself, have other people test it,
+and correct the mistakes it makes.</p>
+<div class="section" id="debugging">
+<h3>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h3>
+<p>The first thing to try is to run your bot with the <code class="docutils literal notranslate"><span class="pre">debug</span></code> flag, see <a class="reference internal" href="../debugging/#debugging"><span class="std std-ref">Debugging</span></a> for details.
+If you are just getting started, you probably only have a few hand-written stories.
+This is a great starting point, but
+you should give your bot to people to test <strong>as soon as possible</strong>. One of the guiding principles
+behind Rasa Core is:</p>
+<blockquote class="pull-quote">
+<div>Learning from real conversations is more important than designing hypothetical ones</div></blockquote>
+<p>So don’t try to cover every possiblity in your hand-written stories before giving it to testers.
+Real user behavior will always surprise you!</p>
+</div>
+</div>
+<div class="section" id="slot-filling-with-a-formaction">
+<h2>Slot Filling with a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code><a class="headerlink" href="#slot-filling-with-a-formaction" title="Permalink to this headline">¶</a></h2>
+<p>If you need to collect multiple pieces of information in a row, it is sometimes easier
+to create a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code>.
+This lets you have a single action that is called multiple times, rather than separate actions for each question,
+e.g. <code class="docutils literal notranslate"><span class="pre">utter_ask_cuisine</span></code>, <code class="docutils literal notranslate"><span class="pre">utter_ask_numpeople</span></code>, in a restaurant bot.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You don’t <em>have</em> to use a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> to do slot filling! It just means you need
+fewer stories to get the initial flow working.</p>
+</div>
+<p>A form action has a set of required fields, which you define for the class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ActionSearchRestaurants</span><span class="p">(</span><span class="n">FormAction</span><span class="p">):</span>
+
+    <span class="n">RANDOMIZE</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">required_fields</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">EntityFormField</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">,</span> <span class="s2">&quot;cuisine&quot;</span><span class="p">),</span>
+            <span class="n">EntityFormField</span><span class="p">(</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;people&quot;</span><span class="p">),</span>
+            <span class="n">BooleanFormField</span><span class="p">(</span><span class="s2">&quot;vegetarian&quot;</span><span class="p">,</span> <span class="s2">&quot;affirm&quot;</span><span class="p">,</span> <span class="s2">&quot;deny&quot;</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;action_search_restaurants&#39;</span>
+
+    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">RestaurantAPI</span><span class="p">()</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">),</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s2">&quot;people&quot;</span><span class="p">),</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s2">&quot;vegetarian&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;search_results&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>The way this works is that every time you call this action, it will pick one of the
+<code class="docutils literal notranslate"><span class="pre">REQUIRED_FIELDS</span></code> that’s still missing and ask the user for it. You can also ask a yes/no
+question with a <code class="docutils literal notranslate"><span class="pre">BooleanFormField</span></code>.</p>
+<p>The form action will set a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code> to keep track if what it has asked the user.
+So a story will look something like this:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>* request_restaurant
+     - action_restaurant_form
+     - slot{&quot;requested_slot&quot;: &quot;people&quot;}
+* inform{&quot;number&quot;: 3}
+     - action_restaurant_form
+     - slot{&quot;people&quot;: 3}
+     - slot{&quot;requested_slot&quot;: &quot;cuisine&quot;}
+* inform{&quot;cuisine&quot;: &quot;chinese&quot;}
+     - action_restaurant_form
+     - slot{&quot;cuisine&quot;: &quot;chinese&quot;}
+     - slot{&quot;requested_slot&quot;: &quot;vegetarian&quot;}
+* deny
+     - action_restaurant_form
+     - slot{&quot;vegetarian&quot;: false}
+</pre></div>
+</div>
+<p>Some important things to consider:</p>
+<ul class="simple">
+<li>The <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method is called when the action is run and all slots are filled, in this case after the <code class="docutils literal notranslate"><span class="pre">deny</span></code> intent.
+If you are just collecting some information and don’t need to make an API call at the end, your <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method
+should just <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">[]</span></code>.</li>
+<li>Your domain needs to have a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code>. You can make this an unfeaturized slot.</li>
+<li>You need to define utterances for asking for each slot in your domain, e.g. <code class="docutils literal notranslate"><span class="pre">utter_ask_{slot_name}</span></code>.</li>
+<li>We strongly recommend that you create these stories using interactive learning, because if you
+type these by hand you will probably forget to include the lines for the <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code>.</li>
+<li>Any slots that are already set won’t be asked for. E.g. if someone says “I’d like a vegetarian Chinese restaurant for 8 people” the <code class="docutils literal notranslate"><span class="pre">submit</span></code> function should get called right away.</li>
+</ul>
+<div class="section" id="form-fields-and-free-text-input">
+<h3>Form Fields and Free-text Input<a class="headerlink" href="#form-fields-and-free-text-input" title="Permalink to this headline">¶</a></h3>
+<p>The pre-defined <code class="docutils literal notranslate"><span class="pre">FormField</span></code> types are:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">EntityFormField(entity_name,</span> <span class="pre">slot_name)</span></code>, which will
+look for an entity called <code class="docutils literal notranslate"><span class="pre">entity_name</span></code> to fill a slot <code class="docutils literal notranslate"><span class="pre">slot_name</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">BooleanFormField(slot_name,</span> <span class="pre">affirm_intent,</span> <span class="pre">deny_intent)</span></code>, which looks for the intents <code class="docutils literal notranslate"><span class="pre">affirm_intent</span></code>
+and <code class="docutils literal notranslate"><span class="pre">deny_intent</span></code> to fill a boolean slot called <code class="docutils literal notranslate"><span class="pre">slot_name</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">FreeTextFormField(slot_name)</span></code>, which will use the next user utterance to fill the text slot <code class="docutils literal notranslate"><span class="pre">slot_name</span></code>.</li>
+</ul>
+<p>For any subclass of  <code class="docutils literal notranslate"><span class="pre">FormField</span></code>, its <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method will be called before setting it
+as a slot. By default this just checks that the value isn’t <code class="docutils literal notranslate"><span class="pre">None</span></code>, but if you want to check
+the value against a DB, or check a pattern is matched, you can do so by defining your own class
+like <code class="docutils literal notranslate"><span class="pre">MyCustomFormField</span></code> and overriding the <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The <code class="docutils literal notranslate"><span class="pre">FreeTextFormField</span></code> class will just extract the user message as a value.
+However, there is currently no way to write a ‘wildcard’ intent in Rasa Core stories as of now.
+Typically your NLU model will assign this free-text input to 2-3 different intents.
+It’s easiest to add stories for each of these.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script> 
+	    <script type="text/javascript"> docsearch({ 
+	     apiKey: '1f9e0efb89e98543f6613a60f847b176', 
+	     indexName: 'rasa', 
+	     inputSelector: 'body > div.nav-top > .nav > input', 
+	     debug: false // Set debug to true if you want to inspect the dropdown 
+	    }); 
+	    </script> 
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
+    </div>
+
+    
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  <script type="text/javascript">
+    var clipboard = new ClipboardJS('.copyable');
+    clipboard.on('success', function(e) {
+      gtag('event', e.action, {
+        'event_category': 'code',
+        'event_label': e.text
+      });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
+    });
+    clipboard.on('error', function(e) {
+      console.log(e);
+    });
+  </script>
+  
+  <!-- onsite anchor fix (otherwise anchors scroll to far) -->
+  <script>
+    /* Adapted from https://stackoverflow.com/a/13067009/1906073 */
+    (function(document, history, location) {
+      var HISTORY_SUPPORT = !!(history && history.pushState);
+
+      var anchorScrolls = {
+        ANCHOR_REGEX: /^#[^ ]+$/,
+        OFFSET_HEIGHT_PX: 66,
+
+        /**
+         * Establish events, and fix initial scroll position if a hash is provided.
+         */
+        init: function() {
+          this.scrollToCurrent();
+          $(window).on('hashchange', $.proxy(this, 'scrollToCurrent'));
+          $('body').on('click', 'a', $.proxy(this, 'delegateAnchors'));
+        },
+
+        /**
+         * Return the offset amount to deduct from the normal scroll position.
+         * Modify as appropriate to allow for dynamic calculations
+         */
+        getFixedOffset: function() {
+          return this.OFFSET_HEIGHT_PX;
+        },
+
+        /**
+         * If the provided href is an anchor which resolves to an element on the
+         * page, scroll to it.
+         * @param  {String} href
+         * @return {Boolean} - Was the href an anchor.
+         */
+        scrollIfAnchor: function(href, pushToHistory) {
+          var match, anchorOffset;
+
+          if(!this.ANCHOR_REGEX.test(href)) {
+            return false;
+          }
+
+          match = document.getElementById(href.slice(1));
+
+          if(match) {
+            anchorOffset = $(match).offset().top - this.getFixedOffset();
+            $('html, body').animate({ scrollTop: anchorOffset});
+
+            // Add the state to history as-per normal anchor links
+            if(HISTORY_SUPPORT && pushToHistory) {
+              history.pushState({}, document.title, location.pathname + href);
+            }
+          }
+
+          return !!match;
+        },
+        
+        /**
+         * Attempt to scroll to the current location's hash.
+         */
+        scrollToCurrent: function(e) { 
+          if(this.scrollIfAnchor(window.location.hash) && e) {
+            e.preventDefault();
+          }
+        },
+
+        /**
+         * If the click event's target was an anchor, fix the scroll position.
+         */
+        delegateAnchors: function(e) {
+          var elem = e.target;
+
+          if(this.scrollIfAnchor(elem.getAttribute('href'), true)) {
+            e.preventDefault();
+          }
+        }
+      };
+
+      $(document).ready($.proxy(anchorScrolls, 'init'));
+    })(window.document, window.history, window.location);
+
+  </script>
+  </body>
+</html>
