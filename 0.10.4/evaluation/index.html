@@ -258,11 +258,49 @@ will be trained multiple times, with 0, 5, 25, 50, 70, 90, 95, and 100% of the s
 in that file removed from the training data. By evaluating on the full set of stories, you
 can measure how well Rasa Core is predicting the held-out stories.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python2.7.14/bin/python: No module named rasa_core.train_paper
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
+RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
+usage: train_paper.py [-h] --exclude EXCLUDE --data DATA [--epochs EPOCHS]
+                      [--path PATH] [--percentages PERCENTAGES] [--runs RUNS]
+                      --domain DOMAIN [-v] [-vv] [--quiet]
+
+evaluates a dialogue model
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --exclude EXCLUDE     file to exclude from training
+  --data DATA           Data to train on
+  --epochs EPOCHS       number of epochs
+  --path PATH           Path to store models in
+  --percentages PERCENTAGES
+                        Range of exclusion percentages
+  --runs RUNS           Number of runs for experiments
+  --domain DOMAIN       Path of domain file
+  -v, --verbose         Be verbose. Sets logging level to INFO
+  -vv, --debug          Print lots of debugging statements. Sets logging level
+                        to DEBUG
+  --quiet               Be quiet! Sets logging level to WARNING
 </pre></div>
 </div>
 <p>The full list of options for the evaluation script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python2.7.14/bin/python: No module named rasa_core.evaluate_paper
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
+RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
+usage: evaluate_paper.py [-h] --models MODELS -s STORIES [-o OUTPUT] [-v]
+                         [-vv] [--quiet]
+
+evaluates a dialogue model
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --models MODELS       folder containing trained models
+  -s STORIES, --stories STORIES
+                        file or folder containing stories to evaluate on
+  -o OUTPUT, --output OUTPUT
+                        output path for the results
+  -v, --verbose         Be verbose. Sets logging level to INFO
+  -vv, --debug          Print lots of debugging statements. Sets logging level
+                        to DEBUG
+  --quiet               Be quiet! Sets logging level to WARNING
 </pre></div>
 </div>
 </div>
