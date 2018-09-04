@@ -70,7 +70,7 @@ var klaroConfig = {
             analytics : {
                 en : 'Analytics',
             },
-            livechat:{
+            livechat : {
                 en: 'Live Chat',
             },
         
@@ -126,7 +126,7 @@ var klaroConfig = {
             default: 'true',
             onlyOnce: 'true',
             title: 'Google Tag Manager',
-            purposes: ['live chat'],
+            purposes: ['livechat'],
             cookies: [/^_dc_gtm_*$/, 'googletagmanager_ignore'],
             callback: function(consent, app){
                 console.log("User consent for app "+app.name+": consnet="+consent)

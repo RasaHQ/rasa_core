@@ -75,38 +75,40 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <div class="nav-top">
-  <a href="/docs" class="brand-link">
-      <h1 class="brand">
-          <img src="../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
-      </h1>
-      <span class="logo extension">docs</span>
-  </a>
-  
-  <ul class="nav">
-    <input type="text" class="search" placeholder="Search">
+  <div class="nav-container">
+    <a href="/docs" class="brand-link">
+        <h1 class="brand">
+            <img src="../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+        </h1>
+        <span class="logo extension">docs</span>
+    </a>
     
+    <ul class="nav">
+      <input type="text" class="search" placeholder="Search">
       
-        <li><a href=/docs/getting-started>Getting Started</a></li>
+        
+          <li><a href=/docs/getting-started>Getting Started</a></li>
+        
       
-    
+        
+          <li><a href=/docs/nlu>NLU</a></li>
+        
       
-        <li><a href=/docs/nlu>NLU</a></li>
+        
+          <li class="active"><a href=/docs/core>Core</a></li>
+        
       
-    
+        
+          <li><a href=/docs/platform>Platform</a></li>
+        
       
-        <li class="active"><a href=/docs/core>Core</a></li>
       
-    
+      <li>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Join Community</button></a>
+      </li>
       
-        <li><a href=/docs/platform>Platform</a></li>
-      
-    
-    
-    <li>
-      <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Join Community</button></a>
-    </li>
-    
-  </ul>
+    </ul>
+  </div>
 </div>
 
   <div class="sidebar-extended"></div>
@@ -259,11 +261,55 @@ will be trained multiple times, with 0, 5, 25, 50, 70, 90, 95, and 100% of the s
 in that file removed from the training data. By evaluating on the full set of stories, you
 can measure how well Rasa Core is predicting the held-out stories.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python2.7.14/bin/python: No module named rasa_core.train_paper
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
+RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
+usage: train_paper.py [-h] --exclude EXCLUDE -s STORIES
+                      [--epochs_embed EPOCHS_EMBED]
+                      [--epochs_keras EPOCHS_KERAS] [-o OUT]
+                      [--percentages [PERCENTAGES [PERCENTAGES ...]]]
+                      [--runs RUNS] -d DOMAIN [-v] [-vv] [--quiet]
+
+Trains multiple Core models with the Embedding and Keras policies
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --exclude EXCLUDE     file to exclude from training
+  -s STORIES, --stories STORIES
+                        file or folder containing the training stories
+  --epochs_embed EPOCHS_EMBED
+                        number of epochs for the embedding policy
+  --epochs_keras EPOCHS_KERAS
+                        number of epochs for the keras policy
+  -o OUT, --out OUT     directory to persist the trained model in
+  --percentages [PERCENTAGES [PERCENTAGES ...]]
+                        Range of exclusion percentages
+  --runs RUNS           Number of runs for experiments
+  -d DOMAIN, --domain DOMAIN
+                        domain specification yaml file
+  -v, --verbose         Be verbose. Sets logging level to INFO
+  -vv, --debug          Print lots of debugging statements. Sets logging level
+                        to DEBUG
+  --quiet               Be quiet! Sets logging level to WARNING
 </pre></div>
 </div>
 <p>The full list of options for the evaluation script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python2.7.14/bin/python: No module named rasa_core.evaluate_paper
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
+RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
+usage: evaluate_paper.py [-h] --models MODELS -s STORIES [-o OUT] [-v] [-vv]
+                         [--quiet]
+
+evaluates a dialogue model
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --models MODELS       folder containing trained models
+  -s STORIES, --stories STORIES
+                        file or folder containing stories to evaluate on
+  -o OUT, --out OUT     output path for the results
+  -v, --verbose         Be verbose. Sets logging level to INFO
+  -vv, --debug          Print lots of debugging statements. Sets logging level
+                        to DEBUG
+  --quiet               Be quiet! Sets logging level to WARNING
 </pre></div>
 </div>
 </div>
@@ -274,7 +320,7 @@ can measure how well Rasa Core is predicting the held-out stories.</p>
 	    <script type="text/javascript"> docsearch({ 
 	     apiKey: '1f9e0efb89e98543f6613a60f847b176', 
 	     indexName: 'rasa', 
-	     inputSelector: 'body > div.nav-top > .nav > input', 
+	     inputSelector: 'body > div.nav-top > .nav-container > .nav > input', 
 	     debug: false // Set debug to true if you want to inspect the dropdown 
 	    }); 
 	    </script> 

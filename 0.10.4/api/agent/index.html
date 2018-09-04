@@ -75,38 +75,40 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <div class="nav-top">
-  <a href="/docs" class="brand-link">
-      <h1 class="brand">
-          <img src="../../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
-      </h1>
-      <span class="logo extension">docs</span>
-  </a>
-  
-  <ul class="nav">
-    <input type="text" class="search" placeholder="Search">
+  <div class="nav-container">
+    <a href="/docs" class="brand-link">
+        <h1 class="brand">
+            <img src="../../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa" alt="Rasa logo">
+        </h1>
+        <span class="logo extension">docs</span>
+    </a>
     
+    <ul class="nav">
+      <input type="text" class="search" placeholder="Search">
       
-        <li><a href=/docs/getting-started>Getting Started</a></li>
+        
+          <li><a href=/docs/getting-started>Getting Started</a></li>
+        
       
-    
+        
+          <li><a href=/docs/nlu>NLU</a></li>
+        
       
-        <li><a href=/docs/nlu>NLU</a></li>
+        
+          <li class="active"><a href=/docs/core>Core</a></li>
+        
       
-    
+        
+          <li><a href=/docs/platform>Platform</a></li>
+        
       
-        <li class="active"><a href=/docs/core>Core</a></li>
       
-    
+      <li>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Join Community</button></a>
+      </li>
       
-        <li><a href=/docs/platform>Platform</a></li>
-      
-    
-    
-    <li>
-      <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Join Community</button></a>
-    </li>
-    
-  </ul>
+    </ul>
+  </div>
 </div>
 
   <div class="sidebar-extended"></div>
@@ -286,7 +288,7 @@ the bot wants to respond.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.load_data">
-<code class="descname">load_data</code><span class="sig-paren">(</span><em>resource_name</em>, <em>remove_duplicates=True</em>, <em>unique_last_num_states=None</em>, <em>augmentation_factor=20</em>, <em>tracker_limit=None</em>, <em>use_story_concatenation=True</em>, <em>debug_plots=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load_data</code><span class="sig-paren">(</span><em>resource_name</em>, <em>remove_duplicates=True</em>, <em>unique_last_num_states=None</em>, <em>augmentation_factor=20</em>, <em>tracker_limit=None</em>, <em>use_story_concatenation=True</em>, <em>debug_plots=False</em>, <em>exclusion_file=None</em>, <em>exclusion_percentage=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load training data from a resource.</p>
 </dd></dl>
 
@@ -350,7 +352,7 @@ trainer (e.g. keras parameters)</li>
 	    <script type="text/javascript"> docsearch({ 
 	     apiKey: '1f9e0efb89e98543f6613a60f847b176', 
 	     indexName: 'rasa', 
-	     inputSelector: 'body > div.nav-top > .nav > input', 
+	     inputSelector: 'body > div.nav-top > .nav-container > .nav > input', 
 	     debug: false // Set debug to true if you want to inspect the dropdown 
 	    }); 
 	    </script> 
