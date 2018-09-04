@@ -158,13 +158,14 @@
 <div class="versions">
     <div>
       <span class="current-version">
-        v: 0.11.2
+        v: 0.11.3
       </span>
     </div>
     <div class="other-versions">
         <div class="dropdown">
           <button class="dropdown-btn">tags</button>
           <div class="dropdown-content">
+              <a href=".././0.11.3/connectors/">0.11.3</a>
               <a href=".././0.11.2/connectors/">0.11.2</a>
               <a href=".././0.11.1/connectors/">0.11.1</a>
               <a href=".././0.11.0/connectors/">0.11.0</a>
@@ -253,7 +254,12 @@ custom input channel.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#using-ngrok-for-local-testing" id="id47">Using Ngrok For Local Testing</a></li>
-<li><a class="reference internal" href="#custom-channels" id="id48">Custom Channels</a></li>
+<li><a class="reference internal" href="#rest-channels" id="id48">REST Channels</a><ul>
+<li><a class="reference internal" href="#restinput" id="id49">RestInput</a></li>
+<li><a class="reference internal" href="#callbackinput" id="id50">CallbackInput</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#creating-a-new-channel" id="id51">Creating a new Channel</a></li>
 </ul>
 </li>
 </ul>
@@ -818,8 +824,8 @@ with applications like Slack, Facebook, etc.</p>
 would then be <a class="reference external" href="https://xxxxxx.ngrok.io/webhooks/facebook/webhook">https://xxxxxx.ngrok.io/webhooks/facebook/webhook</a>,
 for telegram <a class="reference external" href="https://xxxxxx.ngrok.io/webhooks/telegram/webhook">https://xxxxxx.ngrok.io/webhooks/telegram/webhook</a>, etc.</p>
 </div>
-<div class="section" id="custom-channels">
-<span id="id17"></span><h2><a class="toc-backref" href="#id48">Custom Channels</a><a class="headerlink" href="#custom-channels" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rest-channels">
+<span id="id17"></span><h2><a class="toc-backref" href="#id48">REST Channels</a><a class="headerlink" href="#rest-channels" title="Permalink to this headline">¶</a></h2>
 <p>If you want to put a widget on your website so that people can
 talk to your bot, check out these two projects:</p>
 <ul class="simple">
@@ -828,7 +834,78 @@ uses sockets.</li>
 <li><a class="reference external" href="https://github.com/scalableminds/chatroom">Chatroom</a>
 uses regular HTTP requests.</li>
 </ul>
-<p>You can also implement your own, fully custom channel.</p>
+<p>For these use cases it is easiest to use either the <code class="docutils literal notranslate"><span class="pre">RestInput</span></code> or the
+<code class="docutils literal notranslate"><span class="pre">CallbackInput</span></code> channels. They will provide you with a URL to post the
+messages to.</p>
+<div class="section" id="restinput">
+<h3><a class="toc-backref" href="#id49">RestInput</a><a class="headerlink" href="#restinput" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">rest</span></code> channel, will provide you with a REST endpoint to post messages
+to and in response to that request will send back the bots messages.
+Here is an example on how to connect the <code class="docutils literal notranslate"><span class="pre">rest</span></code> input channel
+using the run script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+    --port <span class="m">5002</span> --credentials credentials.yml
+</pre></div>
+</div>
+<p>you need to supply a <code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code> with the following content:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">rest</span><span class="p p-Indicator">:</span>
+  <span class="c1"># you don&#39;t need to provide anything here - this channel doesn&#39;t</span>
+  <span class="c1"># require any credentials</span>
+</pre></div>
+</div>
+<p>After connecting the <code class="docutils literal notranslate"><span class="pre">rest</span></code> input channel, you can post messages to
+<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/webhooks/rest/webhook</span></code> with the following format:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;sender&quot;</span><span class="p">:</span> <span class="s2">&quot;Rasa&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Hi there!&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The response to this request will include the bot responses, e.g.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+  <span class="p">{</span><span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Hey Rasa!&quot;</span><span class="p">},</span> <span class="p">{</span><span class="nt">&quot;image&quot;</span><span class="p">:</span> <span class="s2">&quot;http://example.com/image.jpg&quot;</span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="callbackinput">
+<h3><a class="toc-backref" href="#id50">CallbackInput</a><a class="headerlink" href="#callbackinput" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">callback</span></code> channel behaves very much like the <code class="docutils literal notranslate"><span class="pre">rest</span></code> input,
+but instead of directly returning the bot messages to the HTTP
+request that sends the message, it will call a URL you can specify
+to send bot messages.</p>
+<p>Here is an example on how to connect the
+<code class="docutils literal notranslate"><span class="pre">callback</span></code> input channel using the run script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+    --port <span class="m">5002</span> --credentials credentials.yml
+</pre></div>
+</div>
+<p>you need to supply a <code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code> with the following content:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">callback</span><span class="p p-Indicator">:</span>
+  <span class="c1"># URL to which Core will send the bot responses</span>
+  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="s">&quot;http://localhost:5034/bot&quot;</span>
+</pre></div>
+</div>
+<p>After connecting the <code class="docutils literal notranslate"><span class="pre">callback</span></code> input channel, you can post messages to
+<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/webhooks/callback/webhook</span></code> with the following format:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;sender&quot;</span><span class="p">:</span> <span class="s2">&quot;Rasa&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Hi there!&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The response will simply be <code class="docutils literal notranslate"><span class="pre">success</span></code>. Once Core wants to send a
+message to the user, it will call the URL you specified with a <code class="docutils literal notranslate"><span class="pre">POST</span></code>
+and the following <code class="docutils literal notranslate"><span class="pre">JSON</span></code> body:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+  <span class="p">{</span><span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Hey Rasa!&quot;</span><span class="p">},</span> <span class="p">{</span><span class="nt">&quot;image&quot;</span><span class="p">:</span> <span class="s2">&quot;http://example.com/image.jpg&quot;</span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="creating-a-new-channel">
+<span id="custom-channels"></span><h2><a class="toc-backref" href="#id51">Creating a new Channel</a><a class="headerlink" href="#creating-a-new-channel" title="Permalink to this headline">¶</a></h2>
 <p>You can also implement your own, custom channel. You can
 use the <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.channel.RestInput</span></code> class as a template.
 The methods you need to implement are <code class="docutils literal notranslate"><span class="pre">blueprint</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code>. The method
