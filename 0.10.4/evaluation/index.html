@@ -261,55 +261,11 @@ will be trained multiple times, with 0, 5, 25, 50, 70, 90, 95, and 100% of the s
 in that file removed from the training data. By evaluating on the full set of stories, you
 can measure how well Rasa Core is predicting the held-out stories.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
-RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
-usage: train_paper.py [-h] --exclude EXCLUDE -s STORIES
-                      [--epochs_embed EPOCHS_EMBED]
-                      [--epochs_keras EPOCHS_KERAS] [-o OUT]
-                      [--percentages [PERCENTAGES [PERCENTAGES ...]]]
-                      [--runs RUNS] -d DOMAIN [-v] [-vv] [--quiet]
-
-Trains multiple Core models with the Embedding and Keras policies
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --exclude EXCLUDE     file to exclude from training
-  -s STORIES, --stories STORIES
-                        file or folder containing the training stories
-  --epochs_embed EPOCHS_EMBED
-                        number of epochs for the embedding policy
-  --epochs_keras EPOCHS_KERAS
-                        number of epochs for the keras policy
-  -o OUT, --out OUT     directory to persist the trained model in
-  --percentages [PERCENTAGES [PERCENTAGES ...]]
-                        Range of exclusion percentages
-  --runs RUNS           Number of runs for experiments
-  -d DOMAIN, --domain DOMAIN
-                        domain specification yaml file
-  -v, --verbose         Be verbose. Sets logging level to INFO
-  -vv, --debug          Print lots of debugging statements. Sets logging level
-                        to DEBUG
-  --quiet               Be quiet! Sets logging level to WARNING
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python2.7.14/bin/python: No module named rasa_core.train_paper
 </pre></div>
 </div>
 <p>The full list of options for the evaluation script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
-RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
-usage: evaluate_paper.py [-h] --models MODELS -s STORIES [-o OUT] [-v] [-vv]
-                         [--quiet]
-
-evaluates multiple dialogue models
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --models MODELS       folder containing trained models
-  -s STORIES, --stories STORIES
-                        file or folder containing stories to evaluate on
-  -o OUT, --out OUT     output path for the results
-  -v, --verbose         Be verbose. Sets logging level to INFO
-  -vv, --debug          Print lots of debugging statements. Sets logging level
-                        to DEBUG
-  --quiet               Be quiet! Sets logging level to WARNING
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python2.7.14/bin/python: No module named rasa_core.evaluate_paper
 </pre></div>
 </div>
 </div>

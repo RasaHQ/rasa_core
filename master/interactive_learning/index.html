@@ -222,10 +222,10 @@ feedback on mistakes it makes.</p>
 <p>Run the following to start interactive learning:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core_sdk.endpoint --actions actions<span class="p">&amp;</span>
 
-python -m rasa_core.run <span class="se">\</span>
-  --interactive -d models/dialogue <span class="se">\</span>
-  --stories-out stories_interactive.md <span class="se">\</span>
-  -u models/default/nlu
+python -m rasa_core.train <span class="se">\</span>
+  --online -o models/dialogue <span class="se">\</span>
+  -d domain.yml -s stories.md <span class="se">\</span>
+  --endpoints endpoints.yml
 </pre></div>
 </div>
 <p>The first command starts the action server (see <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>).</p>
