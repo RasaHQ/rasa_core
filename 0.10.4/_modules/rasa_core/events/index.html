@@ -259,7 +259,7 @@
 
 <span class="c1"># noinspection PyProtectedMember</span>
 <div class="viewcode-block" id="Event"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event">[docs]</a><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Events describe everything that occurs in </span>
+    <span class="sd">&quot;&quot;&quot;Events describe everything that occurs in</span>
 <span class="sd">    a conversation and tell the :class:`DialogueStateTracker`</span>
 <span class="sd">    how to update its state.&quot;&quot;&quot;</span>
 
@@ -595,10 +595,10 @@
 
 <span class="c1"># noinspection PyProtectedMember</span>
 <div class="viewcode-block" id="UserUtteranceReverted"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUtteranceReverted">[docs]</a><span class="k">class</span> <span class="nc">UserUtteranceReverted</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Bot reverts everything until before the most recent user message. </span>
-<span class="sd">    </span>
-<span class="sd">    The bot will revert all events after the latest `UserUttered`, this </span>
-<span class="sd">    also means that the last event on the tracker is usually `action_listen` </span>
+    <span class="sd">&quot;&quot;&quot;Bot reverts everything until before the most recent user message.</span>
+
+<span class="sd">    The bot will revert all events after the latest `UserUttered`, this</span>
+<span class="sd">    also means that the last event on the tracker is usually `action_listen`</span>
 <span class="sd">    and the bot is waiting for a new user message.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;rewind&quot;</span>
@@ -723,9 +723,9 @@
     <span class="sd">&quot;&quot;&quot;Bot undoes its last action.</span>
 
 <span class="sd">    The bot everts everything until before the most recent action.</span>
-<span class="sd">    This includes the action itself, as well as any events that </span>
-<span class="sd">    action created, like set slot events - the bot will now </span>
-<span class="sd">    predict a new action using the state before the most recent </span>
+<span class="sd">    This includes the action itself, as well as any events that</span>
+<span class="sd">    action created, like set slot events - the bot will now</span>
+<span class="sd">    predict a new action using the state before the most recent</span>
 <span class="sd">    action.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;undo&quot;</span>
@@ -877,13 +877,17 @@
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;action&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">policy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">policy_confidence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">=</span> <span class="n">action_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="n">policy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy_confidence</span> <span class="o">=</span> <span class="n">policy_confidence</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unpredictable</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;ActionExecuted(action: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;ActionExecuted(action: </span><span class="si">{}</span><span class="s2">, policy: </span><span class="si">{}</span><span class="s2">, policy_confidence: </span><span class="si">{}</span><span class="s2">)&quot;</span>
+                <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">policy_confidence</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
@@ -900,7 +904,10 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">ActionExecuted</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
-                              <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
+                              <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy&quot;</span><span class="p">),</span>
+                              <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy_confidence&quot;</span><span class="p">),</span>
+                              <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)</span>
+                              <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
