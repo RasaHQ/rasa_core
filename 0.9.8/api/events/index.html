@@ -240,7 +240,7 @@
 events in an http callback).</p>
 <span class="target" id="module-rasa_core.events"></span><dl class="class">
 <dt id="rasa_core.events.ActionExecuted">
-<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ActionExecuted</code><span class="sig-paren">(</span><em>action_name</em>, <em>policy=None</em>, <em>policy_confidence=None</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecuted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecuted" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ActionExecuted</code><span class="sig-paren">(</span><em>action_name</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecuted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecuted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
 <p>An operation describes an action taken + its result.</p>
 <p>It comprises an action and a list of events. operations will be appended
@@ -273,9 +273,9 @@ to the latest <code class="docutils literal notranslate"><span class="pre">Turn<
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
 <p>Bot undoes its last action.</p>
 <p>The bot everts everything until before the most recent action.
-This includes the action itself, as well as any events that
-action created, like set slot events - the bot will now
-predict a new action using the state before the most recent
+This includes the action itself, as well as any events that 
+action created, like set slot events - the bot will now 
+predict a new action using the state before the most recent 
 action.</p>
 <dl class="method">
 <dt id="rasa_core.events.ActionReverted.apply_to">
@@ -439,7 +439,7 @@ be set to <code class="docutils literal notranslate"><span class="pre">True</spa
 <dt id="rasa_core.events.Event">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">Event</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Events describe everything that occurs in
+<p>Events describe everything that occurs in 
 a conversation and tell the <code class="xref py py-class docutils literal notranslate"><span class="pre">DialogueStateTracker</span></code>
 how to update its state.</p>
 <dl class="method">
@@ -614,8 +614,8 @@ that <code class="docutils literal notranslate"><span class="pre">tracker.slots[
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">UserUtteranceReverted</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#UserUtteranceReverted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUtteranceReverted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
 <p>Bot reverts everything until before the most recent user message.</p>
-<p>The bot will revert all events after the latest <cite>UserUttered</cite>, this
-also means that the last event on the tracker is usually <cite>action_listen</cite>
+<p>The bot will revert all events after the latest <cite>UserUttered</cite>, this 
+also means that the last event on the tracker is usually <cite>action_listen</cite> 
 and the bot is waiting for a new user message.</p>
 <dl class="method">
 <dt id="rasa_core.events.UserUtteranceReverted.apply_to">
