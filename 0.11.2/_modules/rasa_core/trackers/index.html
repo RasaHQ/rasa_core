@@ -206,11 +206,11 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
-
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
@@ -248,15 +248,6 @@
 <span class="sd">        the tracker, these events will be replayed to recreate the state.&quot;&quot;&quot;</span>
 
         <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">events_as_dict</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">evts</span><span class="p">,</span> <span class="n">slots</span><span class="p">,</span> <span class="n">max_event_history</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_events</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
-                    <span class="n">sender_id</span><span class="p">,</span>  <span class="c1"># type: Text</span>
-                    <span class="n">evts</span><span class="p">,</span>  <span class="c1"># type: List[Event]</span>
-                    <span class="n">slots</span><span class="p">,</span>  <span class="c1"># type: List[Slot]</span>
-                    <span class="n">max_event_history</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[int]</span>
-                    <span class="p">):</span>
         <span class="n">tracker</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">slots</span><span class="p">,</span> <span class="n">max_event_history</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evts</span><span class="p">:</span>
             <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
@@ -509,7 +500,7 @@
 <span class="sd">        Returns the dumped tracker as a string.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">rasa_core.training.structures</span> <span class="k">import</span> <span class="n">Story</span>
 
-        <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">story</span><span class="o">.</span><span class="n">as_story_string</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">export_stories_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="s2">&quot;debug.md&quot;</span><span class="p">):</span>
