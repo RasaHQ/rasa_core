@@ -504,7 +504,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">noop</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>  <span class="c1">#</span>
 
-        <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">(</span><span class="n">message_preprocessor</span><span class="p">)</span>
+        <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_processor</span><span class="p">(</span><span class="n">message_preprocessor</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
     <span class="c1"># noinspection PyUnusedLocal</span>
@@ -516,7 +516,7 @@
         <span class="c1"># type: (Text, Any) -&gt; Dict[Text, Any]</span>
         <span class="sd">&quot;&quot;&quot;Handle a single message.&quot;&quot;&quot;</span>
 
-        <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">()</span>
+        <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_processor</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">predict_next</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span></div>
 
     <span class="c1"># noinspection PyUnusedLocal</span>
@@ -529,7 +529,7 @@
         <span class="c1"># type: (...) -&gt; Dict[Text, Any]</span>
         <span class="sd">&quot;&quot;&quot;Append a message to a dialogue - does not predict actions.&quot;&quot;&quot;</span>
 
-        <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">(</span><span class="n">message_preprocessor</span><span class="p">)</span>
+        <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_processor</span><span class="p">(</span><span class="n">message_preprocessor</span><span class="p">)</span>
         <span class="n">tracker</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">log_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">tracker</span><span class="o">.</span><span class="n">current_state</span><span class="p">(</span><span class="n">should_include_events</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
@@ -542,7 +542,7 @@
         <span class="c1"># type: (...) -&gt; DialogueStateTracker</span>
         <span class="sd">&quot;&quot;&quot;Handle a single message.&quot;&quot;&quot;</span>
 
-        <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_processor</span><span class="p">()</span>
+        <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_processor</span><span class="p">()</span>
         <span class="n">dispatcher</span> <span class="o">=</span> <span class="n">Dispatcher</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span>
                                 <span class="n">output_channel</span><span class="p">,</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span><span class="p">)</span>
@@ -816,7 +816,7 @@
                                 <span class="s2">&quot;You need to set an interpreter, a policy &quot;</span>
                                 <span class="s2">&quot;ensemble as well as a tracker store.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_create_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preprocessor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Agent.create_processor"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.create_processor">[docs]</a>    <span class="k">def</span> <span class="nf">create_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preprocessor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># type: (Optional[Callable[[Text], Text]]) -&gt; MessageProcessor</span>
         <span class="sd">&quot;&quot;&quot;Instantiates a processor based on the set state of the agent.&quot;&quot;&quot;</span>
         <span class="c1"># Checks that the interpreter and tracker store are set and</span>
@@ -829,7 +829,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span><span class="p">,</span>
                 <span class="n">action_endpoint</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">action_endpoint</span><span class="p">,</span>
-                <span class="n">message_preprocessor</span><span class="o">=</span><span class="n">preprocessor</span><span class="p">)</span>
+                <span class="n">message_preprocessor</span><span class="o">=</span><span class="n">preprocessor</span><span class="p">)</span></div>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">):</span>

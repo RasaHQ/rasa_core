@@ -279,7 +279,7 @@
                           <span class="n">parameters</span><span class="p">,</span>  <span class="c1"># type: Dict[Text, Any]</span>
                           <span class="n">default</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Type[Event]]</span>
                           <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; Optional[Event]</span>
+        <span class="c1"># type: (...) -&gt; Optional[List[Event]]</span>
         <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">resolve_by_type</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
@@ -306,8 +306,9 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; Optional[List[Event]]</span>
         <span class="sd">&quot;&quot;&quot;Called to convert a parsed story line into an event.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">cls</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))]</span>
 
 <div class="viewcode-block" id="Event.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
@@ -317,14 +318,20 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Called to convert a dictionary of parameters to an event.</span>
+        <span class="sd">&quot;&quot;&quot;Called to convert a dictionary of parameters to a single event.</span>
 
 <span class="sd">        By default uses the same implementation as the story line</span>
 <span class="sd">        conversation ``_from_story_string``. But the subclass might</span>
 <span class="sd">        decide to handle parameters differently if the parsed parameters</span>
 <span class="sd">        don&#39;t origin from a story file.&quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_story_string</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Event from parameters called with parameters &quot;</span>
+                           <span class="s2">&quot;for multiple events. This is not supported, &quot;</span>
+                           <span class="s2">&quot;only the first event will be returned. &quot;</span>
+                           <span class="s2">&quot;Parameters: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">parameters</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">result</span> <span class="k">else</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Event.resolve_by_type"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event.resolve_by_type">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">resolve_by_type</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -411,10 +418,11 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; Optional[List[Event]]</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_parse_data</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">),</span>
-                                        <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parse_data&quot;</span><span class="p">),</span>
-                                        <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">_from_parse_data</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">),</span>
+                                         <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parse_data&quot;</span><span class="p">),</span>
+                                         <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))]</span>
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse bot uttered event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
@@ -533,6 +541,8 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; Optional[List[Event]]</span>
+
         <span class="n">slots</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">slot_key</span><span class="p">,</span> <span class="n">slot_val</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">slots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">slot_key</span><span class="p">,</span> <span class="n">slot_val</span><span class="p">))</span>
@@ -708,12 +718,14 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; Optional[List[Event]]</span>
+
         <span class="n">trigger_date_time</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;date_time&quot;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">ReminderScheduled</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">),</span>
-                                 <span class="n">trigger_date_time</span><span class="p">,</span>
-                                 <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                                 <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kill_on_user_msg&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
-                                 <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">ReminderScheduled</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">),</span>
+                                  <span class="n">trigger_date_time</span><span class="p">,</span>
+                                  <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kill_on_user_msg&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                                  <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))]</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -803,8 +815,10 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">FollowupAction</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
-                              <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; Optional[List[Event]]</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">FollowupAction</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
+                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))]</span>
 
 <div class="viewcode-block" id="FollowupAction.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.FollowupAction.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">FollowupAction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
@@ -875,7 +889,11 @@
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;action&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">policy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">policy_confidence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">action_name</span><span class="p">,</span>
+                 <span class="n">policy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">policy_confidence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">=</span> <span class="n">action_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="n">policy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_confidence</span> <span class="o">=</span> <span class="n">policy_confidence</span>
@@ -901,11 +919,13 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">ActionExecuted</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
-                              <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy&quot;</span><span class="p">),</span>
-                              <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy_confidence&quot;</span><span class="p">),</span>
-                              <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)</span>
-                              <span class="p">)</span>
+        <span class="c1"># type: (Dict[Text, Any]) -&gt; Optional[List[Event]]</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">ActionExecuted</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
+                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy&quot;</span><span class="p">),</span>
+                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy_confidence&quot;</span><span class="p">),</span>
+                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)</span>
+                               <span class="p">)]</span>
 
 <div class="viewcode-block" id="ActionExecuted.as_dict"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.ActionExecuted.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
