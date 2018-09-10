@@ -490,8 +490,9 @@ class FullDialogueTrackerFeaturizer(TrackerFeaturizer):
         trackers_as_actions = []
 
         logger.info("Creating states and action examples from "
-                    "collected trackers (by {})..."
-                    "".format(type(self).__name__))
+                    "collected trackers (by {}({}))..."
+                    "".format(type(self).__name__,
+                              type(self.state_featurizer).__name__))
         pbar = tqdm(trackers, desc="Processed trackers")
         for tracker in pbar:
             states = self._create_states(tracker, domain,
@@ -600,8 +601,9 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
         hashed_examples = set()
 
         logger.info("Creating states and action examples from "
-                    "collected trackers (by {})..."
-                    "".format(type(self).__name__))
+                    "collected trackers (by {}({}))..."
+                    "".format(type(self).__name__,
+                              type(self.state_featurizer).__name__))
         pbar = tqdm(trackers, desc="Processed trackers")
         for tracker in pbar:
             states = self._create_states(tracker, domain, True)

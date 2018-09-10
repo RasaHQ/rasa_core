@@ -4,13 +4,13 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import json
+from flask import Blueprint, jsonify, request, Flask, Response
 from multiprocessing import Queue
 from threading import Thread
-
-from flask import Blueprint, jsonify, request, Flask, Response
 from typing import Text, List, Dict, Any, Optional, Callable, Iterable
 
 from rasa_core import utils
+from rasa_core.constants import DOCS_BASE_URL
 
 try:
     from urlparse import urljoin
@@ -60,12 +60,22 @@ def register(input_channels,  # type: List[InputChannel]
         app.register_blueprint(channel.blueprint(on_new_message), url_prefix=p)
 
 
+def button_to_string(button, idx=0):
+    """Create a string representation of a button."""
+    return "{idx}: {title} ({val})".format(
+            idx=idx + 1, title=button['title'], val=button['payload'])
+
+
 class InputChannel(object):
 
     @classmethod
     def name(cls):
         """Every input channel needs a name to identify it."""
         return cls.__name__
+
+    @classmethod
+    def from_credentials(cls, credentials):
+        return cls()
 
     def url_prefix(self):
         return self.name()
@@ -78,6 +88,17 @@ class InputChannel(object):
         incoming routes it registered for."""
         raise NotImplementedError(
                 "Component listener needs to provide blueprint.")
+
+    @classmethod
+    def raise_missing_credentials_exception(cls):
+        raise Exception("To use the {} input channel, you need to "
+                        "pass a credentials file using '--credentials'. "
+                        "The argument should be a file path pointing to"
+                        "a yml file containing the {} authentication"
+                        "information. Details in the docs: "
+                        "{}/connectors/#{}-setup".
+                        format(cls.name(), cls.name(),
+                               DOCS_BASE_URL, cls.name()))
 
 
 class OutputChannel(object):
@@ -110,6 +131,9 @@ class OutputChannel(object):
         if message.get("image"):
             self.send_image_url(recipient_id, message.get("image"))
 
+        if message.get("attachment"):
+            self.send_attachment(recipient_id, message.get("attachment"))
+
     def send_text_message(self, recipient_id, message):
         # type: (Text, Text) -> None
         """Send a message through this channel."""
@@ -138,8 +162,7 @@ class OutputChannel(object):
 
         self.send_text_message(recipient_id, message)
         for idx, button in enumerate(buttons):
-            button_msg = "{idx}: {title} ({val})".format(
-                    idx=idx + 1, title=button['title'], val=button['payload'])
+            button_msg = button_to_string(button, idx)
             self.send_text_message(recipient_id, button_msg)
 
     def send_custom_message(self, recipient_id, elements):
@@ -167,24 +190,60 @@ class CollectingOutputChannel(OutputChannel):
     def name(cls):
         return "collector"
 
+    @staticmethod
+    def _message(recipient_id,
+                 text=None,
+                 image=None,
+                 buttons=None,
+                 attachment=None):
+        """Create a message object that will be stored."""
+
+        obj = {
+            "recipient_id": recipient_id,
+            "text": text,
+            "image": image,
+            "buttons": buttons,
+            "attachment": attachment
+        }
+
+        # filter out any values that are `None`
+        return utils.remove_none_values(obj)
+
     def latest_output(self):
         if self.messages:
             return self.messages[-1]
         else:
             return None
 
+    def _persist_message(self, message):
+        self.messages.append(message)
+
     def send_text_message(self, recipient_id, message):
         for message_part in message.split("\n\n"):
-            self.messages.append({"recipient_id": recipient_id,
-                                  "text": message_part})
+            self._persist_message(self._message(recipient_id,
+                                                text=message_part))
 
     def send_text_with_buttons(self, recipient_id, message, buttons, **kwargs):
-        self.messages.append({"recipient_id": recipient_id,
-                              "text": message,
-                              "data": buttons})
+        self._persist_message(self._message(recipient_id,
+                                            text=message,
+                                            buttons=buttons))
+
+    def send_image_url(self, recipient_id, image_url):
+        # type: (Text, Text) -> None
+        """Sends an image. Default will just post the url as a string."""
+
+        self._persist_message(self._message(recipient_id,
+                                            image=image_url))
+
+    def send_attachment(self, recipient_id, attachment):
+        # type: (Text, Text) -> None
+        """Sends an attachment. Default will just post as a string."""
+
+        self._persist_message(self._message(recipient_id,
+                                            attachment=attachment))
 
 
-class QueueOutputChannel(OutputChannel):
+class QueueOutputChannel(CollectingOutputChannel):
     """Output channel that collects send messages in a list
 
     (doesn't send them anywhere, just collects them)."""
@@ -197,15 +256,11 @@ class QueueOutputChannel(OutputChannel):
         # type: (Queue) -> None
         self.messages = Queue() if not message_queue else message_queue
 
-    def send_text_message(self, recipient_id, message):
-        for message_part in message.split("\n\n"):
-            self.messages.put({"recipient_id": recipient_id,
-                               "text": message_part})
+    def latest_output(self):
+        raise NotImplemented("A queue doesn't allow to peek at messages.")
 
-    def send_text_with_buttons(self, recipient_id, message, buttons, **kwargs):
-        self.messages.put({"recipient_id": recipient_id,
-                           "text": message,
-                           "data": buttons})
+    def _persist_message(self, message):
+        self.messages.put(message)
 
 
 class RestInput(InputChannel):

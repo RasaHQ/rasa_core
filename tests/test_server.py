@@ -21,6 +21,7 @@ from rasa_core.actions.action import ACTION_LISTEN_NAME
 from rasa_core.agent import Agent
 from rasa_core.channels import UserMessage
 from rasa_core.channels import CollectingOutputChannel
+from rasa_core.domain import Domain
 from rasa_core.events import (
     UserUttered, BotUttered, SlotSet, Event, ActionExecuted)
 from rasa_core.interpreter import RegexInterpreter
@@ -189,3 +190,17 @@ def test_remote_append_events(http_app, event):
     evts = tracker.get("events")
     expected = [ActionExecuted(ACTION_LISTEN_NAME), event]
     assert events.deserialise_events(evts) == expected
+
+
+def test_predict(http_app, app):
+    client = RasaCoreClient(EndpointConfig(http_app))
+    cid = str(uuid.uuid1())
+    for event in test_events[:2]:
+        client.append_event_to_tracker(cid, event)
+    out = app.get('/domain', headers={'Accept': 'yml'})
+    domain = Domain.from_yaml(out.get_data())
+    tracker = client.tracker(cid, domain)
+    event_dicts = [ev.as_dict() for ev in tracker.applied_events()]
+    response = app.post('/predict',
+                        json=event_dicts)
+    assert response.status_code == 200

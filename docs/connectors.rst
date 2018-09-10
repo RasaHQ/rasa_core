@@ -37,10 +37,11 @@ channels:
 
 .. _facebook_connector:
 
-Facebook Messenger Setup
-------------------------
+Facebook Setup
+--------------
 
-You first need to retrieve some credentials, once you have them you can
+You first need to retrieve some credentials to connect to the
+Facebook Messenger. Once you have them you can
 **either** attach the input channel running the provided ``rasa_core.run``
 script, or you can attach it in your own code.
 
@@ -378,6 +379,118 @@ The arguments for the ``handle_channels`` are the input channels and
 the port. The endpoint for receiving twilio channel messages
 is ``/webhooks/twilio/webhook``.
 
+
+.. _rocketchat_connector:
+
+RocketChat Setup
+----------------
+
+Getting Credentials
+^^^^^^^^^^^^^^^^^^^
+
+**How to set up Rocket.Chat:**
+
+ 1. Create a user that will be used to post messages and set its
+    credentials at credentials file.
+ 2. Create a Rocket.Chat outgoing webhook by logging as admin to
+    Rocket.Chat and going to
+    **Administration > Integrations > New Integration**.
+ 3. Select **Outgoing Webhook**.
+ 4. Set **Event Trigger** section to value **Message Sent**.
+ 5. Fill out the details including the channel you want the bot
+    listen to. Optionally, it is possible to set the
+    **Trigger Words** section with ``@yourbotname`` so that way it
+    doesn't trigger on everything that is said.
+ 6. Set your **URLs** section to the Rasa URL where you have your
+    webhook running, in Core or your public address with
+    ``/webhooks/rocketchat/webhook``, e.g.:
+    ``http://test.example.com/webhooks/rocketchat/webhook``.
+
+For more information on the Rocket.Chat Webhooks, go to
+https://rocket.chat/docs/administrator-guides/integrations/
+
+
+Using run script
+^^^^^^^^^^^^^^^^
+
+If you want to connect to the rocketchat input channel using the run
+script, e.g. using:
+
+.. code-block:: bash
+
+  python -m rasa_core.run -d models/dialogue -u models/nlu/current
+      --port 5002 --credentials credentials.yml
+
+you need to supply a ``credentials.yml`` with the following content:
+
+.. code-block:: yaml
+
+   rocketchat:
+     user: "yourbotname"
+     password: "YOUR_PASSWORD"
+     server_url: "https://demo.rocket.chat"
+
+Directly using python
+^^^^^^^^^^^^^^^^^^^^^
+
+A ``RocketChatInput`` instance provides a flask blueprint for creating
+a webserver. This lets you separate the exact endpoints and implementation
+from your webserver creation logic.
+
+Code to create a RocketChat-compatible webserver looks like this:
+
+.. literalinclude:: ../tests/test_channels.py
+   :pyobject: test_rocketchat_channel
+   :lines: 2-
+   :end-before: END DOC INCLUDE
+
+The arguments for the ``handle_channels`` are the input channels and
+the port. The endpoint for receiving mattermost channel messages
+is ``/webhooks/rocketchat/webhook``. This is the url you should add in the
+RocketChat outgoing webhook.
+
+.. _botframework_connector:
+
+Microsoft Bot Framework Setup
+-----------------------------
+
+Using run script
+^^^^^^^^^^^^^^^^
+If you want to connect to the botframework input channel using the
+run script, e.g. using:
+
+.. code-block:: bash
+
+ python -m rasa_core.run -d models/dialogue -u models/nlu/current \
+     --port 5002 --credentials credentials.yml
+
+you need to supply a ``credentials.yml`` with the following content:
+
+.. code-block:: yaml
+
+   botframework:
+     app_id: "MICROSOFT_APP_ID"
+     app_password: "MICROSOFT_APP_PASSWORD"
+
+Directly using python
+^^^^^^^^^^^^^^^^^^^^^
+
+A ``BotFrameworkInput`` instance provides a flask blueprint for creating
+a webserver. This lets you seperate the exact endpoints and implementation
+from your webserver creation logic.
+
+Code to create a Microsoft Bot Framework-compatible webserver looks like this:
+
+.. literalinclude:: ../tests/test_channels.py
+   :pyobject: test_botframework_channel
+   :lines: 2-
+   :end-before: END DOC INCLUDE
+
+The arguments for the ``handle_channels`` are the input channels and
+the port. The endpoint for receiving botframework channel messages
+is ``/webhooks/botframework/webhook``. This is the url you should
+add in your microsoft bot service configuration.
+
 .. _ngrok:
 
 Using Ngrok For Local Testing
@@ -400,10 +513,10 @@ https://xxxxxx.ngrok.io . For a facebook bot, your webhook address
 would then be https://xxxxxx.ngrok.io/webhooks/facebook/webhook,
 for telegram https://xxxxxx.ngrok.io/webhooks/telegram/webhook, etc.
 
-.. _custom_channels:
+.. _rest_channels:
 
-Custom Channels
----------------
+REST Channels
+-------------
 
 If you want to put a widget on your website so that people can
 talk to your bot, check out these two projects:
@@ -413,8 +526,98 @@ talk to your bot, check out these two projects:
 - `Chatroom <https://github.com/scalableminds/chatroom>`_
   uses regular HTTP requests.
 
-You can also implement your own, fully custom channel.
+For these use cases it is easiest to use either the ``RestInput`` or the
+``CallbackInput`` channels. They will provide you with a URL to post the
+messages to.
 
+RestInput
+^^^^^^^^^
+
+The ``rest`` channel, will provide you with a REST endpoint to post messages
+to and in response to that request will send back the bots messages.
+Here is an example on how to connect the ``rest`` input channel
+using the run script:
+
+.. code-block:: bash
+
+ python -m rasa_core.run -d models/dialogue -u models/nlu/current \
+     --port 5002 --credentials credentials.yml
+
+you need to supply a ``credentials.yml`` with the following content:
+
+.. code-block:: yaml
+
+   rest:
+     # you don't need to provide anything here - this channel doesn't
+     # require any credentials
+
+After connecting the ``rest`` input channel, you can post messages to
+``POST /webhooks/rest/webhook`` with the following format:
+
+.. code-block:: json
+
+   {
+     "sender": "Rasa",
+     "text": "Hi there!"
+   }
+
+The response to this request will include the bot responses, e.g.
+
+.. code-block:: json
+
+   [
+     {"text": "Hey Rasa!"}, {"image": "http://example.com/image.jpg"}
+   ]
+
+
+CallbackInput
+^^^^^^^^^^^^^
+
+The ``callback`` channel behaves very much like the ``rest`` input,
+but instead of directly returning the bot messages to the HTTP
+request that sends the message, it will call a URL you can specify
+to send bot messages.
+
+Here is an example on how to connect the
+``callback`` input channel using the run script:
+
+.. code-block:: bash
+
+ python -m rasa_core.run -d models/dialogue -u models/nlu/current \
+     --port 5002 --credentials credentials.yml
+
+you need to supply a ``credentials.yml`` with the following content:
+
+.. code-block:: yaml
+
+   callback:
+     # URL to which Core will send the bot responses
+     url: "http://localhost:5034/bot"
+
+After connecting the ``callback`` input channel, you can post messages to
+``POST /webhooks/callback/webhook`` with the following format:
+
+.. code-block:: json
+
+   {
+     "sender": "Rasa",
+     "text": "Hi there!"
+   }
+
+The response will simply be ``success``. Once Core wants to send a
+message to the user, it will call the URL you specified with a ``POST``
+and the following ``JSON`` body:
+
+.. code-block:: json
+
+   [
+     {"text": "Hey Rasa!"}, {"image": "http://example.com/image.jpg"}
+   ]
+
+.. _custom_channels:
+
+Creating a new Channel
+----------------------
 
 You can also implement your own, custom channel. You can
 use the ``rasa_core.channels.channel.RestInput`` class as a template.

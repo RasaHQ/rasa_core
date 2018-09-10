@@ -17,9 +17,13 @@ from typing import Text, Optional, Any, List, Dict
 
 import rasa_core
 from rasa_core import utils, training, constants
-from rasa_core.events import SlotSet, ActionExecuted
+from rasa_core.events import SlotSet, ActionExecuted, UserUttered
+from rasa_core.exceptions import UnsupportedDialogueModelError
 from rasa_core.featurizers import MaxHistoryTrackerFeaturizer
 from rasa_core.constants import FORM_ACTION_NAME
+from rasa_core.policies.fallback import FallbackPolicy
+from rasa_core.policies.memoization import (MemoizationPolicy,
+                                            AugmentedMemoizationPolicy)
 
 logger = logging.getLogger(__name__)
 
@@ -27,20 +31,6 @@ if typing.TYPE_CHECKING:
     from rasa_core.domain import Domain
     from rasa_core.policies.policy import Policy
     from rasa_core.trackers import DialogueStateTracker
-
-
-class UnsupportedDialogueModelError(Exception):
-    """Raised when a model is to old to be loaded.
-
-    Attributes:
-        message -- explanation of why the model is invalid
-    """
-
-    def __init__(self, message):
-        self.message = message
-
-    def __str__(self):
-        return self.message
 
 
 class PolicyEnsemble(object):
@@ -170,14 +160,15 @@ class PolicyEnsemble(object):
         model_version = metadata.get("rasa_core", "0.0.0")
         if version.parse(model_version) < version.parse(version_to_check):
             raise UnsupportedDialogueModelError(
-                "The model version is to old to be "
-                "loaded by this Rasa Core instance. "
-                "Either retrain the model, or run with"
-                "an older version. "
-                "Model version: {} Instance version: {} "
-                "Minimal compatible version: {}"
-                "".format(model_version, rasa_core.__version__,
-                          version_to_check))
+                    "The model version is to old to be "
+                    "loaded by this Rasa Core instance. "
+                    "Either retrain the model, or run with"
+                    "an older version. "
+                    "Model version: {} Instance version: {} "
+                    "Minimal compatible version: {}"
+                    "".format(model_version, rasa_core.__version__,
+                              version_to_check),
+                    model_version)
 
     @classmethod
     def load(cls, path):
@@ -194,7 +185,7 @@ class PolicyEnsemble(object):
             policy = policy_cls.load(policy_path)
             policies.append(policy)
         ensemble_cls = utils.class_from_module_path(
-                                metadata["ensemble_name"])
+                metadata["ensemble_name"])
         fingerprints = metadata.get("action_fingerprints", {})
         ensemble = ensemble_cls(policies, fingerprints)
         return ensemble
@@ -209,8 +200,13 @@ class PolicyEnsemble(object):
 
 class SimplePolicyEnsemble(PolicyEnsemble):
 
+    def is_not_memo_policy(self, best_policy_name):
+        return not (best_policy_name.endswith("_" + MemoizationPolicy.__name__)
+                    or best_policy_name.endswith(
+                                    "_" + AugmentedMemoizationPolicy.__name__))
+
     def probabilities_using_best_policy(self, tracker, domain):
-        # type: (DialogueStateTracker, Domain) -> List[float]
+        # type: (DialogueStateTracker, Domain) -> Tuple[List[float], Text]
         result = None
         max_confidence = -1
         best_policy_name = None
@@ -221,12 +217,37 @@ class SimplePolicyEnsemble(PolicyEnsemble):
                 max_confidence = confidence
                 result = probabilities
                 best_policy_name = 'policy_{}_{}'.format(i, type(p).__name__)
+
+        policy_names = [type(p).__name__ for p in self.policies]
+
+        # Trigger the fallback policy when ActionListen is predicted after
+        # a user utterance. This is done on the condition that: a fallback
+        # policy is present, there was just a user message and the predicted
+        # action is action_listen by a policy other than the MemoizationPolicy
+
+        if FallbackPolicy.__name__ in policy_names:
+            idx = policy_names.index(FallbackPolicy.__name__)
+            fallback_policy = self.policies[idx]
+
+            if (result.index(max_confidence) == 0 and
+                    self.is_not_memo_policy(best_policy_name)
+                    and isinstance(tracker.events[-1], UserUttered)):
+                logger.debug("Action listen was predicted after a user message."
+                             " Predicting fallback action: {}"
+                             "".format(fallback_policy.fallback_action_name))
+                result = fallback_policy.fallback_scores(domain)
+
+                best_policy_name = 'policy_{}_{}'.format(
+                                            idx,
+                                            type(fallback_policy).__name__)
+
         # normalize probablilities
         if np.sum(result) != 0:
-            result = result / np.linalg.norm(result)
+            result = result / np.nansum(result)
+
         logger.debug("Predicted next action using {}"
                      "".format(best_policy_name))
-        return result
+        return result, best_policy_name
 
 
 class FormPolicyEnsemble(SimplePolicyEnsemble):
@@ -236,8 +257,10 @@ class FormPolicyEnsemble(SimplePolicyEnsemble):
             logger.debug("Next action is decided by form {}".format(tracker.active_form))
             result = [0] * domain.num_actions
             result[domain.index_for_action(FORM_ACTION_NAME)] = 1.00
+            best_policy_name = tracker.active_form
         else:
-            result = super(FormPolicyEnsemble,
-                           self).probabilities_using_best_policy(tracker,
-                                                                 domain)
-        return result
+            result, best_policy_name = super(FormPolicyEnsemble,
+                                             self).probabilities_using_best_policy(
+                                                            tracker,
+                                                            domain)
+        return result, best_policy_name

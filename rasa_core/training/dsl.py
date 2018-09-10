@@ -10,27 +10,21 @@ import logging
 import os
 import re
 import warnings
-
-from rasa_nlu import utils as nlu_utils
 from typing import Optional, List, Text, Any, Dict, AnyStr
 
 from rasa_core import utils
 from rasa_core.events import (
     ActionExecuted, UserUttered, Event, SlotSet)
+from rasa_core.exceptions import StoryParseError
 from rasa_core.interpreter import RegexInterpreter
 from rasa_core.training.structures import (
     Checkpoint, STORY_START, StoryStep,
     GENERATED_CHECKPOINT_PREFIX, GENERATED_HASH_LENGTH)
+
 from rasa_core.constants import FORM_ACTION_NAME
+from rasa_nlu import utils as nlu_utils
 
 logger = logging.getLogger(__name__)
-
-
-class StoryParseError(Exception):
-    """Raised if there is an error while parsing the story file."""
-
-    def __init__(self, message):
-        self.message = message
 
 
 class StoryStepBuilder(object):
@@ -325,6 +319,11 @@ class StoryFileReader(object):
         if parsed is None:
             raise StoryParseError("Unknown event '{}'. It is Neither an event "
                                   "nor an action).".format(event_name))
+        if self.current_step_builder is None:
+            raise StoryParseError("Failed to handle event '{}'. There is no "
+                                  "started story block available. "
+                                  "".format(event_name))
+
         if isinstance(parsed, list):
             for p in parsed:
                 self.current_step_builder.add_event(p)

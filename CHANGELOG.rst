@@ -4,10 +4,65 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning`_ starting with version 0.2.0.
 
-[Unreleased 0.11.0.aX] - `master`_
+.. _master-release:
+
+[Unreleased 0.12.0.aX] - `master`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note:: This version is not yet released and is under active development.
+
+Added
+-----
+
+Changed
+-------
+
+Removed
+-------
+
+Fixed
+-----
+
+[0.11.3] - 2018-09-04
+^^^^^^^^^^^^^^^^^^^^^
+
+Added
+-----
+- callback output channel, receives messages and uses a REST endpoint to
+  respond with messages
+
+Changed
+-------
+- channel input creation moved to the channel, every channel can now
+  customize how it gets created from the credentials file
+
+[0.11.2] - 2018-09-04
+^^^^^^^^^^^^^^^^^^^^^
+
+Changed
+-------
+- improved documentation for events (e.g. including json serialisation)
+
+Removed
+-------
+- outdated documentation for removed endpoints in the server
+  (``/parse`` & ``/continue``)
+
+Fixed
+-----
+- read in fallback command line args
+
+[0.11.1] - 2018-08-30
+^^^^^^^^^^^^^^^^^^^^^
+
+Fixed
+-----
+- increased minimal compatible model version to 0.11.0
+
+.. _v0-11-0:
+
+[0.11.0] - 2018-08-30
+^^^^^^^^^^^^^^^^^^^^^
 
 .. warning::
 
@@ -18,11 +73,16 @@ This project adheres to `Semantic Versioning`_ starting with version 0.2.0.
 
 Added
 -----
+- added microsoft botframework input and output channels
+- added rocket chat input and output channels
 - script parameter ``--quiet`` to set the log level to ``WARNING``
 - information about the python version a model has been trained with to the
   model metadata
 - more emoji support for PY2
 - intent confidence support in RegexInterpreter
+- added paramter to train script to pull training data from an url instead
+  of a stories file
+- added new policy: :ref:`embedding_policy` implemented in tensorflow
 
 Changed
 -------
@@ -33,14 +93,24 @@ Changed
 - webhook URLs for the input channels have changed and need to be reset
 - deprecated using ``rasa_core.server`` as a script - use
   ``rasa_core.run --enable_api`` instead
+- collecting output channel will no properly collect events for images,
+  buttons, and attachments
 
 Removed
 -------
 - removed the deprecated ``TopicSet`` event
-- removed ``tracker.follow_up_action`` - use the ``FollowupAction`` event instead
+- removed ``tracker.follow_up_action`` - use the ``FollowupAction``
+  event instead
+- removed ``action_factory: remote`` from domain file - the domain is
+  always run over http
+- removed ``OnlineLearningPolicy`` - use the ``training.online``
+  script instead
 
 Fixed
 -------
+- lots of type annotations
+- some invalid documentation references
+- changed all ``logger.warn`` to ``logger.warning``
 
 [0.10.4] - 2018-08-08
 ^^^^^^^^^^^^^^^^^^^^^
@@ -83,6 +153,8 @@ Changed
 -------
 
 - documentation changes
+
+.. _v0-10-0:
 
 [0.10.0] - 2018-07-17
 ^^^^^^^^^^^^^^^^^^^^^
@@ -170,6 +242,8 @@ Fixed
 - the ``agent()`` method used in some ``rasa_core.server`` endpoints is
   re-run at every new call of the ``ensure_loaded_agent`` decorator
 - fixed OR usage of intents
+
+.. _v0-9-0:
 
 [0.9.0] - 2018-05-24
 ^^^^^^^^^^^^^^^^^^^^
@@ -260,6 +334,8 @@ Fixed
 - removed deque to support python 3.5
 - Documentation improvements to tutorials
 - serialisation of date time value for ``ReminderScheduled`` event
+
+.. _v0-8-0:
 
 [0.8.0] - 2018-01-30
 ^^^^^^^^^^^^^^^^^^^^
@@ -403,6 +479,8 @@ Fixed
   wrong predictions
 
 
+.. _v0-7-0:
+
 [0.7.0] - 2017-10-04
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -421,6 +499,8 @@ Changed
 - use hashing when writing memorized turns into persistence - requires retraining of all models that are trained with a version prior to this
 - changed ``agent.handle_message(...)`` interface for easier usage
 
+.. _v0-6-0:
+
 [0.6.0] - 2017-08-27
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -434,6 +514,8 @@ Added
 Changed
 -------
 - large refactoring of code base
+
+.. _v0-5-0:
 
 [0.5.0] - 2017-06-18
 ^^^^^^^^^^^^^^^^^^^^
@@ -457,6 +539,8 @@ Fixed
 - ``RegexInterpreter`` checks if the regex actually matches the message instead of assuming it always does
 - ``str`` implementation for all events
 - ``Controller`` can be started without an input channel (e.g. messages need to be fed into the queue manually)
+
+.. _v0-2-0:
 
 [0.2.0] - 2017-05-18
 ^^^^^^^^^^^^^^^^^^^^

@@ -20,7 +20,12 @@ class EventChannel(object):
 
 
 class PikaProducer(EventChannel):
-    def __init__(self, host, username, password, queue='rasa_core_events'):
+    def __init__(self, host, username, password,
+                 queue='rasa_core_events',
+                 loglevel=logging.INFO):
+
+        logging.getLogger('pika').setLevel(loglevel)
+
         self.queue = queue
         self.host = host
         self.credentials = pika.PlainCredentials(username, password)

@@ -22,6 +22,8 @@ from rasa_core.interpreter import NaturalLanguageInterpreter
 from rasa_core.policies import PolicyEnsemble
 from rasa_core.trackers import DialogueStateTracker
 from rasa_core.version import __version__
+from rasa_core.channels import UserMessage
+
 
 logger = logging.getLogger(__name__)
 
@@ -182,17 +184,22 @@ def create_app(agent,
                methods=['GET', 'OPTIONS'])
     @cross_origin(origins=cors_origins)
     @requires_auth(auth_token)
-    @ensure_loaded_agent(agent)
     def list_trackers():
-        return jsonify(list(agent.tracker_store.keys()))
+        if agent.tracker_store:
+            return jsonify(list(agent.tracker_store.keys()))
+        else:
+            return jsonify([])
 
     @app.route("/conversations/<sender_id>/tracker",
                methods=['GET', 'OPTIONS'])
     @cross_origin(origins=cors_origins)
     @requires_auth(auth_token)
-    @ensure_loaded_agent(agent)
     def retrieve_tracker(sender_id):
         """Get a dump of a conversations tracker including its events."""
+
+        if not agent.tracker_store:
+            return Response("No tracker store available.",
+                            status=503)
 
         # parameters
         should_ignore_restarts = utils.bool_arg('ignore_restarts',
@@ -203,6 +210,11 @@ def create_app(agent,
 
         # retrieve tracker and set to requested state
         tracker = agent.tracker_store.get_or_create_tracker(sender_id)
+        if not tracker:
+            return Response("Could not retrieve tracker. Most likely "
+                            "because there is no domain set on the agent.",
+                            status=503)
+
         if until_time is not None:
             tracker = tracker.travel_back_in_time(float(until_time))
 
@@ -346,9 +358,9 @@ def create_app(agent,
                             content_type="application/x-yml")
         else:
             return Response(
-                    """Invalid accept header. Domain can be provided 
-                    as json ("Accept: application/json")  
-                    or yml ("Accept: application/x-yml"). 
+                    """Invalid accept header. Domain can be provided
+                    as json ("Accept: application/json")
+                    or yml ("Accept: application/x-yml").
                     Make sure you've set the appropriate Accept header.""",
                     status=406)
 
@@ -388,6 +400,33 @@ def create_app(agent,
             "model_fingerprint": agent.fingerprint,
             "is_ready": agent.is_ready()
         })
+
+    @app.route("/predict", methods=['POST'])
+    @requires_auth(auth_token)
+    @cross_origin(origins=cors_origins)
+    @ensure_loaded_agent(agent)
+    def tracker_predict():
+        """ Given a list of events, predicts the next action"""
+        sender_id = UserMessage.DEFAULT_SENDER_ID
+        request_params = request.get_json(force=True)
+        for param in request_params:
+            if param.get('event', None) is None:
+                return Response(
+                    """Invalid list of events provided.""",
+                    status=400)
+        tracker = DialogueStateTracker.from_dict(sender_id,
+                                                 request_params,
+                                                 agent.domain.slots)
+        policy_ensemble = agent.policy_ensemble
+        probabilities, _ = policy_ensemble.probabilities_using_best_policy(
+                                                tracker, agent.domain)
+        
+        probability_dict = {}
+        for idx, probability in enumerate(probabilities):
+            action_name = agent.domain.action_names[idx]
+            probability_dict[action_name] = probability
+
+        return jsonify(probability_dict)
 
     return app
 

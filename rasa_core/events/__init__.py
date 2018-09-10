@@ -3,15 +3,15 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import datetime
-import json
-import logging
 import time
-import uuid
-
-import jsonpickle
-import typing
 from builtins import str
+
+import json
+import jsonpickle
+import logging
+import typing
+import uuid
+from dateutil import parser
 from typing import List, Dict, Text, Any, Type, Optional
 
 from rasa_core import utils
@@ -59,7 +59,7 @@ def first_key(d, default_key):
 
 # noinspection PyProtectedMember
 class Event(object):
-    """Events describe everything that occurs in 
+    """Events describe everything that occurs in
     a conversation and tell the :class:`DialogueStateTracker`
     how to update its state."""
 
@@ -307,6 +307,9 @@ class BotUttered(Event):
 class SlotSet(Event):
     """The user has specified their preference for the value of a ``slot``.
 
+    Every slot has a name and a value. This event can be used to set a
+    value for a slot on a conversation.
+
     As a side effect the ``Tracker``'s slots will be updated so
     that ``tracker.slots[key]=value``."""
 
@@ -369,7 +372,9 @@ class SlotSet(Event):
 class Restarted(Event):
     """Conversation should start over & history wiped.
 
-    As a side effect the ``Tracker`` will be reinitialised."""
+    Instead of deleting all events, this event can be used to reset the
+    trackers state (e.g. ignoring any past user messages & resetting all
+    the slots)."""
 
     type_name = "restart"
 
@@ -393,10 +398,10 @@ class Restarted(Event):
 
 # noinspection PyProtectedMember
 class UserUtteranceReverted(Event):
-    """Bot reverts everything until before the most recent user message. 
-    
-    The bot will revert all events after the latest `UserUttered`, this 
-    also means that the last event on the tracker is usually `action_listen` 
+    """Bot reverts everything until before the most recent user message.
+
+    The bot will revert all events after the latest `UserUttered`, this
+    also means that the last event on the tracker is usually `action_listen`
     and the bot is waiting for a new user message."""
 
     type_name = "rewind"
@@ -422,9 +427,11 @@ class UserUtteranceReverted(Event):
 
 # noinspection PyProtectedMember
 class AllSlotsReset(Event):
-    """Conversation should start over & history wiped.
+    """All Slots are reset to their initial values.
 
-    As a side effect the ``Tracker`` will be reinitialised."""
+    If you want to keep the dialogue history and only want to reset the
+    slots, you can use this event to set all the slots to their initial
+    values."""
 
     type_name = "reset_slots"
 
@@ -459,7 +466,7 @@ class ReminderScheduled(Event):
 
         :param action_name: name of the action to be scheduled
         :param trigger_date_time: date at which the execution of the action
-                                  should be triggered
+                                  should be triggered (either utc or with tz)
         :param name: id of the reminder. if there are multiple reminders with
                      the same id only the last will be run
         :param kill_on_user_message: ``True`` means a user message before the
@@ -473,7 +480,8 @@ class ReminderScheduled(Event):
         super(ReminderScheduled, self).__init__(timestamp)
 
     def __hash__(self):
-        return hash(self.name)
+        return hash((self.action_name, self.trigger_date_time.isoformat(),
+                     self.kill_on_user_message, self.name))
 
     def __eq__(self, other):
         if not isinstance(other, ReminderScheduled):
@@ -504,14 +512,8 @@ class ReminderScheduled(Event):
         return d
 
     @classmethod
-    def _parse_trigger_time(cls, date_time):
-        return datetime.datetime.strptime(date_time[:19], '%Y-%m-%dT%H:%M:%S')
-
-    @classmethod
     def _from_story_string(cls, parameters):
-        logger.info("Reminders will be ignored during training, "
-                    "which should be ok.")
-        trigger_date_time = cls._parse_trigger_time(parameters.get("date_time"))
+        trigger_date_time = parser.parse(parameters.get("date_time"))
         return ReminderScheduled(parameters.get("action"),
                                  trigger_date_time,
                                  parameters.get("name", None),
@@ -524,9 +526,9 @@ class ActionReverted(Event):
     """Bot undoes its last action.
 
     The bot everts everything until before the most recent action.
-    This includes the action itself, as well as any events that 
-    action created, like set slot events - the bot will now 
-    predict a new action using the state before the most recent 
+    This includes the action itself, as well as any events that
+    action created, like set slot events - the bot will now
+    predict a new action using the state before the most recent
     action."""
 
     type_name = "undo"
@@ -678,13 +680,17 @@ class ActionExecuted(Event):
 
     type_name = "action"
 
-    def __init__(self, action_name, timestamp=None):
+    def __init__(self, action_name, policy=None, policy_confidence=None, timestamp=None):
         self.action_name = action_name
         self.unpredictable = action_name == FORM_ACTION_NAME
+        self.policy = policy
+        self.policy_confidence = policy_confidence
         super(ActionExecuted, self).__init__(timestamp)
 
     def __str__(self):
-        return "ActionExecuted(action: {})".format(self.action_name)
+        return ("ActionExecuted(action: {}, policy: {}, policy_confidence: {})"
+                "".format(self.action_name, self.policy,
+                          self.policy_confidence))
 
     def __hash__(self):
         return hash(self.action_name)
@@ -701,7 +707,10 @@ class ActionExecuted(Event):
     @classmethod
     def _from_story_string(cls, parameters):
         return ActionExecuted(parameters.get("name"),
-                              parameters.get("timestamp"))
+                              parameters.get("policy"),
+                              parameters.get("policy_confidence"),
+                              parameters.get("timestamp")
+                              )
 
     def as_dict(self):
         d = super(ActionExecuted, self).as_dict()

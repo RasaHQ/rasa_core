@@ -7,6 +7,8 @@ Migration Guide
 This page contains information about changes between major versions and
 how you can migrate from one version to another.
 
+.. _migration-to-0-11-0:
+
 0.10.x to 0.11.0
 ----------------
 
@@ -19,10 +21,33 @@ how you can migrate from one version to another.
 
 General
 ~~~~~~~
-- domain actions list now needs to always contain the actions names instead of
-  the classpath
+.. note::
+
+  TL;DR these are the most important surface changes. But if you have
+  a second please take a minute to read all of them.
+
+- If you have custom actions, you now need to run a separate server to execute
+  them. If your actions are written in python (in a file called actions.py) you
+  can do this by running ``python -m rasa_core_sdk.endpoint --actions actions``
+  and specifying the action endpoint in the ``endpoints.yml``
+  For more information please read :ref:`customactions`.
+- For your custom actions, the imports have changed from
+  ``from rasa_core.actions import Action`` to ``from rasa_core_sdk import Action`` and
+  from ``from rasa_core.events import *`` to ``from rasa_core_sdk.events import *``
+- The actions list in the domain now needs to always contain the actions names
+  instead of the classpath (e.g. change ``actions.ActionExample`` to ``action_example``)
 - utter templates that should be used as actions, now need to start with
   ``utter_``, otherwise the bot won't be able to find the action
+
+HTTP Server endpoints
+~~~~~~~~~~~~~~~~~~~~~
+- We removed ``/parse`` and ``/continue`` endpoints used for running actions
+  remotely. This has been replaced by the action server that allows you
+  to run your action code in any language. There are no replacement endpoints
+  for these two, as the flow of information has been changed: Instead of you
+  calling Rasa Core to update the tracker and receive the next action to be
+  executed, Rasa Core will call your action server once it predicted an action.
+  More information can be found in the updated docs for :ref:`customactions`.
 
 
 Webhooks
@@ -45,10 +70,20 @@ Webhooks
 
 Changes to Input and Output Channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- ``ConsoleOutputChannel`` and ``ConsoleInputChannel`` have been removed. Either
+  use the `run script <https://github.com/RasaHQ/rasa_core/blob/master/rasa_core/run.py>`_
+  to run your bot on the cmdline, or adapt the ``serve_application``
+  `function <https://github.com/RasaHQ/rasa_core/blob/master/rasa_core/run.py#L260>`_
+  to run from a python script.
 - ``rasa_core.channels.direct`` output channel package removed.
   ``CollectingOutputChannel`` moved to ``rasa_core.channels.channel``
 - ``HttpInputComponent`` renamed to ``InputChannel`` & moved to
   ``rasa_core.channels.channel.InputChannel``
+- If you wrote your own custom input channel, make sure to inherit from
+  ``InputChannel`` instead of ``HttpInputComponent``.
+- ``CollectingOutput`` channel will no properly collect events for images,
+  buttons, and attachments. The content of the collected messages has changed,
+  ``data`` is now called ``buttons``.
 - removed package ``rasa_core.channels.rest``,
   please use ``rasa_core.channels.RestInput`` instead
 - remove file input channel ``rasa_core.channels.file.FileInputChannel``
@@ -63,6 +98,22 @@ Changes to Input and Output Channels
                                    fb_secret="SECRET",
                                    fb_access_token="ACCESS_TOKEN")
      agent.handle_channels([input_channel], port=5005, serve_forever=True)
+- If you wrote your own custom output channel, make sure to split messages
+  on double new lines if you like (the ``InputChannel`` you inherit from
+  doesn't do this anymore), e.g.:
+
+  .. code-block:: python
+
+     def send_text_message(self, recipient_id, message):
+         # type: (Text, Text) -> None
+         """Send a message through this channel."""
+
+         for message_part in message.split("\n\n"):
+           # self.send would be the actual communication to e.g. facebook
+           self.send(recipient_id, message_part)
+
+
+.. _migration-to-0-10-0:
 
 0.9.x to 0.10.0
 ---------------
@@ -103,6 +154,7 @@ There have been some API changes to classes and methods:
       endpoint = EndpointConfig("http://localhost:500", token="mytoken")
       interpreter = RasaNLUHttpInterpreter("mymodelname", endpoint)
 
+.. _migration-to-0-9-0:
 
 0.8.x to 0.9.0
 --------------
@@ -163,6 +215,8 @@ There have been some API changes to classes and methods:
 - the ListSlot now stores a list of entities (with the same name)
   present in an utterance
 
+
+.. _migration-to-0-8-0:
 
 0.7.x to 0.8.0
 --------------
