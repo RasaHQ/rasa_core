@@ -221,11 +221,8 @@ We count any story as <cite>failed</cite> if at least one of the actions was pre
 The confusion matrix shows, for each action in your domain, how often that action
 was predicted, and how often an incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
-RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
-usage: evaluate.py [-h] -s STORIES [-m MAX_STORIES] -d CORE [-u NLU]
-                   [-o OUTPUT] [--failed FAILED] [--endpoints ENDPOINTS]
-                   [--fail_on_prediction_errors] [-v] [-vv] [--quiet]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] -s STORIES [-m MAX_STORIES] -d CORE [-u NLU]
+                   [-o OUTPUT] [--failed FAILED] [-v] [-vv] [--quiet]
 
 evaluates a dialogue model
 
@@ -242,12 +239,6 @@ optional arguments:
                         output path for the created evaluation plot. If set to
                         Noneor an empty string, no plot will be generated.
   --failed FAILED       output path for the failed stories
-  --endpoints ENDPOINTS
-                        Configuration file for the connectors as a yml file
-  --fail_on_prediction_errors
-                        If a prediction error is encountered, an exception is
-                        thrown. This can be used to validate stories during
-                        tests, e.g. on travis.
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG
