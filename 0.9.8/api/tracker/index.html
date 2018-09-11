@@ -278,7 +278,7 @@ of this tracker exactly.</p>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.current_state">
-<code class="descname">current_state</code><span class="sig-paren">(</span><em>should_include_events=False</em>, <em>should_ignore_restarts=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.current_state" title="Permalink to this definition">¶</a></dt>
+<code class="descname">current_state</code><span class="sig-paren">(</span><em>event_verbosity=&lt;EventVerbosity.NONE: 1&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.current_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the current tracker state as an object.</p>
 </dd></dl>
 
@@ -392,6 +392,33 @@ at the target time will be included.</p>
 <code class="descname">update</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify the state of the tracker according to an <code class="docutils literal notranslate"><span class="pre">Event</span></code>.</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rasa_core.trackers.EventVerbosity">
+<em class="property">class </em><code class="descclassname">rasa_core.trackers.</code><code class="descname">EventVerbosity</code><a class="reference internal" href="../../_modules/rasa_core/trackers/#EventVerbosity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.EventVerbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Filter on which events to include in tracker dumps.</p>
+<dl class="attribute">
+<dt id="rasa_core.trackers.EventVerbosity.AFTER_RESTART">
+<code class="descname">AFTER_RESTART</code><em class="property"> = 3</em><a class="headerlink" href="#rasa_core.trackers.EventVerbosity.AFTER_RESTART" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.trackers.EventVerbosity.ALL">
+<code class="descname">ALL</code><em class="property"> = 4</em><a class="headerlink" href="#rasa_core.trackers.EventVerbosity.ALL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.trackers.EventVerbosity.APPLIED">
+<code class="descname">APPLIED</code><em class="property"> = 2</em><a class="headerlink" href="#rasa_core.trackers.EventVerbosity.APPLIED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.trackers.EventVerbosity.NONE">
+<code class="descname">NONE</code><em class="property"> = 1</em><a class="headerlink" href="#rasa_core.trackers.EventVerbosity.NONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

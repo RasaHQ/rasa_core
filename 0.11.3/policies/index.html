@@ -272,12 +272,10 @@ you should store it as a slot. Slot information is always available for every fe
 </div>
 <div class="section" id="training-script-options">
 <h3>Training Script Options<a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
-RuntimeError: module compiled against API version 0xc but this version of numpy is 0xb
-usage: train.py [-h] (-s STORIES | --url URL) -o OUT -d DOMAIN [-u NLU]
-                [--history HISTORY] [--epochs EPOCHS]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] (-s STORIES | --url URL | --core CORE) [-o OUT] -d DOMAIN
+                [-u NLU] [--history HISTORY] [--epochs EPOCHS]
                 [--validation_split VALIDATION_SPLIT]
-                [--batch_size BATCH_SIZE] [--online]
+                [--batch_size BATCH_SIZE] [--online] [--finetune]
                 [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
                 [--endpoints ENDPOINTS] [--nlu_threshold NLU_THRESHOLD]
                 [--core_threshold CORE_THRESHOLD]
@@ -293,6 +291,8 @@ optional arguments:
   --url URL             If supplied, downloads a story file from a URL and
                         trains on it. Fetches the data by sending a GET
                         request to the supplied URL.
+  --core CORE           path to load a pre-trained model instead of training
+                        (for online mode only)
   -o OUT, --out OUT     directory to persist the trained model in
   -d DOMAIN, --domain DOMAIN
                         domain specification yaml file
@@ -306,6 +306,7 @@ optional arguments:
                         number of training samples to put into one training
                         batch
   --online              enable online training
+  --finetune            retrain the model immediately based on feedback.
   --augmentation AUGMENTATION
                         how much data augmentation to use during training
   --debug_plots         If enabled, will create plots showing checkpoints and
