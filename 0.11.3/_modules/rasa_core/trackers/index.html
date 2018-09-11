@@ -209,7 +209,6 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
 
 <span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
 
@@ -227,25 +226,6 @@
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">rasa_core.actions</span> <span class="k">import</span> <span class="n">Action</span>
     <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
-
-
-<span class="k">class</span> <span class="nc">EventVerbosity</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Filter on which events to include in tracker dumps.&quot;&quot;&quot;</span>
-
-    <span class="c1"># no events will be included</span>
-    <span class="n">NONE</span> <span class="o">=</span> <span class="mi">1</span>
-
-    <span class="c1"># all events, that contribute to the trackers state are included</span>
-    <span class="c1"># these are all you need to reconstruct the tracker state</span>
-    <span class="n">APPLIED</span> <span class="o">=</span> <span class="mi">2</span>
-
-    <span class="c1"># include even more events, in this case everything that comes</span>
-    <span class="c1"># after the most recent restart event. this will also include</span>
-    <span class="c1"># utterances that got reverted and actions that got undone.</span>
-    <span class="n">AFTER_RESTART</span> <span class="o">=</span> <span class="mi">3</span>
-
-    <span class="c1"># include every logged event</span>
-    <span class="n">ALL</span> <span class="o">=</span> <span class="mi">4</span>
 
 
 <div class="viewcode-block" id="DialogueStateTracker"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker">[docs]</a><span class="k">class</span> <span class="nc">DialogueStateTracker</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -305,16 +285,18 @@
     <span class="c1">###</span>
     <span class="c1"># Public tracker interface</span>
     <span class="c1">###</span>
-<div class="viewcode-block" id="DialogueStateTracker.current_state"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.current_state">[docs]</a>    <span class="k">def</span> <span class="nf">current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_verbosity</span><span class="o">=</span><span class="n">EventVerbosity</span><span class="o">.</span><span class="n">NONE</span><span class="p">):</span>
-        <span class="c1"># type: (EventVerbosity) -&gt; Dict[Text, Any]</span>
+<div class="viewcode-block" id="DialogueStateTracker.current_state"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.current_state">[docs]</a>    <span class="k">def</span> <span class="nf">current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">should_include_events</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">should_ignore_restarts</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># type: (bool, bool) -&gt; Dict[Text, Any]</span>
         <span class="sd">&quot;&quot;&quot;Return the current tracker state as an object.&quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">event_verbosity</span> <span class="o">==</span> <span class="n">EventVerbosity</span><span class="o">.</span><span class="n">ALL</span><span class="p">:</span>
-            <span class="n">evts</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">event_verbosity</span> <span class="o">==</span> <span class="n">EventVerbosity</span><span class="o">.</span><span class="n">AFTER_RESTART</span><span class="p">:</span>
-            <span class="n">evts</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events_after_latest_restart</span><span class="p">()]</span>
-        <span class="k">elif</span> <span class="n">event_verbosity</span> <span class="o">==</span> <span class="n">EventVerbosity</span><span class="o">.</span><span class="n">APPLIED</span><span class="p">:</span>
-            <span class="n">evts</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">should_include_events</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">should_ignore_restarts</span><span class="p">:</span>
+                <span class="n">es</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">es</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events_after_latest_restart</span><span class="p">()</span>
+            <span class="n">evts</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">es</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">evts</span> <span class="o">=</span> <span class="kc">None</span>
 
