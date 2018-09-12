@@ -15,10 +15,11 @@ from dateutil import parser
 from typing import List, Dict, Text, Any, Type, Optional
 
 from rasa_core import utils
+from rasa_core.constants import FORM_ACTION_NAME
 
 if typing.TYPE_CHECKING:
     from rasa_core.trackers import DialogueStateTracker
-from rasa_core.constants import FORM_ACTION_NAME
+
 
 logger = logging.getLogger(__name__)
 
@@ -829,8 +830,8 @@ class FormListen(Event):
     type_name = 'form_listen'
 
     def apply_to(self, tracker):
-        from rasa_core.actions.action import ActionListen
-        tracker.trigger_follow_up_action(ActionListen())
+        from rasa_core.actions.action import ACTION_LISTEN_NAME
+        tracker.trigger_follow_up_action(ACTION_LISTEN_NAME)
 
     def as_story_string(self):
         return None
