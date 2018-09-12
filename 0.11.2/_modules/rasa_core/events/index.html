@@ -592,7 +592,7 @@
     <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_follow_up_action</span><span class="p">(</span><span class="n">ACTION_LISTEN_NAME</span><span class="p">)</span></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_followup_action</span><span class="p">(</span><span class="n">ACTION_LISTEN_NAME</span><span class="p">)</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>
@@ -817,7 +817,7 @@
 
     <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_follow_up_action</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span></div>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_followup_action</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span></div>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>

@@ -309,7 +309,7 @@
             <span class="s2">&quot;slots&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_slot_values</span><span class="p">(),</span>
             <span class="s2">&quot;latest_message&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">parse_data</span><span class="p">,</span>
             <span class="s2">&quot;latest_event_time&quot;</span><span class="p">:</span> <span class="n">latest_event_time</span><span class="p">,</span>
-            <span class="s2">&quot;followup_action&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">follow_up_action</span><span class="p">,</span>
+            <span class="s2">&quot;followup_action&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">followup_action</span><span class="p">,</span>
             <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span><span class="p">(),</span>
             <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">evts</span>
         <span class="p">}</span></div>
@@ -521,7 +521,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="n">UserUttered</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="n">BotUttered</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">follow_up_action</span> <span class="o">=</span> <span class="n">ACTION_LISTEN_NAME</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">followup_action</span> <span class="o">=</span> <span class="n">ACTION_LISTEN_NAME</span>
 
     <span class="k">def</span> <span class="nf">_reset_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; None</span>
@@ -558,7 +558,7 @@
     <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DialogueStateTracker.trigger_follow_up_action"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.trigger_follow_up_action">[docs]</a>    <span class="k">def</span> <span class="nf">trigger_follow_up_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<div class="viewcode-block" id="DialogueStateTracker.trigger_followup_action"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.trigger_followup_action">[docs]</a>    <span class="k">def</span> <span class="nf">trigger_followup_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="c1"># type: (Text) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Triggers another action following the execution of the current.&quot;&quot;&quot;</span>
 
