@@ -404,9 +404,10 @@
     <span class="k">def</span> <span class="nf">_action_call_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; Dict[Text, Any]</span>
         <span class="sd">&quot;&quot;&quot;Create the request json send to the action server.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">EventVerbosity</span>
 
-        <span class="n">tracker_state</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">current_state</span><span class="p">(</span><span class="n">EventVerbosity</span><span class="o">.</span><span class="n">ALL</span><span class="p">)</span>
+        <span class="n">tracker_state</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">current_state</span><span class="p">(</span>
+                <span class="n">should_include_events</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">should_ignore_restarts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;next_action&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
