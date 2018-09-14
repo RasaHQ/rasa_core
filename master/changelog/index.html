@@ -220,6 +220,10 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 <div class="section" id="added">
 <h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>a flag <code class="docutils literal notranslate"><span class="pre">--fail_on_prediction_errors</span></code> to the <code class="docutils literal notranslate"><span class="pre">evaluate.py</span></code> script -
+if used when running the evaluation, the script will fail with a non
+0 exit code if there is at least one prediction error. This can be
+used on CIs to validate models against test stories.</li>
 <li>JWT support: parameters to allow clients to authenticate requests to
 the rasa_core.server using JWT’s in addition to normal token based auth</li>
 <li>added socket.io input / output channel</li>
@@ -228,6 +232,10 @@ the rasa_core.server using JWT’s in addition to normal token based auth</li>
 <div class="section" id="changed">
 <h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>dump failed stories after evaluation in the normal story format instead of
+as a text file</li>
+<li>do not run actions during evaluation. instead, action are only predicted
+and validated against the gold story.</li>
 <li>improved the online learning experience on the CLI</li>
 <li>made finetuning during online learning optional (use <code class="docutils literal notranslate"><span class="pre">--finetune</span></code> if
 you want to enable it)</li>
