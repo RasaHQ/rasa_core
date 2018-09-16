@@ -257,23 +257,18 @@ div.sphinxsidebar hr {
     font-weight:600;
 }
 
-.rst-versions {
+.versions {
     font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif;
 }
 
-.rst-other-versions {
-  visibility: hidden; 
+.other-versions {
+    margin-bottom: 100px;
 }
 
-.rst-versions:hover .rst-other-versions {
-  visibility:visible;
-  display: block;
-  border:1px solid ;
-  box-shadow: 0 4px 4px 0 rgba(107,107,107,0.04);
-  padding:0 24px;
-  max-width:100px;
+.versions-content {
+    margin-left: 12px;
 }
-  
+
 
 /* -- body styles ----------------------------------------------------------- */
 
