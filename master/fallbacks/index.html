@@ -246,7 +246,7 @@ of intent / action prediction is below the threshold</td>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span> <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">KerasPolicy</span><span class="p">(),</span> <span class="n">fallback</span><span class="p">])</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">action_fallback</span></code> is a default action in Rasa Core, which will send the
+<p><code class="docutils literal notranslate"><span class="pre">action_default_fallback</span></code> is a default action in Rasa Core, which will send the
 <code class="docutils literal notranslate"><span class="pre">utter_default</span></code> template message to the user. Make sure to specify
 this template in your domain file. It will also revert back to the
 state of the conversation before the user message that caused the
