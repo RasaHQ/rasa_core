@@ -240,6 +240,9 @@ you want to enable it)</li>
 </div>
 <div class="section" id="removed">
 <h3>Removed<a class="headerlink" href="#removed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>package pytest-services since it wasn’t necessary</li>
+</ul>
 </div>
 <div class="section" id="fixed">
 <h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
@@ -247,6 +250,7 @@ you want to enable it)</li>
 <li>fixed an issue with the followup (there was a name confusion, sometimes
 the followup action would be set to the non existent <code class="docutils literal notranslate"><span class="pre">follow_up_action</span></code>
 attribute instead of <code class="docutils literal notranslate"><span class="pre">followup_action</span></code>)</li>
+<li>fixed an issue with boolean slots where False and None had the same value</li>
 </ul>
 </div>
 </div>
