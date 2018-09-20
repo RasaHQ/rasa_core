@@ -1019,7 +1019,8 @@ posted this message to the channel:</p>
     <span class="k">def</span> <span class="nf">on_message_wrapper</span><span class="p">(</span><span class="n">on_new_message</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">):</span>
         <span class="n">collector</span> <span class="o">=</span> <span class="n">QueueOutputChannel</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
 
-        <span class="n">message</span> <span class="o">=</span> <span class="n">UserMessage</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">collector</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">UserMessage</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">collector</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span>
+                              <span class="n">input_channel</span><span class="o">=</span><span class="n">RestInput</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
         <span class="n">on_new_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
         <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;DONE&quot;</span><span class="p">)</span>
@@ -1065,7 +1066,8 @@ posted this message to the channel:</p>
                         <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;text/event-stream&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">collector</span> <span class="o">=</span> <span class="n">CollectingOutputChannel</span><span class="p">()</span>
-                <span class="n">on_new_message</span><span class="p">(</span><span class="n">UserMessage</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">collector</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">))</span>
+                <span class="n">on_new_message</span><span class="p">(</span><span class="n">UserMessage</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">collector</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span>
+                                           <span class="n">input_channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
                 <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">collector</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">custom_webhook</span>

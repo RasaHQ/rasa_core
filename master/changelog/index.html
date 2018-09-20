@@ -246,6 +246,9 @@ used on CIs to validate models against test stories.</li>
 <li>JWT support: parameters to allow clients to authenticate requests to
 the rasa_core.server using JWT’s in addition to normal token based auth</li>
 <li>added socket.io input / output channel</li>
+<li><code class="docutils literal notranslate"><span class="pre">UserMessage</span></code> and <code class="docutils literal notranslate"><span class="pre">UserUttered</span></code> classes have a new attribute
+<code class="docutils literal notranslate"><span class="pre">input_channel</span></code> that stores the name of the <code class="docutils literal notranslate"><span class="pre">InputChannel</span></code>
+through which the message was received</li>
 </ul>
 </div>
 <div class="section" id="id3">
