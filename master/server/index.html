@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -225,7 +226,7 @@ head over to <a class="reference internal" href="../customactions/#customactions
 </div>
 <p>The HTTP api exists to make it easy for python and non-python
 projects to interact with Rasa Core. The API allows you to modify
-the trackers (e.g. push or remote events).</p>
+the trackers.</p>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
@@ -349,7 +350,7 @@ and the <code class="docutils literal notranslate"><span class="pre">HS256</span
 </pre></div>
 </div>
 <p>Your requests should have set a proper JWT header:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>&quot;Authorization&quot;: &quot;Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ&quot;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&quot;Authorization&quot;: &quot;Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ&quot;
                  &quot;zdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIi&quot;
                  &quot;wiaWF0IjoxNTE2MjM5MDIyfQ.qdrr2_a7Sd80gmCWjnDomO&quot;
                  &quot;Gl8eZFVfKXA6jhncgRn-I&quot;
@@ -358,304 +359,14 @@ and the <code class="docutils literal notranslate"><span class="pre">HS256</span
 </div>
 <div class="section" id="endpoints">
 <h2><a class="toc-backref" href="#id6">Endpoints</a><a class="headerlink" href="#endpoints" title="Permalink to this headline">¶</a></h2>
-<dl class="post">
-<dt id="post--conversations-(str-sender_id)-respond">
-<code class="descname">POST </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/respond</code><a class="headerlink" href="#post--conversations-(str-sender_id)-respond" title="Permalink to this definition">¶</a></dt>
-<dd><div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This endpoint will be removed in the future. Rather consider using
-the <code class="docutils literal notranslate"><span class="pre">RestInput</span></code> channel. When added to core, it will provide you
-an endpoint at <code class="docutils literal notranslate"><span class="pre">/webhooks/rest/webhook</span></code> that returns the same
-output as this endpoint. The only difference is, that you need to send
-the message as <code class="docutils literal notranslate"><span class="pre">{&quot;message&quot;:</span> <span class="pre">}&quot;&lt;your</span> <span class="pre">text</span> <span class="pre">to</span> <span class="pre">parse&gt;&quot;}</span></code>.</p>
-</div>
-<p>Notify the dialogue engine that the user posted a new message, and get
-a list of response messages the bot should send back.
-You must <code class="docutils literal notranslate"><span class="pre">POST</span></code> data in this format <code class="docutils literal notranslate"><span class="pre">'{&quot;query&quot;:&quot;&lt;your</span> <span class="pre">text</span> <span class="pre">to</span> <span class="pre">parse&gt;&quot;}'</span></code>,
-you can do this with</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -XPOST localhost:5005/conversations/default/respond -d <span class="se">\</span>
-  <span class="s1">&#39;{&quot;query&quot;:&quot;hello there&quot;}&#39;</span> <span class="p">|</span> python -mjson.tool
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+<p>Documentation of the server API as
+<a class="reference download internal" href="../_downloads/server.yml" download=""><code class="xref download docutils literal notranslate"><span class="pre">OpenAPI</span> <span class="pre">Spec</span></code></a>.</p>
 
-<span class="p">[</span>
-  <span class="p">{</span>
-    <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;Hi! welcome to the pizzabot&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;order pizza&quot;</span><span class="p">,</span> <span class="s2">&quot;payload&quot;</span><span class="o">:</span> <span class="s2">&quot;/start_order&quot;</span><span class="p">},</span>
-  <span class="p">}</span>
-<span class="p">]</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
 
-<dl class="get">
-<dt id="get--conversations-(str-sender_id)-tracker">
-<code class="descname">GET </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/tracker</code><a class="headerlink" href="#get--conversations-(str-sender_id)-tracker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the current tracker state for the conversation with <code class="docutils literal notranslate"><span class="pre">sender_id</span></code>.
-This includes the set slots as well as the latest message and all previous
-events.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl http://localhost:5005/conversations/default/tracker <span class="p">|</span> python -mjson.tool
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
-
-<span class="p">{</span>
-    <span class="s2">&quot;events&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="s2">&quot;action&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;action_listen&quot;</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;parse_data&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;entities&quot;</span><span class="o">:</span> <span class="p">[],</span>
-                <span class="s2">&quot;intent&quot;</span><span class="o">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;confidence&quot;</span><span class="o">:</span> <span class="mf">0.7561643619088745</span><span class="p">,</span>
-                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;affirm&quot;</span>
-                <span class="p">},</span>
-                <span class="s2">&quot;intent_ranking&quot;</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="p">...</span>
-                <span class="p">],</span>
-                <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;hello there&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;hello there&quot;</span>
-        <span class="p">}</span>
-    <span class="p">],</span>
-    <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;entities&quot;</span><span class="o">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;intent&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;confidence&quot;</span><span class="o">:</span> <span class="mf">0.7561643619088745</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;affirm&quot;</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;intent_ranking&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">...</span>
-        <span class="p">],</span>
-        <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;hello there&quot;</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="put">
-<dt id="put--conversations-(str-sender_id)-tracker">
-<code class="descname">PUT </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/tracker</code><a class="headerlink" href="#put--conversations-(str-sender_id)-tracker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replace the tracker state using events. Any existing tracker for
-<code class="docutils literal notranslate"><span class="pre">sender_id</span></code> will be discarded. A new tracker will be created and the
-passed events will be applied to create a new state.</p>
-<p>The format of the passed events is the same as for the <code class="docutils literal notranslate"><span class="pre">/continue</span></code>
-endpoint.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -XPUT http://localhost:5005/conversations/default/tracker -d <span class="se">\</span>
-  <span class="s1">&#39;[{&quot;event&quot;: &quot;slot&quot;, &quot;name&quot;: &quot;cuisine&quot;, &quot;value&quot;: &quot;mexican&quot;},{&quot;event&quot;: &quot;action&quot;, &quot;name&quot;: &quot;action_listen&quot;}]&#39;</span> <span class="p">|</span> python -mjson.tool
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
-
-<span class="p">{</span>
-    <span class="s2">&quot;events&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="s2">&quot;slot&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;cuisine&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="s2">&quot;mexican&quot;</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="s2">&quot;action&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;action_listen&quot;</span>
-        <span class="p">}</span>
-    <span class="p">],</span>
-    <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;entities&quot;</span><span class="o">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;intent&quot;</span><span class="o">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="kc">null</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="s2">&quot;mexican&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="post">
-<dt id="post--conversations-(str-sender_id)-tracker-events">
-<code class="descname">POST </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/tracker/events</code><a class="headerlink" href="#post--conversations-(str-sender_id)-tracker-events" title="Permalink to this definition">¶</a></dt>
-<dd><p>Append the tracker state of the conversation with events. Any existing
-events will be kept and the new events will be appended, updating the
-existing state.</p>
-<p>The format of the passed events is the same as for the <code class="docutils literal notranslate"><span class="pre">/continue</span></code>
-endpoint.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -XPOST http://localhost:5005/conversations/default/tracker/events -d <span class="se">\</span>
-  <span class="s1">&#39;[{&quot;event&quot;: &quot;slot&quot;, &quot;name&quot;: &quot;cuisine&quot;, &quot;value&quot;: &quot;mexican&quot;},{&quot;event&quot;: &quot;action&quot;, &quot;name&quot;: &quot;action_listen&quot;}]&#39;</span> <span class="p">|</span> python -mjson.tool
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
-
-<span class="p">{</span>
-    <span class="s2">&quot;events&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="s2">&quot;latest_message&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;entities&quot;</span><span class="o">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;intent&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;confidence&quot;</span><span class="o">:</span> <span class="mf">0.7561643619088745</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;affirm&quot;</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;intent_ranking&quot;</span><span class="o">:</span> <span class="p">[</span>
-            <span class="p">...</span>
-        <span class="p">],</span>
-        <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;hello there&quot;</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="s2">&quot;sender_id&quot;</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;slots&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;cuisine&quot;</span><span class="o">:</span> <span class="s2">&quot;mexican&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;info&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;matches&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;people&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="kc">null</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="get">
-<dt id="get--conversations">
-<code class="descname">GET </code><code class="descname">/conversations</code><a class="headerlink" href="#get--conversations" title="Permalink to this definition">¶</a></dt>
-<dd><p>List the sender ids of all the running conversations.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl http://localhost:5005/conversations <span class="p">|</span> python -mjson.tool
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
-
-<span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="get">
-<dt id="get--version">
-<code class="descname">GET </code><code class="descname">/version</code><a class="headerlink" href="#get--version" title="Permalink to this definition">¶</a></dt>
-<dd><p>Version of Rasa Core that is currently running.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl http://localhost:5005/version <span class="p">|</span> python -mjson.tool
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
-
-<span class="p">{</span>
-    <span class="s2">&quot;version&quot;</span> <span class="o">:</span> <span class="s2">&quot;0.7.0&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
+<body>
+  <redoc spec-url="../_downloads/server.yml"></redoc>
+  <script src="https://storage.googleapis.com/docs-theme/redoc.standalone.js?v=1"></script>
+</body>
 </div>
 <div class="section" id="have-questions-or-feedback">
 <h2><a class="toc-backref" href="#id7">Have questions or feedback?</a><a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
