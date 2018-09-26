@@ -162,12 +162,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.6
+          viewing: 0.11.7
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.11.7/connectors/">0.11.7</a>
               <a href=".././0.11.6/connectors/">0.11.6</a>
               <a href=".././0.11.5/connectors/">0.11.5</a>
               <a href=".././0.11.4/connectors/">0.11.4</a>
@@ -1047,7 +1048,9 @@ posted this message to the channel:</p>
                 <span class="k">yield</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
 
     <span class="k">def</span> <span class="nf">blueprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_new_message</span><span class="p">):</span>
-        <span class="n">custom_webhook</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;custom_webhook&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">custom_webhook</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span>
+                <span class="s1">&#39;custom_webhook_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span>
+                <span class="n">inspect</span><span class="o">.</span><span class="n">getmodule</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="nd">@custom_webhook</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
         <span class="k">def</span> <span class="nf">health</span><span class="p">():</span>
