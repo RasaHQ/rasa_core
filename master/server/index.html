@@ -342,6 +342,10 @@ as a parameter:</p>
 Requests to the server need to contain a valid JWT token in
 the <code class="docutils literal notranslate"><span class="pre">Authorization</span></code> header that is signed using this secret
 and the <code class="docutils literal notranslate"><span class="pre">HS256</span></code> algorithm.</p>
+<p>The user must have <code class="docutils literal notranslate"><span class="pre">username</span></code> and <code class="docutils literal notranslate"><span class="pre">role</span></code> attributes.
+If the <code class="docutils literal notranslate"><span class="pre">role</span></code> is <code class="docutils literal notranslate"><span class="pre">admin</span></code>, all endpoints are accessible.
+If the <code class="docutils literal notranslate"><span class="pre">role</span></code> is <code class="docutils literal notranslate"><span class="pre">user</span></code>, endpoints with a <code class="docutils literal notranslate"><span class="pre">sender_id</span></code> parameter are only accessible
+if the <code class="docutils literal notranslate"><span class="pre">sender_id</span></code> matches the user’s <code class="docutils literal notranslate"><span class="pre">username</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.run <span class="se">\</span>
     --enable_api <span class="se">\</span>
     --jwt_secret thisismysecret <span class="se">\</span>
