@@ -231,13 +231,13 @@ training a model on that data.</p>
 <h3>Data Augmentation<a class="headerlink" href="#data-augmentation" title="Permalink to this headline">¶</a></h3>
 <p>By default, Rasa Core will create longer stories by randomly glueing together
 the ones in your stories file. This is because if you have stories like:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># thanks
-* thankyou
-   - utter_youarewelcome
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># thanks</span>
+<span class="vm">* thankyou</span>
+<span class="vm">   </span>- utter_youarewelcome
 
-# bye
-* goodbye
-   - utter_goodbye
+<span class="gh"># bye</span>
+<span class="vm">* goodbye</span>
+<span class="vm">   </span>- utter_goodbye
 </pre></div>
 </div>
 <p>You actually want to teach your policy to <strong>ignore</strong> the dialogue history
@@ -262,12 +262,12 @@ by passing it to your policy’s <code class="xref py py-class docutils literal 
 <p>As an example, let’s say you have an <code class="docutils literal notranslate"><span class="pre">out_of_scope</span></code> intent which describes off-topic
 user messages. If your bot sees this intent multiple times in a row, you might want to
 tell the user what you <cite>can</cite> help them with. So your story might look like this:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>* out_of_scope
-   - utter_default
-* out_of_scope
-   - utter_default
-* out_of_scope
-   - utter_help_message
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="vm">* out_of_scope</span>
+<span class="vm">   </span>- utter_default
+<span class="vm">* out_of_scope</span>
+<span class="vm">   </span>- utter_default
+<span class="vm">* out_of_scope</span>
+<span class="vm">   </span>- utter_help_message
 </pre></div>
 </div>
 <p>For Rasa Core to learn this pattern, the <code class="docutils literal notranslate"><span class="pre">max_history</span></code> has to be <cite>at least</cite> <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
