@@ -162,12 +162,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.7
+          viewing: 0.11.8
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.11.8/slotfilling/">0.11.8</a>
               <a href=".././0.11.7/slotfilling/">0.11.7</a>
               <a href=".././0.11.6/slotfilling/">0.11.6</a>
               <a href=".././0.11.5/slotfilling/">0.11.5</a>
@@ -217,14 +218,14 @@ This is also called <strong>slot filling</strong>.</p>
 need to know their location. Users might say that right away, e.g. <cite>What’s the weather in Caracas?</cite>
 When they don’t provide this information, you’ll have to ask them for it.
 We can provide two stories to Rasa Core, so that it can learn to handle both cases:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story1
-* ask_weather{&quot;location&quot;: &quot;Caracas&quot;}
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># story1</span>
+<span class="vm">* ask_weather</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;Caracas&quot;</span><span class="p">}</span>
    - action_weather_api
 
-# story2
-* ask_weather
-   - utter_ask_location
-* inform{&quot;location&quot;: &quot;Caracas&quot;}
+<span class="gh"># story2</span>
+<span class="vm">* ask_weather</span>
+<span class="vm">   </span>- utter_ask_location
+<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;Caracas&quot;</span><span class="p">}</span>
    - action_weather_api
 </pre></div>
 </div>
@@ -248,30 +249,30 @@ Start by defining a <code class="docutils literal notranslate"><span class="pre"
 It can <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">[SlotSet(&quot;location_match&quot;,</span> <span class="pre">value)]</span></code>, where <code class="docutils literal notranslate"><span class="pre">value</span></code> is one of <code class="docutils literal notranslate"><span class="pre">&quot;zero&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;one&quot;</span></code>, or
 <code class="docutils literal notranslate"><span class="pre">&quot;multiple&quot;</span></code>, depending on what the API sends back.</p>
 <p>We then define stories for each of these cases:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story1
-* ask_weather{&quot;location&quot;: &quot;Caracas&quot;}
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># story1</span>
+<span class="vm">* ask_weather</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;Caracas&quot;</span><span class="p">}</span>
    - action_location_api
-   - slot{&quot;location_match&quot;: &quot;one&quot;}
+<span class="o">   - slot</span><span class="p">{</span><span class="nt">&quot;location_match&quot;</span><span class="p">:</span> <span class="s2">&quot;one&quot;</span><span class="p">}</span>
    - action_weather_api
 
-# story2
-* ask_weather
-   - utter_ask_location
-* inform{&quot;location&quot;: &quot;Caracas&quot;}
+<span class="gh"># story2</span>
+<span class="vm">* ask_weather</span>
+<span class="vm">   </span>- utter_ask_location
+<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;Caracas&quot;</span><span class="p">}</span>
    - action_location_api
-<span class="hll">   - slot{&quot;location_match&quot;: &quot;one&quot;}
+<span class="hll"><span class="o">   - slot</span><span class="p">{</span><span class="nt">&quot;location_match&quot;</span><span class="p">:</span> <span class="s2">&quot;one&quot;</span><span class="p">}</span>
 </span><span class="hll">   - action_weather_api
 </span>
-# story3
-* ask_weather{&quot;location&quot;: &quot;the Moon&quot;}
+<span class="gh"># story3</span>
+<span class="vm">* ask_weather</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;the Moon&quot;</span><span class="p">}</span>
    - action_location_api
-<span class="hll">   - slot{&quot;location_match&quot;: &quot;none&quot;}
+<span class="hll"><span class="o">   - slot</span><span class="p">{</span><span class="nt">&quot;location_match&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">}</span>
 </span><span class="hll">   - utter_location_not_found
 </span>
-# story4
-* ask_weather{&quot;location&quot;: &quot;San Jose&quot;}
+<span class="gh"># story4</span>
+<span class="vm">* ask_weather</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;San Jose&quot;</span><span class="p">}</span>
    - action_location_api
-<span class="hll">   - slot{&quot;location_match&quot;: &quot;multiple&quot;}
+<span class="hll"><span class="o">   - slot</span><span class="p">{</span><span class="nt">&quot;location_match&quot;</span><span class="p">:</span> <span class="s2">&quot;multiple&quot;</span><span class="p">}</span>
 </span><span class="hll">   - utter_ask_which_location
 </span></pre></div>
 </div>
@@ -335,20 +336,20 @@ fewer stories to get the initial flow working.</p>
 question with a <code class="docutils literal notranslate"><span class="pre">BooleanFormField</span></code>.</p>
 <p>The form action will set a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code> to keep track if what it has asked the user.
 So a story will look something like this:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>* request_restaurant
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="vm">* request_restaurant</span>
+<span class="vm">     </span>- action_restaurant_form
+<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;requested_slot&quot;</span><span class="p">:</span> <span class="s2">&quot;people&quot;</span><span class="p">}</span>
+<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;number&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
      - action_restaurant_form
-     - slot{&quot;requested_slot&quot;: &quot;people&quot;}
-* inform{&quot;number&quot;: 3}
+<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;people&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;requested_slot&quot;</span><span class="p">:</span> <span class="s2">&quot;cuisine&quot;</span><span class="p">}</span>
+<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;cuisine&quot;</span><span class="p">:</span> <span class="s2">&quot;chinese&quot;</span><span class="p">}</span>
      - action_restaurant_form
-     - slot{&quot;people&quot;: 3}
-     - slot{&quot;requested_slot&quot;: &quot;cuisine&quot;}
-* inform{&quot;cuisine&quot;: &quot;chinese&quot;}
-     - action_restaurant_form
-     - slot{&quot;cuisine&quot;: &quot;chinese&quot;}
-     - slot{&quot;requested_slot&quot;: &quot;vegetarian&quot;}
-* deny
-     - action_restaurant_form
-     - slot{&quot;vegetarian&quot;: false}
+<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;cuisine&quot;</span><span class="p">:</span> <span class="s2">&quot;chinese&quot;</span><span class="p">}</span>
+<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;requested_slot&quot;</span><span class="p">:</span> <span class="s2">&quot;vegetarian&quot;</span><span class="p">}</span>
+<span class="vm">* deny</span>
+<span class="vm">     </span>- action_restaurant_form
+<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;vegetarian&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>Some important things to consider:</p>

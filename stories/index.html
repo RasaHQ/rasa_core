@@ -162,12 +162,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.7
+          viewing: 0.11.8
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.11.8/stories/">0.11.8</a>
               <a href=".././0.11.7/stories/">0.11.7</a>
               <a href=".././0.11.6/stories/">0.11.6</a>
               <a href=".././0.11.5/stories/">0.11.5</a>
@@ -220,15 +221,15 @@ been part of one large file.</p>
 <h2>Format<a class="headerlink" href="#format" title="Permalink to this headline">¶</a></h2>
 <p>Here’s an example from the <a class="reference external" href="https://research.fb.com/downloads/babi/">bAbI</a>
 data (converted into Rasa stories):</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## story_07715946    &lt;!-- name of the story - just for debugging --&gt;
-* greet
-   - action_ask_howcanhelp
-* inform{&quot;location&quot;: &quot;rome&quot;, &quot;price&quot;: &quot;cheap&quot;}  &lt;!-- user utterance, in format intent{entities} --&gt;
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## story_07715946</span>    <span class="k">&lt;!--</span><span class="c c-MultiLine"> name of the story - just for debugging </span><span class="k">--&gt;</span><span class="vm"></span>
+<span class="vm">* greet</span>
+<span class="vm">   </span>- action_ask_howcanhelp
+<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;rome&quot;</span><span class="p">,</span> <span class="nt">&quot;price&quot;</span><span class="p">:</span> <span class="s2">&quot;cheap&quot;</span><span class="p">}</span><span class="k">  &lt;!--</span><span class="c c-MultiLine"> user utterance, in format intent{entities} </span><span class="k">--&gt;</span>
    - action_on_it
    - action_ask_cuisine
-* inform{&quot;cuisine&quot;: &quot;spanish&quot;}
-   - action_ask_numpeople        &lt;!-- action that the bot should execute --&gt;
-* inform{&quot;people&quot;: &quot;six&quot;}
+<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;cuisine&quot;</span><span class="p">:</span> <span class="s2">&quot;spanish&quot;</span><span class="p">}</span>
+   - action_ask_numpeople        <span class="k">&lt;!--</span><span class="c c-MultiLine"> action that the bot should execute </span><span class="k">--&gt;</span><span class="vm"></span>
+<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;people&quot;</span><span class="p">:</span> <span class="s2">&quot;six&quot;</span><span class="p">}</span>
    - action_ack_dosearch
 </pre></div>
 </div>
@@ -257,20 +258,20 @@ understand. It makes sense to use them if a story block is repeated
 very often in different stories, but stories <em>without</em> checkpoints
 are easier to read and write. Here is an example story file which
 contains checkpoints:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## first story
-* hello
-   - action_ask_user_question
-&gt; check_asked_question
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## first story</span>
+<span class="vm">* hello</span>
+<span class="vm">   </span>- action_ask_user_question
+<span class="no">&gt; check_asked_question</span>
 
-## user affirms question
-&gt; check_asked_question
-* affirm
-  - action_handle_affirmation
+<span class="gh">## user affirms question</span>
+<span class="no">&gt; check_asked_question</span><span class="vm"></span>
+<span class="vm">* affirm</span>
+<span class="vm">  </span>- action_handle_affirmation
 
-## user denies question
-&gt; check_asked_question
-* deny
-  - action_handle_denial
+<span class="gh">## user denies question</span>
+<span class="no">&gt; check_asked_question</span><span class="vm"></span>
+<span class="vm">* deny</span>
+<span class="vm">  </span>- action_handle_denial
 </pre></div>
 </div>
 </div>
@@ -288,11 +289,11 @@ and <code class="docutils literal notranslate"><span class="pre">thankyou</span>
 converted into two stories at training time. Just like checkpoints,
 <code class="docutils literal notranslate"><span class="pre">OR</span></code> statements can be useful, but if you are using a lot of them,
 it is probably better to restructure your domain and/or intents:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## story
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## story</span>
 ...
   - utter_ask_confirm
-* affirm OR thankyou
-  - action_handle_affirmation
+<span class="vm">* affirm </span><span class="k">OR </span><span class="vm">thankyou</span>
+<span class="vm">  </span>- action_handle_affirmation
 </pre></div>
 </div>
 </div>

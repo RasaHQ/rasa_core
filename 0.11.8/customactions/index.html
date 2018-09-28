@@ -1,0 +1,660 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Actions</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Using Slots" href="../slots/" />
+    <link rel="prev" title="Chat &amp; Voice platforms" href="../connectors/" />
+
+<!-- Google Tag Manager -->
+<script> 
+  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
+</script>
+<!-- End Google Tag Manager -->
+   
+    
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta itemprop="image" content="https://rasa.com/assets/img/facebook-og.png">
+  <meta property="og:title" content="Actions" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
+  <meta property="og:url" content="https://rasa.com/docs/core/customactions" />
+  
+    <meta name="description" content="None" />
+    <meta itemprop="description" content="None">
+    <meta name="twitter:description" content="None" />
+    <meta property="og:description" content="None" />
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@Rasa_HQ">
+  <meta name="twitter:title" content="Actions">
+  <meta name="twitter:creator" content="@Rasa_HQ">
+  <meta name="twitter:image" content="https://rasa.com/assets/img/facebook-og.png">
+    
+  <link rel="stylesheet" href="../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <script defer type="text/javascript" src="../_static/config.js"></script>
+  <script defer type="text/javascript" src="../_static/klaro.js"></script>
+  <script type="text/javascript" src="https://storage.googleapis.com/docs-theme/clipboard.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" /> 
+  
+
+  </head><body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMHSZCS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div class="nav-top">
+  <div class="nav-container">
+    <a href="/docs" class="brand-link">
+        <h1 class="brand">
+            <img src="../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa logo" alt="Rasa logo">
+        </h1>
+        <span class="logo extension">docs</span>
+    </a>
+    
+    <ul class="nav">
+      <input type="text" class="search" placeholder="Search">
+      
+        
+          <li><a href=/docs/getting-started/>Getting Started</a></li>
+        
+      
+        
+          <li><a href=/docs/nlu/>NLU</a></li>
+        
+      
+        
+          <li class="active"><a href=/docs/core/>Core</a></li>
+        
+      
+        
+          <li><a href=/docs/platform/>Platform</a></li>
+        
+      
+      
+      <li>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Join Community</button></a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+  <div class="sidebar-extended"></div>
+  <div class="document">
+    
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fallbacks/">Fallback Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
+</ul>
+
+<div class="versions">
+    <p class="caption">Versions</p>
+    <div class="versions-content">
+      <div>
+        <span class="current-version">
+          viewing: 0.11.8
+        </span>
+      </div>
+      <div class="other-versions">
+          <p>tags</p>
+          <div class="dropdown-content">
+              <a href="../../0.11.8/customactions/">0.11.8</a>
+              <a href="../../0.11.7/customactions/">0.11.7</a>
+              <a href="../../0.11.6/customactions/">0.11.6</a>
+              <a href="../../0.11.5/customactions/">0.11.5</a>
+              <a href="../../0.11.4/customactions/">0.11.4</a>
+              <a href="../../0.11.3/customactions/">0.11.3</a>
+              <a href="../../0.11.2/customactions/">0.11.2</a>
+              <a href="../../0.11.1/customactions/">0.11.1</a>
+              <a href="../../0.11.0/customactions/">0.11.0</a>
+              <a href="../../0.10.4/customactions/">0.10.4</a>
+              <a href="../../0.9.8/index/">0.9.8</a>
+              <a href="../../0.8.6/index/">0.8.6</a>
+              <a href="../../0.7.9/index/">0.7.9</a>
+              <a href="../../0.6.9/index/">0.6.9</a>
+          </div>
+          <p>branches</p>
+          <div class="dropdown-content">
+              <a href="../../master/customactions/">master</a>
+          </div>
+      </div>
+    </div>
+</div>
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+
+
+
+
+
+<div class="section" id="actions">
+<span id="customactions"></span><h1>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h1>
+<p>Actions are the things your bot runs in response to user input.
+There are three kinds of actions in Rasa Core:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><strong>default actions</strong> (<code class="docutils literal notranslate"><span class="pre">action_listen</span></code>, <code class="docutils literal notranslate"><span class="pre">action_restart</span></code>,
+<code class="docutils literal notranslate"><span class="pre">action_default_fallback</span></code>)</li>
+<li><strong>utter actions</strong>, starting with <code class="docutils literal notranslate"><span class="pre">utter_</span></code>, which just sends a message
+to the user (see <a class="reference internal" href="../responses/#responses"><span class="std std-ref">Bot Responses</span></a>).</li>
+<li><strong>custom actions</strong> - any other action, these actions can run arbitrary code</li>
+</ol>
+</div></blockquote>
+<div class="section" id="utter-actions">
+<h2>Utter Actions<a class="headerlink" href="#utter-actions" title="Permalink to this headline">¶</a></h2>
+<p>To define an <code class="docutils literal notranslate"><span class="pre">UtterAction</span></code>, add an utterance template to the domain file,
+that starts with <code class="docutils literal notranslate"><span class="pre">utter_</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">templates</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">utter_my_message</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;this</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">what</span><span class="nv"> </span><span class="s">I</span><span class="nv"> </span><span class="s">want</span><span class="nv"> </span><span class="s">my</span><span class="nv"> </span><span class="s">action</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">say!&quot;</span>
+</pre></div>
+</div>
+<p>It is conventional to start the name of an <code class="docutils literal notranslate"><span class="pre">UtterAction</span></code> with <code class="docutils literal notranslate"><span class="pre">utter_</span></code>.
+If this prefix is missing, you can still use the template in your custom
+actions, but the template can not be directly predicted as its own action.
+See <a class="reference internal" href="../responses/#responses"><span class="std std-ref">Bot Responses</span></a> for more details.</p>
+<p>If you use an external NLG service, you don’t need to specify the
+templates in the domain, but you still need to add the utterance names
+to the actions list of the domain.</p>
+</div>
+<div class="section" id="custom-actions">
+<h2>Custom Actions<a class="headerlink" href="#custom-actions" title="Permalink to this headline">¶</a></h2>
+<p>An action can run any code you want. Custom actions can turn on the lights,
+add an event to a calendar, check a user’s bank balance, or anything
+else you can imagine.</p>
+<p>Core will call an endpoint you can specify, when a custom action is
+predicted. This endpoint should be a webserver that reacts to this
+call, runs the code and optionally returns information to modify
+the dialogue state.</p>
+<p>To specify, your action server use the <code class="docutils literal notranslate"><span class="pre">endpoints.yml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">action_endpoint</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="s">&quot;http://localhost:5055/webhook&quot;</span>
+</pre></div>
+</div>
+<p>And pass it to the scripts using <code class="docutils literal notranslate"><span class="pre">--endpoints</span> <span class="pre">endpoints.yml</span></code>.</p>
+</div>
+<div class="section" id="custom-actions-written-in-python">
+<h2>Custom Actions Written in Python<a class="headerlink" href="#custom-actions-written-in-python" title="Permalink to this headline">¶</a></h2>
+<p>For actions written in python, we have a convenient SDK which starts
+this action server for you.</p>
+<p>The only thing your action server needs to install is <code class="docutils literal notranslate"><span class="pre">rasa_core_sdk</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install rasa_core_sdk
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You do not need to install <code class="docutils literal notranslate"><span class="pre">rasa_core</span></code> for your action server.
+E.g. it is recommended to run Rasa Core in a docker container and
+create a separate container for your action server. In this
+separate container, you only need to install <code class="docutils literal notranslate"><span class="pre">rasa_core_sdk</span></code>.</p>
+</div>
+<p>If your actions are defined in a file
+called <code class="docutils literal notranslate"><span class="pre">actions.py</span></code>, run this command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core_sdk.endpoint --actions actions
+</pre></div>
+</div>
+<p>However, you can also create a server in node.js, .NET, java, or any
+other language and define your acitons there.</p>
+<p>Whichever option you go for, you will then need to add an entry into your
+<code class="docutils literal notranslate"><span class="pre">endpoints.yml</span></code> as follows:</p>
+<p id="custom-action-example">In a restaurant bot, if the user says “show me a Mexican restaurant”,
+your bot could execute the action <code class="docutils literal notranslate"><span class="pre">ActionCheckRestaurants</span></code>,
+which might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core_sdk</span> <span class="kn">import</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">rasa_core_sdk.events</span> <span class="kn">import</span> <span class="n">SlotSet</span>
+
+<span class="k">class</span> <span class="nc">ActionCheckRestaurants</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="c1"># type: () -&gt; Text</span>
+      <span class="k">return</span> <span class="s2">&quot;action_check_restaurants&quot;</span>
+
+   <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+      <span class="c1"># type: (Dispatcher, DialogueStateTracker, Domain) -&gt; List[Event]</span>
+
+      <span class="n">cuisine</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s1">&#39;cuisine&#39;</span><span class="p">)</span>
+      <span class="n">q</span> <span class="o">=</span> <span class="s2">&quot;select * from restaurants where cuisine=&#39;{0}&#39; limit 1&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cuisine</span><span class="p">)</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+      <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;matches&quot;</span><span class="p">,</span> <span class="n">result</span> <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="p">[])]</span>
+</pre></div>
+</div>
+<p>You should add the the action name <code class="docutils literal notranslate"><span class="pre">action_check_restaurants</span></code> to
+the actions in your domain file. The action’s <code class="docutils literal notranslate"><span class="pre">run</span></code> method receives
+three arguments. You can access the values of slots and the latest message
+sent by the user using the <code class="docutils literal notranslate"><span class="pre">tracker</span></code> object, and you can send messages
+back to the user with the <code class="docutils literal notranslate"><span class="pre">dispatcher</span></code> object, by calling
+<code class="docutils literal notranslate"><span class="pre">dispatcher.utter_template</span></code>, <code class="docutils literal notranslate"><span class="pre">dispatcher.utter_message</span></code>, or any other
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Dispatcher</span></code> method.</p>
+<p>Details of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method:</p>
+<dl class="method">
+<dt id="rasa_core.actions.Action.run">
+<code class="descclassname">Action.</code><code class="descname">run</code><span class="sig-paren">(</span><em>dispatcher</em>, <em>tracker</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/actions/action/#Action.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.actions.Action.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the side effects of this action.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dispatcher</strong> (<em>Dispatcher</em>) – the dispatcher which is used to send
+messages back to the user. Use <code class="docutils literal notranslate"><span class="pre">dipatcher.utter_message()</span></code>
+or any other <code class="xref py py-class docutils literal notranslate"><span class="pre">Dispatcher</span></code> method.</li>
+<li><strong>tracker</strong> (<a class="reference internal" href="../api/tracker/#rasa_core.trackers.DialogueStateTracker" title="rasa_core.trackers.DialogueStateTracker"><em>DialogueStateTracker</em></a>) – the state tracker for the current
+user. You can access slot values using
+<code class="docutils literal notranslate"><span class="pre">tracker.get_slot(slot_name)</span></code> and the most recent user
+message is <code class="docutils literal notranslate"><span class="pre">tracker.latest_message.text</span></code>.</li>
+<li><strong>domain</strong> (<em>Domain</em>) – the bot’s domain</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code> instances</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List[<a class="reference internal" href="../api/events/#rasa_core.events.Event" title="rasa_core.events.Event">Event</a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>There is an example of a <code class="docutils literal notranslate"><span class="pre">SlotSet</span></code> event
+<a class="reference internal" href="#custom-action-example"><span class="std std-ref">below</span></a>, and a full list of possible
+events in <a class="reference internal" href="../api/events/#events"><span class="std std-ref">Events</span></a>.</p>
+</div>
+<div class="section" id="execute-actions-in-other-code">
+<h2>Execute Actions in other Code<a class="headerlink" href="#execute-actions-in-other-code" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="action-request-format">
+<h3>Action Request Format<a class="headerlink" href="#action-request-format" title="Permalink to this headline">¶</a></h3>
+<p>Rasa Core will send an HTTP <code class="docutils literal notranslate"><span class="pre">POST</span></code> request to your server containing
+information on which action to run. Here is an example request you’ll
+receive from rasa core:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;next_action&quot;</span><span class="p">:</span> <span class="s2">&quot;action_search_concerts&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;sender_id&quot;</span><span class="p">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;tracker&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;sender_id&quot;</span><span class="p">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;slots&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;concerts&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span> <span class="nt">&quot;venues&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">},</span>
+    <span class="nt">&quot;latest_message&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;/search_concerts&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;intent&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;search_concerts&quot;</span><span class="p">,</span> <span class="nt">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+      <span class="nt">&quot;intent_ranking&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;search_concerts&quot;</span><span class="p">,</span> <span class="nt">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}],</span>
+      <span class="nt">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;latest_event_time&quot;</span><span class="p">:</span> <span class="mf">1535092548.4191391</span><span class="p">,</span>
+    <span class="nt">&quot;followup_action&quot;</span><span class="p">:</span> <span class="s2">&quot;action_listen&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;paused&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;action&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span> <span class="mf">1535092548.41875</span><span class="p">,</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;action_listen&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span> <span class="mf">1535092548.4191391</span><span class="p">,</span>
+        <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;/search_concerts&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;parse_data&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;/search_concerts&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;intent&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;search_concerts&quot;</span><span class="p">,</span> <span class="nt">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+          <span class="nt">&quot;intent_ranking&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;search_concerts&quot;</span><span class="p">,</span> <span class="nt">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}],</span>
+          <span class="nt">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;domain&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;store_entities_as_slots&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">},</span>
+    <span class="nt">&quot;intents&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span><span class="nt">&quot;greet&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;use_entities&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">}},</span>
+      <span class="p">{</span><span class="nt">&quot;thankyou&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;use_entities&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">}},</span>
+      <span class="p">{</span><span class="nt">&quot;goodbye&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;use_entities&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">}},</span>
+      <span class="p">{</span><span class="nt">&quot;search_concerts&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;use_entities&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">}},</span>
+      <span class="p">{</span><span class="nt">&quot;search_venues&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;use_entities&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">}},</span>
+      <span class="p">{</span><span class="nt">&quot;compare_reviews&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;use_entities&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">}}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+    <span class="nt">&quot;slots&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;concerts&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rasa_core.slots.ListSlot&quot;</span><span class="p">,</span> <span class="nt">&quot;initial_value&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">},</span>
+      <span class="nt">&quot;venues&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rasa_core.slots.ListSlot&quot;</span><span class="p">,</span> <span class="nt">&quot;initial_value&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;templates&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;utter_default&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;default message&quot;</span><span class="p">}],</span>
+      <span class="nt">&quot;utter_goodbye&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;goodbye :(&quot;</span><span class="p">}],</span>
+      <span class="nt">&quot;utter_greet&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hey there!&quot;</span><span class="p">}],</span>
+      <span class="nt">&quot;utter_youarewelcome&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;you&#39;re very welcome&quot;</span><span class="p">}]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;utter_default&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;utter_greet&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;utter_goodbye&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;utter_youarewelcome&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;action_search_concerts&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;action_search_venues&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;action_show_concert_reviews&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;action_show_venue_reviews&quot;</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This request contains the next action as well as a lot of information
+about the conversation:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="74%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">next_action</span></code></td>
+<td>name of the predicted action that should be run</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">sender_id</span></code></td>
+<td>id of the conversation</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">tracker</span></code></td>
+<td>serialised state of the conversations tracker</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">domain</span></code></td>
+<td>configuration of the domain</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="action-response-format">
+<h3>Action Response Format<a class="headerlink" href="#action-response-format" title="Permalink to this headline">¶</a></h3>
+<p>As a response to the action call from Core, you can modify the tracker,
+e.g. by setting slots and send responses back to the user.
+All of the modifications are done using events.</p>
+<p>Here is an example json response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;slot&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;concerts&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="nt">&quot;artist&quot;</span><span class="p">:</span> <span class="s2">&quot;Foo Fighters&quot;</span><span class="p">,</span> <span class="nt">&quot;reviews&quot;</span><span class="p">:</span> <span class="mf">4.5</span><span class="p">},</span>
+        <span class="p">{</span><span class="nt">&quot;artist&quot;</span><span class="p">:</span> <span class="s2">&quot;Katy Perry&quot;</span><span class="p">,</span> <span class="nt">&quot;reviews&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;responses&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Foo Fighters, Katy Perry&quot;</span><span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There is a list of all possible event types in <a class="reference internal" href="../api/events/#events"><span class="std std-ref">Events</span></a>.</p>
+</div>
+</div>
+<div class="section" id="default-actions">
+<h2>Default Actions<a class="headerlink" href="#default-actions" title="Permalink to this headline">¶</a></h2>
+<p>There are three default actions:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">action_listen</span></code></td>
+<td>stop predicting more actions and wait for user
+input</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">action_restart</span></code></td>
+<td>reset the whole conversation, usually triggered
+by using <code class="docutils literal notranslate"><span class="pre">/restart</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">action_default_fallback</span></code></td>
+<td>undoes the last user message (as if the user
+did not send it) and utters a message that the
+bot did not understand. See <a class="reference internal" href="../fallbacks/#fallbacks"><span class="std std-ref">Fallback Actions</span></a>.</td>
+</tr>
+</tbody>
+</table>
+<p>All the default actions can be overwritten. To do so, add the action name
+to the list of actions in your domain:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">action_listen</span>
+</pre></div>
+</div>
+<p>Rasa Core will then call your action endpoint and treat it as every other
+custom action.</p>
+</div>
+<div class="section" id="have-questions-or-feedback">
+<h2>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
+<p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
+that is happy to help you with your questions. If you have any feedback for us or a specific
+suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
+<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<div id="livechat">
+   <!--Start of Tawk.to Script-->
+   <script type="text/javascript">
+      var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+      (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/5b85a455afc2c34e96e7fedd/default';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+      })();
+   </script>
+   <!--End of Tawk.to Script-->
+</div></div>
+</div>
+
+
+	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script> 
+	    <script type="text/javascript"> docsearch({ 
+	     apiKey: '1f9e0efb89e98543f6613a60f847b176', 
+	     indexName: 'rasa', 
+	     inputSelector: 'body > div.nav-top > .nav-container > .nav > input', 
+	     debug: false // Set debug to true if you want to inspect the dropdown 
+	    }); 
+	    </script> 
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a> 
+      
+
+    </div>
+
+    
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  <script type="text/javascript">
+    var clipboard = new ClipboardJS('.copyable');
+    clipboard.on('success', function(e) {
+      gtag('event', e.action, {
+        'event_category': 'code',
+        'event_label': e.text
+      });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){ 
+        document.getElementById(id).classList.remove('visible');}, 
+        800
+      );
+    });
+    clipboard.on('error', function(e) {
+      console.log(e);
+    });
+  </script>
+  
+  <!-- onsite anchor fix (otherwise anchors scroll to far) -->
+  <script>
+    /* Adapted from https://stackoverflow.com/a/13067009/1906073 */
+    (function(document, history, location) {
+      var HISTORY_SUPPORT = !!(history && history.pushState);
+
+      var anchorScrolls = {
+        ANCHOR_REGEX: /^#[^ ]+$/,
+        OFFSET_HEIGHT_PX: 66,
+
+        /**
+         * Establish events, and fix initial scroll position if a hash is provided.
+         */
+        init: function() {
+          this.scrollToCurrent();
+          $(window).on('hashchange', $.proxy(this, 'scrollToCurrent'));
+          $('body').on('click', 'a', $.proxy(this, 'delegateAnchors'));
+        },
+
+        /**
+         * Return the offset amount to deduct from the normal scroll position.
+         * Modify as appropriate to allow for dynamic calculations
+         */
+        getFixedOffset: function() {
+          return this.OFFSET_HEIGHT_PX;
+        },
+
+        /**
+         * If the provided href is an anchor which resolves to an element on the
+         * page, scroll to it.
+         * @param  {String} href
+         * @return {Boolean} - Was the href an anchor.
+         */
+        scrollIfAnchor: function(href, pushToHistory) {
+          var match, anchorOffset;
+
+          if(!this.ANCHOR_REGEX.test(href)) {
+            return false;
+          }
+
+          match = document.getElementById(href.slice(1));
+
+          if(match) {
+            anchorOffset = $(match).offset().top - this.getFixedOffset();
+            $('html, body').animate({ scrollTop: anchorOffset});
+
+            // Add the state to history as-per normal anchor links
+            if(HISTORY_SUPPORT && pushToHistory) {
+              history.pushState({}, document.title, location.pathname + href);
+            }
+          }
+
+          return !!match;
+        },
+        
+        /**
+         * Attempt to scroll to the current location's hash.
+         */
+        scrollToCurrent: function(e) { 
+          if(this.scrollIfAnchor(window.location.hash) && e) {
+            e.preventDefault();
+          }
+        },
+
+        /**
+         * If the click event's target was an anchor, fix the scroll position.
+         */
+        delegateAnchors: function(e) {
+          var elem = e.target;
+
+          if(this.scrollIfAnchor(elem.getAttribute('href'), true)) {
+            e.preventDefault();
+          }
+        }
+      };
+
+      $(document).ready($.proxy(anchorScrolls, 'init'));
+    })(window.document, window.history, window.location);
+
+  </script>
+  </body>
+</html>

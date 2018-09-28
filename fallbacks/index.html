@@ -162,12 +162,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.7
+          viewing: 0.11.8
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.11.8/fallbacks/">0.11.8</a>
               <a href=".././0.11.7/fallbacks/">0.11.7</a>
               <a href=".././0.11.6/fallbacks/">0.11.6</a>
               <a href=".././0.11.5/fallbacks/">0.11.5</a>
@@ -269,9 +270,9 @@ fallback action is not present in your stories</p>
 </div>
 <p>If you have a specific intent that will trigger this, let’s say it’s
 called <code class="docutils literal notranslate"><span class="pre">out_of_scope</span></code>, then you should add this as a story:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## fallback story
-* out_of_scope
-  - action_default_fallback
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## fallback story</span>
+<span class="vm">* out_of_scope</span>
+<span class="vm">  </span>- action_default_fallback
 </pre></div>
 </div>
 <div class="section" id="have-questions-or-feedback">

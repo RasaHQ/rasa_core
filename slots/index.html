@@ -162,12 +162,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.7
+          viewing: 0.11.8
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.11.8/slots/">0.11.8</a>
               <a href=".././0.11.7/slots/">0.11.7</a>
               <a href=".././0.11.6/slots/">0.11.6</a>
               <a href=".././0.11.5/slots/">0.11.5</a>
@@ -246,9 +247,9 @@ The policy just sees a <code class="docutils literal notranslate"><span class="p
 <h3>Slots Set from NLU<a class="headerlink" href="#slots-set-from-nlu" title="Permalink to this headline">¶</a></h3>
 <p>If your NLU model picks up an entity, and your domain contains a
 slot with the same name, the slot will be set automatically. For example:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story_01
-* greet{&quot;name&quot;: &quot;Ali&quot;}
-  - slot{&quot;name&quot;: &quot;Ali&quot;}
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># story_01</span>
+<span class="vm">* greet</span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ali&quot;</span><span class="p">}</span>
+<span class="o">  - slot</span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ali&quot;</span><span class="p">}</span>
   - utter_greet
 </pre></div>
 </div>
@@ -305,16 +306,16 @@ When the <code class="docutils literal notranslate"><span class="pre">fetch_prof
         <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;account_type&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;account_type&quot;</span><span class="p">])]</span>
 </pre></div>
 </div>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story_01
-* greet
-  - action_fetch_profile
-  - slot{&quot;account_type&quot; : &quot;premium&quot;}
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># story_01</span>
+<span class="vm">* greet</span>
+<span class="vm">  </span>- action_fetch_profile
+<span class="o">  - slot</span><span class="p">{</span><span class="nt">&quot;account_type&quot;</span> <span class="p">:</span> <span class="s2">&quot;premium&quot;</span><span class="p">}</span>
   - utter_welcome_premium
 
-# story_02
-* greet
-  - action_fetch_profile
-  - slot{&quot;account_type&quot; : &quot;basic&quot;}
+<span class="gh"># story_02</span>
+<span class="vm">* greet</span>
+<span class="vm">  </span>- action_fetch_profile
+<span class="o">  - slot</span><span class="p">{</span><span class="nt">&quot;account_type&quot;</span> <span class="p">:</span> <span class="s2">&quot;basic&quot;</span><span class="p">}</span>
   - utter_welcome_basic
 </pre></div>
 </div>
@@ -376,13 +377,13 @@ a vector of length <code class="docutils literal notranslate"><span class="pre">
 </div>
 <p>Now we also need some training stories, so that Rasa Core
 can learn from these how to handle the different situations:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span># story1
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># story1</span>
 ...
-* inform{&quot;people&quot;: &quot;3&quot;}
+<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;people&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">}</span>
 - action_book_table
 ...
-# story2
-* inform{&quot;people&quot;: &quot;9&quot;}
+<span class="gh"># story2</span>
+<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;people&quot;</span><span class="p">:</span> <span class="s2">&quot;9&quot;</span><span class="p">}</span>
 - action_explain_table_limit
 </pre></div>
 </div>

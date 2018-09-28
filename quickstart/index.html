@@ -162,12 +162,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.7
+          viewing: 0.11.8
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.11.8/quickstart/">0.11.8</a>
               <a href=".././0.11.7/quickstart/">0.11.7</a>
               <a href=".././0.11.6/quickstart/">0.11.6</a>
               <a href=".././0.11.5/quickstart/">0.11.5</a>
@@ -230,9 +231,9 @@ Rasa Core works by learning from example conversations, and we’ll
 write the first few examples ourselves to kick things off.</p>
 <p>In this very simple conversation, the user says hello to our bot, and the bot
 says hello back. This is how it looks as a story:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span>## story1
-* greet
-   - utter_greet
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## story1</span>
+<span class="vm">* greet</span>
+<span class="vm">   </span>- utter_greet
 </pre></div>
 </div>
 <p>A story starts with <code class="docutils literal notranslate"><span class="pre">##</span></code> followed by a name (the name is optional).
