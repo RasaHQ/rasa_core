@@ -255,6 +255,9 @@ the dialogue state.</p>
 </pre></div>
 </div>
 <p>And pass it to the scripts using <code class="docutils literal notranslate"><span class="pre">--endpoints</span> <span class="pre">endpoints.yml</span></code>.</p>
+<p>You can create an action server in node.js, .NET, java, or any
+other language and define your actions there - but we provide
+a small python sdk to make development there even easier.</p>
 </div>
 <div class="section" id="custom-actions-written-in-python">
 <h2>Custom Actions Written in Python<a class="headerlink" href="#custom-actions-written-in-python" title="Permalink to this headline">¶</a></h2>
@@ -276,10 +279,6 @@ called <code class="docutils literal notranslate"><span class="pre">actions.py</
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core_sdk.endpoint --actions actions
 </pre></div>
 </div>
-<p>However, you can also create a server in node.js, .NET, java, or any
-other language and define your acitons there.</p>
-<p>Whichever option you go for, you will then need to add an entry into your
-<code class="docutils literal notranslate"><span class="pre">endpoints.yml</span></code> as follows:</p>
 <p id="custom-action-example">In a restaurant bot, if the user says “show me a Mexican restaurant”,
 your bot could execute the action <code class="docutils literal notranslate"><span class="pre">ActionCheckRestaurants</span></code>,
 which might look like this:</p>
