@@ -903,19 +903,17 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">action_name</span><span class="p">,</span>
                  <span class="n">policy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">policy_confidence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">confidence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">=</span> <span class="n">action_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="n">policy</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">policy_confidence</span> <span class="o">=</span> <span class="n">policy_confidence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">=</span> <span class="n">confidence</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unpredictable</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;ActionExecuted(action: </span><span class="si">{}</span><span class="s2">, policy: </span><span class="si">{}</span><span class="s2">, policy_confidence: </span><span class="si">{}</span><span class="s2">)&quot;</span>
-                <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="p">,</span>
-                          <span class="bp">self</span><span class="o">.</span><span class="n">policy_confidence</span><span class="p">))</span>
-
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;ActionExecuted(action: </span><span class="si">{}</span><span class="s2">, policy: </span><span class="si">{}</span><span class="s2">, confidence: </span><span class="si">{}</span><span class="s2">)&quot;</span>
+                <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">))</span>
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
 
@@ -934,14 +932,17 @@
 
         <span class="k">return</span> <span class="p">[</span><span class="n">ActionExecuted</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
                                <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy&quot;</span><span class="p">),</span>
-                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy_confidence&quot;</span><span class="p">),</span>
+                               <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;confidence&quot;</span><span class="p">),</span>
                                <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)</span>
                                <span class="p">)]</span>
 
     <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
-        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">})</span>
-        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;policy_confidence&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_confidence</span><span class="p">})</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">,</span>
+            <span class="s2">&quot;policy&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="p">,</span>
+            <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span>
+        <span class="p">})</span>
         <span class="k">return</span> <span class="n">d</span>
 
     <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
