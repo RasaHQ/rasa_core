@@ -266,33 +266,6 @@ to the latest <code class="docutils literal notranslate"><span class="pre">Turn<
 </dd></dl>
 
 <dl class="class">
-<dt id="rasa_core.events.ActionExecutionRejected">
-<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ActionExecutionRejected</code><span class="sig-paren">(</span><em>action_name</em>, <em>policy=None</em>, <em>confidence=None</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecutionRejected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecutionRejected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
-<p>Notify Core that the execution of an action has failed</p>
-<dl class="method">
-<dt id="rasa_core.events.ActionExecutionRejected.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecutionRejected.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecutionRejected.apply_to" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.events.ActionExecutionRejected.as_dict">
-<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecutionRejected.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecutionRejected.as_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.events.ActionExecutionRejected.as_story_string">
-<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecutionRejected.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecutionRejected.as_story_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="rasa_core.events.ActionExecutionRejected.type_name">
-<code class="descname">type_name</code><em class="property"> = u'action_execution_rejected'</em><a class="headerlink" href="#rasa_core.events.ActionExecutionRejected.type_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="rasa_core.events.ActionReverted">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ActionReverted</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionReverted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionReverted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
@@ -528,34 +501,6 @@ how to update its state.</p>
 <dl class="attribute">
 <dt id="rasa_core.events.FollowupAction.type_name">
 <code class="descname">type_name</code><em class="property"> = u'followup'</em><a class="headerlink" href="#rasa_core.events.FollowupAction.type_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="rasa_core.events.Form">
-<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">Form</code><span class="sig-paren">(</span><em>name</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Form"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Form" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
-<p>A Form gets activated/deactivated</p>
-<p>This  sets the <cite>active_form</cite> of the tracker</p>
-<dl class="method">
-<dt id="rasa_core.events.Form.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Form.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Form.apply_to" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.events.Form.as_dict">
-<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Form.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Form.as_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.events.Form.as_story_string">
-<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Form.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Form.as_story_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="rasa_core.events.Form.type_name">
-<code class="descname">type_name</code><em class="property"> = u'form'</em><a class="headerlink" href="#rasa_core.events.Form.type_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
