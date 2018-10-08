@@ -269,7 +269,8 @@ the wrong action.</p>
 so make sure you have the domain &amp; data for it. You can download
 the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/0.12.0a4/examples/concertbot">github examples/concertbot</a>.</p>
 <p>If you ask <code class="docutils literal notranslate"><span class="pre">/search_concerts</span></code>, the bot should suggest
-<code class="docutils literal notranslate"><span class="pre">action_search_concerts</span></code> and then <code class="docutils literal notranslate"><span class="pre">action_listen</span></code>.
+<code class="docutils literal notranslate"><span class="pre">action_search_concerts</span></code> and then <code class="docutils literal notranslate"><span class="pre">action_listen</span></code> (the confidence at which
+the policy selected its next action will be displayed next to the action name).
 Now let’s enter <code class="docutils literal notranslate"><span class="pre">/compare_reviews</span></code> as the next user message.
 The bot <strong>might</strong> choose the wrong one out of the two
 possibilities (depending on the training run, it might also be correct):</p>
@@ -283,8 +284,8 @@ Chat History
  2                                            /search_concerts
                                   intent: search_concerts 1.00
 ───────────────────────────────────────────────────────────────
- 3    action_search_concerts
-      action_listen
+ 3    action_search_concerts 0.72
+      action_listen 0.78
 ───────────────────────────────────────────────────────────────
  4                                            /compare_reviews
                                   intent: compare_reviews 1.00
