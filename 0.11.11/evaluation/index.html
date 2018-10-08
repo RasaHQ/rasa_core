@@ -228,8 +228,9 @@ domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] -s STORIES [-m MAX_STORIES] -d CORE [-u NLU]
-                   [-o OUTPUT] [--failed FAILED] [--endpoints ENDPOINTS]
-                   [--fail_on_prediction_errors] [-v] [-vv] [--quiet]
+                   [-o OUTPUT] [--e2e] [--failed FAILED]
+                   [--endpoints ENDPOINTS] [--fail_on_prediction_errors] [-v]
+                   [-vv] [--quiet]
 
 evaluates a dialogue model
 
@@ -245,6 +246,9 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         output path for the created evaluation plot. If set to
                         Noneor an empty string, no plot will be generated.
+  --e2e, --end-to-end   Run an end-to-end evaluation for combined action and
+                        intent prediction. Requires a story file in end-to-end
+                        format.
   --failed FAILED       output path for the failed stories
   --endpoints ENDPOINTS
                         Configuration file for the connectors as a yml file
