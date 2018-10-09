@@ -831,16 +831,6 @@ a.footnote-reference:hover {
 a:hover tt, a:hover code {
     background: #EEE;
 }
-
-.icon-pull-left {
-  float:left;
-  margin-right:6px;
-}
-
-a.icon-pull-left:hover {
-  text-decoration:none;
-  border-bottom:0;
-}
     div.sphinxsidebar {
         position: fixed;
         margin-left: 0;
