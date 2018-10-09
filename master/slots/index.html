@@ -9,25 +9,36 @@
     <title>Using Slots</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Slot Filling" href="../slotfilling/" />
     <link rel="prev" title="Actions" href="../customactions/" />
 
- <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
-    <!-- End Google Tag Manager -->   
+<!-- Google Tag Manager -->
+<script> 
+  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
+</script>
+<!-- End Google Tag Manager -->
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -137,6 +148,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
@@ -256,7 +268,7 @@ story, because it is automatically picked up.</p>
 <h3>Slots Set By Clicking Buttons<a class="headerlink" href="#slots-set-by-clicking-buttons" title="Permalink to this headline">¶</a></h3>
 <p>You can use buttons as a shortcut.
 Rasa Core will send messages starting with a <code class="docutils literal notranslate"><span class="pre">/</span></code> to the
-<code class="xref py py-class docutils literal notranslate"><span class="pre">RegexInterpreter</span></code>, which expects NLU input in the same format
+<code class="docutils literal notranslate"><span class="pre">RegexInterpreter</span></code>, which expects NLU input in the same format
 as in story files, e.g. <code class="docutils literal notranslate"><span class="pre">/intent{entities}</span></code>. For example, if you let
 users choose a color by clicking a button, the button payloads might
 be <code class="docutils literal notranslate"><span class="pre">/choose{&quot;color&quot;:</span> <span class="pre">&quot;blue&quot;}</span></code> and <code class="docutils literal notranslate"><span class="pre">/choose{&quot;color&quot;:</span> <span class="pre">&quot;red&quot;}</span></code>.</p>

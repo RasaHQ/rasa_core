@@ -9,24 +9,35 @@
     <title>Actions</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Using Slots" href="../slots/" />
     <link rel="prev" title="Chat &amp; Voice platforms" href="../connectors/" />
 
- <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
-    <!-- End Google Tag Manager -->   
+<!-- Google Tag Manager -->
+<script> 
+  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
+</script>
+<!-- End Google Tag Manager -->
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -311,7 +322,7 @@ back to the user with the <code class="docutils literal notranslate"><span class
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>dispatcher</strong> (<em>Dispatcher</em>) – the dispatcher which is used to send
 messages back to the user. Use <code class="docutils literal notranslate"><span class="pre">dipatcher.utter_message()</span></code>
-or any other <code class="xref py py-class docutils literal notranslate"><span class="pre">Dispatcher</span></code> method.</li>
+or any other <code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.dispatcher.Dispatcher</span></code> method.</li>
 <li><strong>tracker</strong> (<a class="reference internal" href="../api/tracker/#rasa_core.trackers.DialogueStateTracker" title="rasa_core.trackers.DialogueStateTracker"><em>DialogueStateTracker</em></a>) – the state tracker for the current
 user. You can access slot values using
 <code class="docutils literal notranslate"><span class="pre">tracker.get_slot(slot_name)</span></code> and the most recent user
@@ -320,7 +331,7 @@ message is <code class="docutils literal notranslate"><span class="pre">tracker.
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code> instances</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of <a class="reference internal" href="../api/events/#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a> instances</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List[<a class="reference internal" href="../api/events/#rasa_core.events.Event" title="rasa_core.events.Event">Event</a>]</p>

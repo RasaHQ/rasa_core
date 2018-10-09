@@ -9,25 +9,36 @@
     <title>Training and Policies</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Debugging" href="../debugging/" />
     <link rel="prev" title="Fallback Actions" href="../fallbacks/" />
 
- <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
-    <!-- End Google Tag Manager -->   
+<!-- Google Tag Manager -->
+<script> 
+  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
+</script>
+<!-- End Google Tag Manager -->
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -137,6 +148,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
@@ -209,7 +221,8 @@
 <p>Rasa Core works by creating training data from your stories and
 training a model on that data.</p>
 <p>You can run training from the command line like in the <a class="reference internal" href="../quickstart/#quickstart"><span class="std std-ref">Quickstart</span></a>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.train -d domain.yml -s data/stories.md -o models/current/dialogue --epochs <span class="m">200</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.train -d domain.yml -s data/stories.md <span class="se">\</span>
+  -o models/current/dialogue --epochs <span class="m">200</span>
 </pre></div>
 </div>
 <p>Or by creating an agent and running the train method yourself:</p>
@@ -234,27 +247,30 @@ the ones in your stories file. This is because if you have stories like:</p>
 </pre></div>
 </div>
 <p>You actually want to teach your policy to <strong>ignore</strong> the dialogue history
-when it isn’t relevant and just respond with the same action no matter what happened
-before.</p>
-<p>You can alter this behaviour with the <code class="docutils literal notranslate"><span class="pre">--augmentation</span></code> flag. <code class="docutils literal notranslate"><span class="pre">--augmentation</span> <span class="pre">0</span></code>
-disables this behavior.</p>
-<p>In python, you can pass the <code class="docutils literal notranslate"><span class="pre">augmentation_factor</span></code> argument to the <code class="docutils literal notranslate"><span class="pre">Agent.load_data</span></code> method.</p>
+when it isn’t relevant and just respond with the same action no matter
+what happened before.</p>
+<p>You can alter this behaviour with the <code class="docutils literal notranslate"><span class="pre">--augmentation</span></code> flag.
+<code class="docutils literal notranslate"><span class="pre">--augmentation</span> <span class="pre">0</span></code> disables this behavior.</p>
+<p>In python, you can pass the <code class="docutils literal notranslate"><span class="pre">augmentation_factor</span></code> argument to the
+<code class="docutils literal notranslate"><span class="pre">Agent.load_data</span></code> method.</p>
 </div>
 <div class="section" id="max-history">
 <h3>Max History<a class="headerlink" href="#max-history" title="Permalink to this headline">¶</a></h3>
 <p>One important hyperparameter for Rasa Core policies is the <code class="docutils literal notranslate"><span class="pre">max_history</span></code>.
-This controls how much dialogue history the model looks at to decide which action
-to take next.</p>
-<p>You can set the <code class="docutils literal notranslate"><span class="pre">max_history</span></code> using the training script’s <code class="docutils literal notranslate"><span class="pre">--history</span></code> flag or
-by passing it to your policy’s <code class="xref py py-class docutils literal notranslate"><span class="pre">Featurizer</span></code>.</p>
+This controls how much dialogue history the model looks at to decide which
+action to take next.</p>
+<p>You can set the <code class="docutils literal notranslate"><span class="pre">max_history</span></code> using the training script’s <code class="docutils literal notranslate"><span class="pre">--history</span></code>
+flag or by passing it to your policy’s <code class="docutils literal notranslate"><span class="pre">Featurizer</span></code>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Only the <code class="docutils literal notranslate"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> uses a max history, whereas the
-<code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer</span></code> always looks at the full conversation history.</p>
+<p class="last">Only the <code class="docutils literal notranslate"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> uses a max history,
+whereas the <code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer</span></code> always looks at
+the full conversation history.</p>
 </div>
-<p>As an example, let’s say you have an <code class="docutils literal notranslate"><span class="pre">out_of_scope</span></code> intent which describes off-topic
-user messages. If your bot sees this intent multiple times in a row, you might want to
-tell the user what you <cite>can</cite> help them with. So your story might look like this:</p>
+<p>As an example, let’s say you have an <code class="docutils literal notranslate"><span class="pre">out_of_scope</span></code> intent which
+describes off-topic user messages. If your bot sees this intent multiple
+times in a row, you might want to tell the user what you <cite>can</cite> help them
+with. So your story might look like this:</p>
 <div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="vm">* out_of_scope</span>
 <span class="vm">   </span>- utter_default
 <span class="vm">* out_of_scope</span>
@@ -263,10 +279,12 @@ tell the user what you <cite>can</cite> help them with. So your story might look
 <span class="vm">   </span>- utter_help_message
 </pre></div>
 </div>
-<p>For Rasa Core to learn this pattern, the <code class="docutils literal notranslate"><span class="pre">max_history</span></code> has to be <cite>at least</cite> <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
-<p>If you increase your <code class="docutils literal notranslate"><span class="pre">max_history</span></code>, your model will become bigger and training will take longer.
-If you have some information that should affect the dialogue very far into the future,
-you should store it as a slot. Slot information is always available for every featurizer.</p>
+<p>For Rasa Core to learn this pattern, the <code class="docutils literal notranslate"><span class="pre">max_history</span></code>
+has to be <cite>at least</cite> <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+<p>If you increase your <code class="docutils literal notranslate"><span class="pre">max_history</span></code>, your model will become bigger and
+training will take longer. If you have some information that should
+affect the dialogue very far into the future, you should store it as a
+slot. Slot information is always available for every featurizer.</p>
 </div>
 <div class="section" id="training-script-options">
 <h3>Training Script Options<a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
@@ -335,10 +353,11 @@ optional arguments:
 <h2>Policies<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="../api/policy/#rasa_core.policies.Policy" title="rasa_core.policies.Policy"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.policies.Policy</span></code></a> class decides which action to take
 at every step in the conversation.</p>
-<p>There are different policies to choose from, and you can include multiple policies
-in a single <code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code>. At every turn, the policy which predicts the
-next action with the highest confidence will be used.
-You can pass a list of policies when you create an agent:</p>
+<p>There are different policies to choose from, and you can include
+multiple policies in a single <a class="reference internal" href="../api/agent/#rasa_core.agent.Agent" title="rasa_core.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.agent.Agent</span></code></a>. At
+every turn, the policy which predicts the next action with the
+highest confidence will be used. You can pass a list of policies
+when you create an agent:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="kn">import</span> <span class="n">MemoizationPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="kn">import</span> <span class="n">KerasPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
@@ -349,19 +368,20 @@ You can pass a list of policies when you create an agent:</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">By default, Rasa Core uses the <code class="xref py py-class docutils literal notranslate"><span class="pre">KerasPolicy</span></code> in combination with
-the <code class="xref py py-class docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code>.</p>
+<p class="last">By default, Rasa Core uses the <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> in combination with
+the <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code>.</p>
 </div>
 <div class="section" id="memoization-policy">
 <h3>Memoization Policy<a class="headerlink" href="#memoization-policy" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code> just memorizes the conversations in your training data.
-It predicts the next action with confidence <code class="docutils literal notranslate"><span class="pre">1.0</span></code> if this exact conversation exists in the
-training data, otherwise it predicts <code class="docutils literal notranslate"><span class="pre">None</span></code> with confidence <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code> just memorizes the conversations in your
+training data. It predicts the next action with confidence <code class="docutils literal notranslate"><span class="pre">1.0</span></code>
+if this exact conversation exists in the training data, otherwise it
+predicts <code class="docutils literal notranslate"><span class="pre">None</span></code> with confidence <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
 </div>
 <div class="section" id="keras-policy">
 <h3>Keras Policy<a class="headerlink" href="#keras-policy" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> uses a neural network implemented in <a class="reference external" href="http://keras.io">Keras</a> to
-select the next action.
+<p>The <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> uses a neural network implemented in
+<a class="reference external" href="http://keras.io">Keras</a> to select the next action.
 The default architecture is based on an LSTM, but you can override the
 <code class="docutils literal notranslate"><span class="pre">KerasPolicy.model_architecture</span></code> method to implement your own architecture.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">model_architecture</span><span class="p">(</span>
@@ -466,129 +486,181 @@ or initialize <code class="docutils literal notranslate"><span class="pre">Keras
 </div>
 <div class="section" id="embedding-policy">
 <span id="id2"></span><h2>Embedding policy<a class="headerlink" href="#embedding-policy" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>This policy has a pre-defined architecture, which comprises the following steps:</dt>
-<dd><ul class="first last simple">
-<li>apply dense layers to create embeddings for user intents, entities and system actions including previous actions and slots;</li>
-<li>use the embeddings of previous user inputs as a user memory and embeddings of previous system actions as a system memory;</li>
-<li>concatenate user input, previous system action and slots embeddings for current time into an input vector to rnn;</li>
-<li>using user and previous system action embeddings from the input vector, calculate attention probabilities over the user and system memories
-(for system memory, this policy uses <a class="reference external" href="https://arxiv.org/abs/1410.5401">NTM mechanism</a> with attention by location);</li>
-<li>sum the user embedding and user attention vector and feed it and the embeddings of the slots as an input to an LSTM cell;</li>
-<li>apply a dense layer to the output of the LSTM to get a raw recurrent embedding of a dialogue;</li>
-<li>sum this raw recurrent embedding of a dialogue with system attention vector to create dialogue level embedding,
-this step allows the algorithm to repeat previous system action by copying its embedding vector directly to the current time output;</li>
-<li>weight previous LSTM states with system attention probabilities to get the previous action embedding, the policy is likely payed attention to;</li>
-<li>if the similarity between this previous action embedding and current time dialogue embedding is high,
-overwrite current LSTM state with the one from the time when this action happened;</li>
-<li>for each LSTM time step, calculate the similarity between the dialogue embedding and embedded system actions.
-This step is based on the starspace idea from: <a class="reference external" href="https://arxiv.org/abs/1709.03856">https://arxiv.org/abs/1709.03856</a>.</li>
+<p>This policy has a pre-defined architecture, which comprises the
+following steps:</p>
+<blockquote>
+<div><ul class="simple">
+<li>apply dense layers to create embeddings for user intents,
+entities and system actions including previous actions and slots;</li>
+<li>use the embeddings of previous user inputs as a user memory
+and embeddings of previous system actions as a system memory;</li>
+<li>concatenate user input, previous system action and slots
+embeddings for current time into an input vector to rnn;</li>
+<li>using user and previous system action embeddings from the input
+vector, calculate attention probabilities over the user and
+system memories (for system memory, this policy uses
+<a class="reference external" href="https://arxiv.org/abs/1410.5401">NTM mechanism</a> with attention
+by location);</li>
+<li>sum the user embedding and user attention vector and feed it
+and the embeddings of the slots as an input to an LSTM cell;</li>
+<li>apply a dense layer to the output of the LSTM to get a raw
+recurrent embedding of a dialogue;</li>
+<li>sum this raw recurrent embedding of a dialogue with system
+attention vector to create dialogue level embedding, this step
+allows the algorithm to repeat previous system action by copying
+its embedding vector directly to the current time output;</li>
+<li>weight previous LSTM states with system attention probabilities
+to get the previous action embedding, the policy is likely payed
+attention to;</li>
+<li>if the similarity between this previous action embedding and
+current time dialogue embedding is high, overwrite current LSTM
+state with the one from the time when this action happened;</li>
+<li>for each LSTM time step, calculate the similarity between the
+dialogue embedding and embedded system actions.
+This step is based on the starspace idea from:
+<a class="reference external" href="https://arxiv.org/abs/1709.03856">https://arxiv.org/abs/1709.03856</a>.</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This policy only works with <code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer(state_featurizer)</span></code>.</p>
+<p class="last">This policy only works with
+<code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer(state_featurizer)</span></code>.</p>
 </div>
-<p>It is recommended to use <code class="docutils literal notranslate"><span class="pre">state_featurizer=LabelTokenizerSingleStateFeaturizer(...)</span></code> (see <a class="reference internal" href="../api/featurizer/#featurization"><span class="std std-ref">Featurization</span></a> for details).</p>
+<p>It is recommended to use
+<code class="docutils literal notranslate"><span class="pre">state_featurizer=LabelTokenizerSingleStateFeaturizer(...)</span></code>
+(see <a class="reference internal" href="../api/featurizer/#featurization"><span class="std std-ref">Featurization</span></a> for details).</p>
 <p><strong>Configuration</strong>:</p>
 <blockquote>
 <div><blockquote>
 <div><p>Configuration parameters can be passed to <code class="docutils literal notranslate"><span class="pre">agent.train(...)</span></code> method.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Pass an appropriate <code class="docutils literal notranslate"><span class="pre">epochs</span></code> number to <code class="docutils literal notranslate"><span class="pre">agent.train(...)</span></code> method,
-otherwise the policy will be trained only for <code class="docutils literal notranslate"><span class="pre">1</span></code> epoch. Since this is embedding based policy,
-it requires a large number of epochs, which depends on the complexity of the training data and whether attention is used or not.</p>
+<p class="last">Pass an appropriate <code class="docutils literal notranslate"><span class="pre">epochs</span></code> number to <code class="docutils literal notranslate"><span class="pre">agent.train(...)</span></code>
+method, otherwise the policy will be trained only for <code class="docutils literal notranslate"><span class="pre">1</span></code> epoch.
+Since this is embedding based policy, it requires a large
+number of epochs, which depends on the complexity of the
+training data and whether attention is used or not.</p>
 </div>
-<p>The main feature of this policy is an <strong>attention</strong> mechanism over previous user input and system actions.
-<strong>Attention is turned on by default</strong>, in order to turn it off, configure the following parameters:</p>
+<p>The main feature of this policy is an <strong>attention</strong> mechanism over
+previous user input and system actions.
+<strong>Attention is turned on by default</strong>, in order to turn it off,
+configure the following parameters:</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">attn_before_rnn</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> the algorithm will use attention mechanism over previous user input, default <code class="docutils literal notranslate"><span class="pre">true</span></code>;</li>
-<li><code class="docutils literal notranslate"><span class="pre">attn_after_rnn</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> the algorithm will use attention mechanism over previous system actions
-and will be able to copy previously executed action together with LSTM’s hidden state from its history, default <code class="docutils literal notranslate"><span class="pre">true</span></code>;</li>
-<li><code class="docutils literal notranslate"><span class="pre">sparse_attention</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> <code class="docutils literal notranslate"><span class="pre">sparsemax</span></code> will be used instead of <code class="docutils literal notranslate"><span class="pre">softmax</span></code> for attention probabilities, default <code class="docutils literal notranslate"><span class="pre">false</span></code>;</li>
-<li><code class="docutils literal notranslate"><span class="pre">attn_shift_range</span></code> the range of allowed location-based attention shifts for system memory (<code class="docutils literal notranslate"><span class="pre">attn_after_rnn</span></code>), see <a class="reference external" href="https://arxiv.org/abs/1410.5401">https://arxiv.org/abs/1410.5401</a> for details;</li>
+<li><code class="docutils literal notranslate"><span class="pre">attn_before_rnn</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> the algorithm will use
+attention mechanism over previous user input, default <code class="docutils literal notranslate"><span class="pre">true</span></code>;</li>
+<li><code class="docutils literal notranslate"><span class="pre">attn_after_rnn</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> the algorithm will use
+attention mechanism over previous system actions and will be
+able to copy previously executed action together with LSTM’s
+hidden state from its history, default <code class="docutils literal notranslate"><span class="pre">true</span></code>;</li>
+<li><code class="docutils literal notranslate"><span class="pre">sparse_attention</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> <code class="docutils literal notranslate"><span class="pre">sparsemax</span></code> will be used
+instead of <code class="docutils literal notranslate"><span class="pre">softmax</span></code> for attention probabilities, default
+<code class="docutils literal notranslate"><span class="pre">false</span></code>;</li>
+<li><code class="docutils literal notranslate"><span class="pre">attn_shift_range</span></code> the range of allowed location-based
+attention shifts for system memory (<code class="docutils literal notranslate"><span class="pre">attn_after_rnn</span></code>), see
+<a class="reference external" href="https://arxiv.org/abs/1410.5401">https://arxiv.org/abs/1410.5401</a> for details;</li>
 </ul>
 </div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Attention requires larger values of <code class="docutils literal notranslate"><span class="pre">epochs</span></code> and takes longer to train. But it can learn more complicated and nonlinear behaviour.</p>
+<p class="last">Attention requires larger values of <code class="docutils literal notranslate"><span class="pre">epochs</span></code> and takes longer
+to train. But it can learn more complicated and nonlinear behaviour.</p>
 </div>
-<dl class="docutils">
-<dt>The algorithm also has hyperparameters to control:</dt>
-<dd><ul class="first last simple">
-<li><dl class="first docutils">
-<dt>neural network’s architecture:</dt>
-<dd><ul class="first last">
-<li><code class="docutils literal notranslate"><span class="pre">hidden_layers_sizes_a</span></code> sets a list of hidden layers sizes before embedding layer for user inputs, the number of hidden layers is equal to the length of the list;</li>
-<li><code class="docutils literal notranslate"><span class="pre">hidden_layers_sizes_b</span></code> sets a list of hidden layers sizes before embedding layer for system actions, the number of hidden layers is equal to the length of the list;</li>
+<p>The algorithm also has hyper-parameters to control:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">neural network’s architecture:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">hidden_layers_sizes_a</span></code> sets a list of hidden layers
+sizes before embedding layer for user inputs, the number
+of hidden layers is equal to the length of the list;</li>
+<li><code class="docutils literal notranslate"><span class="pre">hidden_layers_sizes_b</span></code> sets a list of hidden layers
+sizes before embedding layer for system actions, the number
+of hidden layers is equal to the length of the list;</li>
 <li><code class="docutils literal notranslate"><span class="pre">rnn_size</span></code> sets the number of units in the LSTM cell;</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="first docutils">
-<dt>training:</dt>
-<dd><ul class="first last">
-<li><code class="docutils literal notranslate"><span class="pre">layer_norm</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> layer normalization for lstm cell is turned on,  default <code class="docutils literal notranslate"><span class="pre">true</span></code>;</li>
-<li><code class="docutils literal notranslate"><span class="pre">batch_size</span></code> sets the number of training examples in one forward/backward pass, the higher the batch size, the more memory space you’ll need;</li>
-<li><code class="docutils literal notranslate"><span class="pre">epochs</span></code> sets the number of times the algorithm will see training data, where <code class="docutils literal notranslate"><span class="pre">one</span> <span class="pre">epoch</span></code> = one forward pass and one backward pass of all the training examples;</li>
+<li><p class="first">training:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">layer_norm</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> layer normalization for lstm
+cell is turned on,  default <code class="docutils literal notranslate"><span class="pre">true</span></code>;</li>
+<li><code class="docutils literal notranslate"><span class="pre">batch_size</span></code> sets the number of training examples in one
+forward/backward pass, the higher the batch size, the more
+memory space you’ll need;</li>
+<li><code class="docutils literal notranslate"><span class="pre">epochs</span></code> sets the number of times the algorithm will see
+training data, where <code class="docutils literal notranslate"><span class="pre">one</span> <span class="pre">epoch</span></code> = one forward pass and
+one backward pass of all the training examples;</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="first docutils">
-<dt>embedding:</dt>
-<dd><ul class="first last">
+<li><p class="first">embedding:</p>
+<blockquote>
+<div><ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">embed_dim</span></code> sets the dimension of embedding space;</li>
-<li><code class="docutils literal notranslate"><span class="pre">mu_pos</span></code> controls how similar the algorithm should try to make embedding vectors for correct intent labels;</li>
-<li><code class="docutils literal notranslate"><span class="pre">mu_neg</span></code> controls maximum negative similarity for incorrect intents;</li>
-<li><code class="docutils literal notranslate"><span class="pre">similarity_type</span></code> sets the type of the similarity, it should be either <code class="docutils literal notranslate"><span class="pre">cosine</span></code> or <code class="docutils literal notranslate"><span class="pre">inner</span></code>;</li>
-<li><code class="docutils literal notranslate"><span class="pre">num_neg</span></code> sets the number of incorrect intent labels, the algorithm will minimize their similarity to the user input during training;</li>
-<li><code class="docutils literal notranslate"><span class="pre">use_max_sim_neg</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> the algorithm only minimizes maximum similarity over incorrect intent labels;</li>
+<li><code class="docutils literal notranslate"><span class="pre">mu_pos</span></code> controls how similar the algorithm should try
+to make embedding vectors for correct intent labels;</li>
+<li><code class="docutils literal notranslate"><span class="pre">mu_neg</span></code> controls maximum negative similarity for
+incorrect intents;</li>
+<li><code class="docutils literal notranslate"><span class="pre">similarity_type</span></code> sets the type of the similarity,
+it should be either <code class="docutils literal notranslate"><span class="pre">cosine</span></code> or <code class="docutils literal notranslate"><span class="pre">inner</span></code>;</li>
+<li><code class="docutils literal notranslate"><span class="pre">num_neg</span></code> sets the number of incorrect intent labels,
+the algorithm will minimize their similarity to the user
+input during training;</li>
+<li><code class="docutils literal notranslate"><span class="pre">use_max_sim_neg</span></code> if <code class="docutils literal notranslate"><span class="pre">true</span></code> the algorithm only
+minimizes maximum similarity over incorrect intent labels;</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="first docutils">
-<dt>regularization:</dt>
-<dd><ul class="first last">
+<li><p class="first">regularization:</p>
+<blockquote>
+<div><ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">C2</span></code> sets the scale of L2 regularization</li>
-<li><code class="docutils literal notranslate"><span class="pre">C_emb</span></code> sets the scale of how important is to minimize the maximum similarity between embeddings of different intent labels;</li>
-<li><code class="docutils literal notranslate"><span class="pre">droprate_a</span></code> sets the dropout rate between hidden layers before embedding layer for user inputs;</li>
-<li><code class="docutils literal notranslate"><span class="pre">droprate_b</span></code> sets the dropout rate between hidden layers before embedding layer for system actions;</li>
-<li><code class="docutils literal notranslate"><span class="pre">droprate_rnn</span></code> sets the recurrent dropout rate on the LSTM hidden state <a class="reference external" href="https://arxiv.org/abs/1603.05118">https://arxiv.org/abs/1603.05118</a>;</li>
+<li><code class="docutils literal notranslate"><span class="pre">C_emb</span></code> sets the scale of how important is to minimize
+the maximum similarity between embeddings of different
+intent labels;</li>
+<li><code class="docutils literal notranslate"><span class="pre">droprate_a</span></code> sets the dropout rate between hidden
+layers before embedding layer for user inputs;</li>
+<li><code class="docutils literal notranslate"><span class="pre">droprate_b</span></code> sets the dropout rate between hidden layers
+before embedding layer for system actions;</li>
+<li><code class="docutils literal notranslate"><span class="pre">droprate_rnn</span></code> sets the recurrent dropout rate on
+the LSTM hidden state <a class="reference external" href="https://arxiv.org/abs/1603.05118">https://arxiv.org/abs/1603.05118</a>;</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="first docutils">
-<dt>train accuracy calculation:</dt>
-<dd><ul class="first last">
-<li><code class="docutils literal notranslate"><span class="pre">evaluate_every_num_epochs</span></code> sets how often to calculate train accuracy, small values may hurt performance;</li>
-<li><code class="docutils literal notranslate"><span class="pre">evaluate_on_num_examples</span></code> how many examples to use for calculation of train accuracy, large values may hurt performance.</li>
+<li><p class="first">train accuracy calculation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">evaluate_every_num_epochs</span></code> sets how often to calculate
+train accuracy, small values may hurt performance;</li>
+<li><code class="docutils literal notranslate"><span class="pre">evaluate_on_num_examples</span></code> how many examples to use for
+calculation of train accuracy, large values may hurt
+performance.</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Droprate should be between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">droprate=0.1</span></code> would drop out <code class="docutils literal notranslate"><span class="pre">10%</span></code> of input units</p>
+<p class="last">Droprate should be between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code>, e.g.
+<code class="docutils literal notranslate"><span class="pre">droprate=0.1</span></code> would drop out <code class="docutils literal notranslate"><span class="pre">10%</span></code> of input units.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">For <code class="docutils literal notranslate"><span class="pre">cosine</span></code> similarity <code class="docutils literal notranslate"><span class="pre">mu_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">mu_neg</span></code> should be between <code class="docutils literal notranslate"><span class="pre">-1</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+<p class="last">For <code class="docutils literal notranslate"><span class="pre">cosine</span></code> similarity <code class="docutils literal notranslate"><span class="pre">mu_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">mu_neg</span></code> should
+be between <code class="docutils literal notranslate"><span class="pre">-1</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">There is an option to use linearly increasing batch size. The idea comes from <a class="reference external" href="https://arxiv.org/abs/1711.00489">https://arxiv.org/abs/1711.00489</a>.
-In order to do it pass a list to <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;batch_size&quot;:</span> <span class="pre">[8,</span> <span class="pre">32]</span></code> (default behaviour).
-If constant <code class="docutils literal notranslate"><span class="pre">batch_size</span></code> is required, pass an <code class="docutils literal notranslate"><span class="pre">int</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;batch_size&quot;:</span> <span class="pre">8</span></code>.</p>
+<p class="last">There is an option to use linearly increasing batch size.
+The idea comes from <a class="reference external" href="https://arxiv.org/abs/1711.00489">https://arxiv.org/abs/1711.00489</a>.
+In order to do it pass a list to <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>, e.g.
+<code class="docutils literal notranslate"><span class="pre">&quot;batch_size&quot;:</span> <span class="pre">[8,</span> <span class="pre">32]</span></code> (default behaviour). If constant
+<code class="docutils literal notranslate"><span class="pre">batch_size</span></code> is required, pass an <code class="docutils literal notranslate"><span class="pre">int</span></code>, e.g.
+<code class="docutils literal notranslate"><span class="pre">&quot;batch_size&quot;:</span> <span class="pre">8</span></code>.</p>
 </div>
 <p>These parameters can be passed to <code class="docutils literal notranslate"><span class="pre">Agent.train(...)</span></code> method.
 The default values are defined in <code class="docutils literal notranslate"><span class="pre">EmbeddingPolicy.defaults</span></code>:</p>
@@ -668,9 +740,10 @@ The default values are defined in <code class="docutils literal notranslate"><sp
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Parameter <code class="docutils literal notranslate"><span class="pre">mu_neg</span></code> is set to a negative value to mimic the original
-starspace algorithm in the case <code class="docutils literal notranslate"><span class="pre">mu_neg</span> <span class="pre">=</span> <span class="pre">mu_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">use_max_sim_neg</span> <span class="pre">=</span> <span class="pre">False</span></code>.
-See <a class="reference external" href="https://arxiv.org/abs/1709.03856">starspace paper</a> for details.</p>
+<p class="last">Parameter <code class="docutils literal notranslate"><span class="pre">mu_neg</span></code> is set to a negative value to mimic
+the original starspace algorithm in the case
+<code class="docutils literal notranslate"><span class="pre">mu_neg</span> <span class="pre">=</span> <span class="pre">mu_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">use_max_sim_neg</span> <span class="pre">=</span> <span class="pre">False</span></code>. See
+<a class="reference external" href="https://arxiv.org/abs/1709.03856">starspace paper</a> for details.</p>
 </div>
 </div></blockquote>
 </div>

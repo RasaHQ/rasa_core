@@ -129,7 +129,7 @@ var klaroConfig = {
             purposes: ['livechat'],
             cookies: [/^_dc_gtm_*$/, 'googletagmanager_ignore'],
             callback: function(consent, app){
-                console.log("User consent for app "+app.name+": consent="+consent)
+                console.log("User consent for app "+app.name+": consnet="+consent)
             },
             required : false,
             optOut : false, 

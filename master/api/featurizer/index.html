@@ -9,25 +9,36 @@
     <title>Featurization</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/banner.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
-    <link rel="next" title="Migration Guide" href="../../migrations/" />
+    <link rel="next" title="Dispatcher" href="../dispatcher/" />
     <link rel="prev" title="Policy" href="../policy/" />
 
- <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
-    <!-- End Google Tag Manager -->   
+<!-- Google Tag Manager -->
+<script> 
+  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
+</script>
+<!-- End Google Tag Manager -->
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -137,6 +148,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../policy/">Policy</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
@@ -252,8 +264,9 @@ entity, previous action or slot e.g. <code class="docutils literal notranslate">
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">LabelTokenizerSingleStateFeaturizer</span></code> creates an vector based on the feature label:</dt>
-<dd><p class="first">All active feature labels (e.g. <code class="docutils literal notranslate"><span class="pre">prev_action_listen</span></code>) are split
+<dt><code class="docutils literal notranslate"><span class="pre">LabelTokenizerSingleStateFeaturizer</span></code> creates an vector</dt>
+<dd><p class="first">based on the feature label:
+All active feature labels (e.g. <code class="docutils literal notranslate"><span class="pre">prev_action_listen</span></code>) are split
 into tokens and represented as a bag-of-words. For example, actions
 <code class="docutils literal notranslate"><span class="pre">utter_explain_details_hotel</span></code> and
 <code class="docutils literal notranslate"><span class="pre">utter_explain_details_restaurant</span></code> will have 3 features in
@@ -291,20 +304,30 @@ states and calls a <code class="docutils literal notranslate"><span class="pre">
 different tracker featurizers:</p>
 <div class="section" id="full-dialogue">
 <h3>1. Full Dialogue<a class="headerlink" href="#full-dialogue" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer</span></code> creates numerical representation of stories to feed to a recurrent neural network
-where the whole dialogue is fed to a network and the gradient is backpropagated from all time steps.
-Therefore, <code class="docutils literal notranslate"><span class="pre">X</span></code> is an array of shape <code class="docutils literal notranslate"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_input_features)</span></code> and
-<code class="docutils literal notranslate"><span class="pre">y</span></code> is an array of shape <code class="docutils literal notranslate"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_bot_features)</span></code>.
-The smaller dialogues are padded with <code class="docutils literal notranslate"><span class="pre">-1</span></code> for all features, indicating no values for a policy.</p>
+<p><code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer</span></code> creates numerical representation of
+stories to feed to a recurrent neural network where the whole dialogue
+is fed to a network and the gradient is backpropagated from all time steps.
+Therefore, <code class="docutils literal notranslate"><span class="pre">X</span></code> is an array of shape
+<code class="docutils literal notranslate"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_input_features)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">y</span></code> is an array of shape
+<code class="docutils literal notranslate"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_bot_features)</span></code>.
+The smaller dialogues are padded with <code class="docutils literal notranslate"><span class="pre">-1</span></code> for all features, indicating
+no values for a policy.</p>
 </div>
 <div class="section" id="max-history">
 <h3>2. Max History<a class="headerlink" href="#max-history" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> creates an array of previous tracker states for each bot action or utterance, with
-the parameter <code class="docutils literal notranslate"><span class="pre">max_history</span></code> defining how many states go into each row in <code class="docutils literal notranslate"><span class="pre">X</span></code>.
-Deduplication is performed to filter out duplicated turns (bot actions or bot utterances) in terms of their previous states.
-Hence <code class="docutils literal notranslate"><span class="pre">X</span></code> has shape <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history,</span> <span class="pre">num_input_features)</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> is an array of shape <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">num_bot_features)</span></code>.</p>
-<p>For some algorithms a flat feature vector is needed, so <code class="docutils literal notranslate"><span class="pre">X</span></code> should be reshaped to <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history</span> <span class="pre">*</span> <span class="pre">num_input_features)</span></code>.
-If numeric target class labels are needed instead of one-hot vectors, use <code class="docutils literal notranslate"><span class="pre">y.argmax(axis=-1)</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> creates an array of previous tracker
+states for each bot action or utterance, with the parameter
+<code class="docutils literal notranslate"><span class="pre">max_history</span></code> defining how many states go into each row in <code class="docutils literal notranslate"><span class="pre">X</span></code>.
+Deduplication is performed to filter out duplicated turns (bot actions
+or bot utterances) in terms of their previous states. Hence <code class="docutils literal notranslate"><span class="pre">X</span></code>
+has shape <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history,</span> <span class="pre">num_input_features)</span></code>
+and <code class="docutils literal notranslate"><span class="pre">y</span></code> is an array of shape <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">num_bot_features)</span></code>.</p>
+<p>For some algorithms a flat feature vector is needed, so <code class="docutils literal notranslate"><span class="pre">X</span></code>
+should be reshaped to
+<code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history</span> <span class="pre">*</span> <span class="pre">num_input_features)</span></code>. If numeric
+target class labels are needed instead of one-hot vectors, use
+<code class="docutils literal notranslate"><span class="pre">y.argmax(axis=-1)</span></code>.</p>
 </div>
 <div class="section" id="have-questions-or-feedback">
 <h3>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h3>
