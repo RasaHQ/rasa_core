@@ -57,6 +57,9 @@ def run_comparison_evaluation(models, stories, output):
 
     for run in nlu_utils.list_subdirectories(models):
         correct_embed = []
+        correct_embed_noattn_before = []
+        correct_embed_noattn_after = []
+        correct_embed_noattn = []
         correct_keras = []
 
         for model in sorted(nlu_utils.list_subdirectories(run)):
@@ -71,11 +74,20 @@ def run_comparison_evaluation(models, stories, output):
                                           agent)
             if 'keras' in model:
                 correct_keras.append(no_of_stories - len(failed_stories))
+            elif 'embed_noattn_before' in model:
+                correct_embed_noattn_before.append(no_of_stories - len(failed_stories))
+            elif 'embed_noattn_after' in model:
+                correct_embed_noattn_after.append(no_of_stories - len(failed_stories))
+            elif 'embed_noattn' in model:
+                correct_embed_noattn.append(no_of_stories - len(failed_stories))
             elif 'embed' in model:
                 correct_embed.append(no_of_stories - len(failed_stories))
 
         num_correct['keras'].append(correct_keras)
         num_correct['embed'].append(correct_embed)
+        num_correct['embed_noattn_before'].append(correct_embed_noattn_before)
+        num_correct['embed_noattn_after'].append(correct_embed_noattn_after)
+        num_correct['embed_noattn'].append(correct_embed_noattn)
 
     utils.create_dir_for_file(output)
 
@@ -95,7 +107,7 @@ def plot_curve(output, no_stories, ax=None, **kwargs):
     x = no_stories
 
     # compute mean of all the runs for keras/embed policies
-    for label in ['keras', 'embed']:
+    for label in ['keras', 'embed', 'embed_noattn_before', 'embed_noattn_after', 'embed_noattn']:
         if len(data[label]) == 0:
             continue
         mean = np.mean(data[label], axis=0)
