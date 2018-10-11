@@ -9,7 +9,7 @@ This project adheres to `Semantic Versioning`_ starting with version 0.2.0.
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Changed
------
+-------
 - Remove livechat widget from docs
 
 [0.11.11] - 2018-10-05
