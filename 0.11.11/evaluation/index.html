@@ -168,6 +168,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.11.12/evaluation/">0.11.12</a>
               <a href="../../0.11.11/evaluation/">0.11.11</a>
               <a href="../../0.11.10/evaluation/">0.11.10</a>
               <a href="../../0.11.9/evaluation/">0.11.9</a>
@@ -206,9 +207,12 @@
   
 
 
+    
+    
 
 
 
+    <p class="scv-banner"><a href="../../0.11.12/evaluation/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.11.12.</a></p>
 <div class="section" id="evaluating-and-testing">
 <span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="evaluating-a-trained-model">
@@ -228,9 +232,8 @@ domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] -s STORIES [-m MAX_STORIES] -d CORE [-u NLU]
-                   [-o [OUTPUT]] [--e2e] [--failed FAILED]
-                   [--endpoints ENDPOINTS] [--fail_on_prediction_errors] [-v]
-                   [-vv] [--quiet]
+                   [-o OUTPUT] [--failed FAILED] [--endpoints ENDPOINTS]
+                   [--fail_on_prediction_errors] [-v] [-vv] [--quiet]
 
 evaluates a dialogue model
 
@@ -243,12 +246,9 @@ optional arguments:
   -d CORE, --core CORE  core model to run with the server
   -u NLU, --nlu NLU     nlu model to run with the server. None for regex
                         interpreter
-  -o [OUTPUT], --output [OUTPUT]
+  -o OUTPUT, --output OUTPUT
                         output path for the created evaluation plot. If set to
                         Noneor an empty string, no plot will be generated.
-  --e2e, --end-to-end   Run an end-to-end evaluation for combined action and
-                        intent prediction. Requires a story file in end-to-end
-                        format.
   --failed FAILED       output path for the failed stories
   --endpoints ENDPOINTS
                         Configuration file for the connectors as a yml file
