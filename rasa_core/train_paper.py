@@ -80,7 +80,10 @@ def train_domain_policy(story_filename,
                         output_path=None,
                         exclusion_file=None,
                         exclusion_percentage=None,
-                        starspace=True):
+                        starspace=True,
+                        attn_before_rnn=True,
+                        attn_after_rnn=True,
+                        ):
 
     """Trains either a KerasPolicy model or an EmbeddingPolicy, excluding a
     certain percentage of a story file"""
@@ -108,7 +111,10 @@ def train_domain_policy(story_filename,
                 rnn_size=64,
                 epochs=epochs,
                 embed_dim=20,
-                attn_shift_range=5)
+                attn_shift_range=5,
+                attn_before_rnn=attn_before_rnn,
+                attn_after_rnn=attn_after_rnn,
+                )
 
     agent.persist(model_path=output_path)
 
@@ -141,6 +147,15 @@ if __name__ == '__main__':
             output_path_embed = (os.path.join(cmdline_args.out, 'run_' +
                                  str(r + 1), 'embed' + str(current_round)))
 
+            output_path_embed_noattn_before = (os.path.join(cmdline_args.out, 'run_' +
+                                               str(r + 1), 'embed_noattn_before' + str(current_round)))
+
+            output_path_embed_noattn_after = (os.path.join(cmdline_args.out, 'run_' +
+                                              str(r + 1), 'embed_noattn_after' + str(current_round)))
+
+            output_path_embed_noattn = (os.path.join(cmdline_args.out, 'run_' +
+                                        str(r + 1), 'embed_noattn' + str(current_round)))
+
             logging.info("Starting to train embed round {}/{}".format(
                                                 current_round,
                                                 len(cmdline_args.percentages)))
@@ -156,6 +171,58 @@ if __name__ == '__main__':
             logger.info("Finished training embed round {}/{}".format(
                                                 current_round,
                                                 len(cmdline_args.percentages)))
+
+            logging.info("Starting to train embed_noattn_before round {}/{}".format(
+                current_round,
+                len(cmdline_args.percentages)))
+
+            train_domain_policy(story_filename=cmdline_args.stories,
+                                domain=cmdline_args.domain,
+                                epochs=cmdline_args.epochs_embed,
+                                output_path=output_path_embed_noattn_before,
+                                exclusion_file=cmdline_args.exclude,
+                                exclusion_percentage=i,
+                                starspace=True,
+                                attn_before_rnn=False)
+
+            logger.info("Finished training embed_noattn_before round {}/{}".format(
+                current_round,
+                len(cmdline_args.percentages)))
+
+            logging.info("Starting to train embed_noattn_after round {}/{}".format(
+                current_round,
+                len(cmdline_args.percentages)))
+
+            train_domain_policy(story_filename=cmdline_args.stories,
+                                domain=cmdline_args.domain,
+                                epochs=cmdline_args.epochs_embed,
+                                output_path=output_path_embed_noattn_after,
+                                exclusion_file=cmdline_args.exclude,
+                                exclusion_percentage=i,
+                                starspace=True,
+                                attn_after_rnn=False)
+
+            logger.info("Finished training embed_noattn_after round {}/{}".format(
+                current_round,
+                len(cmdline_args.percentages)))
+
+            logging.info("Starting to train embed_noattn round {}/{}".format(
+                current_round,
+                len(cmdline_args.percentages)))
+
+            train_domain_policy(story_filename=cmdline_args.stories,
+                                domain=cmdline_args.domain,
+                                epochs=cmdline_args.epochs_embed,
+                                output_path=output_path_embed_noattn,
+                                exclusion_file=cmdline_args.exclude,
+                                exclusion_percentage=i,
+                                starspace=True,
+                                attn_before_rnn=False,
+                                attn_after_rnn=False)
+
+            logger.info("Finished training embed_noattn round {}/{}".format(
+                current_round,
+                len(cmdline_args.percentages)))
 
             logging.info("Starting to train keras round {}/{}".format(
                                                 current_round,
