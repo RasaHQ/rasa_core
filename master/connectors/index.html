@@ -393,7 +393,7 @@ from your webserver creation logic.</p>
             <span class="c1"># token for the page you subscribed to</span>
     <span class="p">)</span>
 
-    <span class="c1"># set serve_forever=False if you want to keep the server running</span>
+    <span class="c1"># set serve_forever=True if you want to keep the server running</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="mi">5004</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -469,7 +469,7 @@ from your webserver creation logic.</p>
             <span class="c1"># the name of your channel to which the bot posts (optional)</span>
     <span class="p">)</span>
 
-    <span class="c1"># set serve_forever=False if you want to keep the server running</span>
+    <span class="c1"># set serve_forever=True if you want to keep the server running</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="mi">5004</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -544,7 +544,7 @@ from your webserver creation logic.</p>
             <span class="c1"># the password of your bot user that will post messages</span>
     <span class="p">)</span>
 
-    <span class="c1"># set serve_forever=False if you want to keep the server running</span>
+    <span class="c1"># set serve_forever=True if you want to keep the server running</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="mi">5004</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -623,7 +623,7 @@ from your webserver creation logic.</p>
             <span class="n">webhook_url</span><span class="o">=</span><span class="s2">&quot;YOUR_WEBHOOK_URL&quot;</span>
     <span class="p">)</span>
 
-    <span class="c1"># set serve_forever=False if you want to keep the server running</span>
+    <span class="c1"># set serve_forever=True if you want to keep the server running</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="mi">5004</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -697,7 +697,7 @@ from your webserver creation logic.</p>
             <span class="n">twilio_number</span><span class="o">=</span><span class="s2">&quot;YOUR_TWILIO_NUMBER&quot;</span>
     <span class="p">)</span>
 
-    <span class="c1"># set serve_forever=False if you want to keep the server running</span>
+    <span class="c1"># set serve_forever=True if you want to keep the server running</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="mi">5004</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -771,7 +771,7 @@ from your webserver creation logic.</p>
             <span class="n">server_url</span><span class="o">=</span><span class="s2">&quot;https://demo.rocket.chat&quot;</span>
     <span class="p">)</span>
 
-    <span class="c1"># set serve_forever=False if you want to keep the server running</span>
+    <span class="c1"># set serve_forever=True if you want to keep the server running</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="mi">5004</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -818,7 +818,7 @@ from your webserver creation logic.</p>
             <span class="n">app_password</span><span class="o">=</span><span class="s2">&quot;MICROSOFT_APP_PASSWORD&quot;</span>
     <span class="p">)</span>
 
-    <span class="c1"># set serve_forever=False if you want to keep the server running</span>
+    <span class="c1"># set serve_forever=True if you want to keep the server running</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="mi">5004</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -869,7 +869,7 @@ when sending or receiving messages over socket.io.</p>
             <span class="n">namespace</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span>
 
-    <span class="c1"># set serve_forever=False if you want to keep the server running</span>
+    <span class="c1"># set serve_forever=True if you want to keep the server running</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="mi">5004</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
