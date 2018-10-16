@@ -282,8 +282,7 @@ you should store it as a slot. Slot information is always available for every fe
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] (-s STORIES | --url URL | --core CORE) [-o OUT]
                 [-d DOMAIN] [-u NLU] [--history HISTORY] [--epochs EPOCHS]
                 [--validation_split VALIDATION_SPLIT]
-                [--batch_size BATCH_SIZE] [--interactive]
-                [--skip_visualization] [--finetune]
+                [--batch_size BATCH_SIZE] [--interactive] [--finetune]
                 [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
                 [--endpoints ENDPOINTS] [--nlu_threshold NLU_THRESHOLD]
                 [--core_threshold CORE_THRESHOLD]
@@ -314,8 +313,6 @@ optional arguments:
                         number of training samples to put into one training
                         batch
   --interactive         enable interactive training
-  --skip_visualization  disables plotting the visualization during interactive
-                        learning
   --finetune            retrain the model immediately based on feedback.
   --augmentation AUGMENTATION
                         how much data augmentation to use during training
