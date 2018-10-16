@@ -217,11 +217,17 @@
     <p class="scv-banner"><a href="../../0.11.12/evaluation/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.11.12.</a></p>
 <div class="section" id="evaluating-and-testing">
 <span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you’re looking to evaluate both Rasa NLU and Rasa Core predictions
+combined, take a look at the section on
+<a class="reference internal" href="#end-to-end-evaluation"><span class="std std-ref">end-to-end evaluation</span></a>.</p>
+</div>
 <div class="section" id="evaluating-a-trained-model">
 <h2>Evaluating a Trained Model<a class="headerlink" href="#evaluating-a-trained-model" title="Permalink to this headline">¶</a></h2>
 <p>You can evaluate your trained model on a set of test stories
 by using the evaluate script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.evaluate -d models/dialogue <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate -d models/dialogue <span class="se">\</span>
   -s test_stories.md -o matrix.pdf --failed failed_stories.md
 </pre></div>
 </div>
@@ -267,6 +273,46 @@ optional arguments:
                         to DEBUG
   --quiet               Be quiet! Sets logging level to WARNING
 </pre></div>
+</div>
+</div>
+<div class="section" id="end-to-end-evaluation-of-rasa-nlu-and-core">
+<span id="end-to-end-evaluation"></span><h2>End-to-end evaluation of Rasa NLU and Core<a class="headerlink" href="#end-to-end-evaluation-of-rasa-nlu-and-core" title="Permalink to this headline">¶</a></h2>
+<p>Say your bot uses a dialogue model in combination with a Rasa NLU model to
+parse intent messages, and you would like to evaluate how the two models
+perform together on whole dialogues.
+The evaluate script lets you evaluate dialogues end-to-end, combining
+Rasa NLU intent predictions with Rasa Core action predictions.
+You can activate this feature with the <code class="docutils literal notranslate"><span class="pre">--e2e</span></code> option in the
+<code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code> module.</p>
+<p>The story format used for end-to-end evaluation is slightly different to
+the standard Rasa Core stories, as you’ll have to include the user
+messages in natural language instead of just their intent. The format for the
+user messages is <code class="docutils literal notranslate"><span class="pre">*</span> <span class="pre">&lt;intent&gt;:&lt;Rasa</span> <span class="pre">NLU</span> <span class="pre">example&gt;</span></code>. The NLU part follows the
+<a class="reference external" href="https://rasa.com/docs/nlu/dataformat/#markdown-format">markdown syntax for Rasa NLU training data</a>.</p>
+<p>Here’s an example of what an end-to-end story file may look like:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## end-to-end story 1</span>
+<span class="vm">* greet: </span>hello
+   - utter_ask_howcanhelp
+<span class="vm">* inform: </span>show me [chinese](cuisine) restaurants
+   - utter_ask_location
+<span class="vm">* inform: </span>in [Paris](location)
+   - utter_ask_price
+
+<span class="gh">## end-to-end story 2</span>
+...
+</pre></div>
+</div>
+<p>If you’ve saved these stories under <code class="docutils literal notranslate"><span class="pre">e2e_storied.md</span></code>,
+the full end-to-end evaluation command is this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate -d models/dialogue --nlu models/nlu/current <span class="se">\</span>
+  -s e2e_stories.md --e2e
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Make sure you specify an NLU model to load with the dialogue model using the
+<code class="docutils literal notranslate"><span class="pre">--nlu</span></code> option of <code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code>. If you do not specify an NLU
+model, Rasa Core will load the default <code class="docutils literal notranslate"><span class="pre">RegexInterpreter</span></code>.</p>
 </div>
 </div>
 <div class="section" id="comparing-policies">
