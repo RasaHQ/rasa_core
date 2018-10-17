@@ -21,13 +21,24 @@
     <link rel="next" title="Debugging" href="../debugging/" />
     <link rel="prev" title="Fallback Actions" href="../fallbacks/" />
 
- <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
-    <!-- End Google Tag Manager -->   
+<!-- Google Tag Manager -->
+<script> 
+  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
+</script>
+<!-- End Google Tag Manager -->
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -278,17 +289,15 @@ slot. Slot information is always available for every featurizer.</p>
 </div>
 <div class="section" id="training-script-options">
 <h3>Training Script Options<a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] (-s STORIES | --url URL | --core CORE) [-o OUT] -d DOMAIN
-                [-u NLU] [--history HISTORY] [--epochs EPOCHS]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] (-s STORIES | --url URL | --core CORE) [-o OUT]
+                [-d DOMAIN] [-u NLU] [--history HISTORY] [--epochs EPOCHS]
                 [--validation_split VALIDATION_SPLIT]
                 [--batch_size BATCH_SIZE] [--interactive] [--finetune]
                 [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
                 [--endpoints ENDPOINTS] [--nlu_threshold NLU_THRESHOLD]
                 [--core_threshold CORE_THRESHOLD]
-                [--fallback_action_name FALLBACK_ACTION_NAME] [--mode MODE]
-                [--epochs_embed EPOCHS_EMBED] [--epochs_keras EPOCHS_KERAS]
-                [--percentages [PERCENTAGES [PERCENTAGES ...]]] [--runs RUNS]
-                [-v] [-vv] [--quiet]
+                [--fallback_action_name FALLBACK_ACTION_NAME] [-v] [-vv]
+                [--quiet]
 
 trains a dialogue model
 
@@ -333,15 +342,6 @@ optional arguments:
                         When a fallback is triggered (e.g. because the ML
                         prediction is of low confidence) this is the name of
                         tje action that will get triggered instead.
-  --mode MODE           default|compare (train a model, or train multiple
-                        models to compare policies)
-  --epochs_embed EPOCHS_EMBED
-                        number of epochs for the embedding policy
-  --epochs_keras EPOCHS_KERAS
-                        number of epochs for the keras policy
-  --percentages [PERCENTAGES [PERCENTAGES ...]]
-                        Range of exclusion percentages
-  --runs RUNS           Number of runs for experiments
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG
