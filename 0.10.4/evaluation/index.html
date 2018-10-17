@@ -20,24 +20,13 @@
     <link rel="next" title="Domain Format" href="../domains/" />
     <link rel="prev" title="Debugging" href="../debugging/" />
 
-<!-- Google Tag Manager -->
-<script> 
-  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start': new Date().getTime(),
-            event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s),
-            dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
-</script>
-<!-- End Google Tag Manager -->
+ <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
+    <!-- End Google Tag Manager -->   
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -225,10 +214,10 @@ We count any story as <cite>failed</cite> if at least one of the actions was pre
 The confusion matrix shows, for each action in your domain, how often that action
 was predicted, and how often an incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] -s STORIES [-m MAX_STORIES] -d CORE [-u NLU]
-                   [-o [OUTPUT]] [--e2e] [--failed FAILED]
-                   [--endpoints ENDPOINTS] [--fail_on_prediction_errors] [-v]
-                   [-vv] [--quiet]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] -s STORIES [-m MAX_STORIES] [-d CORE] [-u NLU]
+                   [-o OUTPUT] [--e2e] [--endpoints ENDPOINTS]
+                   [--fail_on_prediction_errors] [--mode MODE]
+                   [--models MODELS] [-v] [-vv] [--quiet]
 
 evaluates a dialogue model
 
@@ -241,19 +230,21 @@ optional arguments:
   -d CORE, --core CORE  core model to run with the server
   -u NLU, --nlu NLU     nlu model to run with the server. None for regex
                         interpreter
-  -o [OUTPUT], --output [OUTPUT]
-                        output path for the created evaluation plot. If not
-                        specified, no plot will be generated.
+  -o OUTPUT, --output OUTPUT
+                        output path for the any files created from the
+                        evaluation
   --e2e, --end-to-end   Run an end-to-end evaluation for combined action and
                         intent prediction. Requires a story file in end-to-end
                         format.
-  --failed FAILED       output path for the failed stories
   --endpoints ENDPOINTS
                         Configuration file for the connectors as a yml file
   --fail_on_prediction_errors
                         If a prediction error is encountered, an exception is
                         thrown. This can be used to validate stories during
                         tests, e.g. on travis.
+  --mode MODE           default|compare (evaluate a model, or evaluate
+                        multiple models and compare them)
+  --models MODELS       folder containing trained models for comparison
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG
