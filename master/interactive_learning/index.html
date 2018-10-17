@@ -236,6 +236,7 @@ python -m rasa_core.train <span class="se">\</span>
   --endpoints endpoints.yml
 </pre></div>
 </div>
+<p>To include an existing model to identify intents use –nlu models/current/nlu in the above command. Else interactive learning will use a default REGEX to intentify default intents from the user input text.</p>
 <p>The first command starts the action server (see <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>).</p>
 <p>The second command starts the bot in interactive mode.
 In interactive mode, the bot will ask you to confirm it has chosen
