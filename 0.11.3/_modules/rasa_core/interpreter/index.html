@@ -18,24 +18,13 @@
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
 
-<!-- Google Tag Manager -->
-<script> 
-  type="opt-in" data-name="gtm">(function(w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start': new Date().getTime(),
-            event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s),
-            dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-MMHSZCS');
-</script>
-<!-- End Google Tag Manager -->
+ <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
+    <!-- End Google Tag Manager -->   
    
     
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -53,8 +42,8 @@
     
   <link rel="stylesheet" href="../../../_static/xq-light.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
-  <script defer type="text/javascript" src="../../../_static/config.js"></script>
-  <script defer type="text/javascript" src="../../../_static/klaro.js"></script>
+  <!--<script defer type="text/javascript" src="../../../_static/config.js"></script>
+  <script defer type="text/javascript" src="../../../_static/klaro.js"></script>-->
   <script type="text/javascript" src="https://storage.googleapis.com/docs-theme/clipboard.min.js"></script>
   
   
@@ -520,19 +509,25 @@
 
     
 
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-      dataLayer.push(arguments);
+    function gtag(...arguments) {
+      dataLayer.push(...arguments);
     }
     gtag('js', new Date());
     gtag('config', 'UA-87333416-1', {
       'anonymize_ip': true,
     });
   </script>
+  <script src="https://rasa.com/assets/js/js.cookies.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- TODO: Re-Enable once Klaro is re-activated again. Remove the next two lines, then.
+  <script type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://rasa.com/assets/js/userId.js"></script>
+  -->
+  <script src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script src="https://rasa.com/assets/js/userId.js"></script>
   <script type="text/javascript">
     var clipboard = new ClipboardJS('.copyable');
     clipboard.on('success', function(e) {
