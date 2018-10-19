@@ -210,9 +210,10 @@
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">constants</span>
 <span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
-<span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="n">INTENT_MESSAGE_PREFIX</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">INTENT_MESSAGE_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
 
 
 <span class="k">class</span> <span class="nc">NaturalLanguageInterpreter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -314,12 +315,6 @@
                            <span class="s2">&quot;Error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">confidence_str</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
             <span class="k">return</span> <span class="mf">0.0</span>
 
-    <span class="k">def</span> <span class="nf">_starts_with_intent_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_prefixes</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-                <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">extract_intent_and_entities</span><span class="p">(</span><span class="n">user_input</span><span class="p">):</span>
         <span class="c1"># type: (Text) -&gt; object</span>
@@ -393,13 +388,8 @@
             <span class="n">intent</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">entities</span> <span class="o">=</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">extract_intent_and_entities</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_starts_with_intent_prefix</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-            <span class="n">message_text</span> <span class="o">=</span> <span class="n">text</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">message_text</span> <span class="o">=</span> <span class="n">INTENT_MESSAGE_PREFIX</span> <span class="o">+</span> <span class="n">text</span>
-
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">message_text</span><span class="p">,</span>
+            <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
             <span class="s1">&#39;intent&#39;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">intent</span><span class="p">,</span>
                 <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="n">confidence</span><span class="p">,</span>
