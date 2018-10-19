@@ -213,7 +213,7 @@ it makes. One advantage of machine learning based dialogue is that when
 your bot doesn’t know how to do something yet, you can just teach it!
 Some people are calling this <a class="reference external" href="https://medium.com/&#64;karpathy/software-2-0-a64152b37c35">Software 2.0</a>.</p>
 <div class="section" id="load-up-an-existing-bot">
-<h2>1. Load up an existing bot<a class="headerlink" href="#load-up-an-existing-bot" title="Permalink to this headline">¶</a></h2>
+<h2>Load up an existing bot<a class="headerlink" href="#load-up-an-existing-bot" title="Permalink to this headline">¶</a></h2>
 <p>We have a basic working bot, and want to teach it by providing
 feedback on mistakes it makes.</p>
 <p>Run the following to start interactive learning:</p>
@@ -256,7 +256,9 @@ right action (<code class="docutils literal notranslate"><span class="pre">utter
 Then we type <code class="docutils literal notranslate"><span class="pre">y</span></code> again, because ‘action_listen’ is the correct
 action after greeting. We continue this loop until the bot chooses
 the wrong action.</p>
-<p><strong>Providing feedback on errors</strong></p>
+</div>
+<div class="section" id="providing-feedback-on-errors">
+<h2>Providing feedback on errors<a class="headerlink" href="#providing-feedback-on-errors" title="Permalink to this headline">¶</a></h2>
 <p>For this example we are going to use the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example,
 so make sure you have the domain &amp; data for it. You can download
 the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/0.12.0a4/examples/concertbot">github examples/concertbot</a>.</p>
@@ -314,6 +316,17 @@ conversation. At any point you can press <code class="docutils literal notransla
 provide you with exit options, e.g. writing the created conversations as
 stories to a file. Make sure to combine the dumped story with your original
 training data for the next training.</p>
+</div>
+<div class="section" id="visualization-of-conversations">
+<h2>Visualization of conversations<a class="headerlink" href="#visualization-of-conversations" title="Permalink to this headline">¶</a></h2>
+<p>During the interactive learning, Core will plot the current conversation
+and close surrounding conversations from the training data to help you
+keep track of where you are.</p>
+<p>You can view the visualization at <a class="reference external" href="http://localhost:5005/visualization.html">http://localhost:5005/visualization.html</a>
+as soon as you have started the interactive learning.</p>
+<p>To skip the visualization, pass <code class="docutils literal notranslate"><span class="pre">--skip_visualization</span></code> to the training
+script.</p>
+<img alt="../_images/interactive_learning_graph.gif" src="../_images/interactive_learning_graph.gif" />
 <div class="section" id="have-questions-or-feedback">
 <h3>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h3>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>

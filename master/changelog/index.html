@@ -218,11 +218,14 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 <h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>openapi documentation of server API</li>
-<li>NLU data learned through interactive learning will now be stored in a separate markdown-format file (any previous NLU
-data is merged)</li>
-<li>Command line interface for interactive learning now displays policy confidence alongside the action name</li>
+<li>NLU data learned through interactive learning will now be stored in a
+separate markdown-format file (any previous NLU data is merged)</li>
+<li>Command line interface for interactive learning now displays policy
+confidence alongside the action name</li>
 <li>added action prediction confidence &amp; policy to <code class="docutils literal notranslate"><span class="pre">ActionExecuted</span></code> event</li>
-<li>both the date and the time at which a model was trained are now included in the policy’s metadata when it is persisted</li>
+<li>both the date and the time at which a model was trained are now
+included in the policy’s metadata when it is persisted</li>
+<li>show visualization of conversation while doing interactive learning</li>
 <li>option for end-to-end evaluation of Rasa Core and NLU examples in
 <code class="docutils literal notranslate"><span class="pre">evaluate.py</span></code> script</li>
 </ul>
@@ -246,7 +249,8 @@ data is merged)</li>
 <li>use utf8 everywhere when handling file IO</li>
 <li>argument <code class="docutils literal notranslate"><span class="pre">--connector</span></code> on run script accepts custom channel module names</li>
 <li>properly handle non ascii categorical slot values, e.g. <code class="docutils literal notranslate"><span class="pre">大于100亿元</span></code></li>
-<li>fixed HTTP server attempting to authenticate based on incorrect path to the correct JWT data field</li>
+<li>fixed HTTP server attempting to authenticate based on incorrect path to
+the correct JWT data field</li>
 <li>all sender ids from channels are now handled as <cite>str</cite>.
 Sender ids from old messages with an <cite>int</cite> id are converted to <cite>str</cite>.</li>
 </ul>
