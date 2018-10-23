@@ -228,6 +228,7 @@ included in the policy’s metadata when it is persisted</li>
 <li>show visualization of conversation while doing interactive learning</li>
 <li>option for end-to-end evaluation of Rasa Core and NLU examples in
 <code class="docutils literal notranslate"><span class="pre">evaluate.py</span></code> script</li>
+<li>docker-compose file to start a rasa core server together with nlu, an action server, and duckling</li>
 </ul>
 </div>
 <div class="section" id="changed">
@@ -236,6 +237,8 @@ included in the policy’s metadata when it is persisted</li>
 <li>improved response format for <code class="docutils literal notranslate"><span class="pre">/predict</span></code> endpoint</li>
 <li>all error messages from the server are now in json format</li>
 <li><code class="docutils literal notranslate"><span class="pre">agent.log_message</span></code> now returns a tracker instead of the trackers state</li>
+<li>the core container does not load the nlu model by default anymore.
+Instead it can be connected to a nlu server.</li>
 </ul>
 </div>
 <div class="section" id="removed">
