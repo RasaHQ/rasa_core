@@ -322,6 +322,22 @@ the stories in that file removed from the training data. By evaluating
 on the full set of stories, you can measure how well Rasa Core is
 predicting the held-out stories.</p>
 </div>
+<div class="section" id="evaluating-stories-over-http">
+<h2>Evaluating stories over http<a class="headerlink" href="#evaluating-stories-over-http" title="Permalink to this headline">¶</a></h2>
+<p>Rasa Core’s server lets you to retrieve evaluations for the currently
+loaded model. Say your Rasa Core server is running locally on port 5005,
+and your story evaluation file is saved at <code class="docutils literal notranslate"><span class="pre">eval_stories.md</span></code>. The command
+to post stories to the server for evaluation is this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl --data-binary @eval_stories.md <span class="s2">&quot;localhost:5005/evaluate&quot;</span> <span class="p">|</span> python -m json.tool
+</pre></div>
+</div>
+<p>If you would like to evaluate end-to-end stories
+(<a class="reference internal" href="#end-to-end-evaluation"><span class="std std-ref">docs</span></a>),
+you may do so by adding the <code class="docutils literal notranslate"><span class="pre">e2e=true</span></code> query parameter:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl --data-binary @eval_stories.md <span class="s2">&quot;localhost:5005/evaluate?e2e=true&quot;</span> <span class="p">|</span> python -m json.tool
+</pre></div>
+</div>
+</div>
 <div class="section" id="have-questions-or-feedback">
 <h2>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
