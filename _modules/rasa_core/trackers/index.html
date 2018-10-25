@@ -519,7 +519,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
         <span class="n">event</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">export_stories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e2e</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">export_stories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; Text</span>
         <span class="sd">&quot;&quot;&quot;Dump the tracker as a story in the Rasa Core story format.</span>
 
@@ -527,7 +527,7 @@
         <span class="kn">from</span> <span class="nn">rasa_core.training.structures</span> <span class="k">import</span> <span class="n">Story</span>
 
         <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">story</span><span class="o">.</span><span class="n">as_story_string</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">e2e</span><span class="o">=</span><span class="n">e2e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">story</span><span class="o">.</span><span class="n">as_story_string</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">export_stories_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="s2">&quot;debug.md&quot;</span><span class="p">):</span>
         <span class="c1"># type: (Text) -&gt; None</span>

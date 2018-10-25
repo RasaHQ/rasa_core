@@ -276,8 +276,8 @@ you should store it as a slot. Slot information is always available for every fe
                 [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
                 [--endpoints ENDPOINTS] [--nlu_threshold NLU_THRESHOLD]
                 [--core_threshold CORE_THRESHOLD]
-                [--fallback_action_name FALLBACK_ACTION_NAME] [-v] [-vv]
-                [--quiet]
+                [--fallback_action_name FALLBACK_ACTION_NAME] [-c CONFIG] [-v]
+                [-vv] [--quiet]
 
 trains a dialogue model
 
@@ -324,6 +324,8 @@ optional arguments:
                         When a fallback is triggered (e.g. because the ML
                         prediction is of low confidence) this is the name of
                         tje action that will get triggered instead.
+  -c CONFIG, --config CONFIG
+                        Policy specification yaml file.
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG

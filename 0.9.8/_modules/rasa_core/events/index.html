@@ -431,7 +431,7 @@
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse bot uttered event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
-<div class="viewcode-block" id="UserUttered.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUttered.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e2e</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UserUttered.as_story_string"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.UserUttered.as_story_string">[docs]</a>    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span><span class="p">:</span>
                 <span class="n">ent_string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="n">ent</span><span class="p">[</span><span class="s1">&#39;entity&#39;</span><span class="p">]:</span> <span class="n">ent</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
@@ -439,13 +439,9 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ent_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-            <span class="n">parse_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{intent}{entities}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                           <span class="n">intent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
-                           <span class="n">entities</span><span class="o">=</span><span class="n">ent_string</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">e2e</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">parse_string</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">parse_string</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{intent}{entities}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">intent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                    <span class="n">entities</span><span class="o">=</span><span class="n">ent_string</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span></div>
 

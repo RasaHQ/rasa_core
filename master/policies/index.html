@@ -286,8 +286,8 @@ slot. Slot information is always available for every featurizer.</p>
                 [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
                 [--endpoints ENDPOINTS] [--nlu_threshold NLU_THRESHOLD]
                 [--core_threshold CORE_THRESHOLD]
-                [--fallback_action_name FALLBACK_ACTION_NAME] [-v] [-vv]
-                [--quiet]
+                [--fallback_action_name FALLBACK_ACTION_NAME] [-c CONFIG] [-v]
+                [-vv] [--quiet]
 
 trains a dialogue model
 
@@ -334,6 +334,8 @@ optional arguments:
                         When a fallback is triggered (e.g. because the ML
                         prediction is of low confidence) this is the name of
                         tje action that will get triggered instead.
+  -c CONFIG, --config CONFIG
+                        Policy specification yaml file.
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG
@@ -349,8 +351,37 @@ at every step in the conversation.</p>
 <p>There are different policies to choose from, and you can include
 multiple policies in a single <a class="reference internal" href="../api/agent/#rasa_core.agent.Agent" title="rasa_core.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.agent.Agent</span></code></a>. At
 every turn, the policy which predicts the next action with the
-highest confidence will be used. You can pass a list of policies
-when you create an agent:</p>
+highest confidence will be used.</p>
+<div class="section" id="configuring-polices-using-a-configuration-file">
+<span id="policy-file"></span><h3>Configuring polices using a configuration file<a class="headerlink" href="#configuring-polices-using-a-configuration-file" title="Permalink to this headline">¶</a></h3>
+<p>You can set the policies you would like the Core model to use in a YAML file.</p>
+<p>For example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;KerasPolicy&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">max_history</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;MemoizationPolicy&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">max_history</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;FallbackPolicy&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">nlu_threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.4</span>
+    <span class="l l-Scalar l-Scalar-Plain">core_threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.3</span>
+    <span class="l l-Scalar l-Scalar-Plain">fallback_action_name</span><span class="p p-Indicator">:</span> <span class="s">&quot;my_fallback_action&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;path.to.your.policy.class&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">arg1</span><span class="p p-Indicator">:</span> <span class="s">&quot;...&quot;</span>
+</pre></div>
+</div>
+<p>Pass the YAML file’s name to the train script using the <code class="docutils literal notranslate"><span class="pre">--config</span></code>
+argument (or just <code class="docutils literal notranslate"><span class="pre">-c</span></code>). If no config.yaml is given, the policies
+default to <code class="docutils literal notranslate"><span class="pre">[KerasPolicy(),</span> <span class="pre">MemoizationPolicy(),</span> <span class="pre">FallbackPolicy()]</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Policies specified higher in the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> will take
+precedence over a policy specified lower if the confidences
+are equal.</p>
+</div>
+</div>
+<div class="section" id="configuring-polices-in-code">
+<h3>Configuring polices in code<a class="headerlink" href="#configuring-polices-in-code" title="Permalink to this headline">¶</a></h3>
+<p>You can pass a list of policies when you create an agent:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="kn">import</span> <span class="n">MemoizationPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="kn">import</span> <span class="n">KerasPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
@@ -363,6 +394,7 @@ when you create an agent:</p>
 <p class="first admonition-title">Note</p>
 <p class="last">By default, Rasa Core uses the <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> in combination with
 the <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code>.</p>
+</div>
 </div>
 <div class="section" id="memoization-policy">
 <h3>Memoization Policy<a class="headerlink" href="#memoization-policy" title="Permalink to this headline">¶</a></h3>
