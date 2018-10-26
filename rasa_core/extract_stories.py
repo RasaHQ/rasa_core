@@ -7,6 +7,7 @@ from tqdm import tqdm
 import argparse
 import logging
 import io
+import os
 
 from rasa_core import utils
 
@@ -53,15 +54,16 @@ def add_args_to_parser(parser):
             '-o', '--out',
             type=str,
             required=False,
-            help="directory to persist the trained model in"
+            help="directory to persist the trained model in",
+            default="extracted_stories"
     )
-    parse.add_argument(
+    parser.add_argument(
             '--host',
             type=str,
             required=True,
             help="hostname where rasa core server is running"
     )
-    parse.add_argument(
+    parser.add_argument(
             '-t', '--token',
             type=str,
             required=False,
@@ -80,33 +82,33 @@ def add_args_to_parser(parser):
             type=int)
     return parser
 
-def fetch_sender_ids():
-    result = core_endpoint.request(method="get", subpath="/conversations")
+def fetch_sender_ids(endpoint):
+    result = endpoint.request(method="get", subpath="/conversations")
     return result.json()
 
-def fetch_story(sender_id):
-    result = core_endpoint.request(
+def fetch_story(endpoint, sender_id):
+    result = endpoint.request(
         method="get",
         subpath="/conversations/{}/story".format(sender_id))
     return result.text
 
-def fetch_stories(n=None):
-    sender_ids = fetch_sender_ids()
-    if n:
-        sender_ids = sender_ids[-n:]
-    return [fetch_story(_id)
+def fetch_stories(endpoint, max_stories=None):
+    sender_ids = fetch_sender_ids(endpoint)
+    if max_stories:
+        sender_ids = sender_ids[-max_stories:]
+    return [fetch_story(endpoint, _id)
         for _id in sender_ids]
 
 def evaluate(story):
     memorized = MEMORIZED
-    result = core_endpoint.request(
+    response = endpoint.request(
         subpath="/evaluate",
         content_type="text/markdown",
         data=story.encode('utf-8'))
-
+    result = response.json()
     if result['in_training_data_fraction'] < 1:
         memorized = PREDICTED
-    return result.json(), memorized
+    return result, memorized
 
 def write_results(results, output_dir=None):
 
@@ -124,6 +126,7 @@ def write_results(results, output_dir=None):
                     continue
 
                 file_path = fpath(goal, success, memo)
+                utils.create_dir_for_file(file_path)
                 with io.open(file_path, "w") as f:
                     f.write("\n".join(stories))
 
@@ -133,7 +136,7 @@ def goal_success(story):
     if "signup_newsletter" in story:
         user_goal = "signup_newsletter"
         if "action_subscribe_newsletter" in story:
-        success = SUCCESSFUL
+            success = SUCCESSFUL
 
     return user_goal, success
     
@@ -163,6 +166,6 @@ if __name__ == "__main__":
         if goal not in results:
             results[goal] = template.copy()
 
-        results[goal][successful][memorized].append(story)
+        results[goal][success][memorized].append(story)
 
     write_results(results, output_dir=cmdline_args.out)
