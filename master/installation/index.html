@@ -322,31 +322,33 @@ This is useful for a quick local setup or if you want to host the Rasa component
 
 <span class="n">services</span><span class="p">:</span>
   <span class="n">rasa_core</span><span class="p">:</span>
-      <span class="n">image</span><span class="p">:</span> <span class="n">rasa</span><span class="o">/</span><span class="n">rasa_core</span><span class="p">:</span><span class="n">latest</span>
-      <span class="n">networks</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;rasa-network&#39;</span><span class="p">]</span>
-      <span class="n">ports</span><span class="p">:</span>
-      <span class="o">-</span> <span class="s2">&quot;5005:5005&quot;</span>
-      <span class="n">volumes</span><span class="p">:</span>
-      <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/models/current/dialogue:/app/model&quot;</span>
-      <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/config:/app/config&quot;</span>
-      <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/project:/app/project&quot;</span>
-      <span class="n">command</span><span class="p">:</span> 
-        <span class="o">-</span> <span class="n">start</span>
-        <span class="o">-</span> <span class="o">-</span><span class="n">d</span>
-        <span class="o">-</span> <span class="o">./</span><span class="n">model</span>
-        <span class="o">-</span> <span class="o">-</span><span class="n">c</span>
-        <span class="o">-</span> <span class="n">rest</span>
-        <span class="o">-</span> <span class="o">-</span><span class="n">u</span>
-        <span class="o">-</span> <span class="n">current</span><span class="o">/</span><span class="n">nlu</span>
-        <span class="o">-</span> <span class="o">--</span><span class="n">endpoints</span>
-        <span class="o">-</span> <span class="n">config</span><span class="o">/</span><span class="n">endpoints</span><span class="o">.</span><span class="n">yml</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">rasa</span><span class="o">/</span><span class="n">rasa_core</span><span class="p">:</span><span class="n">latest</span>
+    <span class="n">networks</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;rasa-network&#39;</span><span class="p">]</span>
+    <span class="n">ports</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;5005:5005&quot;</span>
+    <span class="n">volumes</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/models/current/dialogue:/app/model&quot;</span>
+    <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/config:/app/config&quot;</span>
+    <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/project:/app/project&quot;</span>
+    <span class="n">command</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">start</span>
+    <span class="o">-</span> <span class="o">-</span><span class="n">d</span>
+    <span class="o">-</span> <span class="o">./</span><span class="n">model</span>
+    <span class="o">-</span> <span class="o">-</span><span class="n">c</span>
+    <span class="o">-</span> <span class="n">rest</span>
+    <span class="o">-</span> <span class="o">-</span><span class="n">u</span>
+    <span class="o">-</span> <span class="n">current</span><span class="o">/</span><span class="n">nlu</span>
+    <span class="o">-</span> <span class="o">--</span><span class="n">endpoints</span>
+    <span class="o">-</span> <span class="n">config</span><span class="o">/</span><span class="n">endpoints</span><span class="o">.</span><span class="n">yml</span>
+
   <span class="n">action_server</span><span class="p">:</span>
-      <span class="n">image</span><span class="p">:</span> <span class="n">rasa</span><span class="o">/</span><span class="n">rasa_core_sdk</span><span class="p">:</span><span class="n">latest</span>
-      <span class="n">networks</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;rasa-network&#39;</span><span class="p">]</span>
-      <span class="n">ports</span><span class="p">:</span>
-      <span class="o">-</span> <span class="s2">&quot;5055:5055&quot;</span>
-      <span class="n">volumes</span><span class="p">:</span>
-      <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/actions:/app/actions&quot;</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">rasa</span><span class="o">/</span><span class="n">rasa_core_sdk</span><span class="p">:</span><span class="n">latest</span>
+    <span class="n">networks</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;rasa-network&#39;</span><span class="p">]</span>
+    <span class="n">ports</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;5055:5055&quot;</span>
+    <span class="n">volumes</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/actions:/app/actions&quot;</span>
+
   <span class="n">rasa_nlu</span><span class="p">:</span>
     <span class="n">image</span><span class="p">:</span> <span class="n">rasa</span><span class="o">/</span><span class="n">rasa_nlu</span><span class="p">:</span><span class="n">latest</span><span class="o">-</span><span class="n">full</span>
     <span class="n">networks</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;rasa-network&#39;</span><span class="p">]</span>
@@ -355,6 +357,7 @@ This is useful for a quick local setup or if you want to host the Rasa component
     <span class="n">volumes</span><span class="p">:</span>
     <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/models/:/app/projects&quot;</span>
     <span class="o">-</span> <span class="s2">&quot;./rasa-app-data/logs:/app/logs&quot;</span>
+
   <span class="n">duckling</span><span class="p">:</span>
     <span class="n">image</span><span class="p">:</span> <span class="n">rasa</span><span class="o">/</span><span class="n">duckling</span><span class="p">:</span><span class="n">latest</span>
     <span class="n">networks</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;rasa-network&#39;</span><span class="p">]</span>
