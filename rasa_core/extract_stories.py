@@ -8,28 +8,18 @@ import argparse
 import logging
 import io
 import os
+from collections import defaultdict
 
 from rasa_core import utils
 
 logger = logging.getLogger(__name__)
 
 # constants
-UNKNOWN = "UNKNOWN"
-SUCCESSFUL = "SUCCESSFUL"
-UNSUCCESSFUL = "UNSUCCESSFUL"
-MEMORIZED = "MEMORIZED"
-PREDICTED = "PREDICTED"
-
-template = {
-    SUCCESSFUL: {
-        MEMORIZED: [],
-        PREDICTED: [],
-    },
-    UNSUCCESSFUL: {
-        MEMORIZED: [],
-        PREDICTED: [],
-    },
-}
+UNKNOWN = "unknown"
+SUCCESSFUL = "successful"
+UNSUCCESSFUL = "unsuccessful"
+MEMORIZED = "memorized"
+PREDICTED = "predicted"
 
 def create_argument_parser():
     """Parse all the command line arguments for the training script."""
@@ -101,34 +91,28 @@ def fetch_stories(endpoint, max_stories=None):
 
 def evaluate(story):
     memorized = MEMORIZED
+    if '*' not in story:  # empty story
+        return None, memorized
+
     response = endpoint.request(
         subpath="/evaluate",
         content_type="text/markdown",
         data=story.encode('utf-8'))
     result = response.json()
+
     if result['in_training_data_fraction'] < 1:
         memorized = PREDICTED
     return result, memorized
 
 def write_results(results, output_dir=None):
 
-    def fpath(goal, success, memo):
-        name = "{}_{}_{}.md".format(goal, success, memo)
+    for (goal, success, memo), stories in results.items():
+        file_path = "{}_{}_{}.md".format(goal, success, memo)
         if output_dir:
-            name = os.path.join(output_dir, name)
-        return name
-
-    for goal in results.keys():
-        for success in results[goal].keys():
-            for memo in results[goal][success].keys():
-                stories = results[goal][success][memo]
-                if not stories:
-                    continue
-
-                file_path = fpath(goal, success, memo)
-                utils.create_dir_for_file(file_path)
-                with io.open(file_path, "w") as f:
-                    f.write("\n".join(stories))
+            file_path = os.path.join(output_dir, file_path)
+        utils.create_dir_for_file(file_path)
+        with io.open(file_path, "w") as f:
+            f.write("\n".join(stories))
 
 def goal_success(story):
     user_goal, success = UNKNOWN, UNSUCCESSFUL
@@ -153,7 +137,7 @@ if __name__ == "__main__":
         token=cmdline_args.token)
 
     goals_to_ignore = []
-    results = {}
+    results = defaultdict(list)
 
     all_stories = fetch_stories(endpoint, max_stories=cmdline_args.num_stories)
  
@@ -162,10 +146,9 @@ if __name__ == "__main__":
         goal, success = goal_success(story)
         if goal in goals_to_ignore:
             continue
-        _, memorized = evaluate(story)
-        if goal not in results:
-            results[goal] = template.copy()
 
-        results[goal][success][memorized].append(story)
+        _, memorized = evaluate(story)
+
+        results[(goal, success, memorized)].append(story)
 
     write_results(results, output_dir=cmdline_args.out)
