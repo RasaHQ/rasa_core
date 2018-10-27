@@ -213,6 +213,7 @@
 <span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">rasa_nlu.training_data.formats</span> <span class="k">import</span> <span class="n">MarkdownWriter</span><span class="p">,</span> <span class="n">MarkdownReader</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
@@ -240,6 +241,23 @@
                                <span class="s2">&quot;events. Couldn&#39;t parse it.&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">deserialised</span>
+
+
+<span class="k">def</span> <span class="nf">deserialise_entities</span><span class="p">(</span><span class="n">entities</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entities</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">entities</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entities</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)]</span>
+
+
+<span class="k">def</span> <span class="nf">md_format_message</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">intent</span><span class="p">,</span> <span class="n">entities</span><span class="p">):</span>
+    <span class="n">message_from_md</span> <span class="o">=</span> <span class="n">MarkdownReader</span><span class="p">()</span><span class="o">.</span><span class="n">_parse_training_example</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">deserialised_entities</span> <span class="o">=</span> <span class="n">deserialise_entities</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">MarkdownWriter</span><span class="p">()</span><span class="o">.</span><span class="n">_generate_message_md</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">message_from_md</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+             <span class="s2">&quot;intent&quot;</span><span class="p">:</span> <span class="n">intent</span><span class="p">,</span>
+             <span class="s2">&quot;entities&quot;</span><span class="p">:</span> <span class="n">deserialised_entities</span><span class="p">}</span>
+    <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">first_key</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">default_key</span><span class="p">):</span>
@@ -428,7 +446,7 @@
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to parse bot uttered event. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e2e</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span><span class="p">:</span>
                 <span class="n">ent_string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="n">ent</span><span class="p">[</span><span class="s1">&#39;entity&#39;</span><span class="p">]:</span> <span class="n">ent</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
@@ -436,9 +454,16 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ent_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{intent}{entities}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">intent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
-                    <span class="n">entities</span><span class="o">=</span><span class="n">ent_string</span><span class="p">)</span>
+            <span class="n">parse_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{intent}{entities}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                           <span class="n">intent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                           <span class="n">entities</span><span class="o">=</span><span class="n">ent_string</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">e2e</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="n">md_format_message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">entities</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span> <span class="n">message</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">parse_string</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span>
 
