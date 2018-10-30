@@ -267,25 +267,14 @@ create the relevant stories to add to your training data.</p>
 <p>Sometimes it is helpful to get an overview of the conversational paths that
 are described within a story file. To make debugging easier and to ease
 discussions about bot flows, you can visualize the content of a story file.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>For this to
-work, you need to <strong>install graphviz</strong>. These are the instructions to do that
-on OSX, for other systems the instructions might be slightly different:</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>brew install graphviz
-pip install pygraphviz --install-option<span class="o">=</span><span class="s2">&quot;--include-path=/usr/include/graphviz&quot;</span> <span class="se">\</span>
-  --install-option<span class="o">=</span><span class="s2">&quot;--library-path=/usr/lib/graphviz/&quot;</span>
-</pre></div>
-</div>
-</div>
-<p>As soon as this is installed you can visualize stories with this command:</p>
+<p>You can visualize stories with this command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/concertbot/
-python -m rasa_core.visualize -d domain.yml -s data/stories.md -o graph.png
+python -m rasa_core.visualize -d domain.yml -s data/stories.md -o graph.html
 </pre></div>
 </div>
 <p>This will run through the stories of the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example in
-<code class="docutils literal notranslate"><span class="pre">data/stories.md</span></code> and create a graph stored in the
-output image <code class="docutils literal notranslate"><span class="pre">graph.png</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">data/stories.md</span></code> and create a graph which can be shown in your browser by
+opening <code class="docutils literal notranslate"><span class="pre">graph.html</span></code> with browser of your choice.</p>
 <img alt="../_images/concert_stories.png" src="../_images/concert_stories.png" />
 <p>We can also run the visualisation directly from code. For this example, we can
 create a <code class="docutils literal notranslate"><span class="pre">visualize.py</span></code> in <code class="docutils literal notranslate"><span class="pre">examples/concertbot</span></code> with the following code:</p>
@@ -303,7 +292,7 @@ create a <code class="docutils literal notranslate"><span class="pre">visualize.
                   <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">KerasPolicy</span><span class="p">()])</span>
 
     <span class="n">agent</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="s2">&quot;data/stories.md&quot;</span><span class="p">,</span>
-                    <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;graph.png&quot;</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;graph.html&quot;</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Which will create the same image as the previous command.
