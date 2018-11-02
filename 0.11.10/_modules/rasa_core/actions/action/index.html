@@ -208,9 +208,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">events</span>
-<span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="p">(</span><span class="n">DOCS_BASE_URL</span><span class="p">,</span>
-                                 <span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">,</span>
-                                 <span class="n">REQUESTED_SLOT</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="n">DOCS_BASE_URL</span><span class="p">,</span> <span class="n">DEFAULT_REQUEST_TIMEOUT</span>
 <span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -227,14 +225,11 @@
 
 <span class="n">ACTION_DEFAULT_FALLBACK_NAME</span> <span class="o">=</span> <span class="s2">&quot;action_default_fallback&quot;</span>
 
-<span class="n">ACTION_DEACTIVATE_FORM_NAME</span> <span class="o">=</span> <span class="s2">&quot;action_deactivate_form&quot;</span>
-
 
 <span class="k">def</span> <span class="nf">default_actions</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; List[Action]</span>
     <span class="sd">&quot;&quot;&quot;List default actions.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">ActionListen</span><span class="p">(),</span> <span class="n">ActionRestart</span><span class="p">(),</span>
-            <span class="n">ActionDefaultFallback</span><span class="p">(),</span> <span class="n">ActionDeactivateForm</span><span class="p">()]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">ActionListen</span><span class="p">(),</span> <span class="n">ActionRestart</span><span class="p">(),</span> <span class="n">ActionDefaultFallback</span><span class="p">()]</span>
 
 
 <span class="k">def</span> <span class="nf">default_action_names</span><span class="p">():</span>
@@ -396,17 +391,6 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">()]</span></div>
 
 
-<span class="k">class</span> <span class="nc">ActionDeactivateForm</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Deactivates a form&quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">ACTION_DEACTIVATE_FORM_NAME</span>
-
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">SlotSet</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">Form</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">SlotSet</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
-
-
 <span class="k">class</span> <span class="nc">RemoteAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">action_endpoint</span><span class="p">):</span>
         <span class="c1"># type: (Text, Optional[EndpointConfig]) -&gt; None</span>
@@ -523,14 +507,9 @@
                          <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_endpoint</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
                     <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">400</span><span class="p">:</span>
-                <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">response_data</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">])</span>
-                <span class="k">raise</span> <span class="n">ActionExecutionRejection</span><span class="p">(</span><span class="n">response_data</span><span class="p">[</span><span class="s2">&quot;action_name&quot;</span><span class="p">],</span>
-                                               <span class="n">response_data</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">])</span>
             <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
             <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">_validate_action_result</span><span class="p">(</span><span class="n">response_data</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 
@@ -562,20 +541,6 @@
 
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
-
-
-<span class="k">class</span> <span class="nc">ActionExecutionRejection</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Raising this exception will allow other policies</span>
-<span class="sd">        to predict a different action&quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">=</span> <span class="n">action_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="n">message</span> <span class="ow">or</span>
-                        <span class="s2">&quot;Custom action &#39;</span><span class="si">{}</span><span class="s2">&#39; rejected to run&quot;</span>
-                        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">action_name</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
