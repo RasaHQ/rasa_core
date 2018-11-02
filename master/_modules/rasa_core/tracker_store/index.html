@@ -214,6 +214,7 @@
 <span class="kn">import</span> <span class="nn">six.moves.cPickle</span> <span class="k">as</span> <span class="nn">pickler</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
 
+<span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">class_from_module_path</span>
 <span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
 <span class="kn">from</span> <span class="nn">rasa_core.broker</span> <span class="k">import</span> <span class="n">EventChannel</span>
 <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="p">(</span>
@@ -233,19 +234,35 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">event_broker</span> <span class="o">=</span> <span class="n">event_broker</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">find_tracker_store</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">event_broker</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">find_tracker_store</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">store</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">store</span><span class="o">.</span><span class="n">store_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">InMemoryTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">event_broker</span><span class="o">=</span><span class="n">event_broker</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">InMemoryTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">store</span><span class="o">.</span><span class="n">store_type</span> <span class="o">==</span> <span class="s1">&#39;redis&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">RedisTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
                                      <span class="n">host</span><span class="o">=</span><span class="n">store</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
-                                     <span class="n">event_broker</span><span class="o">=</span><span class="n">event_broker</span><span class="p">,</span>
                                      <span class="o">**</span><span class="n">store</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">store</span><span class="o">.</span><span class="n">store_type</span> <span class="o">==</span> <span class="s1">&#39;mongod&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">MongoTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
                                      <span class="n">host</span><span class="o">=</span><span class="n">store</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
-                                     <span class="n">event_broker</span><span class="o">=</span><span class="n">event_broker</span><span class="p">,</span>
                                      <span class="o">**</span><span class="n">store</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TrackerStore</span><span class="o">.</span><span class="n">load_tracker_from_module_string</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">store</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load_tracker_from_module_string</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+        <span class="n">custom_tracker</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">custom_tracker</span> <span class="o">=</span> <span class="n">class_from_module_path</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">store_type</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Store type </span><span class="si">{}</span><span class="s2"> not found. &quot;</span>
+                           <span class="s2">&quot;Using InMemoryTrackerStore instead&quot;</span>
+                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">store_type</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">custom_tracker</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">custom_tracker</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
+                                  <span class="n">url</span><span class="o">=</span><span class="n">store</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">store</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">InMemoryTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_or_create_tracker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">):</span>
         <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span>
