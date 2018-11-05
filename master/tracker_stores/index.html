@@ -360,16 +360,17 @@ This is done by extending the base class <cite>TrackerStore</cite>.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Steps:</th><td class="field-body"><ol class="first last arabic">
-<li><p class="first">Extend the <cite>TrackerStore</cite> base class</p>
+<li><p class="first">Extend the <cite>TrackerStore</cite> base class. Note that your constructor has to
+provide a parameter <code class="docutils literal notranslate"><span class="pre">url</span></code>.</p>
 </li>
-<li><p class="first">Adapt the code in <code class="code docutils literal notranslate"><span class="pre">rasa_core.run.py</span></code> to use your custom tracker store.</p>
+<li><p class="first">In your endpoints.yml put in the module path to your custom tracker store
+and the parameters you require:</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
- <span class="n">_agent</span> <span class="o">=</span> <span class="n">load_agent</span><span class="p">(</span><span class="n">cmdline_args</span><span class="o">.</span><span class="n">core</span><span class="p">,</span>
-            <span class="n">interpreter</span><span class="o">=</span><span class="n">_interpreter</span><span class="p">,</span>
-            <span class="n">endpoints</span><span class="o">=</span><span class="n">_endpoints</span><span class="p">,</span>
-            <span class="n">tracker_store</span><span class="o">=</span><span class="n">CustomTrackerStore</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
-<span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">tracker_store</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">store_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">path.to.your.module.Class</span>
+  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="l l-Scalar l-Scalar-Plain">a_parameter</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a value</span>
+  <span class="l l-Scalar l-Scalar-Plain">another_parameter</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">another value</span>
 </pre></div>
 </div>
 </div></blockquote>
