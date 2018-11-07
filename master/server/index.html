@@ -229,11 +229,17 @@ the trackers.</p>
 <ul class="simple">
 <li><a class="reference internal" href="#http-api" id="id1">HTTP API</a><ul>
 <li><a class="reference internal" href="#running-the-http-server" id="id2">Running the HTTP server</a></li>
-<li><a class="reference internal" href="#fetching-models-from-a-server" id="id3">Fetching models from a server</a></li>
-<li><a class="reference internal" href="#events" id="id4">Events</a></li>
-<li><a class="reference internal" href="#security-considerations" id="id5">Security Considerations</a></li>
-<li><a class="reference internal" href="#endpoints" id="id6">Endpoints</a></li>
-<li><a class="reference internal" href="#have-questions-or-feedback" id="id7">Have questions or feedback?</a></li>
+<li><a class="reference internal" href="#events" id="id3">Events</a></li>
+<li><a class="reference internal" href="#security-considerations" id="id4">Security Considerations</a></li>
+<li><a class="reference internal" href="#endpoint-configuration" id="id5">Endpoint Configuration</a><ul>
+<li><a class="reference internal" href="#fetching-models-from-a-server" id="id6">Fetching Models From a Server</a></li>
+<li><a class="reference internal" href="#connecting-rasa-nlu" id="id7">Connecting Rasa NLU</a></li>
+<li><a class="reference internal" href="#connecting-a-tracker-store" id="id8">Connecting a Tracker Store</a></li>
+<li><a class="reference internal" href="#connecting-an-event-broker" id="id9">Connecting an Event Broker</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#endpoints" id="id10">Endpoints</a></li>
+<li><a class="reference internal" href="#have-questions-or-feedback" id="id11">Have questions or feedback?</a></li>
 </ul>
 </li>
 </ul>
@@ -263,42 +269,8 @@ configuration for your action server as well using
 <code class="docutils literal notranslate"><span class="pre">--endpoints</span> <span class="pre">endpoints.yml</span></code>.</p>
 </div>
 </div>
-<div class="section" id="fetching-models-from-a-server">
-<h2><a class="toc-backref" href="#id3">Fetching models from a server</a><a class="headerlink" href="#fetching-models-from-a-server" title="Permalink to this headline">¶</a></h2>
-<p>You can also configure the http server to fetch models from another URL:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.run <span class="se">\</span>
-    --enable_api <span class="se">\</span>
-    -d models/dialogue <span class="se">\</span>
-    -u models/nlu/current <span class="se">\</span>
-    --endpoints my_endpoints.yaml <span class="se">\</span>
-    -o out.log
-</pre></div>
-</div>
-<p>The model server is specified in an <code class="docutils literal notranslate"><span class="pre">EndpointConfig</span></code> file
-(<code class="docutils literal notranslate"><span class="pre">my_endpoints.yaml</span></code>), where you specify the server URL Rasa Core
-regularly queries for zipped Rasa Core models:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">models</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">http://my-server.com/models/default_core@latest</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Your model server must provide zipped Rasa Core models, and have
-<code class="docutils literal notranslate"><span class="pre">{&quot;ETag&quot;:</span> <span class="pre">&lt;model_hash_string&gt;}</span></code> as one of its headers. Core will
-only download a new model if this model hash changed.</p>
-</div>
-<p>Rasa Core sends requests to your model server with an <code class="docutils literal notranslate"><span class="pre">If-None-Match</span></code>
-header that contains the current model hash. If your model server can
-provide a model with a different hash from the one you sent, it should send it
-in as a zip file with an <code class="docutils literal notranslate"><span class="pre">ETag</span></code> header containing the new hash. If not, Rasa
-Core expects an empty response with a <code class="docutils literal notranslate"><span class="pre">204</span></code> status code.</p>
-<p>An example request Rasa Core might make to your model server looks like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl --header <span class="s2">&quot;If-None-Match: d41d8cd98f00b204e9800998ecf8427e&quot;</span> http://my-server.com/models/default_core@latest
-</pre></div>
-</div>
-</div>
 <div class="section" id="events">
-<h2><a class="toc-backref" href="#id4">Events</a><a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Events</a><a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
 <p>Events allow you to modify the internal state of the dialogue. This information
 will be used to predict the next action. E.g. you can set slots (to store
 information about the user) or restart the conversation.</p>
@@ -312,7 +284,7 @@ at <a class="reference internal" href="../api/events/#events"><span class="std s
 log the event.</p>
 </div>
 <div class="section" id="security-considerations">
-<span id="server-security"></span><h2><a class="toc-backref" href="#id5">Security Considerations</a><a class="headerlink" href="#security-considerations" title="Permalink to this headline">¶</a></h2>
+<span id="server-security"></span><h2><a class="toc-backref" href="#id4">Security Considerations</a><a class="headerlink" href="#security-considerations" title="Permalink to this headline">¶</a></h2>
 <p>We recommend to not expose the Rasa Core server to the outside world but
 rather connect to it from your backend over a private connection (e.g.
 between docker containers).</p>
@@ -358,10 +330,86 @@ if the <code class="docutils literal notranslate"><span class="pre">sender_id</s
 </pre></div>
 </div>
 </div>
+<div class="section" id="endpoint-configuration">
+<h2><a class="toc-backref" href="#id5">Endpoint Configuration</a><a class="headerlink" href="#endpoint-configuration" title="Permalink to this headline">¶</a></h2>
+<p>To connect Rasa Core to other endpoints, you can specify an endpoint
+configuration within a <a class="reference external" href="https://en.wikipedia.org/wiki/YAML">YAML</a> file.
+Then run Rasa Core with the flag
+<code class="docutils literal notranslate"><span class="pre">--endpoints</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">endpoint</span> <span class="pre">configuration.yml</span></code>.</p>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run <span class="se">\</span>
+    --d &lt;core model&gt; <span class="se">\</span>
+    --endpoints &lt;path to endpoint configuration&gt;.yml
+</pre></div>
+</div>
+<div class="section" id="fetching-models-from-a-server">
+<h3><a class="toc-backref" href="#id6">Fetching Models From a Server</a><a class="headerlink" href="#fetching-models-from-a-server" title="Permalink to this headline">¶</a></h3>
+<p>You can also configure the http server to fetch models from another URL:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.run <span class="se">\</span>
+    --enable_api <span class="se">\</span>
+    -d models/dialogue <span class="se">\</span>
+    -u models/nlu/current <span class="se">\</span>
+    --endpoints my_endpoints.yaml <span class="se">\</span>
+    -o out.log
+</pre></div>
+</div>
+<p>The model server is specified in the endpoint configuration
+(<code class="docutils literal notranslate"><span class="pre">my_endpoints.yaml</span></code>), where you specify the server URL Rasa Core
+regularly queries for zipped Rasa Core models:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">models</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">http://my-server.com/models/default_core@latest</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Your model server must provide zipped Rasa Core models, and have
+<code class="docutils literal notranslate"><span class="pre">{&quot;ETag&quot;:</span> <span class="pre">&lt;model_hash_string&gt;}</span></code> as one of its headers. Core will
+only download a new model if this model hash changed.</p>
+</div>
+<p>Rasa Core sends requests to your model server with an <code class="docutils literal notranslate"><span class="pre">If-None-Match</span></code>
+header that contains the current model hash. If your model server can
+provide a model with a different hash from the one you sent, it should send it
+in as a zip file with an <code class="docutils literal notranslate"><span class="pre">ETag</span></code> header containing the new hash. If not, Rasa
+Core expects an empty response with a <code class="docutils literal notranslate"><span class="pre">204</span></code> status code.</p>
+<p>An example request Rasa Core might make to your model server looks like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl --header <span class="s2">&quot;If-None-Match: d41d8cd98f00b204e9800998ecf8427e&quot;</span> http://my-server.com/models/default_core@latest
+</pre></div>
+</div>
+</div>
+<div class="section" id="connecting-rasa-nlu">
+<h3><a class="toc-backref" href="#id7">Connecting Rasa NLU</a><a class="headerlink" href="#connecting-rasa-nlu" title="Permalink to this headline">¶</a></h3>
+<p>To connect Rasa Core with a NLU server, you have to add the connection details
+into your endpoint configuration file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">nlu</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="s">&quot;http://&lt;your</span><span class="nv"> </span><span class="s">nlu</span><span class="nv"> </span><span class="s">host&gt;:5000&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">token</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;token&gt;</span>  <span class="c1"># [optional]</span>
+    <span class="l l-Scalar l-Scalar-Plain">token_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;name of the token&gt;</span> <span class="c1"># [optional] (default: token)</span>
+</pre></div>
+</div>
+<p>Then run Rasa Core with the <code class="docutils literal notranslate"><span class="pre">--endpoints</span> <span class="pre">&lt;path_to_your_endpoint_config&gt;.yml</span></code>
+and specify the nlu model to use with the <cite>-u</cite> flag.
+For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/current/dialogue <span class="se">\</span>
+    -u &lt;project_name&gt;/&lt;model_name&gt; <span class="se">\</span>
+    --endpoints endpoints.yml
+</pre></div>
+</div>
+</div>
+<div class="section" id="connecting-a-tracker-store">
+<h3><a class="toc-backref" href="#id8">Connecting a Tracker Store</a><a class="headerlink" href="#connecting-a-tracker-store" title="Permalink to this headline">¶</a></h3>
+<p>To configure a tracker store within your endpoint configuration,
+please see <a class="reference internal" href="../tracker_stores/#tracker-store"><span class="std std-ref">Tracker Stores</span></a>.</p>
+</div>
+<div class="section" id="connecting-an-event-broker">
+<h3><a class="toc-backref" href="#id9">Connecting an Event Broker</a><a class="headerlink" href="#connecting-an-event-broker" title="Permalink to this headline">¶</a></h3>
+<p>To configure an event broker within your endpoint configuration,
+please see <a class="reference internal" href="../brokers/#brokers"><span class="std std-ref">Event Brokers</span></a>.</p>
+</div>
+</div>
 <div class="section" id="endpoints">
-<h2><a class="toc-backref" href="#id6">Endpoints</a><a class="headerlink" href="#endpoints" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id10">Endpoints</a><a class="headerlink" href="#endpoints" title="Permalink to this headline">¶</a></h2>
 <p>Documentation of the server API as
-<a class="reference download internal" download="" href="../_downloads/5738d2d9e34dc4a354029c6e9bac304d/server.yml"><code class="xref download docutils literal notranslate"><span class="pre">OpenAPI</span> <span class="pre">Spec</span></code></a>.</p>
+<a class="reference download internal" download="" href="../_downloads/da3085af855c758f201036492c99bc9a/server.yml"><code class="xref download docutils literal notranslate"><span class="pre">OpenAPI</span> <span class="pre">Spec</span></code></a>.</p>
 
 
 <body>
@@ -370,7 +418,7 @@ if the <code class="docutils literal notranslate"><span class="pre">sender_id</s
 </body>
 </div>
 <div class="section" id="have-questions-or-feedback">
-<h2><a class="toc-backref" href="#id7">Have questions or feedback?</a><a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id11">Have questions or feedback?</a><a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
