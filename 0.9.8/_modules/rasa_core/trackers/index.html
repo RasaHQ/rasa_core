@@ -219,7 +219,7 @@
 <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">UserUttered</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">,</span>
     <span class="n">Event</span><span class="p">,</span> <span class="n">SlotSet</span><span class="p">,</span> <span class="n">Restarted</span><span class="p">,</span> <span class="n">ActionReverted</span><span class="p">,</span> <span class="n">UserUtteranceReverted</span><span class="p">,</span>
-    <span class="n">BotUttered</span><span class="p">,</span> <span class="n">Form</span><span class="p">)</span>
+    <span class="n">BotUttered</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">rasa_core.slots</span> <span class="k">import</span> <span class="n">Slot</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -305,11 +305,10 @@
         <span class="c1"># A deterministically scheduled action to be executed next</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">followup_action</span> <span class="o">=</span> <span class="n">ACTION_LISTEN_NAME</span>  <span class="c1"># type: Optional[Text]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1"># Stores the most recent message sent by the user</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Stores the most recent message sent by the user</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="c1">###</span>
     <span class="c1"># Public tracker interface</span>
@@ -339,9 +338,7 @@
             <span class="s2">&quot;followup_action&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">followup_action</span><span class="p">,</span>
             <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span><span class="p">(),</span>
             <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">evts</span><span class="p">,</span>
-            <span class="s2">&quot;latest_input_channel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latest_input_channel</span><span class="p">(),</span>
-            <span class="s2">&quot;active_form&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">,</span>
-            <span class="s2">&quot;latest_action_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span>
+            <span class="s2">&quot;latest_input_channel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latest_input_channel</span><span class="p">()</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.past_states"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.past_states">[docs]</a>    <span class="k">def</span> <span class="nf">past_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
@@ -350,40 +347,6 @@
 
         <span class="n">generated_states</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">states_for_tracker_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">deque</span><span class="p">((</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">generated_states</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="DialogueStateTracker.change_form_to"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.change_form_to">[docs]</a>    <span class="k">def</span> <span class="nf">change_form_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_name</span><span class="p">):</span>
-        <span class="c1"># type: (Text) -&gt; None</span>
-        <span class="sd">&quot;&quot;&quot;Activate or deactivate a form&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">form_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">form_name</span><span class="p">,</span>
-                                <span class="s1">&#39;validate&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                                <span class="s1">&#39;rejected&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="p">{}</span></div>
-
-<div class="viewcode-block" id="DialogueStateTracker.set_form_validation"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.set_form_validation">[docs]</a>    <span class="k">def</span> <span class="nf">set_form_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validate</span><span class="p">):</span>
-        <span class="c1"># type: (bool) -&gt; None</span>
-        <span class="sd">&quot;&quot;&quot;Toggle form validation&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">[</span><span class="s1">&#39;validate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">validate</span></div>
-
-<div class="viewcode-block" id="DialogueStateTracker.reject_action"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.reject_action">[docs]</a>    <span class="k">def</span> <span class="nf">reject_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_name</span><span class="p">):</span>
-        <span class="c1"># type: (Text) -&gt; None</span>
-        <span class="sd">&quot;&quot;&quot;Notify active form that it was rejected&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">action_name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">[</span><span class="s1">&#39;rejected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span></div>
-
-<div class="viewcode-block" id="DialogueStateTracker.set_latest_action_name"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.set_latest_action_name">[docs]</a>    <span class="k">def</span> <span class="nf">set_latest_action_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_name</span><span class="p">):</span>
-        <span class="c1"># type: (Text) -&gt; None</span>
-        <span class="sd">&quot;&quot;&quot;Set latest action name</span>
-<span class="sd">            and reset form validation and rejection parameters</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="n">action_name</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
-            <span class="c1"># reset form validation if some form is active</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">[</span><span class="s1">&#39;validate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">if</span> <span class="n">action_name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
-            <span class="c1"># reset form rejection if it was predicted again</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">[</span><span class="s1">&#39;rejected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.current_slot_values"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.current_slot_values">[docs]</a>    <span class="k">def</span> <span class="nf">current_slot_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; Dict[Text, Any]</span>
@@ -460,66 +423,12 @@
 
         <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_copy</span><span class="p">()</span>
 
-        <span class="n">ignored_trackers</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">latest_message</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span>
-
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">()):</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">UserUttered</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="c1"># store latest user message before the form</span>
-                    <span class="n">latest_message</span> <span class="o">=</span> <span class="n">event</span>
-
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Form</span><span class="p">):</span>
-                <span class="c1"># form got either activated or deactivated, so override</span>
-                <span class="c1"># tracker&#39;s latest message</span>
-                <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="n">latest_message</span>
-
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">):</span>
-                <span class="c1"># yields the intermediate state</span>
-                <span class="k">if</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="n">tracker</span>
-
-                <span class="k">elif</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rejected&#39;</span><span class="p">):</span>
-                    <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">ignored_trackers</span><span class="p">:</span>
-                        <span class="k">yield</span> <span class="n">tr</span>
-                    <span class="n">ignored_trackers</span> <span class="o">=</span> <span class="p">[]</span>
-
-                    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;validate&#39;</span><span class="p">)</span> <span class="ow">or</span>
-                            <span class="n">event</span><span class="o">.</span><span class="n">action_name</span> <span class="o">!=</span>
-                            <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)):</span>
-                        <span class="c1"># persist latest user message</span>
-                        <span class="c1"># that was rejected by the form</span>
-                        <span class="n">latest_message</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="c1"># form was called with validation, so</span>
-                        <span class="c1"># override tracker&#39;s latest message</span>
-                        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="n">latest_message</span>
-
-                    <span class="k">yield</span> <span class="n">tracker</span>
-
-                <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">action_name</span> <span class="o">!=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
-                    <span class="c1"># it is not known whether the form will be</span>
-                    <span class="c1"># successfully executed, so store this tracker for later</span>
-                    <span class="n">tr</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-                    <span class="c1"># form was called with validation, so</span>
-                    <span class="c1"># override tracker&#39;s latest message</span>
-                    <span class="n">tr</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="n">latest_message</span>
-                    <span class="n">ignored_trackers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">action_name</span> <span class="o">==</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
-                    <span class="c1"># the form was successfully executed, so</span>
-                    <span class="c1"># remove all stored trackers</span>
-                    <span class="n">ignored_trackers</span> <span class="o">=</span> <span class="p">[]</span>
-
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">tracker</span>
             <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
-        <span class="c1"># yields the final state</span>
-        <span class="k">if</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="n">tracker</span>
-        <span class="k">elif</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rejected&#39;</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">ignored_trackers</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">tr</span>
-            <span class="k">yield</span> <span class="n">tracker</span></div>
+        <span class="k">yield</span> <span class="n">tracker</span>  <span class="c1"># yields the final state</span></div>
 
 <div class="viewcode-block" id="DialogueStateTracker.applied_events"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.applied_events">[docs]</a>    <span class="k">def</span> <span class="nf">applied_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; List[Event]</span>
@@ -648,7 +557,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="n">UserUttered</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="n">BotUttered</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">followup_action</span> <span class="o">=</span> <span class="n">ACTION_LISTEN_NAME</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">_reset_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; None</span>
