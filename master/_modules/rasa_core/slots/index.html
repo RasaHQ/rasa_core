@@ -217,11 +217,15 @@
 <div class="viewcode-block" id="Slot"><a class="viewcode-back" href="../../../api/slots_api/#rasa_core.slots.Slot">[docs]</a><span class="k">class</span> <span class="nc">Slot</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">type_name</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_reset_delay</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                 <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">value_reset_delay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">auto_fill</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">initial_value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span> <span class="o">=</span> <span class="n">initial_value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_value_reset_delay</span> <span class="o">=</span> <span class="n">value_reset_delay</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_fill</span> <span class="o">=</span> <span class="n">auto_fill</span>
 
 <div class="viewcode-block" id="Slot.feature_dimensionality"><a class="viewcode-back" href="../../../api/slots_api/#rasa_core.slots.Slot.feature_dimensionality">[docs]</a>    <span class="k">def</span> <span class="nf">feature_dimensionality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;How many features this single slot creates.</span>
@@ -282,7 +286,8 @@
 
     <span class="k">def</span> <span class="nf">persistence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">module_path_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
-                <span class="s2">&quot;initial_value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span><span class="p">}</span></div>
+                <span class="s2">&quot;initial_value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span><span class="p">,</span>
+                <span class="s2">&quot;auto_fill&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_fill</span><span class="p">}</span></div>
 
 
 <span class="k">class</span> <span class="nc">FloatSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
@@ -291,9 +296,13 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
                  <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">value_reset_delay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">auto_fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
                  <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">FloatSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">,</span> <span class="n">value_reset_delay</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FloatSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                                        <span class="n">initial_value</span><span class="p">,</span>
+                                        <span class="n">value_reset_delay</span><span class="p">,</span>
+                                        <span class="n">auto_fill</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="n">max_value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">min_value</span>
 
@@ -384,10 +393,12 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
                  <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">value_reset_delay</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">value_reset_delay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">auto_fill</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CategoricalSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
                                               <span class="n">initial_value</span><span class="p">,</span>
-                                              <span class="n">value_reset_delay</span><span class="p">)</span>
+                                              <span class="n">value_reset_delay</span><span class="p">,</span>
+                                              <span class="n">auto_fill</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span> <span class="k">if</span> <span class="n">values</span> <span class="k">else</span> <span class="p">[]</span>
 
     <span class="k">def</span> <span class="nf">persistence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -423,8 +434,14 @@
 
 
 <span class="k">class</span> <span class="nc">DataSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_reset_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DataSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">,</span> <span class="n">value_reset_delay</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                 <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">value_reset_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">auto_fill</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DataSlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                                       <span class="n">initial_value</span><span class="p">,</span>
+                                       <span class="n">value_reset_delay</span><span class="p">,</span>
+                                       <span class="n">auto_fill</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">as_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Each slot type needs to specify how its &quot;</span>
