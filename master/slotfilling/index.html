@@ -207,84 +207,307 @@
 
     <p class="scv-banner"><a href="../../0.11.12/slotfilling/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.11.12.</a></p>
 <div class="section" id="slot-filling">
-<span id="slotfilling"></span><h1>Slot Filling<a class="headerlink" href="#slot-filling" title="Permalink to this headline">¶</a></h1>
-<p>One of the most common conversation patterns
-is to collect a few pieces of information
-from a user in order to do something (book a restaurant, call an API, search a database, etc.).
-This is also called <strong>slot filling</strong>.</p>
-<div class="section" id="example-providing-the-weather">
-<h2>Example: Providing the Weather<a class="headerlink" href="#example-providing-the-weather" title="Permalink to this headline">¶</a></h2>
-<p>Let’s say you are building a weather bot ⛅️. If somebody asks you for the weather, you will
-need to know their location. Users might say that right away, e.g. <cite>What’s the weather in Caracas?</cite>
-When they don’t provide this information, you’ll have to ask them for it.
-We can provide two stories to Rasa Core, so that it can learn to handle both cases:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># story1</span>
-<span class="vm">* ask_weather</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;Caracas&quot;</span><span class="p">}</span>
-   - action_weather_api
+<span id="slotfilling"></span><h1><a class="toc-backref" href="#id1">Slot Filling</a><a class="headerlink" href="#slot-filling" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#slot-filling" id="id1">Slot Filling</a><ul>
+<li><a class="reference internal" href="#basics" id="id2">Basics</a></li>
+<li><a class="reference internal" href="#custom-slot-mappings" id="id3">Custom slot mappings</a></li>
+<li><a class="reference internal" href="#validating-user-input" id="id4">Validating user input</a></li>
+<li><a class="reference internal" href="#handling-unhappy-paths" id="id5">Handling unhappy paths</a></li>
+<li><a class="reference internal" href="#the-requested-slot-slot" id="id6">The requested_slot slot</a></li>
+<li><a class="reference internal" href="#handling-conditional-slot-logic" id="id7">Handling conditional slot logic</a></li>
+<li><a class="reference internal" href="#debugging" id="id8">Debugging</a></li>
+<li><a class="reference internal" href="#have-questions-or-feedback" id="id9">Have questions or feedback?</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>One of the most common conversation patterns is to collect a few pieces of
+information from a user in order to do something (book a restaurant, call an
+API, search a database, etc.). This is also called <strong>slot filling</strong>.</p>
+<p>If you need to collect multiple pieces of information in a row, we recommended
+that you create a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code>. This is a single action which contains the
+logic to loop over the required slots and ask the user for this information.
+There is a full example using forms in the <code class="docutils literal notranslate"><span class="pre">examples/formbot</span></code> directory of
+Rasa Core.</p>
+<p>You can take a look at the FormAction base class by clicking this link:</p>
+<dl class="class">
+<dt id="rasa_core_sdk.forms.FormAction">
+<em class="property">class </em><code class="descclassname">rasa_core_sdk.forms.</code><code class="descname">FormAction</code><a class="reference internal" href="../_modules/rasa_core_sdk/forms/#FormAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core_sdk.forms.FormAction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
-<span class="gh"># story2</span>
-<span class="vm">* ask_weather</span>
-<span class="vm">   </span>- utter_ask_location
-<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;Caracas&quot;</span><span class="p">}</span>
-   - action_weather_api
+<div class="section" id="basics">
+<span id="section-form-basics"></span><h2><a class="toc-backref" href="#id2">Basics</a><a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h2>
+<p>Using a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code>, you can describe <em>all</em> of the happy paths with a single
+story. By “happy path”, we mean that whenever you ask a user for some information,
+they respond with what you asked for.</p>
+<p>If we take the example of the restaurant bot, this single story describes all of the
+happy paths.</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## happy path</span>
+<span class="vm">* request_restaurant</span>
+<span class="vm">    </span>- restaurant_form
+    - form{&quot;name&quot;: &quot;restaurant_form&quot;}
+    - form{&quot;name&quot;: null}
 </pre></div>
 </div>
-<p>Here we are assuming you have defined an <code class="docutils literal notranslate"><span class="pre">inform</span></code> intent, which captures the cases where a user
-is just providing information.</p>
-<p>But <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a> can also set slots, and these can also influence the conversation.
-For example, a location like <cite>San Jose</cite> could refer to multiple places, in this case, probably in
-Costa Rica 🇨🇷  or California 🇺🇸</p>
-<p>Let’s add a call to a location API to deal with this.
-Start by defining a <code class="docutils literal notranslate"><span class="pre">location_match</span></code> slot:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">location_match</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical</span>
-    <span class="l l-Scalar l-Scalar-Plain">values</span><span class="p p-Indicator">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">zero</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">one</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">multiple</span>
+<p>The <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> will only requests slots which haven’t already been set.
+If a user says
+“I’d like a vegetarian Chinese restaurant for 8 people”, they won’t be
+asked about the <code class="docutils literal notranslate"><span class="pre">cuisine</span></code> and <code class="docutils literal notranslate"><span class="pre">num_people</span></code> slots.</p>
+<p>Note that for this story to work, your slots should be <a class="reference external" href="https://rasa.com/docs/core/api/slots_api/#unfeaturized-slot">unfeaturized</a>.
+If they’re not, you should add all the slots that have been set by the form.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">restaurant_form</span></code> in the story above is the name of our form action.
+Here is an example of what it looks like.
+You need to define three methods:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">name</span></code>: the name of this action</li>
+<li><code class="docutils literal notranslate"><span class="pre">required_slots</span></code>: a list of slots that need to be filled for the <code class="docutils literal notranslate"><span class="pre">submit</span></code> method to work.</li>
+<li><code class="docutils literal notranslate"><span class="pre">submit</span></code>: what to do at the end of the form, when all the slots have been filled.</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RestaurantForm</span><span class="p">(</span><span class="n">FormAction</span><span class="p">):</span>
+   <span class="sd">&quot;&quot;&quot;Example of a custom form action&quot;&quot;&quot;</span>
+
+   <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="c1"># type: () -&gt; Text</span>
+       <span class="sd">&quot;&quot;&quot;Unique identifier of the form&quot;&quot;&quot;</span>
+
+       <span class="k">return</span> <span class="s2">&quot;restaurant_form&quot;</span>
+
+   <span class="nd">@staticmethod</span>
+   <span class="k">def</span> <span class="nf">required_slots</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
+       <span class="c1"># type: () -&gt; List[Text]</span>
+       <span class="sd">&quot;&quot;&quot;A list of required slots that the form has to fill&quot;&quot;&quot;</span>
+
+       <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;cuisine&quot;</span><span class="p">,</span> <span class="s2">&quot;num_people&quot;</span><span class="p">,</span> <span class="s2">&quot;outdoor_seating&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;preferences&quot;</span><span class="p">,</span> <span class="s2">&quot;feedback&quot;</span><span class="p">]</span>
+
+   <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+       <span class="c1"># type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -&gt; List[Dict]</span>
+       <span class="sd">&quot;&quot;&quot;Define what the form has to do</span>
+<span class="sd">           after all required slots are filled&quot;&quot;&quot;</span>
+
+       <span class="c1"># utter submit template</span>
+       <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s1">&#39;utter_submit&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">)</span>
+       <span class="k">return</span> <span class="p">[]</span>
 </pre></div>
 </div>
-<p>And our location api action will have to use the API response to fill in this slot.
-It can <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">[SlotSet(&quot;location_match&quot;,</span> <span class="pre">value)]</span></code>, where <code class="docutils literal notranslate"><span class="pre">value</span></code> is one of <code class="docutils literal notranslate"><span class="pre">&quot;zero&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;one&quot;</span></code>, or
-<code class="docutils literal notranslate"><span class="pre">&quot;multiple&quot;</span></code>, depending on what the API sends back.</p>
-<p>We then define stories for each of these cases:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># story1</span>
-<span class="vm">* ask_weather</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;Caracas&quot;</span><span class="p">}</span>
-   - action_location_api
-<span class="o">   - slot</span><span class="p">{</span><span class="nt">&quot;location_match&quot;</span><span class="p">:</span> <span class="s2">&quot;one&quot;</span><span class="p">}</span>
-   - action_weather_api
-
-<span class="gh"># story2</span>
-<span class="vm">* ask_weather</span>
-<span class="vm">   </span>- utter_ask_location
-<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;Caracas&quot;</span><span class="p">}</span>
-   - action_location_api
-<span class="hll"><span class="o">   - slot</span><span class="p">{</span><span class="nt">&quot;location_match&quot;</span><span class="p">:</span> <span class="s2">&quot;one&quot;</span><span class="p">}</span>
-</span><span class="hll">   - action_weather_api
-</span>
-<span class="gh"># story3</span>
-<span class="vm">* ask_weather</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;the Moon&quot;</span><span class="p">}</span>
-   - action_location_api
-<span class="hll"><span class="o">   - slot</span><span class="p">{</span><span class="nt">&quot;location_match&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">}</span>
-</span><span class="hll">   - utter_location_not_found
-</span>
-<span class="gh"># story4</span>
-<span class="vm">* ask_weather</span><span class="p">{</span><span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;San Jose&quot;</span><span class="p">}</span>
-   - action_location_api
-<span class="hll"><span class="o">   - slot</span><span class="p">{</span><span class="nt">&quot;location_match&quot;</span><span class="p">:</span> <span class="s2">&quot;multiple&quot;</span><span class="p">}</span>
-</span><span class="hll">   - utter_ask_which_location
-</span></pre></div>
+<p>Once the form action gets called for the first time,
+the form gets activated and the <code class="docutils literal notranslate"><span class="pre">FormPolicy</span></code> jumps in.
+The <code class="docutils literal notranslate"><span class="pre">FormPolicy</span></code> is extremely simple and just always predicts the form action.
+See <a class="reference internal" href="#section-unhappy"><span class="std std-ref">Handling unhappy paths</span></a> for how to work with unexpected user input.</p>
+<p>Every time the form action gets called, it will ask the user for the next slot in
+<code class="docutils literal notranslate"><span class="pre">required_slots</span></code> which is not already set.
+It does this by looking for a template called <code class="docutils literal notranslate"><span class="pre">utter_ask_{slot_name}</span></code>,
+so you need to define these in your domain file for each required slot.</p>
+<p>Once all the slots are filled, the <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method is called, where you can
+use the information you’ve collected to do something for the user, for example
+querying a restaurant API.
+If you don’t want your form to do anything at the end, just use <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">[]</span></code>
+as your submit method.
+After the submit method is called, the form is deactivated,
+and other policies in your Core model will be used to predict the next action.</p>
 </div>
-<p>Now we’ve given Rasa Core a few examples of how to handle the different values
-that the <code class="docutils literal notranslate"><span class="pre">location_match</span></code> slot can take.
-Right now, we still only have four stories, which is not a lot of training data.
-<a class="reference internal" href="../interactive_learning/#interactive-learning"><span class="std std-ref">Interactive Learning</span></a> is a great way to explore more conversations
-that aren’t in your stories already.
-The best way to improve your model is to test it yourself, have other people test it,
-and correct the mistakes it makes.</p>
+<div class="section" id="custom-slot-mappings">
+<h2><a class="toc-backref" href="#id3">Custom slot mappings</a><a class="headerlink" href="#custom-slot-mappings" title="Permalink to this headline">¶</a></h2>
+<p>Some slots (like <code class="docutils literal notranslate"><span class="pre">cuisine</span></code>) can be picked up using a single entity, but a
+<code class="docutils literal notranslate"><span class="pre">FormAction</span></code> can also support yes/no questions and free-text input.
+The <code class="docutils literal notranslate"><span class="pre">slot_mapping</span></code> method defines how to extract slot values from user responses.</p>
+<p>Here’s an example for the restaurant bot:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">slot_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># type: () -&gt; Dict[Text: Union[Text, Dict, List[Text, Dict]]]</span>
+    <span class="sd">&quot;&quot;&quot;A dictionary to map required slots to</span>
+<span class="sd">        - an extracted entity</span>
+<span class="sd">        - intent: value pairs</span>
+<span class="sd">        - a whole message</span>
+<span class="sd">        or a list of them, where the first match will be picked&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;cuisine&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_entity</span><span class="p">(</span><span class="n">entity</span><span class="o">=</span><span class="s2">&quot;cuisine&quot;</span><span class="p">,</span>
+                                        <span class="n">intent</span><span class="o">=</span><span class="s2">&quot;inform&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;num_people&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_entity</span><span class="p">(</span><span class="n">entity</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;outdoor_seating&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">from_entity</span><span class="p">(</span><span class="n">entity</span><span class="o">=</span><span class="s2">&quot;seating&quot;</span><span class="p">),</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">from_intent</span><span class="p">(</span><span class="n">intent</span><span class="o">=</span><span class="s1">&#39;affirm&#39;</span><span class="p">,</span>
+                                                 <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">from_intent</span><span class="p">(</span><span class="n">intent</span><span class="o">=</span><span class="s1">&#39;deny&#39;</span><span class="p">,</span>
+                                                 <span class="n">value</span><span class="o">=</span><span class="bp">False</span><span class="p">)],</span>
+            <span class="s2">&quot;preferences&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="n">intent</span><span class="o">=</span><span class="s1">&#39;inform&#39;</span><span class="p">),</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">from_intent</span><span class="p">(</span><span class="n">intent</span><span class="o">=</span><span class="s1">&#39;deny&#39;</span><span class="p">,</span>
+                                             <span class="n">value</span><span class="o">=</span><span class="s2">&quot;no additional &quot;</span>
+                                                   <span class="s2">&quot;preferences&quot;</span><span class="p">)],</span>
+            <span class="s2">&quot;feedback&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">from_entity</span><span class="p">(</span><span class="n">entity</span><span class="o">=</span><span class="s2">&quot;feedback&quot;</span><span class="p">),</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">from_text</span><span class="p">()]}</span>
+</pre></div>
+</div>
+<p>The predefined functions work as follows:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">self.from_entity(entity=entity_name,</span> <span class="pre">intent=intent_name)</span></code>
+will look for an entity called <code class="docutils literal notranslate"><span class="pre">entity_name</span></code> to fill a slot
+<code class="docutils literal notranslate"><span class="pre">slot_name</span></code> regardless of user intent if <code class="docutils literal notranslate"><span class="pre">intent_name</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>
+else only if the users intent is <code class="docutils literal notranslate"><span class="pre">intent_name</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">self.from_intent(intent=intent_name,</span> <span class="pre">value=value)</span></code>
+will fill slot <code class="docutils literal notranslate"><span class="pre">slot_name</span></code> with <code class="docutils literal notranslate"><span class="pre">value</span></code> if user intent is <code class="docutils literal notranslate"><span class="pre">intent_name</span></code>.
+To make a boolean slot, take a look at the definition of <code class="docutils literal notranslate"><span class="pre">outdoor_seating</span></code>
+above.</li>
+<li><code class="docutils literal notranslate"><span class="pre">self.from_text(intent=intent_name)</span></code> will use the next
+user utterance to fill the text slot <code class="docutils literal notranslate"><span class="pre">slot_name</span></code> regardless of user intent
+if <code class="docutils literal notranslate"><span class="pre">intent_name</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> else only if user intent is <code class="docutils literal notranslate"><span class="pre">intent_name</span></code>.</li>
+<li>If you want to allow a combination of these, provide them as a list as in the
+example above</li>
+</ul>
+</div>
+<div class="section" id="validating-user-input">
+<h2><a class="toc-backref" href="#id4">Validating user input</a><a class="headerlink" href="#validating-user-input" title="Permalink to this headline">¶</a></h2>
+<p>After extracting a slot value from user input, the form will try to validate the
+value of the slot. By default, this only checks if the requested slot was extracted.
+If you want to add custom validation, for example to check a value against a database,
+you can do this by overwriting the <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method.
+Here is an example which checks if the extracted cuisine slot belongs to a
+list of supported cuisines.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">cuisine_db</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; List[Text]</span>
+    <span class="sd">&quot;&quot;&quot;Database of supported cuisines&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;caribbean&quot;</span><span class="p">,</span> <span class="s2">&quot;chinese&quot;</span><span class="p">,</span> <span class="s2">&quot;french&quot;</span><span class="p">,</span> <span class="s2">&quot;greek&quot;</span><span class="p">,</span> <span class="s2">&quot;indian&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;italian&quot;</span><span class="p">,</span> <span class="s2">&quot;mexican&quot;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="c1"># type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -&gt; List[Dict]</span>
+    <span class="sd">&quot;&quot;&quot;&quot;Validate extracted requested slot else raise an error&quot;&quot;&quot;</span>
+    <span class="n">slot_to_fill</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">)</span>
+
+    <span class="c1"># extract requested slot from a user input by using `slot_mapping`</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">events</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="c1"># raise an error if nothing was extracted</span>
+        <span class="k">raise</span> <span class="n">ActionExecutionRejection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                                       <span class="s2">&quot;Failed to validate slot {0} &quot;</span>
+                                       <span class="s2">&quot;with action {1}&quot;</span>
+                                       <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">,</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
+
+    <span class="n">extracted_slots</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">validated_events</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="s1">&#39;event&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;slot&#39;</span><span class="p">:</span>
+            <span class="c1"># get values of extracted slots to validate them later</span>
+            <span class="n">extracted_slots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># add other events without validating them</span>
+            <span class="n">validated_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">extracted_slots</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">slot_to_fill</span> <span class="o">==</span> <span class="s1">&#39;cuisine&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">slot</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cuisine_db</span><span class="p">():</span>
+                <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s1">&#39;utter_wrong_cuisine&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">)</span>
+                <span class="c1"># validation failed, set this slot to None, meaning the</span>
+                <span class="n">user</span> <span class="n">will</span> <span class="n">be</span> <span class="n">asked</span> <span class="k">for</span> <span class="n">the</span> <span class="n">slot</span> <span class="n">again</span>
+                <span class="n">validated_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># validation succeeded</span>
+                <span class="n">validated_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">,</span> <span class="n">slot</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># no validation needed</span>
+            <span class="n">validated_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">,</span> <span class="n">slot</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">validated_events</span>
+</pre></div>
+</div>
+<p>If nothing is extracted from the user’s utterance for any of the required slots, an
+<code class="docutils literal notranslate"><span class="pre">ActionExecutionRejection</span></code> error will be raised, meaning the action execution
+was rejected and therefore Core will fall back onto a different policy to
+predict another action.</p>
+</div>
+<div class="section" id="handling-unhappy-paths">
+<span id="section-unhappy"></span><h2><a class="toc-backref" href="#id5">Handling unhappy paths</a><a class="headerlink" href="#handling-unhappy-paths" title="Permalink to this headline">¶</a></h2>
+<p>Of course your users will not always respond with the information you ask of them.
+Typically, users will ask questions, make chitchat, change their mind, or otherwise
+stray from the happy path. The way this works with forms is that a form will raise
+an <code class="docutils literal notranslate"><span class="pre">ActionExecutionRejection</span></code> if the user didn’t provide the requested information.
+You need to handle events that might cause <code class="docutils literal notranslate"><span class="pre">ActionExecutionRejection</span></code> errors
+in your stories. For example, if you expect your users to chitchat with your bot,
+you could add a story like this:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## chitchat</span>
+<span class="vm">* request_restaurant</span>
+<span class="vm">    </span>- restaurant_form
+    - form{&quot;name&quot;: &quot;restaurant_form&quot;}
+<span class="vm">* chitchat</span>
+<span class="vm">    </span>- utter_chitchat
+    - restaurant_form
+    - form{&quot;name&quot;: null}
+</pre></div>
+</div>
+<p>It is <strong>strongly</strong> recommended that you build these stories using interactive learning.
+If you write these stories by hand you will likely miss important things.
+Please read <a class="reference internal" href="../interactive_learning/#section-interactive-learning-forms"><span class="std std-ref">Interactive Learning with Forms</span></a>
+on how to use interactive learning with forms.</p>
+</div>
+<div class="section" id="the-requested-slot-slot">
+<h2><a class="toc-backref" href="#id6">The requested_slot slot</a><a class="headerlink" href="#the-requested-slot-slot" title="Permalink to this headline">¶</a></h2>
+<p>The slot <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code> is automatically added to the domain as an
+unfeaturized slot. If you want to make it featurized, you need to add it
+to your domain file as a categorical slot. You might want to do this if you
+want to handle your unhappy paths differently depending on what slot is
+currently being asked from the user. For example, say your users respond
+to one of the bot’s questions with another question, like <em>why do you need to know that?</em>
+The response to this <code class="docutils literal notranslate"><span class="pre">explain</span></code> intent depends on where we are in the story.
+In the restaurant case, your stories would look something like this:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## explain cuisine slot</span>
+<span class="vm">* request_restaurant</span>
+<span class="vm">    </span>- restaurant_form
+    - form{&quot;name&quot;: &quot;restaurant_form&quot;}
+<span class="o">    - slot</span><span class="p">{</span><span class="nt">&quot;requested_slot&quot;</span><span class="p">:</span> <span class="s2">&quot;cuisine&quot;</span><span class="p">}</span>
+<span class="vm">* explain</span>
+<span class="vm">    </span>- utter_explain_cuisine
+    - restaurant_form
+<span class="o">    - slot</span><span class="p">{</span><span class="nt">&quot;cuisine&quot;</span><span class="p">:</span> <span class="s2">&quot;greek&quot;</span><span class="p">}</span>
+    ( ... all other slots the form set ... )
+    - form{&quot;name&quot;: null}
+
+<span class="gh">## explain num_people slot</span>
+<span class="vm">* request_restaurant</span>
+<span class="vm">    </span>- restaurant_form
+    - form{&quot;name&quot;: &quot;restaurant_form&quot;}
+<span class="o">    - slot</span><span class="p">{</span><span class="nt">&quot;requested_slot&quot;</span><span class="p">:</span> <span class="s2">&quot;num_people&quot;</span><span class="p">}</span>
+<span class="vm">* explain</span>
+<span class="vm">    </span>- utter_explain_num_people
+    - restaurant_form
+<span class="o">    - slot</span><span class="p">{</span><span class="nt">&quot;cuisine&quot;</span><span class="p">:</span> <span class="s2">&quot;greek&quot;</span><span class="p">}</span>
+    ( ... all other slots the form set ... )
+    - form{&quot;name&quot;: null}
+</pre></div>
+</div>
+<p>Again, is is <strong>strongly</strong> recommended that you use interactive
+learning to build these stories.
+Please read <a class="reference internal" href="../interactive_learning/#section-interactive-learning-forms"><span class="std std-ref">Interactive Learning with Forms</span></a>
+on how to use interactive learning with forms.</p>
+</div>
+<div class="section" id="handling-conditional-slot-logic">
+<h2><a class="toc-backref" href="#id7">Handling conditional slot logic</a><a class="headerlink" href="#handling-conditional-slot-logic" title="Permalink to this headline">¶</a></h2>
+<p>Many forms require more logic than just requesting a list of fields.
+For example, if someone requests <code class="docutils literal notranslate"><span class="pre">greek</span></code> as their cuisine, you may want to
+ask if they are looking for somewhere with outside seating.</p>
+<p>You can achieve this by writing some logic into the <code class="docutils literal notranslate"><span class="pre">required_slots()</span></code> method,
+for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">required_slots</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
+   <span class="c1"># type: () -&gt; List[Text]</span>
+   <span class="sd">&quot;&quot;&quot;A list of required slots that the form has to fill&quot;&quot;&quot;</span>
+
+   <span class="k">if</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s1">&#39;cuisine&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;greek&#39;</span><span class="p">:</span>
+     <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;cuisine&quot;</span><span class="p">,</span> <span class="s2">&quot;num_people&quot;</span><span class="p">,</span> <span class="s2">&quot;outdoor_seating&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;preferences&quot;</span><span class="p">,</span> <span class="s2">&quot;feedback&quot;</span><span class="p">]</span>
+   <span class="k">else</span><span class="p">:</span>
+     <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;cuisine&quot;</span><span class="p">,</span> <span class="s2">&quot;num_people&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;preferences&quot;</span><span class="p">,</span> <span class="s2">&quot;feedback&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This mechanism is quite general and you can use it to build many different
+kinds of logic into your forms.</p>
+</div>
 <div class="section" id="debugging">
-<h3>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h3>
+<h2><a class="toc-backref" href="#id8">Debugging</a><a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h2>
 <p>The first thing to try is to run your bot with the <code class="docutils literal notranslate"><span class="pre">debug</span></code> flag, see <a class="reference internal" href="../debugging/#debugging"><span class="std std-ref">Debugging</span></a> for details.
 If you are just getting started, you probably only have a few hand-written stories.
 This is a great starting point, but
@@ -295,99 +518,8 @@ behind Rasa Core is:</p>
 <p>So don’t try to cover every possibility in your hand-written stories before giving it to testers.
 Real user behavior will always surprise you!</p>
 </div>
-</div>
-<div class="section" id="slot-filling-with-a-formaction">
-<h2>Slot Filling with a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code><a class="headerlink" href="#slot-filling-with-a-formaction" title="Permalink to this headline">¶</a></h2>
-<p>If you need to collect multiple pieces of information in a row, it is sometimes easier
-to create a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code>.
-This lets you have a single action that is called multiple times, rather than separate actions for each question,
-e.g. <code class="docutils literal notranslate"><span class="pre">utter_ask_cuisine</span></code>, <code class="docutils literal notranslate"><span class="pre">utter_ask_numpeople</span></code>, in a restaurant bot.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">You don’t <em>have</em> to use a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> to do slot filling! It just means you need
-fewer stories to get the initial flow working.</p>
-</div>
-<p>A form action has a set of required fields, which you define for the class:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ActionSearchRestaurants</span><span class="p">(</span><span class="n">FormAction</span><span class="p">):</span>
-
-    <span class="n">RANDOMIZE</span> <span class="o">=</span> <span class="bp">False</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">required_fields</span><span class="p">():</span>
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="n">EntityFormField</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">,</span> <span class="s2">&quot;cuisine&quot;</span><span class="p">),</span>
-            <span class="n">EntityFormField</span><span class="p">(</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;people&quot;</span><span class="p">),</span>
-            <span class="n">BooleanFormField</span><span class="p">(</span><span class="s2">&quot;vegetarian&quot;</span><span class="p">,</span> <span class="s2">&quot;affirm&quot;</span><span class="p">,</span> <span class="s2">&quot;deny&quot;</span><span class="p">)</span>
-        <span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;action_search_restaurants&#39;</span>
-
-    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">RestaurantAPI</span><span class="p">()</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
-            <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s2">&quot;cuisine&quot;</span><span class="p">),</span>
-            <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s2">&quot;people&quot;</span><span class="p">),</span>
-            <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s2">&quot;vegetarian&quot;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="s2">&quot;search_results&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)]</span>
-</pre></div>
-</div>
-<p>The way this works is that every time you call this action, it will pick one of the
-<code class="docutils literal notranslate"><span class="pre">REQUIRED_FIELDS</span></code> that’s still missing and ask the user for it. You can also ask a yes/no
-question with a <code class="docutils literal notranslate"><span class="pre">BooleanFormField</span></code>.</p>
-<p>The form action will set a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code> to keep track if what it has asked the user.
-So a story will look something like this:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="vm">* request_restaurant</span>
-<span class="vm">     </span>- action_restaurant_form
-<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;requested_slot&quot;</span><span class="p">:</span> <span class="s2">&quot;people&quot;</span><span class="p">}</span>
-<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;number&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
-     - action_restaurant_form
-<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;people&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
-<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;requested_slot&quot;</span><span class="p">:</span> <span class="s2">&quot;cuisine&quot;</span><span class="p">}</span>
-<span class="vm">* inform</span><span class="p">{</span><span class="nt">&quot;cuisine&quot;</span><span class="p">:</span> <span class="s2">&quot;chinese&quot;</span><span class="p">}</span>
-     - action_restaurant_form
-<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;cuisine&quot;</span><span class="p">:</span> <span class="s2">&quot;chinese&quot;</span><span class="p">}</span>
-<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;requested_slot&quot;</span><span class="p">:</span> <span class="s2">&quot;vegetarian&quot;</span><span class="p">}</span>
-<span class="vm">* deny</span>
-<span class="vm">     </span>- action_restaurant_form
-<span class="o">     - slot</span><span class="p">{</span><span class="nt">&quot;vegetarian&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">}</span>
-</pre></div>
-</div>
-<p>Some important things to consider:</p>
-<ul class="simple">
-<li>The <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method is called when the action is run and all slots are filled, in this case after the <code class="docutils literal notranslate"><span class="pre">deny</span></code> intent.
-If you are just collecting some information and don’t need to make an API call at the end, your <code class="docutils literal notranslate"><span class="pre">submit()</span></code> method
-should just <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">[]</span></code>.</li>
-<li>Your domain needs to have a slot called <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code>. You can make this an unfeaturized slot.</li>
-<li>You need to define utterances for asking for each slot in your domain, e.g. <code class="docutils literal notranslate"><span class="pre">utter_ask_{slot_name}</span></code>.</li>
-<li>We strongly recommend that you create these stories using interactive learning, because if you
-type these by hand you will probably forget to include the lines for the <code class="docutils literal notranslate"><span class="pre">requested_slot</span></code>.</li>
-<li>Any slots that are already set won’t be asked for. E.g. if someone says “I’d like a vegetarian Chinese restaurant for 8 people” the <code class="docutils literal notranslate"><span class="pre">submit</span></code> function should get called right away.</li>
-</ul>
-<div class="section" id="form-fields-and-free-text-input">
-<h3>Form Fields and Free-text Input<a class="headerlink" href="#form-fields-and-free-text-input" title="Permalink to this headline">¶</a></h3>
-<p>The pre-defined <code class="docutils literal notranslate"><span class="pre">FormField</span></code> types are:</p>
-<ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">EntityFormField(entity_name,</span> <span class="pre">slot_name)</span></code>, which will
-look for an entity called <code class="docutils literal notranslate"><span class="pre">entity_name</span></code> to fill a slot <code class="docutils literal notranslate"><span class="pre">slot_name</span></code>.</li>
-<li><code class="docutils literal notranslate"><span class="pre">BooleanFormField(slot_name,</span> <span class="pre">affirm_intent,</span> <span class="pre">deny_intent)</span></code>, which looks for the intents <code class="docutils literal notranslate"><span class="pre">affirm_intent</span></code>
-and <code class="docutils literal notranslate"><span class="pre">deny_intent</span></code> to fill a boolean slot called <code class="docutils literal notranslate"><span class="pre">slot_name</span></code>.</li>
-<li><code class="docutils literal notranslate"><span class="pre">FreeTextFormField(slot_name)</span></code>, which will use the next user utterance to fill the text slot <code class="docutils literal notranslate"><span class="pre">slot_name</span></code>.</li>
-</ul>
-<p>For any subclass of  <code class="docutils literal notranslate"><span class="pre">FormField</span></code>, its <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method will be called before setting it
-as a slot. By default this just checks that the value isn’t <code class="docutils literal notranslate"><span class="pre">None</span></code>, but if you want to check
-the value against a DB, or check a pattern is matched, you can do so by defining your own class
-like <code class="docutils literal notranslate"><span class="pre">MyCustomFormField</span></code> and overriding the <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">The <code class="docutils literal notranslate"><span class="pre">FreeTextFormField</span></code> class will just extract the user message as a value.
-However, there is currently no way to write a ‘wildcard’ intent in Rasa Core stories as of now.
-Typically your NLU model will assign this free-text input to 2-3 different intents.
-It’s easiest to add stories for each of these.</p>
-</div>
-</div>
-</div>
 <div class="section" id="have-questions-or-feedback">
-<h2>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">Have questions or feedback?</a><a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core

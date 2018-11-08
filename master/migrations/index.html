@@ -210,6 +210,36 @@
 <span id="migration"></span><h1>Migration Guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h1>
 <p>This page contains information about changes between major versions and
 how you can migrate from one version to another.</p>
+<div class="section" id="x-to-0-12-0">
+<span id="migration-to-0-12-0"></span><h2>0.11.x to 0.12.0<a class="headerlink" href="#x-to-0-12-0" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is major new version with a lot of changes under the hood as well
+as on the API level. Please take a careful look at the mentioned
+before updating. Please make sure to
+<strong>retrain your models when switching to this version</strong>.</p>
+</div>
+<div class="section" id="forms">
+<h3>Forms<a class="headerlink" href="#forms" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Forms were completely reworked, please follow <a class="reference internal" href="../slotfilling/#slotfilling"><span class="std std-ref">Slot Filling</span></a>
+for instructions how to use them.</li>
+<li><code class="docutils literal notranslate"><span class="pre">FormField</span></code> class and its subclasses were removed,
+overwrite <code class="docutils literal notranslate"><span class="pre">FormAction.slot_mapping()</span></code> method to specify the mapping between
+user input and requested slot in the form
+utilizing helper methods <code class="docutils literal notranslate"><span class="pre">FormAction.from_entity(...)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">FormAction.from_intent(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">FormAction.from_text(...)</span></code></li>
+<li>stories for forms need to be written differently,
+it is recommended to use interactive learning to create form stories</li>
+<li>functionality of <code class="docutils literal notranslate"><span class="pre">FormAction.get_other_slots(...)</span></code> was moved to
+<code class="docutils literal notranslate"><span class="pre">FormAction.extract_other_slots(...)</span></code></li>
+<li>functionality of <code class="docutils literal notranslate"><span class="pre">FormAction.get_requested_slot(...)</span></code> was moved to
+<code class="docutils literal notranslate"><span class="pre">FormAction.extract_requested_slot(...)</span></code></li>
+<li>overwrite <code class="docutils literal notranslate"><span class="pre">FormAction.validate(...)</span></code> method to validate user input against
+the slot requested by the form</li>
+</ul>
+</div>
+</div>
 <div class="section" id="x-to-0-11-0">
 <span id="migration-to-0-11-0"></span><h2>0.10.x to 0.11.0<a class="headerlink" href="#x-to-0-11-0" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">

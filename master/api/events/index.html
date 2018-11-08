@@ -735,7 +735,7 @@ to the latest <code class="docutils literal notranslate"><span class="pre">Turn<
 <div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
         <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
 
-        <span class="n">tracker</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">set_latest_action_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">clear_followup_action</span><span class="p">()</span>
 </pre></div>
 </div>

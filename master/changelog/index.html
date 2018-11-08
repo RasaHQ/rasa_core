@@ -247,6 +247,17 @@ authenticate against</li>
 <li>environment variables specified with <code class="docutils literal notranslate"><span class="pre">${env_variable}</span></code> in a yaml
 configuration file are now replaced with the value of the environment variable</li>
 <li>detailed documentation on how to deploy Rasa with Docker</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">FormPolicy</span></code> to handle form action prediction</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">ActionExecutionRejection</span></code> exception and <code class="docutils literal notranslate"><span class="pre">ActionExecutionRejected</span></code> event</li>
+<li>add default action <code class="docutils literal notranslate"><span class="pre">ActionDeactivateForm()</span></code></li>
+<li>add <code class="docutils literal notranslate"><span class="pre">formbot</span></code> example</li>
+<li>add ability to turn off auto slot filling with entity for each slot in domain.yml</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">InvalidDomain</span></code> exception</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">active_form_...</span></code> to state dictionary</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">active_form</span></code> and <code class="docutils literal notranslate"><span class="pre">latest_action_name</span></code> properties to <code class="docutils literal notranslate"><span class="pre">DialogueStateTracker</span></code></li>
+<li>add <code class="docutils literal notranslate"><span class="pre">Form</span></code> and <code class="docutils literal notranslate"><span class="pre">FormValidation</span></code> events</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">REQUESTED_SLOT</span></code> constant</li>
+<li>add ability to read <code class="docutils literal notranslate"><span class="pre">action_listen</span></code> from stories</li>
 </ul>
 </div>
 <div class="section" id="changed">
@@ -258,6 +269,10 @@ configuration file are now replaced with the value of the environment variable</
 <li>the core container does not load the nlu model by default anymore.
 Instead it can be connected to a nlu server.</li>
 <li>stories are now visualized as <code class="docutils literal notranslate"><span class="pre">.html</span></code> page instead of an image</li>
+<li>move and deduplicate restaurantbot nlu data from <code class="docutils literal notranslate"><span class="pre">franken_data.json</span></code> to <code class="docutils literal notranslate"><span class="pre">nlu_data.md</span></code></li>
+<li>forms were completely reworked, see changelog in <code class="docutils literal notranslate"><span class="pre">rasa_core_sdk</span></code></li>
+<li>state featurization if some form is active changed</li>
+<li><code class="docutils literal notranslate"><span class="pre">Domain</span></code> raises <code class="docutils literal notranslate"><span class="pre">InvalidDomain</span></code> exception</li>
 </ul>
 </div>
 <div class="section" id="removed">
