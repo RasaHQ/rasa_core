@@ -330,14 +330,27 @@ script, or you can attach it in your own code.</p>
 You need to set up a Facebook app and a page.</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>To create the app go to: <a class="reference external" href="https://developers.facebook.com/">https://developers.facebook.com/</a>
-and click on <em>“Add a new app”</em>.</li>
-<li>go onto the dashboard for the app and under <em>Products</em>,
-click <em>Add Product</em> and <em>add Messenger</em>. Under the settings for
-Messenger, scroll down to <em>Token Generation</em> and click on the
-link to create a new page for your app.</li>
-<li>Use the collected <code class="docutils literal notranslate"><span class="pre">verify</span></code>, <code class="docutils literal notranslate"><span class="pre">secret</span></code> and <code class="docutils literal notranslate"><span class="pre">access</span> <span class="pre">token</span></code>
-to connect your bot to facebook.</li>
+<li>To create the app head over to
+<a class="reference external" href="https://developers.facebook.com/">Facebook for Developers</a>
+and click on <em>My Apps</em> -&gt; <em>Add New App</em>.</li>
+<li>Go onto the dashboard for the app and under <em>Products</em>,
+find the <em>Messenger</em> section and click <em>Set Up</em>. Scroll down to
+<em>Token Generation</em> and click on the link to create a new page for your
+app.</li>
+<li>Create your page and select it in the dropdown menu for the
+<em>Token Generation</em>. The shown <em>Page Access Token</em> is the
+<code class="docutils literal notranslate"><span class="pre">page-access-token</span></code> needed later on.</li>
+<li>Locate the <em>App Secret</em> in the app dashboard under <em>Settings</em> -&gt; <em>Basic</em>.
+This will be your <code class="docutils literal notranslate"><span class="pre">secret</span></code>.</li>
+<li>Use the collected <code class="docutils literal notranslate"><span class="pre">secret</span></code> and <code class="docutils literal notranslate"><span class="pre">page-access-token</span></code> in your
+<code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code>, and add a field called <code class="docutils literal notranslate"><span class="pre">verify</span></code> containing
+a string of your choice. Start <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code> with the
+<code class="docutils literal notranslate"><span class="pre">--credentials</span> <span class="pre">credentials.yml</span></code> option.</li>
+<li>Set up a <em>Webhook</em> and select at least the <em>messaging</em> and
+<em>messaging_postback</em> subscriptions. Insert your callback URL which will
+look like <code class="docutils literal notranslate"><span class="pre">https://&lt;YOUR_HOST&gt;/webhooks/facebook/webhook</span></code>. Insert the
+<em>Verify Token</em> which has to match the <code class="docutils literal notranslate"><span class="pre">verify</span></code>
+entry in your <code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code>.</li>
 </ol>
 </div></blockquote>
 <p>For more detailed steps, visit the
