@@ -219,29 +219,46 @@ combined, take a look at the section on
 <p>You can evaluate your trained model on a set of test stories
 by using the evaluate script:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate -d models/dialogue <span class="se">\</span>
-  -s test_stories.md -o matrix.pdf --failed failed_stories.md
+  -s test_stories.md -o results
 </pre></div>
 </div>
-<p>This will print the failed stories to <code class="docutils literal notranslate"><span class="pre">failed_stories.md</span></code>.
+<p>This will print the failed stories to <code class="docutils literal notranslate"><span class="pre">results/failed_stories.md</span></code>.
 We count any story as <cite>failed</cite> if at least one of the actions
 was predicted incorrectly.</p>
 <p>In addition, this will save a confusion matrix to a file called
-<code class="docutils literal notranslate"><span class="pre">matrix.pdf</span></code>. The confusion matrix shows, for each action in your
-domain, how often that action was predicted, and how often an
+<code class="docutils literal notranslate"><span class="pre">results/story_confmat.pdf</span></code>. The confusion matrix shows, for each action in
+your domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] {default,compare} ...
-
-evaluates a dialogue model
-
-positional arguments:
-  {default,compare}  mode
-    default          default mode: evaluate a dialogue model
-    compare          compare mode: evaluate multiple dialogue models to
-                     compare policies
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py default [-h] -s STORIES [-m MAX_STORIES] [-d CORE] [-u NLU]
+                           [-o OUTPUT] [--e2e] [--endpoints ENDPOINTS]
+                           [--fail_on_prediction_errors] [-v] [-vv] [--quiet]
 
 optional arguments:
-  -h, --help         show this help message and exit
+  -h, --help            show this help message and exit
+  -s STORIES, --stories STORIES
+                        file or folder containing stories to evaluate on
+  -m MAX_STORIES, --max_stories MAX_STORIES
+                        maximum number of stories to test on
+  -d CORE, --core CORE  core model directory to evaluate
+  -u NLU, --nlu NLU     nlu model to run with the server. None for regex
+                        interpreter
+  -o OUTPUT, --output OUTPUT
+                        output path for the any files created from the
+                        evaluation
+  --e2e, --end-to-end   Run an end-to-end evaluation for combined action and
+                        intent prediction. Requires a story file in end-to-end
+                        format.
+  --endpoints ENDPOINTS
+                        Configuration file for the connectors as a yml file
+  --fail_on_prediction_errors
+                        If a prediction error is encountered, an exception is
+                        thrown. This can be used to validate stories during
+                        tests, e.g. on travis.
+  -v, --verbose         Be verbose. Sets logging level to INFO
+  -vv, --debug          Print lots of debugging statements. Sets logging level
+                        to DEBUG
+  --quiet               Be quiet! Sets logging level to WARNING
 </pre></div>
 </div>
 </div>
@@ -274,7 +291,7 @@ user messages is <code class="docutils literal notranslate"><span class="pre">*<
 </div>
 <p>If you’ve saved these stories under <code class="docutils literal notranslate"><span class="pre">e2e_storied.md</span></code>,
 the full end-to-end evaluation command is this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate -d models/dialogue --nlu models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate default -d models/dialogue --nlu models/nlu/current <span class="se">\</span>
   -s e2e_stories.md --e2e
 </pre></div>
 </div>
@@ -294,14 +311,35 @@ of a project, you do not have a lot of real conversations to use to train
 your bot, so you don’t just want to throw some away to use as a test set.</p>
 <p>Rasa Core has some scripts to help you choose and fine-tune your policy.
 Once you are happy with it, you can then train your final policy on your
-full data set. To do this, split your training data into multiple files
-in a single directory. You can then use the <code class="docutils literal notranslate"><span class="pre">train_paper</span></code> script to
-train multiple policies on the same data. You can choose one of the
-files to be partially excluded. This means that Rasa Core will be
-trained multiple times, with 0, 5, 25, 50, 70, 90, 95, and 100% of
-the stories in that file removed from the training data. By evaluating
-on the full set of stories, you can measure how well Rasa Core is
-predicting the held-out stories.</p>
+full data set. To do this, you first have to train models for your different
+policies. Create two (or more) policy config files of the policies you want to
+compare (containing only one policy each), and then use the <code class="docutils literal notranslate"><span class="pre">compare</span></code> mode of
+the train script to train your models:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.train compare -c policy_config1.yml policy_config2.yml <span class="se">\</span>
+  -d domain.yml -s stories_folder -o comparison_models --runs <span class="m">3</span> --percentages <span class="se">\</span>
+  <span class="m">0</span> <span class="m">5</span> <span class="m">25</span> <span class="m">50</span> <span class="m">70</span> <span class="m">90</span> <span class="m">95</span>
+</pre></div>
+</div>
+<p>For each policy configuration provided, Rasa Core will be trained multiple times
+with 0, 5, 25, 50, 70 and 95% of your training stories excluded from the training
+data. This is done for multiple runs, to ensure consistent results.</p>
+<p>Once this script has finished, you can now use the evaluate script in compare
+mode to evaluate the models you just trained:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate compare -s stories_folder -d comparison_models <span class="se">\</span>
+  -o comparison_results
+</pre></div>
+</div>
+<p>This will evaluate each of the models on the training set, and plot some graphs
+to show you which policy is best.  By evaluating on the full set of stories, you
+can measure how well Rasa Core is predicting the held-out stories.</p>
+<p>If you’re not sure which policies to compare, we’d recommend trying out the
+<code class="docutils literal notranslate"><span class="pre">EmbeddingPolicy</span></code> and the <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> to see which one works better for
+you.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This training process can take a long time, so we’d suggest letting it run
+somewhere in the background where it can’t be interrupted</p>
+</div>
 </div>
 <div class="section" id="evaluating-stories-over-http">
 <h2>Evaluating stories over http<a class="headerlink" href="#evaluating-stories-over-http" title="Permalink to this headline">¶</a></h2>

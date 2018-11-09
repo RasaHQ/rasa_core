@@ -258,6 +258,7 @@ configuration file are now replaced with the value of the environment variable</
 <li>add <code class="docutils literal notranslate"><span class="pre">Form</span></code> and <code class="docutils literal notranslate"><span class="pre">FormValidation</span></code> events</li>
 <li>add <code class="docutils literal notranslate"><span class="pre">REQUESTED_SLOT</span></code> constant</li>
 <li>add ability to read <code class="docutils literal notranslate"><span class="pre">action_listen</span></code> from stories</li>
+<li>added train/eval scripts to compare policies</li>
 </ul>
 </div>
 <div class="section" id="changed">
@@ -273,12 +274,17 @@ Instead it can be connected to a nlu server.</li>
 <li>forms were completely reworked, see changelog in <code class="docutils literal notranslate"><span class="pre">rasa_core_sdk</span></code></li>
 <li>state featurization if some form is active changed</li>
 <li><code class="docutils literal notranslate"><span class="pre">Domain</span></code> raises <code class="docutils literal notranslate"><span class="pre">InvalidDomain</span></code> exception</li>
+<li>interactive learning is now started with rasa_core.train interactive</li>
+<li>passing a policy config file to train a model is now required</li>
+<li>flags for output of evaluate script have been merged to one flag <code class="docutils literal notranslate"><span class="pre">--output</span></code>
+where you provide a folder where any output from the script should be stored</li>
 </ul>
 </div>
 <div class="section" id="removed">
 <h3>Removed<a class="headerlink" href="#removed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>removed graphviz dependency</li>
+<li>policy config related flags in training script (see migration guide)</li>
 </ul>
 </div>
 <div class="section" id="fixed">

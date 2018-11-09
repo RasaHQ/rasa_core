@@ -214,7 +214,7 @@
 training a model on that data.</p>
 <p>You can run training from the command line like in the <a class="reference internal" href="../quickstart/#quickstart"><span class="std std-ref">Quickstart</span></a>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.train -d domain.yml -s data/stories.md <span class="se">\</span>
-  -o models/current/dialogue --epochs <span class="m">200</span>
+  -o models/current/dialogue -c default_config.yml
 </pre></div>
 </div>
 <p>Or by creating an agent and running the train method yourself:</p>
@@ -251,8 +251,8 @@ what happened before.</p>
 <p>One important hyperparameter for Rasa Core policies is the <code class="docutils literal notranslate"><span class="pre">max_history</span></code>.
 This controls how much dialogue history the model looks at to decide which
 action to take next.</p>
-<p>You can set the <code class="docutils literal notranslate"><span class="pre">max_history</span></code> using the training script’s <code class="docutils literal notranslate"><span class="pre">--history</span></code>
-flag or by passing it to your policy’s <code class="docutils literal notranslate"><span class="pre">Featurizer</span></code>.</p>
+<p>You can set the <code class="docutils literal notranslate"><span class="pre">max_history</span></code> by passing it to your policy’s <code class="docutils literal notranslate"><span class="pre">Featurizer</span></code>
+in the policy configuration yaml file.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Only the <code class="docutils literal notranslate"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> uses a max history,
@@ -280,20 +280,35 @@ slot. Slot information is always available for every featurizer.</p>
 </div>
 <div class="section" id="training-script-options">
 <h3>Training Script Options<a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] {default,compare,interactive} ...
-
-trains a dialogue model
-
-positional arguments:
-  {default,compare,interactive}
-                        mode
-    default             default mode: train a dialogue model
-    compare             compare mode: train multiple dialogue models to
-                        compare policies
-    interactive         teach the bot with interactive learning
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py default [-h] [-o OUT] -d DOMAIN [--augmentation AUGMENTATION]
+                        -c [CONFIG [CONFIG ...]] [--dump_stories]
+                        [--debug_plots] (-s STORIES | --url URL | --core CORE)
+                        [-v] [-vv] [--quiet]
 
 optional arguments:
   -h, --help            show this help message and exit
+  -o OUT, --out OUT     directory to persist the trained model in
+  -d DOMAIN, --domain DOMAIN
+                        domain specification yaml file
+  --augmentation AUGMENTATION
+                        how much data augmentation to use during training
+  -c [CONFIG [CONFIG ...]], --config [CONFIG [CONFIG ...]]
+                        Policy specification yaml file.
+  --dump_stories        If enabled, save flattened stories to a file
+  --debug_plots         If enabled, will create plots showing checkpoints and
+                        their connections between story blocks in a file
+                        called `story_blocks_connections.pdf`.
+  -s STORIES, --stories STORIES
+                        file or folder containing the training stories
+  --url URL             If supplied, downloads a story file from a URL and
+                        trains on it. Fetches the data by sending a GET
+                        request to the supplied URL.
+  --core CORE           path to load a pre-trained model instead of training
+                        (for interactive mode only)
+  -v, --verbose         Be verbose. Sets logging level to INFO
+  -vv, --debug          Print lots of debugging statements. Sets logging level
+                        to DEBUG
+  --quiet               Be quiet! Sets logging level to WARNING
 </pre></div>
 </div>
 </div>
@@ -308,11 +323,16 @@ every turn, the policy which predicts the next action with the
 highest confidence will be used.</p>
 <div class="section" id="configuring-polices-using-a-configuration-file">
 <span id="policy-file"></span><h3>Configuring polices using a configuration file<a class="headerlink" href="#configuring-polices-using-a-configuration-file" title="Permalink to this headline">¶</a></h3>
-<p>You can set the policies you would like the Core model to use in a YAML file.</p>
+<p>If you are using the training script, you must set the policies you would like
+the Core model to use in a YAML file.</p>
 <p>For example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;KerasPolicy&quot;</span>
-    <span class="l l-Scalar l-Scalar-Plain">max_history</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+    <span class="l l-Scalar l-Scalar-Plain">featurizer</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">MaxHistoryTrackerFeaturizer</span>
+      <span class="l l-Scalar l-Scalar-Plain">max_history</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+      <span class="l l-Scalar l-Scalar-Plain">state_featurizer</span><span class="p p-Indicator">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">BinarySingleStateFeaturizer</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;MemoizationPolicy&quot;</span>
     <span class="l l-Scalar l-Scalar-Plain">max_history</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;FallbackPolicy&quot;</span>
@@ -324,9 +344,8 @@ highest confidence will be used.</p>
 </pre></div>
 </div>
 <p>Pass the YAML file’s name to the train script using the <code class="docutils literal notranslate"><span class="pre">--config</span></code>
-argument (or just <code class="docutils literal notranslate"><span class="pre">-c</span></code>). If no config.yaml is given, the policies
-default to
-<code class="docutils literal notranslate"><span class="pre">[KerasPolicy(),</span> <span class="pre">MemoizationPolicy(),</span> <span class="pre">FallbackPolicy(),</span> <span class="pre">FormPolicy()]</span></code>.</p>
+argument (or just <code class="docutils literal notranslate"><span class="pre">-c</span></code>). There is a default config file you can use in the
+github repository called <code class="docutils literal notranslate"><span class="pre">default_config.yml</span></code></p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Policies specified higher in the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> will take
@@ -427,11 +446,6 @@ The default architecture is based on an LSTM, but you can override the
               <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
 
-        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Parameter `rnn_size` is updated with </span><span class="si">{}</span><span class="s2">&quot;</span>
-                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rnn_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rnn_size&#39;</span><span class="p">)</span>
-
         <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize_for_training</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span>
                                                     <span class="n">domain</span><span class="p">,</span>
                                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -447,17 +461,19 @@ The default architecture is based on an LSTM, but you can override the
                     <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_architecture</span><span class="p">(</span><span class="n">shuffled_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
                                                          <span class="n">shuffled_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
-                <span class="n">validation_split</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;validation_split&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fitting model with </span><span class="si">{}</span><span class="s2"> total samples and a &quot;</span>
                             <span class="s2">&quot;validation split of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                 <span class="n">training_data</span><span class="o">.</span><span class="n">num_examples</span><span class="p">(),</span>
-                                <span class="n">validation_split</span><span class="p">))</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">validation_split</span><span class="p">))</span>
                 <span class="c1"># filter out kwargs that cannot be passed to fit</span>
                 <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_valid_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">shuffled_X</span><span class="p">,</span> <span class="n">shuffled_y</span><span class="p">,</span>
+                               <span class="n">epochs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs</span><span class="p">,</span>
+                               <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">params</span><span class="p">)</span>
                 <span class="c1"># the default parameter for epochs in keras fit is 1</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;epochs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;epochs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done fitting keras policy model&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
