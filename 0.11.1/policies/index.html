@@ -270,68 +270,20 @@ you should store it as a slot. Slot information is always available for every fe
 </div>
 <div class="section" id="training-script-options">
 <h3>Training Script Options<a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] (-s STORIES | --url URL | --core CORE) [-o OUT]
-                [-d DOMAIN] [-u NLU] [--history HISTORY] [--epochs EPOCHS]
-                [--validation_split VALIDATION_SPLIT]
-                [--batch_size BATCH_SIZE] [--interactive]
-                [--skip_visualization] [--finetune]
-                [--augmentation AUGMENTATION] [--debug_plots] [--dump_stories]
-                [--endpoints ENDPOINTS] [--nlu_threshold NLU_THRESHOLD]
-                [--core_threshold CORE_THRESHOLD]
-                [--fallback_action_name FALLBACK_ACTION_NAME] [-c CONFIG] [-v]
-                [-vv] [--quiet]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] {default,compare,interactive} ...
 
 trains a dialogue model
 
+positional arguments:
+  {default,compare,interactive}
+                        mode
+    default             default mode: train a dialogue model
+    compare             compare mode: train multiple dialogue models to
+                        compare policies
+    interactive         teach the bot with interactive learning
+
 optional arguments:
   -h, --help            show this help message and exit
-  -s STORIES, --stories STORIES
-                        file or folder containing the training stories
-  --url URL             If supplied, downloads a story file from a URL and
-                        trains on it. Fetches the data by sending a GET
-                        request to the supplied URL.
-  --core CORE           path to load a pre-trained model instead of training
-                        (for interactive mode only)
-  -o OUT, --out OUT     directory to persist the trained model in
-  -d DOMAIN, --domain DOMAIN
-                        domain specification yaml file
-  -u NLU, --nlu NLU     trained nlu model
-  --history HISTORY     max history to use of a story
-  --epochs EPOCHS       number of epochs to train the model
-  --validation_split VALIDATION_SPLIT
-                        Percentage of training samples used for validation,
-                        0.1 by default
-  --batch_size BATCH_SIZE
-                        number of training samples to put into one training
-                        batch
-  --interactive         enable interactive training
-  --skip_visualization  disables plotting the visualization during interactive
-                        learning
-  --finetune            retrain the model immediately based on feedback.
-  --augmentation AUGMENTATION
-                        how much data augmentation to use during training
-  --debug_plots         If enabled, will create plots showing checkpoints and
-                        their connections between story blocks in a file
-                        called `story_blocks_connections.pdf`.
-  --dump_stories        If enabled, save flattened stories to a file
-  --endpoints ENDPOINTS
-                        Configuration file for the connectors as a yml file
-  --nlu_threshold NLU_THRESHOLD
-                        If NLU prediction confidence is below threshold,
-                        fallback will get triggered.
-  --core_threshold CORE_THRESHOLD
-                        If Core action prediction confidence is below the
-                        threshold a fallback action will get triggered
-  --fallback_action_name FALLBACK_ACTION_NAME
-                        When a fallback is triggered (e.g. because the ML
-                        prediction is of low confidence) this is the name of
-                        the action that will get triggered instead.
-  -c CONFIG, --config CONFIG
-                        Policy specification yaml file.
-  -v, --verbose         Be verbose. Sets logging level to INFO
-  -vv, --debug          Print lots of debugging statements. Sets logging level
-                        to DEBUG
-  --quiet               Be quiet! Sets logging level to WARNING
 </pre></div>
 </div>
 </div>
