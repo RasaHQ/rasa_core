@@ -725,8 +725,9 @@
 
 <div class="viewcode-block" id="Agent.handle_channels"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_channels">[docs]</a>    <span class="k">def</span> <span class="nf">handle_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span>
                         <span class="n">http_port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DEFAULT_SERVER_PORT</span><span class="p">,</span>
-                        <span class="n">serve_forever</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="c1"># type: (List[InputChannel], int, bool) -&gt; WSGIServer</span>
+                        <span class="n">serve_forever</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">route</span><span class="o">=</span><span class="s2">&quot;/webhooks/&quot;</span><span class="p">):</span>
+        <span class="c1"># type: (List[InputChannel], int, bool, Text) -&gt; WSGIServer</span>
         <span class="sd">&quot;&quot;&quot;Start a webserver attaching the input channels and handling msgs.</span>
 
 <span class="sd">        If ``serve_forever`` is set to ``True``, this call will be blocking.</span>
@@ -738,7 +739,7 @@
         <span class="n">rasa_core</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span>
                                             <span class="n">app</span><span class="p">,</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">handle_message</span><span class="p">,</span>
-                                            <span class="n">route</span><span class="o">=</span><span class="s2">&quot;/webhooks/&quot;</span><span class="p">)</span>
+                                            <span class="n">route</span><span class="o">=</span><span class="n">route</span><span class="p">)</span>
 
         <span class="n">http_server</span> <span class="o">=</span> <span class="n">WSGIServer</span><span class="p">((</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">http_port</span><span class="p">),</span> <span class="n">app</span><span class="p">)</span>
         <span class="n">http_server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>

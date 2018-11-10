@@ -261,7 +261,7 @@ getting the next action, and handling a channel.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_channels">
-<code class="descname">handle_channels</code><span class="sig-paren">(</span><em>channels</em>, <em>http_port=5005</em>, <em>serve_forever=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channels" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_channels</code><span class="sig-paren">(</span><em>channels</em>, <em>http_port=5005</em>, <em>serve_forever=True</em>, <em>route=u'/webhooks/'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start a webserver attaching the input channels and handling msgs.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">serve_forever</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, this call will be blocking.
 Otherwise the webserver will be started, and the method will
