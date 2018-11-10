@@ -364,7 +364,13 @@ These placeholders are then replaced by the value of the environment variable.</
 regularly queries for zipped Rasa Core models:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">models</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">http://my-server.com/models/default_core@latest</span>
+  <span class="l l-Scalar l-Scalar-Plain">wait_time_between_pulls</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">10</span>   <span class="c1"># [optional](default: 100)</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to pull the model just once from the server, set
+<code class="docutils literal notranslate"><span class="pre">wait_time_between_pulls</span></code> to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -376,7 +382,7 @@ only download a new model if this model hash changed.</p>
 header that contains the current model hash. If your model server can
 provide a model with a different hash from the one you sent, it should send it
 in as a zip file with an <code class="docutils literal notranslate"><span class="pre">ETag</span></code> header containing the new hash. If not, Rasa
-Core expects an empty response with a <code class="docutils literal notranslate"><span class="pre">204</span></code> status code.</p>
+Core expects an empty response with a <code class="docutils literal notranslate"><span class="pre">204</span></code> or <code class="docutils literal notranslate"><span class="pre">304</span></code> status code.</p>
 <p>An example request Rasa Core might make to your model server looks like this:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl --header <span class="s2">&quot;If-None-Match: d41d8cd98f00b204e9800998ecf8427e&quot;</span> http://my-server.com/models/default_core@latest
 </pre></div>
@@ -415,7 +421,7 @@ please see <a class="reference internal" href="../brokers/#brokers"><span class=
 <div class="section" id="endpoints">
 <h2><a class="toc-backref" href="#id10">Endpoints</a><a class="headerlink" href="#endpoints" title="Permalink to this headline">¶</a></h2>
 <p>Documentation of the server API as
-<a class="reference download internal" download="" href="../_downloads/354456492a23a9a9d4cf3a2cb466383c/server.yml"><code class="xref download docutils literal notranslate"><span class="pre">OpenAPI</span> <span class="pre">Spec</span></code></a>.</p>
+<a class="reference download internal" download="" href="../_downloads/52d81a89e802289e4fe1657f6d970ab2/server.yml"><code class="xref download docutils literal notranslate"><span class="pre">OpenAPI</span> <span class="pre">Spec</span></code></a>.</p>
 
 
 <body>
