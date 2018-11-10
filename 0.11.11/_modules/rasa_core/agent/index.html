@@ -253,7 +253,6 @@
                      <span class="n">tracker_store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[TrackerStore]</span>
                      <span class="n">action_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[EndpointConfig]</span>
                      <span class="n">model_server</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[EndpointConfig]</span>
-                     <span class="n">wait_time_between_pulls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[int]</span>
                      <span class="p">):</span>
     <span class="c1"># type: (...) -&gt; Agent</span>
     <span class="sd">&quot;&quot;&quot;Load a persisted model from a server.&quot;&quot;&quot;</span>
@@ -263,10 +262,14 @@
                   <span class="n">tracker_store</span><span class="o">=</span><span class="n">tracker_store</span><span class="p">,</span>
                   <span class="n">action_endpoint</span><span class="o">=</span><span class="n">action_endpoint</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">wait_time_between_pulls</span><span class="p">:</span>
+    <span class="n">wait_time_between_pulls</span> <span class="o">=</span> <span class="n">model_server</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wait_time_between_pulls&#39;</span><span class="p">,</span>
+                                                      <span class="mi">100</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">wait_time_between_pulls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
+        <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span>
+         <span class="n">wait_time_between_pulls</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
         <span class="c1"># continuously pull the model every `wait_time_between_pulls` seconds</span>
         <span class="n">start_model_pulling_in_worker</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span>
-                                      <span class="n">wait_time_between_pulls</span><span class="p">,</span>
+                                      <span class="nb">int</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">),</span>
                                       <span class="n">agent</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># just pull the model once</span>
