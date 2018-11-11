@@ -207,69 +207,75 @@
 
     <p class="scv-banner"><a href="../../0.11.12/connectors/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.11.12.</a></p>
 <div class="section" id="chat-voice-platforms">
-<span id="connectors"></span><h1><a class="toc-backref" href="#id20">Chat &amp; Voice platforms</a><a class="headerlink" href="#chat-voice-platforms" title="Permalink to this headline">¶</a></h1>
+<span id="connectors"></span><h1><a class="toc-backref" href="#id23">Chat &amp; Voice platforms</a><a class="headerlink" href="#chat-voice-platforms" title="Permalink to this headline">¶</a></h1>
 <p>Here’s how to connect your conversational AI to the outside world.</p>
 <p>See <a class="reference internal" href="#custom-channels"><span class="std std-ref">here</span></a> for details on how to build a
 custom input channel.</p>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#chat-voice-platforms" id="id20">Chat &amp; Voice platforms</a><ul>
-<li><a class="reference internal" href="#managing-credentials" id="id21">Managing Credentials</a></li>
-<li><a class="reference internal" href="#facebook-setup" id="id22">Facebook Setup</a><ul>
-<li><a class="reference internal" href="#getting-credentials" id="id23">Getting Credentials</a></li>
-<li><a class="reference internal" href="#using-the-run-script" id="id24">Using the run script</a></li>
-<li><a class="reference internal" href="#directly-using-python" id="id25">Directly using python</a></li>
+<li><a class="reference internal" href="#chat-voice-platforms" id="id23">Chat &amp; Voice platforms</a><ul>
+<li><a class="reference internal" href="#managing-credentials" id="id24">Managing Credentials</a></li>
+<li><a class="reference internal" href="#facebook-setup" id="id25">Facebook Setup</a><ul>
+<li><a class="reference internal" href="#getting-credentials" id="id26">Getting Credentials</a></li>
+<li><a class="reference internal" href="#using-the-run-script" id="id27">Using the run script</a></li>
+<li><a class="reference internal" href="#directly-using-python" id="id28">Directly using python</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#slack-setup" id="id26">Slack Setup</a><ul>
-<li><a class="reference internal" href="#id1" id="id27">Getting Credentials</a></li>
-<li><a class="reference internal" href="#using-run-script" id="id28">Using run script</a></li>
-<li><a class="reference internal" href="#id2" id="id29">Directly using python</a></li>
+<li><a class="reference internal" href="#cisco-webex-teams-setup" id="id29">Cisco Webex Teams Setup</a><ul>
+<li><a class="reference internal" href="#id1" id="id30">Getting Credentials</a></li>
+<li><a class="reference internal" href="#using-run-script" id="id31">Using run script</a></li>
+<li><a class="reference internal" href="#id2" id="id32">Directly using python</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#mattermost-setup" id="id30">Mattermost Setup</a><ul>
-<li><a class="reference internal" href="#id3" id="id31">Getting Credentials</a></li>
-<li><a class="reference internal" href="#id4" id="id32">Using run script</a></li>
-<li><a class="reference internal" href="#id5" id="id33">Directly using python</a></li>
+<li><a class="reference internal" href="#slack-setup" id="id33">Slack Setup</a><ul>
+<li><a class="reference internal" href="#id3" id="id34">Getting Credentials</a></li>
+<li><a class="reference internal" href="#id4" id="id35">Using run script</a></li>
+<li><a class="reference internal" href="#id5" id="id36">Directly using python</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#telegram-setup" id="id34">Telegram Setup</a><ul>
-<li><a class="reference internal" href="#id6" id="id35">Getting Credentials</a></li>
-<li><a class="reference internal" href="#id7" id="id36">Using run script</a></li>
-<li><a class="reference internal" href="#id8" id="id37">Directly using python</a></li>
+<li><a class="reference internal" href="#mattermost-setup" id="id37">Mattermost Setup</a><ul>
+<li><a class="reference internal" href="#id6" id="id38">Getting Credentials</a></li>
+<li><a class="reference internal" href="#id7" id="id39">Using run script</a></li>
+<li><a class="reference internal" href="#id8" id="id40">Directly using python</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#twilio-setup" id="id38">Twilio Setup</a><ul>
-<li><a class="reference internal" href="#id9" id="id39">Getting Credentials</a></li>
-<li><a class="reference internal" href="#id10" id="id40">Using run script</a></li>
-<li><a class="reference internal" href="#id11" id="id41">Directly using python</a></li>
+<li><a class="reference internal" href="#telegram-setup" id="id41">Telegram Setup</a><ul>
+<li><a class="reference internal" href="#id9" id="id42">Getting Credentials</a></li>
+<li><a class="reference internal" href="#id10" id="id43">Using run script</a></li>
+<li><a class="reference internal" href="#id11" id="id44">Directly using python</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#rocketchat-setup" id="id42">RocketChat Setup</a><ul>
-<li><a class="reference internal" href="#id12" id="id43">Getting Credentials</a></li>
-<li><a class="reference internal" href="#id13" id="id44">Using run script</a></li>
-<li><a class="reference internal" href="#id14" id="id45">Directly using python</a></li>
+<li><a class="reference internal" href="#twilio-setup" id="id45">Twilio Setup</a><ul>
+<li><a class="reference internal" href="#id12" id="id46">Getting Credentials</a></li>
+<li><a class="reference internal" href="#id13" id="id47">Using run script</a></li>
+<li><a class="reference internal" href="#id14" id="id48">Directly using python</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#microsoft-bot-framework-setup" id="id46">Microsoft Bot Framework Setup</a><ul>
-<li><a class="reference internal" href="#id15" id="id47">Using run script</a></li>
-<li><a class="reference internal" href="#id16" id="id48">Directly using python</a></li>
+<li><a class="reference internal" href="#rocketchat-setup" id="id49">RocketChat Setup</a><ul>
+<li><a class="reference internal" href="#id15" id="id50">Getting Credentials</a></li>
+<li><a class="reference internal" href="#id16" id="id51">Using run script</a></li>
+<li><a class="reference internal" href="#id17" id="id52">Directly using python</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#socketio-setup" id="id49">SocketIO Setup</a><ul>
-<li><a class="reference internal" href="#id17" id="id50">Using run script</a></li>
-<li><a class="reference internal" href="#id18" id="id51">Directly using python</a></li>
+<li><a class="reference internal" href="#microsoft-bot-framework-setup" id="id53">Microsoft Bot Framework Setup</a><ul>
+<li><a class="reference internal" href="#id18" id="id54">Using run script</a></li>
+<li><a class="reference internal" href="#id19" id="id55">Directly using python</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#using-ngrok-for-local-testing" id="id52">Using Ngrok For Local Testing</a></li>
-<li><a class="reference internal" href="#rest-channels" id="id53">REST Channels</a><ul>
-<li><a class="reference internal" href="#restinput" id="id54">RestInput</a></li>
-<li><a class="reference internal" href="#callbackinput" id="id55">CallbackInput</a></li>
+<li><a class="reference internal" href="#socketio-setup" id="id56">SocketIO Setup</a><ul>
+<li><a class="reference internal" href="#id20" id="id57">Using run script</a></li>
+<li><a class="reference internal" href="#id21" id="id58">Directly using python</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#creating-a-new-channel" id="id56">Creating a new Channel</a></li>
-<li><a class="reference internal" href="#have-questions-or-feedback" id="id57">Have questions or feedback?</a></li>
+<li><a class="reference internal" href="#using-ngrok-for-local-testing" id="id59">Using Ngrok For Local Testing</a></li>
+<li><a class="reference internal" href="#rest-channels" id="id60">REST Channels</a><ul>
+<li><a class="reference internal" href="#restinput" id="id61">RestInput</a></li>
+<li><a class="reference internal" href="#callbackinput" id="id62">CallbackInput</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#creating-a-new-channel" id="id63">Creating a new Channel</a></li>
+<li><a class="reference internal" href="#have-questions-or-feedback" id="id64">Have questions or feedback?</a></li>
 </ul>
 </li>
 </ul>
@@ -282,7 +288,7 @@ you want is missing, this is a great place to start contributing!</p>
 will need to use <a class="reference internal" href="#ngrok">ngrok</a>. This gives your machine a domain name
 and so that facebook, slack, etc. know where to send messages.</p>
 <div class="section" id="managing-credentials">
-<h2><a class="toc-backref" href="#id21">Managing Credentials</a><a class="headerlink" href="#managing-credentials" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id24">Managing Credentials</a><a class="headerlink" href="#managing-credentials" title="Permalink to this headline">¶</a></h2>
 <p>To connect to most channels, you will need to add some credentials
 (e.g. an API token). Rasa Core will read these properties from a
 credentials file in yaml format, here is an example containing most
@@ -311,6 +317,10 @@ channels:</p>
   <span class="n">verify</span><span class="p">:</span> <span class="s2">&quot;rasa-bot&quot;</span>
   <span class="n">secret</span><span class="p">:</span> <span class="s2">&quot;3e34709d01ea89032asdebfe5a74518&quot;</span>
   <span class="n">page</span><span class="o">-</span><span class="n">access</span><span class="o">-</span><span class="n">token</span><span class="p">:</span> <span class="s2">&quot;EAAbHPa7H9rEBAAuFk4Q3gPKbDedQnx4djJJ1JmQ7CAqO4iJKrQcNT0wtD&quot;</span>
+
+<span class="n">webexteams</span><span class="p">:</span>
+  <span class="n">access_token</span><span class="p">:</span> <span class="s2">&quot;ADD-YOUR-BOT-ACCESS-TOKEN&quot;</span>
+  <span class="n">room</span><span class="p">:</span> <span class="s2">&quot;YOUR-WEBEXTEAMS-ROOM-ID&quot;</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -320,13 +330,13 @@ your <code class="docutils literal notranslate"><span class="pre">credentials.ym
 </div>
 </div>
 <div class="section" id="facebook-setup">
-<span id="facebook-connector"></span><h2><a class="toc-backref" href="#id22">Facebook Setup</a><a class="headerlink" href="#facebook-setup" title="Permalink to this headline">¶</a></h2>
+<span id="facebook-connector"></span><h2><a class="toc-backref" href="#id25">Facebook Setup</a><a class="headerlink" href="#facebook-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials to connect to the
 Facebook Messenger. Once you have them you can
 <strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
 script, or you can attach it in your own code.</p>
 <div class="section" id="getting-credentials">
-<h3><a class="toc-backref" href="#id23">Getting Credentials</a><a class="headerlink" href="#getting-credentials" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id26">Getting Credentials</a><a class="headerlink" href="#getting-credentials" title="Permalink to this headline">¶</a></h3>
 <p><strong>How to get the FB credentials:</strong>
 You need to set up a Facebook app and a page.</p>
 <blockquote>
@@ -358,7 +368,7 @@ entry in your <code class="docutils literal notranslate"><span class="pre">crede
 <a class="reference external" href="https://developers.facebook.com/docs/graph-api/webhooks">messenger docs</a>.</p>
 </div>
 <div class="section" id="using-the-run-script">
-<h3><a class="toc-backref" href="#id24">Using the run script</a><a class="headerlink" href="#using-the-run-script" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id27">Using the run script</a><a class="headerlink" href="#using-the-run-script" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to facebook using the run script, e.g. using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
     --port <span class="m">5002</span> --credentials credentials.yml
@@ -377,7 +387,7 @@ the host and port with the appropriate values. This is the URL
 you should add in the configuration of the webhook.</p>
 </div>
 <div class="section" id="directly-using-python">
-<h3><a class="toc-backref" href="#id25">Directly using python</a><a class="headerlink" href="#directly-using-python" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id28">Directly using python</a><a class="headerlink" href="#directly-using-python" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal notranslate"><span class="pre">FacebookInput</span></code> instance provides a flask blueprint for creating
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
@@ -403,13 +413,82 @@ from your webserver creation logic.</p>
 </div>
 </div>
 </div>
-<div class="section" id="slack-setup">
-<span id="slack-connector"></span><h2><a class="toc-backref" href="#id26">Slack Setup</a><a class="headerlink" href="#slack-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cisco-webex-teams-setup">
+<span id="webexteams-connector"></span><h2><a class="toc-backref" href="#id29">Cisco Webex Teams Setup</a><a class="headerlink" href="#cisco-webex-teams-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials, once you have them you can
 <strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
 script, or you can attach it in your own code.</p>
 <div class="section" id="id1">
-<h3><a class="toc-backref" href="#id27">Getting Credentials</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id30">Getting Credentials</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p><strong>How to get the Cisco Webex Teams credentials:</strong></p>
+<p>You need to set up a bot. Please visit below link to create a bot
+<a class="reference external" href="https://developer.webex.com/authentication.html">Webex Authentication</a>.</p>
+<p>After you have created the bot through Cisco Webex Teams, you need to create a
+room in Cisco Webex Teams. Then add the bot in the room the same way you would
+add a person in the room.</p>
+<p>You need to note down the room ID for the room you created. This room ID will be
+used in <code class="docutils literal notranslate"><span class="pre">room</span></code> variable in the <code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code> file.</p>
+<p>Please follow this link below to find the room ID
+<code class="docutils literal notranslate"><span class="pre">https://developer.webex.com/endpoint-rooms-get.html</span></code></p>
+</div>
+<div class="section" id="using-run-script">
+<h3><a class="toc-backref" href="#id31">Using run script</a><a class="headerlink" href="#using-run-script" title="Permalink to this headline">¶</a></h3>
+<p>If you want to connect to the <code class="docutils literal notranslate"><span class="pre">webexteams</span></code> input channel using the run
+script, e.g. using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+    --port <span class="m">5002</span> --credentials credentials.yml
+</pre></div>
+</div>
+<p>you need to supply a <code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code> with the following content:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">webexteams</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">access_token</span><span class="p p-Indicator">:</span> <span class="s">&quot;YOUR-BOT-ACCESS-TOKEN&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">room</span><span class="p p-Indicator">:</span> <span class="s">&quot;YOUR-CISCOWEBEXTEAMS-ROOM-ID&quot;</span>
+</pre></div>
+</div>
+<p>The endpoint for receiving Cisco Webex Teams messages is
+<code class="docutils literal notranslate"><span class="pre">http://localhost:5005/webhooks/webexteams/webhook</span></code>, replacing
+the host and port with the appropriate values. This is the URL
+you should add in the OAuth &amp; Permissions section.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you do not set the <code class="docutils literal notranslate"><span class="pre">room</span></code> keyword
+argument, messages will by delivered back to
+the user who sent them.</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h3><a class="toc-backref" href="#id32">Directly using python</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">WebexTeamsInput</span></code> instance provides a flask blueprint for creating
+a webserver. This lets you separate the exact endpoints and implementation
+from your webserver creation logic.</p>
+<p>Code to create a WebexTeams-compatible webserver looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">rasa_core.channels.webexteams</span> <span class="k">import</span> <span class="n">WebexTeamsInput</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+
+    <span class="c1"># load your trained agent</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
+
+    <span class="n">input_channel</span> <span class="o">=</span> <span class="n">WebexTeamsInput</span><span class="p">(</span>
+            <span class="n">access_token</span><span class="o">=</span><span class="s2">&quot;YOUR_ACCESS_TOKEN&quot;</span><span class="p">,</span>
+            <span class="c1"># this is the `bot access token`</span>
+            <span class="n">room</span><span class="o">=</span><span class="s2">&quot;YOUR_WEBEX_ROOM&quot;</span>
+            <span class="c1"># the name of your channel to which the bot posts (optional)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># set serve_forever=True if you want to keep the server running</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_channels</span><span class="p">([</span><span class="n">input_channel</span><span class="p">],</span> <span class="mi">5004</span><span class="p">,</span> <span class="n">serve_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="slack-setup">
+<span id="slack-connector"></span><h2><a class="toc-backref" href="#id33">Slack Setup</a><a class="headerlink" href="#slack-setup" title="Permalink to this headline">¶</a></h2>
+<p>You first need to retrieve some credentials, once you have them you can
+<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
+script, or you can attach it in your own code.</p>
+<div class="section" id="id3">
+<h3><a class="toc-backref" href="#id34">Getting Credentials</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p><strong>How to get the Slack credentials:</strong> You need to set up a Slack app.</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -428,8 +507,8 @@ This can be a channel, an app or an individual person</li>
 <p>For more detailed steps, visit the
 <a class="reference external" href="https://api.slack.com/incoming-webhooks">slack api docs</a>.</p>
 </div>
-<div class="section" id="using-run-script">
-<h3><a class="toc-backref" href="#id28">Using run script</a><a class="headerlink" href="#using-run-script" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3><a class="toc-backref" href="#id35">Using run script</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the slack input channel using the run
 script, e.g. using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
@@ -453,8 +532,8 @@ argument, messages will by delivered back to
 the user who sent them.</p>
 </div>
 </div>
-<div class="section" id="id2">
-<h3><a class="toc-backref" href="#id29">Directly using python</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3><a class="toc-backref" href="#id36">Directly using python</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal notranslate"><span class="pre">SlackInput</span></code> instance provides a flask blueprint for creating
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
@@ -480,12 +559,12 @@ from your webserver creation logic.</p>
 </div>
 </div>
 <div class="section" id="mattermost-setup">
-<span id="mattermost-connector"></span><h2><a class="toc-backref" href="#id30">Mattermost Setup</a><a class="headerlink" href="#mattermost-setup" title="Permalink to this headline">¶</a></h2>
+<span id="mattermost-connector"></span><h2><a class="toc-backref" href="#id37">Mattermost Setup</a><a class="headerlink" href="#mattermost-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials, once you have them you can
 <strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
 script, or you can attach it in your own code.</p>
-<div class="section" id="id3">
-<h3><a class="toc-backref" href="#id31">Getting Credentials</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3><a class="toc-backref" href="#id38">Getting Credentials</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p><strong>How to setup the outgoing webhook:</strong></p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -506,8 +585,8 @@ have your webhook running in core or your public address, e.g.
 <p>For more detailed steps, visit the
 <a class="reference external" href="https://docs.mattermost.com/guides/developer.html">mattermost docs at</a>.</p>
 </div>
-<div class="section" id="id4">
-<h3><a class="toc-backref" href="#id32">Using run script</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3><a class="toc-backref" href="#id39">Using run script</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the mattermost input channel using the
 run script, e.g. using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
@@ -523,8 +602,8 @@ run script, e.g. using:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id5">
-<h3><a class="toc-backref" href="#id33">Directly using python</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3><a class="toc-backref" href="#id40">Directly using python</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal notranslate"><span class="pre">MattermostInput</span></code> instance provides a flask blueprint for creating
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
@@ -559,12 +638,12 @@ add in the mattermost outgoing webhook.</p>
 </div>
 </div>
 <div class="section" id="telegram-setup">
-<span id="telegram-connector"></span><h2><a class="toc-backref" href="#id34">Telegram Setup</a><a class="headerlink" href="#telegram-setup" title="Permalink to this headline">¶</a></h2>
+<span id="telegram-connector"></span><h2><a class="toc-backref" href="#id41">Telegram Setup</a><a class="headerlink" href="#telegram-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials, once you have them you can
 <strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
 script, or you can attach it in your own code.</p>
-<div class="section" id="id6">
-<h3><a class="toc-backref" href="#id35">Getting Credentials</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3><a class="toc-backref" href="#id42">Getting Credentials</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <p><strong>How to get the Telegram credentials:</strong>
 You need to set up a Telegram bot.</p>
 <blockquote>
@@ -581,8 +660,8 @@ will only listen when the message is started with <em>/bot</em></li>
 <p>For more information on the Telegram HTTP API, go to
 <a class="reference external" href="https://core.telegram.org/bots/api">https://core.telegram.org/bots/api</a></p>
 </div>
-<div class="section" id="id7">
-<h3><a class="toc-backref" href="#id36">Using run script</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3><a class="toc-backref" href="#id43">Using run script</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to telegram using the run script, e.g. using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current
     --port <span class="m">5002</span> --credentials credentials.yml
@@ -596,8 +675,8 @@ will only listen when the message is started with <em>/bot</em></li>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id8">
-<h3><a class="toc-backref" href="#id37">Directly using python</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3><a class="toc-backref" href="#id44">Directly using python</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal notranslate"><span class="pre">TelegramInput</span></code> instance provides a flask blueprint for creating
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
@@ -640,12 +719,12 @@ first to set the webhook.</p>
 </div>
 </div>
 <div class="section" id="twilio-setup">
-<span id="twilio-connector"></span><h2><a class="toc-backref" href="#id38">Twilio Setup</a><a class="headerlink" href="#twilio-setup" title="Permalink to this headline">¶</a></h2>
+<span id="twilio-connector"></span><h2><a class="toc-backref" href="#id45">Twilio Setup</a><a class="headerlink" href="#twilio-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials, once you have them you can
 <strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
 script, or you can attach it in your own code.</p>
-<div class="section" id="id9">
-<h3><a class="toc-backref" href="#id39">Getting Credentials</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3><a class="toc-backref" href="#id46">Getting Credentials</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p><strong>How to get the Twilio credentials:</strong>
 You need to set up a Twilio account.</p>
 <blockquote>
@@ -663,8 +742,8 @@ number you purchased in your credentials yml.</li>
 <p>For more information on the Twilio REST API, go to
 <a class="reference external" href="https://www.twilio.com/docs/iam/api">https://www.twilio.com/docs/iam/api</a></p>
 </div>
-<div class="section" id="id10">
-<h3><a class="toc-backref" href="#id40">Using run script</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3><a class="toc-backref" href="#id47">Using run script</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the twilio input channel using the run
 script, e.g. using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current
@@ -679,8 +758,8 @@ script, e.g. using:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id11">
-<h3><a class="toc-backref" href="#id41">Directly using python</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3><a class="toc-backref" href="#id48">Directly using python</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal notranslate"><span class="pre">TwilioInput</span></code> instance provides a flask blueprint for creating
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
@@ -711,9 +790,9 @@ is <code class="docutils literal notranslate"><span class="pre">/webhooks/twilio
 </div>
 </div>
 <div class="section" id="rocketchat-setup">
-<span id="rocketchat-connector"></span><h2><a class="toc-backref" href="#id42">RocketChat Setup</a><a class="headerlink" href="#rocketchat-setup" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id12">
-<h3><a class="toc-backref" href="#id43">Getting Credentials</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<span id="rocketchat-connector"></span><h2><a class="toc-backref" href="#id49">RocketChat Setup</a><a class="headerlink" href="#rocketchat-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id15">
+<h3><a class="toc-backref" href="#id50">Getting Credentials</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p><strong>How to set up Rocket.Chat:</strong></p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -737,8 +816,8 @@ webhook running, in Core or your public address with
 <p>For more information on the Rocket.Chat Webhooks, go to
 <a class="reference external" href="https://rocket.chat/docs/administrator-guides/integrations/">https://rocket.chat/docs/administrator-guides/integrations/</a></p>
 </div>
-<div class="section" id="id13">
-<h3><a class="toc-backref" href="#id44">Using run script</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3><a class="toc-backref" href="#id51">Using run script</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the rocketchat input channel using the run
 script, e.g. using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current
@@ -753,8 +832,8 @@ script, e.g. using:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id14">
-<h3><a class="toc-backref" href="#id45">Directly using python</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id17">
+<h3><a class="toc-backref" href="#id52">Directly using python</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal notranslate"><span class="pre">RocketChatInput</span></code> instance provides a flask blueprint for creating
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
@@ -786,9 +865,9 @@ RocketChat outgoing webhook.</p>
 </div>
 </div>
 <div class="section" id="microsoft-bot-framework-setup">
-<span id="botframework-connector"></span><h2><a class="toc-backref" href="#id46">Microsoft Bot Framework Setup</a><a class="headerlink" href="#microsoft-bot-framework-setup" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id15">
-<h3><a class="toc-backref" href="#id47">Using run script</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<span id="botframework-connector"></span><h2><a class="toc-backref" href="#id53">Microsoft Bot Framework Setup</a><a class="headerlink" href="#microsoft-bot-framework-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id18">
+<h3><a class="toc-backref" href="#id54">Using run script</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the botframework input channel using the
 run script, e.g. using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
@@ -802,8 +881,8 @@ run script, e.g. using:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id16">
-<h3><a class="toc-backref" href="#id48">Directly using python</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h3><a class="toc-backref" href="#id55">Directly using python</a><a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal notranslate"><span class="pre">BotFrameworkInput</span></code> instance provides a flask blueprint for creating
 a webserver. This lets you seperate the exact endpoints and implementation
 from your webserver creation logic.</p>
@@ -833,12 +912,12 @@ add in your microsoft bot service configuration.</p>
 </div>
 </div>
 <div class="section" id="socketio-setup">
-<span id="socketio-connector"></span><h2><a class="toc-backref" href="#id49">SocketIO Setup</a><a class="headerlink" href="#socketio-setup" title="Permalink to this headline">¶</a></h2>
+<span id="socketio-connector"></span><h2><a class="toc-backref" href="#id56">SocketIO Setup</a><a class="headerlink" href="#socketio-setup" title="Permalink to this headline">¶</a></h2>
 <p>You can <strong>either</strong> attach the input channel running the provided
 <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code> script, or you can attach the channel in your
 own code.</p>
-<div class="section" id="id17">
-<h3><a class="toc-backref" href="#id50">Using run script</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id20">
+<h3><a class="toc-backref" href="#id57">Using run script</a><a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect the socketio input channel using the run
 script, e.g. using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current
@@ -854,8 +933,8 @@ script, e.g. using:</p>
 <p>These two configuration values define the event names used by Rasa Core
 when sending or receiving messages over socket.io.</p>
 </div>
-<div class="section" id="id18">
-<h3><a class="toc-backref" href="#id51">Directly using python</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id21">
+<h3><a class="toc-backref" href="#id58">Directly using python</a><a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
 <p>Code to create a Socket.IO-compatible webserver looks like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">rasa_core.channels.socketio</span> <span class="k">import</span> <span class="n">SocketIOInput</span>
     <span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
@@ -883,7 +962,7 @@ the port. Once started, you should be able to connect to
 </div>
 </div>
 <div class="section" id="using-ngrok-for-local-testing">
-<span id="ngrok"></span><h2><a class="toc-backref" href="#id52">Using Ngrok For Local Testing</a><a class="headerlink" href="#using-ngrok-for-local-testing" title="Permalink to this headline">¶</a></h2>
+<span id="ngrok"></span><h2><a class="toc-backref" href="#id59">Using Ngrok For Local Testing</a><a class="headerlink" href="#using-ngrok-for-local-testing" title="Permalink to this headline">¶</a></h2>
 <p>You can use <a class="reference external" href="https://ngrok.com/">https://ngrok.com/</a> to create a local webhook from your
 machine that is Publicly available on the internet so you can use it
 with applications like Slack, Facebook, etc.</p>
@@ -898,7 +977,7 @@ would then be <a class="reference external" href="https://xxxxxx.ngrok.io/webhoo
 for telegram <a class="reference external" href="https://xxxxxx.ngrok.io/webhooks/telegram/webhook">https://xxxxxx.ngrok.io/webhooks/telegram/webhook</a>, etc.</p>
 </div>
 <div class="section" id="rest-channels">
-<span id="id19"></span><h2><a class="toc-backref" href="#id53">REST Channels</a><a class="headerlink" href="#rest-channels" title="Permalink to this headline">¶</a></h2>
+<span id="id22"></span><h2><a class="toc-backref" href="#id60">REST Channels</a><a class="headerlink" href="#rest-channels" title="Permalink to this headline">¶</a></h2>
 <p>If you want to put a widget on your website so that people can
 talk to your bot, check out these two projects:</p>
 <ul class="simple">
@@ -911,7 +990,7 @@ uses regular HTTP requests.</li>
 <code class="docutils literal notranslate"><span class="pre">CallbackInput</span></code> channels. They will provide you with a URL to post the
 messages to.</p>
 <div class="section" id="restinput">
-<h3><a class="toc-backref" href="#id54">RestInput</a><a class="headerlink" href="#restinput" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id61">RestInput</a><a class="headerlink" href="#restinput" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">rest</span></code> channel, will provide you with a REST endpoint to post messages
 to and in response to that request will send back the bots messages.
 Here is an example on how to connect the <code class="docutils literal notranslate"><span class="pre">rest</span></code> input channel
@@ -942,7 +1021,7 @@ using the run script:</p>
 </div>
 </div>
 <div class="section" id="callbackinput">
-<h3><a class="toc-backref" href="#id55">CallbackInput</a><a class="headerlink" href="#callbackinput" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id62">CallbackInput</a><a class="headerlink" href="#callbackinput" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">callback</span></code> channel behaves very much like the <code class="docutils literal notranslate"><span class="pre">rest</span></code> input,
 but instead of directly returning the bot messages to the HTTP
 request that sends the message, it will call a URL you can specify
@@ -978,7 +1057,7 @@ and the following <code class="docutils literal notranslate"><span class="pre">J
 </div>
 </div>
 <div class="section" id="creating-a-new-channel">
-<span id="custom-channels"></span><h2><a class="toc-backref" href="#id56">Creating a new Channel</a><a class="headerlink" href="#creating-a-new-channel" title="Permalink to this headline">¶</a></h2>
+<span id="custom-channels"></span><h2><a class="toc-backref" href="#id63">Creating a new Channel</a><a class="headerlink" href="#creating-a-new-channel" title="Permalink to this headline">¶</a></h2>
 <p>You can also implement your own, custom channel. You can
 use the <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.channel.RestInput</span></code> class as a template.
 The methods you need to implement are <code class="docutils literal notranslate"><span class="pre">blueprint</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code>. The method
@@ -1091,7 +1170,7 @@ posted this message to the channel:</p>
 </div>
 </div>
 <div class="section" id="have-questions-or-feedback">
-<h2><a class="toc-backref" href="#id57">Have questions or feedback?</a><a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id64">Have questions or feedback?</a><a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
