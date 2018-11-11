@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -123,6 +124,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -136,10 +138,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
@@ -151,12 +155,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.12
+          viewing: 0.12.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.12.0/responses/">0.12.0</a>
               <a href=".././0.11.12/responses/">0.11.12</a>
               <a href=".././0.11.11/responses/">0.11.11</a>
               <a href=".././0.11.10/responses/">0.11.10</a>
@@ -279,6 +284,22 @@ or <code class="docutils literal notranslate"><span class="pre">server</span></c
   <span class="c1"># basic_auth:</span>
   <span class="c1">#   username: user</span>
   <span class="c1">#   password: pass</span>
+<span class="c1"># example of redis external tracker store config</span>
+<span class="l l-Scalar l-Scalar-Plain">tracker_store</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">store_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">redis</span>
+  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="l l-Scalar l-Scalar-Plain">port</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">6379</span>
+  <span class="l l-Scalar l-Scalar-Plain">db</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+  <span class="l l-Scalar l-Scalar-Plain">password</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">password</span>
+  <span class="l l-Scalar l-Scalar-Plain">record_exp</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">30000</span>
+<span class="c1"># example of mongoDB external tracker store config</span>
+<span class="c1">#tracker_store:</span>
+  <span class="c1">#store_type: mongod</span>
+  <span class="c1">#url: mongodb://localhost:27017</span>
+  <span class="c1">#db: rasa</span>
+  <span class="c1">#user: username</span>
+  <span class="c1">#password: password</span>
+  
 </pre></div>
 </div>
 <p>and you can use this file like this:</p>

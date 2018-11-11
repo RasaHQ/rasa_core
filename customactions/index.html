@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -123,6 +124,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -136,10 +138,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
@@ -151,12 +155,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.12
+          viewing: 0.12.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.12.0/customactions/">0.12.0</a>
               <a href=".././0.11.12/customactions/">0.11.12</a>
               <a href=".././0.11.11/customactions/">0.11.11</a>
               <a href=".././0.11.10/customactions/">0.11.10</a>
@@ -244,6 +249,9 @@ the dialogue state.</p>
 </pre></div>
 </div>
 <p>And pass it to the scripts using <code class="docutils literal notranslate"><span class="pre">--endpoints</span> <span class="pre">endpoints.yml</span></code>.</p>
+<p>You can create an action server in node.js, .NET, java, or any
+other language and define your actions there - but we provide
+a small python sdk to make development there even easier.</p>
 </div>
 <div class="section" id="custom-actions-written-in-python">
 <h2>Custom Actions Written in Python<a class="headerlink" href="#custom-actions-written-in-python" title="Permalink to this headline">¶</a></h2>
@@ -265,10 +273,6 @@ called <code class="docutils literal notranslate"><span class="pre">actions.py</
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core_sdk.endpoint --actions actions
 </pre></div>
 </div>
-<p>However, you can also create a server in node.js, .NET, java, or any
-other language and define your acitons there.</p>
-<p>Whichever option you go for, you will then need to add an entry into your
-<code class="docutils literal notranslate"><span class="pre">endpoints.yml</span></code> as follows:</p>
 <p id="custom-action-example">In a restaurant bot, if the user says “show me a Mexican restaurant”,
 your bot could execute the action <code class="docutils literal notranslate"><span class="pre">ActionCheckRestaurants</span></code>,
 which might look like this:</p>
@@ -281,7 +285,7 @@ which might look like this:</p>
       <span class="k">return</span> <span class="s2">&quot;action_check_restaurants&quot;</span>
 
    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-      <span class="c1"># type: (Dispatcher, DialogueStateTracker, Domain) -&gt; List[Event]</span>
+      <span class="c1"># type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -&gt; List[Dict[Text, Any]]</span>
 
       <span class="n">cuisine</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="s1">&#39;cuisine&#39;</span><span class="p">)</span>
       <span class="n">q</span> <span class="o">=</span> <span class="s2">&quot;select * from restaurants where cuisine=&#39;{0}&#39; limit 1&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cuisine</span><span class="p">)</span>
@@ -296,36 +300,12 @@ three arguments. You can access the values of slots and the latest message
 sent by the user using the <code class="docutils literal notranslate"><span class="pre">tracker</span></code> object, and you can send messages
 back to the user with the <code class="docutils literal notranslate"><span class="pre">dispatcher</span></code> object, by calling
 <code class="docutils literal notranslate"><span class="pre">dispatcher.utter_template</span></code>, <code class="docutils literal notranslate"><span class="pre">dispatcher.utter_message</span></code>, or any other
-<code class="xref py py-class docutils literal notranslate"><span class="pre">Dispatcher</span></code> method.</p>
+<code class="docutils literal notranslate"><span class="pre">rasa_core_sdk.executor.CollectingDispatcher</span></code> method.</p>
 <p>Details of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method:</p>
 <dl class="method">
-<dt id="rasa_core.actions.Action.run">
-<code class="descclassname">Action.</code><code class="descname">run</code><span class="sig-paren">(</span><em>dispatcher</em>, <em>tracker</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core/actions/action/#Action.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.actions.Action.run" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa_core_sdk.Action.run">
+<code class="descclassname">Action.</code><code class="descname">run</code><span class="sig-paren">(</span><em>dispatcher</em>, <em>tracker</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core_sdk/#Action.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core_sdk.Action.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute the side effects of this action.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>dispatcher</strong> (<em>Dispatcher</em>) – the dispatcher which is used to send
-messages back to the user. Use <code class="docutils literal notranslate"><span class="pre">dispatcher.utter_message()</span></code>
-or any other <code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.dispatcher.Dispatcher</span></code> method.</li>
-<li><strong>tracker</strong> (<a class="reference internal" href="../api/tracker/#rasa_core.trackers.DialogueStateTracker" title="rasa_core.trackers.DialogueStateTracker"><em>DialogueStateTracker</em></a>) – the state tracker for the current
-user. You can access slot values using
-<code class="docutils literal notranslate"><span class="pre">tracker.get_slot(slot_name)</span></code> and the most recent user
-message is <code class="docutils literal notranslate"><span class="pre">tracker.latest_message.text</span></code>.</li>
-<li><strong>domain</strong> (<em>Domain</em>) – the bot’s domain</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of <a class="reference internal" href="../api/events/#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a> instances</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List[<a class="reference internal" href="../api/events/#rasa_core.events.Event" title="rasa_core.events.Event">Event</a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <p>There is an example of a <code class="docutils literal notranslate"><span class="pre">SlotSet</span></code> event

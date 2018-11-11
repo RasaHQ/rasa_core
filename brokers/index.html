@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -18,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Using Docker" href="../docker/" />
-    <link rel="prev" title="Migration Guide" href="../migrations/" />
+    <link rel="prev" title="Tracker Stores" href="../tracker_stores/" />
 
  <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -123,6 +124,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -136,10 +138,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
@@ -151,12 +155,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.12
+          viewing: 0.12.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.12.0/brokers/">0.12.0</a>
               <a href=".././0.11.12/brokers/">0.11.12</a>
               <a href=".././0.11.11/brokers/">0.11.11</a>
               <a href=".././0.11.10/brokers/">0.11.10</a>
@@ -206,7 +211,25 @@ example implementation we’re going to show you here uses <a class="reference e
 the Python client library for <a class="reference external" href="https://www.rabbitmq.com">RabbitMQ</a>.</p>
 <p>The event broker emits events into the event queue. It becomes part of the
 <code class="docutils literal notranslate"><span class="pre">TrackerStore</span></code> which you use when starting an <code class="docutils literal notranslate"><span class="pre">Agent</span></code> or launch
-<code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>. Here’s how you add it:</p>
+<code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>.</p>
+<div class="section" id="adding-an-event-broker-using-the-endpoint-configuration">
+<h2>Adding an Event Broker Using the Endpoint Configuration<a class="headerlink" href="#adding-an-event-broker-using-the-endpoint-configuration" title="Permalink to this headline">¶</a></h2>
+<p>You can use an endpoint configuration file to instruct Rasa Core to stream
+all events to your event broker. To do so, add the following section to your
+endpoint configuration, e.g. <code class="docutils literal notranslate"><span class="pre">endpoints.yml</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">event_broker</span><span class="p">:</span>
+  <span class="n">url</span><span class="p">:</span> <span class="n">localhost</span>
+  <span class="n">username</span><span class="p">:</span> <span class="n">username</span>
+  <span class="n">password</span><span class="p">:</span> <span class="n">password</span>
+  <span class="n">queue</span><span class="p">:</span> <span class="n">queue</span>
+</pre></div>
+</div>
+<p>Then instruct Rasa Core to use the endpoint configuration by adding
+<code class="docutils literal notranslate"><span class="pre">--endpoints</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">your</span> <span class="pre">endpoint</span> <span class="pre">configuration</span></code> when running it.</p>
+</div>
+<div class="section" id="adding-an-event-broker-in-python">
+<h2>Adding an Event Broker in Python<a class="headerlink" href="#adding-an-event-broker-in-python" title="Permalink to this headline">¶</a></h2>
+<p>Here is how you add it using Python code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.broker</span> <span class="kn">import</span> <span class="n">PikaProducer</span>
 <span class="kn">from</span> <span class="nn">rasa_platform.core.tracker_store</span> <span class="kn">import</span> <span class="n">InMemoryTrackerStore</span>
 
@@ -218,7 +241,10 @@ the Python client library for <a class="reference external" href="https://www.ra
 <span class="n">tracker_store</span> <span class="o">=</span> <span class="n">InMemoryTrackerStore</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="n">db</span><span class="p">,</span> <span class="n">event_broker</span><span class="o">=</span><span class="n">pika_broker</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>These events are streamed to RabbitMQ as serialised dictionaries every time
+</div>
+<div class="section" id="implementing-an-event-consumer">
+<h2>Implementing an Event Consumer<a class="headerlink" href="#implementing-an-event-consumer" title="Permalink to this headline">¶</a></h2>
+<p>All events are streamed to RabbitMQ as serialised dictionaries every time
 the tracker updates it state. An example event emitted from the <code class="docutils literal notranslate"><span class="pre">default</span></code>
 tracker looks like this:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -262,6 +288,7 @@ example:</p>
                           <span class="n">no_ack</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">channel</span><span class="o">.</span><span class="n">start_consuming</span><span class="p">()</span>
 </pre></div>
+</div>
 </div>
 <div class="section" id="have-questions-or-feedback">
 <h2>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>

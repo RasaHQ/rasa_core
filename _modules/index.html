@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -116,6 +117,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -129,10 +131,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
@@ -144,13 +148,14 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.12
+          viewing: 0.12.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
-              <a href=".././0.11.12/_modules/">0.11.12</a>
+              <a href=".././0.12.0/_modules/">0.12.0</a>
+              <a href=".././0.11.12/index/">0.11.12</a>
               <a href=".././0.11.11/index/">0.11.11</a>
               <a href=".././0.11.10/index/">0.11.10</a>
               <a href=".././0.11.9/index/">0.11.9</a>
@@ -195,12 +200,16 @@
 <h1>All modules for which code is available</h1>
 <ul><li><a href="rasa_core/actions/action/">rasa_core.actions.action</a></li>
 <li><a href="rasa_core/agent/">rasa_core.agent</a></li>
+<li><a href="rasa_core/dispatcher/">rasa_core.dispatcher</a></li>
 <li><a href="rasa_core/events/">rasa_core.events</a></li>
 <li><a href="rasa_core/interpreter/">rasa_core.interpreter</a></li>
 <li><a href="rasa_core/policies/policy/">rasa_core.policies.policy</a></li>
 <li><a href="rasa_core/slots/">rasa_core.slots</a></li>
+<li><a href="rasa_core/tracker_store/">rasa_core.tracker_store</a></li>
 <li><a href="rasa_core/trackers/">rasa_core.trackers</a></li>
-</ul>
+<li><a href="rasa_core_sdk/">rasa_core_sdk</a></li>
+<ul><li><a href="rasa_core_sdk/forms/">rasa_core_sdk.forms</a></li>
+</ul></ul>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
 	    <script type="text/javascript"> docsearch({

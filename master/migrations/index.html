@@ -161,6 +161,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.12.0/migrations/">0.12.0</a>
               <a href="../../0.11.12/migrations/">0.11.12</a>
               <a href="../../0.11.11/migrations/">0.11.11</a>
               <a href="../../0.11.10/migrations/">0.11.10</a>
@@ -205,7 +206,7 @@
 
 
 
-    <p class="scv-banner"><a href="../../0.11.12/migrations/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.11.12.</a></p>
+    <p class="scv-banner"><a href="../../0.12.0/migrations/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.12.0.</a></p>
 <div class="section" id="migration-guide">
 <span id="migration"></span><h1>Migration Guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h1>
 <p>This page contains information about changes between major versions and
@@ -223,22 +224,25 @@ before updating. Please make sure to
 <h3>Train script<a class="headerlink" href="#train-script" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>You <strong>must</strong> pass a policy config flag with <code class="docutils literal notranslate"><span class="pre">-c/--config</span></code> now when training
-a model, see <a class="reference internal" href="../policies/#policy-file"><span class="std std-ref">Configuring polices using a configuration file</span></a>. There is a default config file <code class="docutils literal notranslate"><span class="pre">default_config.yml</span></code>
-in the Github repo</li>
-<li>Interactive learning is now started with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">rasa_core.train</span> <span class="pre">interactive</span></code>
-rather than the <code class="docutils literal notranslate"><span class="pre">--interactive</span></code> flag</li>
-<li>All policy configuration related flags have been removed (–epochs,
-–max_history, –validation_split, –batch_size, –nlu_threshold, –core_threshold,
-–fallback_action_name), specify these in the policy config file instead,
+a model, see <a class="reference internal" href="../policies/#policy-file"><span class="std std-ref">Configuring polices using a configuration file</span></a>. There is a default config file
+<code class="docutils literal notranslate"><span class="pre">default_config.yml</span></code> in the Github repo</li>
+<li>Interactive learning is now started with
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">rasa_core.train</span> <span class="pre">interactive</span></code> rather than the
+<code class="docutils literal notranslate"><span class="pre">--interactive</span></code> flag</li>
+<li>All policy configuration related flags have been removed (<code class="docutils literal notranslate"><span class="pre">--epochs</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--max_history</span></code>, <code class="docutils literal notranslate"><span class="pre">--validation_split</span></code>, <code class="docutils literal notranslate"><span class="pre">--batch_size</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--nlu_threshold</span></code>, <code class="docutils literal notranslate"><span class="pre">--core_threshold</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--fallback_action_name</span></code>), specify these in the policy config file instead,
 see <a class="reference internal" href="../policies/#policy-file"><span class="std std-ref">Configuring polices using a configuration file</span></a></li>
 </ul>
 </div>
 <div class="section" id="evaluation-script">
 <h3>Evaluation script<a class="headerlink" href="#evaluation-script" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>The <code class="docutils literal notranslate"><span class="pre">--output</span></code> flag now takes one argument: the name of the folder any files
-generated from the script should be written to</li>
-<li>The <code class="docutils literal notranslate"><span class="pre">--failed</span></code> flag was removed, as this is part of the <code class="docutils literal notranslate"><span class="pre">--output</span></code> flag now</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">--output</span></code> flag now takes one argument: the name of the folder
+any files generated from the script should be written to</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">--failed</span></code> flag was removed, as this is part of the <code class="docutils literal notranslate"><span class="pre">--output</span></code>
+flag now</li>
 </ul>
 </div>
 <div class="section" id="forms">

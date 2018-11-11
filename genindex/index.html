@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -117,6 +118,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -130,10 +132,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
@@ -145,13 +149,14 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.12
+          viewing: 0.12.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
-              <a href="./0.11.12/gen/">0.11.12</a>
+              <a href="./0.12.0/gen/">0.12.0</a>
+              <a href="./0.11.12/index/">0.11.12</a>
               <a href="./0.11.11/index/">0.11.11</a>
               <a href="./0.11.10/index/">0.11.10</a>
               <a href="./0.11.9/index/">0.11.9</a>
@@ -295,6 +300,10 @@
       <li><a href="../api/tracker/#rasa_core.trackers.DialogueStateTracker">DialogueStateTracker (class in rasa_core.trackers)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../api/dispatcher/#rasa_core.dispatcher.Dispatcher">Dispatcher (class in rasa_core.dispatcher)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="E">E</h2>
@@ -316,8 +325,6 @@
 </li>
       <li><a href="../api/policy/#rasa_core.policies.Policy.featurize_for_training">featurize_for_training() (rasa_core.policies.Policy method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     float
 
@@ -325,7 +332,11 @@
         <li><a href="../api/slots_api/#cmdoption-arg-float">command line option</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="../api/events/#rasa_core.events.FollowupAction">FollowupAction (class in rasa_core.events)</a>
+</li>
+      <li><a href="../slotfilling/#rasa_core_sdk.forms.FormAction">FormAction (class in rasa_core_sdk.forms)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -420,7 +431,7 @@
 </li>
       <li><a href="../api/events/#rasa_core.events.Restarted">Restarted (class in rasa_core.events)</a>
 </li>
-      <li><a href="../customactions/#rasa_core.actions.Action.run">run() (rasa_core.actions.Action method)</a>
+      <li><a href="../customactions/#rasa_core_sdk.Action.run">run() (rasa_core_sdk.Action method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -447,9 +458,11 @@
         <li><a href="../api/slots_api/#cmdoption-arg-text">command line option</a>
 </li>
       </ul></li>
+      <li><a href="../api/agent/#rasa_core.agent.Agent.toggle_memoization">toggle_memoization() (rasa_core.agent.Agent method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="../api/agent/#rasa_core.agent.Agent.toggle_memoization">toggle_memoization() (rasa_core.agent.Agent method)</a>
+      <li><a href="../tracker_stores/#rasa_core.tracker_store.TrackerStore">TrackerStore (class in rasa_core.tracker_store)</a>
 </li>
       <li><a href="../api/agent/#rasa_core.agent.Agent.train">train() (rasa_core.agent.Agent method)</a>
 
@@ -470,11 +483,25 @@
         <li><a href="../api/slots_api/#cmdoption-arg-unfeaturized">command line option</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="../api/events/#rasa_core.events.UserUtteranceReverted">UserUtteranceReverted (class in rasa_core.events)</a>
 </li>
       <li><a href="../api/events/#rasa_core.events.UserUttered">UserUttered (class in rasa_core.events)</a>
+</li>
+      <li><a href="../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_attachment">utter_attachment() (rasa_core.dispatcher.Dispatcher method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_button_message">utter_button_message() (rasa_core.dispatcher.Dispatcher method)</a>
+</li>
+      <li><a href="../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_button_template">utter_button_template() (rasa_core.dispatcher.Dispatcher method)</a>
+</li>
+      <li><a href="../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_custom_message">utter_custom_message() (rasa_core.dispatcher.Dispatcher method)</a>
+</li>
+      <li><a href="../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_message">utter_message() (rasa_core.dispatcher.Dispatcher method)</a>
+</li>
+      <li><a href="../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_response">utter_response() (rasa_core.dispatcher.Dispatcher method)</a>
+</li>
+      <li><a href="../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_template">utter_template() (rasa_core.dispatcher.Dispatcher method)</a>
 </li>
   </ul></td>
 </tr></table>

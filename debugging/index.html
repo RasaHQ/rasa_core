@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -123,6 +124,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -136,10 +138,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
@@ -151,12 +155,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.12
+          viewing: 0.12.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.12.0/debugging/">0.12.0</a>
               <a href=".././0.11.12/debugging/">0.11.12</a>
               <a href=".././0.11.11/debugging/">0.11.11</a>
               <a href=".././0.11.10/debugging/">0.11.10</a>
@@ -244,40 +249,32 @@ source of errors is that your NLU model didn’t accurately pick the intent,
 or made a mistake when extracting entities. If this is the case, you probably
 want to go and improve your NLU model.</p>
 <p>If any slots are set, those will show up in line <code class="docutils literal notranslate"><span class="pre">6</span></code>.
-and in lines <code class="docutils literal notranslate"><span class="pre">9-11</span></code> we can see which policy was used to predict the next action.
-If this exact story was already in the training data and the <code class="xref py py-class docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code>
-is part of the ensemble, this will be used to predict the next action with probability 1.</p>
-<p>If all the slot and NLU information is correct but the wrong action is still predicted,
-you should check which policy was used to make the prediction.
-If the prediction came from the <code class="xref py py-class docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code>, then there is an error in
-your stories. If a probabilistic policy like the <code class="xref py py-class docutils literal notranslate"><span class="pre">KerasPolicy</span></code> was used,
-then your model just made a prediction that wasn’t right. In that case
-it is a good idea to run the bot with interactive learning switched on so you can
+and in lines <code class="docutils literal notranslate"><span class="pre">9-11</span></code> we can see which policy was used to
+predict the next action.
+If this exact story was already in the training data and the
+<code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code> is part of the ensemble, this will be used to predict
+the next action with probability 1.</p>
+<p>If all the slot and NLU information is correct but the wrong action
+is still predicted, you should check which policy was used to make
+the prediction. If the prediction came from the <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code>,
+then there is an error in your stories. If a probabilistic policy
+like the <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> was used, then your model just made a
+prediction that wasn’t right. In that case it is a good idea to run
+the bot with interactive learning switched on so you can
 create the relevant stories to add to your training data.</p>
 <div class="section" id="visualizing-your-stories">
 <span id="story-visualization"></span><h2>Visualizing your Stories<a class="headerlink" href="#visualizing-your-stories" title="Permalink to this headline">¶</a></h2>
 <p>Sometimes it is helpful to get an overview of the conversational paths that
 are described within a story file. To make debugging easier and to ease
 discussions about bot flows, you can visualize the content of a story file.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>For this to
-work, you need to <strong>install graphviz</strong>. These are the instructions to do that
-on OSX, for other systems the instructions might be slightly different:</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>brew install graphviz
-pip install pygraphviz --install-option<span class="o">=</span><span class="s2">&quot;--include-path=/usr/include/graphviz&quot;</span> <span class="se">\</span>
-  --install-option<span class="o">=</span><span class="s2">&quot;--library-path=/usr/lib/graphviz/&quot;</span>
-</pre></div>
-</div>
-</div>
-<p>As soon as this is installed you can visualize stories with this command:</p>
+<p>You can visualize stories with this command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/concertbot/
-python -m rasa_core.visualize -d domain.yml -s data/stories.md -o graph.png
+python -m rasa_core.visualize -d domain.yml -s data/stories.md -o graph.html
 </pre></div>
 </div>
 <p>This will run through the stories of the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example in
-<code class="docutils literal notranslate"><span class="pre">data/stories.md</span></code> and create a graph stored in the
-output image <code class="docutils literal notranslate"><span class="pre">graph.png</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">data/stories.md</span></code> and create a graph which can be shown in your browser by
+opening <code class="docutils literal notranslate"><span class="pre">graph.html</span></code> with browser of your choice.</p>
 <img alt="../_images/concert_stories.png" src="../_images/concert_stories.png" />
 <p>We can also run the visualisation directly from code. For this example, we can
 create a <code class="docutils literal notranslate"><span class="pre">visualize.py</span></code> in <code class="docutils literal notranslate"><span class="pre">examples/concertbot</span></code> with the following code:</p>
@@ -295,7 +292,7 @@ create a <code class="docutils literal notranslate"><span class="pre">visualize.
                   <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">KerasPolicy</span><span class="p">()])</span>
 
     <span class="n">agent</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="s2">&quot;data/stories.md&quot;</span><span class="p">,</span>
-                    <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;graph.png&quot;</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;graph.html&quot;</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Which will create the same image as the previous command.

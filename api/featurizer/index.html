@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
@@ -17,7 +18,7 @@
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
-    <link rel="next" title="Migration Guide" href="../../migrations/" />
+    <link rel="next" title="Dispatcher" href="../dispatcher/" />
     <link rel="prev" title="Policy" href="../policy/" />
 
  <!-- Google Tag Manager -->
@@ -123,6 +124,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docker_walkthrough/">Development with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -136,10 +138,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../interpreter/">Interpreters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../policy/">Policy</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dispatcher/">Dispatcher</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../docker/">Using Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changelog/">Change Log</a></li>
@@ -151,12 +155,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.11.12
+          viewing: 0.12.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../.././0.12.0/api/featurizer/">0.12.0</a>
               <a href="../.././0.11.12/api/featurizer/">0.11.12</a>
               <a href="../.././0.11.11/api/featurizer/">0.11.11</a>
               <a href="../.././0.11.10/api/featurizer/">0.11.10</a>
@@ -249,8 +254,9 @@ entity, previous action or slot e.g. <code class="docutils literal notranslate">
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">LabelTokenizerSingleStateFeaturizer</span></code> creates an vector based on the feature label:</dt>
-<dd><p class="first">All active feature labels (e.g. <code class="docutils literal notranslate"><span class="pre">prev_action_listen</span></code>) are split
+<dt><code class="docutils literal notranslate"><span class="pre">LabelTokenizerSingleStateFeaturizer</span></code> creates an vector</dt>
+<dd><p class="first">based on the feature label:
+All active feature labels (e.g. <code class="docutils literal notranslate"><span class="pre">prev_action_listen</span></code>) are split
 into tokens and represented as a bag-of-words. For example, actions
 <code class="docutils literal notranslate"><span class="pre">utter_explain_details_hotel</span></code> and
 <code class="docutils literal notranslate"><span class="pre">utter_explain_details_restaurant</span></code> will have 3 features in
@@ -274,8 +280,9 @@ their presence or absence at each step of the dialogue.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">If the domain defines the possible <code class="docutils literal notranslate"><span class="pre">actions</span></code>,
 <code class="docutils literal notranslate"><span class="pre">[ActionGreet,</span> <span class="pre">ActionGoodbye]</span></code>,
-two additional default actions are added:
-<code class="docutils literal notranslate"><span class="pre">[ActionListen,</span> <span class="pre">ActionRestart]</span></code>.
+<code class="docutils literal notranslate"><span class="pre">4</span></code> additional default actions are added:
+<code class="docutils literal notranslate"><span class="pre">[ActionListen(),</span> <span class="pre">ActionRestart(),</span>
+<span class="pre">ActionDefaultFallback(),</span> <span class="pre">ActionDeactivateForm()]</span></code>.
 Therefore, label <code class="docutils literal notranslate"><span class="pre">0</span></code> indicates default action listen, label <code class="docutils literal notranslate"><span class="pre">1</span></code>
 default restart, label <code class="docutils literal notranslate"><span class="pre">2</span></code> a greeting and <code class="docutils literal notranslate"><span class="pre">3</span></code> indicates goodbye.</p>
 </div>
@@ -288,20 +295,30 @@ states and calls a <code class="docutils literal notranslate"><span class="pre">
 different tracker featurizers:</p>
 <div class="section" id="full-dialogue">
 <h3>1. Full Dialogue<a class="headerlink" href="#full-dialogue" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer</span></code> creates numerical representation of stories to feed to a recurrent neural network
-where the whole dialogue is fed to a network and the gradient is backpropagated from all time steps.
-Therefore, <code class="docutils literal notranslate"><span class="pre">X</span></code> is an array of shape <code class="docutils literal notranslate"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_input_features)</span></code> and
-<code class="docutils literal notranslate"><span class="pre">y</span></code> is an array of shape <code class="docutils literal notranslate"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_bot_features)</span></code>.
-The smaller dialogues are padded with <code class="docutils literal notranslate"><span class="pre">-1</span></code> for all features, indicating no values for a policy.</p>
+<p><code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer</span></code> creates numerical representation of
+stories to feed to a recurrent neural network where the whole dialogue
+is fed to a network and the gradient is backpropagated from all time steps.
+Therefore, <code class="docutils literal notranslate"><span class="pre">X</span></code> is an array of shape
+<code class="docutils literal notranslate"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_input_features)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">y</span></code> is an array of shape
+<code class="docutils literal notranslate"><span class="pre">(num_stories,</span> <span class="pre">max_dialogue_length,</span> <span class="pre">num_bot_features)</span></code>.
+The smaller dialogues are padded with <code class="docutils literal notranslate"><span class="pre">-1</span></code> for all features, indicating
+no values for a policy.</p>
 </div>
 <div class="section" id="max-history">
 <h3>2. Max History<a class="headerlink" href="#max-history" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> creates an array of previous tracker states for each bot action or utterance, with
-the parameter <code class="docutils literal notranslate"><span class="pre">max_history</span></code> defining how many states go into each row in <code class="docutils literal notranslate"><span class="pre">X</span></code>.
-Deduplication is performed to filter out duplicated turns (bot actions or bot utterances) in terms of their previous states.
-Hence <code class="docutils literal notranslate"><span class="pre">X</span></code> has shape <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history,</span> <span class="pre">num_input_features)</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> is an array of shape <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">num_bot_features)</span></code>.</p>
-<p>For some algorithms a flat feature vector is needed, so <code class="docutils literal notranslate"><span class="pre">X</span></code> should be reshaped to <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history</span> <span class="pre">*</span> <span class="pre">num_input_features)</span></code>.
-If numeric target class labels are needed instead of one-hot vectors, use <code class="docutils literal notranslate"><span class="pre">y.argmax(axis=-1)</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> creates an array of previous tracker
+states for each bot action or utterance, with the parameter
+<code class="docutils literal notranslate"><span class="pre">max_history</span></code> defining how many states go into each row in <code class="docutils literal notranslate"><span class="pre">X</span></code>.
+Deduplication is performed to filter out duplicated turns (bot actions
+or bot utterances) in terms of their previous states. Hence <code class="docutils literal notranslate"><span class="pre">X</span></code>
+has shape <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history,</span> <span class="pre">num_input_features)</span></code>
+and <code class="docutils literal notranslate"><span class="pre">y</span></code> is an array of shape <code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">num_bot_features)</span></code>.</p>
+<p>For some algorithms a flat feature vector is needed, so <code class="docutils literal notranslate"><span class="pre">X</span></code>
+should be reshaped to
+<code class="docutils literal notranslate"><span class="pre">(num_unique_turns,</span> <span class="pre">max_history</span> <span class="pre">*</span> <span class="pre">num_input_features)</span></code>. If numeric
+target class labels are needed instead of one-hot vectors, use
+<code class="docutils literal notranslate"><span class="pre">y.argmax(axis=-1)</span></code>.</p>
 </div>
 <div class="section" id="have-questions-or-feedback">
 <h3>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h3>
