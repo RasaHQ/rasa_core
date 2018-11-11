@@ -15,7 +15,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Using Slots" href="../slots/" />
@@ -309,6 +308,39 @@ back to the user with the <code class="docutils literal notranslate"><span class
 <dt id="rasa_core_sdk.Action.run">
 <code class="descclassname">Action.</code><code class="descname">run</code><span class="sig-paren">(</span><em>dispatcher</em>, <em>tracker</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rasa_core_sdk/#Action.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core_sdk.Action.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute the side effects of this action.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dispatcher</strong> (<em>CollectingDispatcher</em>) – the dispatcher which is used to
+send messages back to the user. Use
+<code class="docutils literal notranslate"><span class="pre">dipatcher.utter_message()</span></code> or any other
+<code class="docutils literal notranslate"><span class="pre">rasa_core_sdk.executor.CollectingDispatcher</span></code>
+method.</li>
+<li><strong>tracker</strong> (<em>Tracker</em>) – the state tracker for the current
+user. You can access slot values using
+<code class="docutils literal notranslate"><span class="pre">tracker.get_slot(slot_name)</span></code>, the most recent user message
+is <code class="docutils literal notranslate"><span class="pre">tracker.latest_message.text</span></code> and any other
+<code class="docutils literal notranslate"><span class="pre">rasa_core_sdk.Tracker</span></code> property.</li>
+<li><strong>domain</strong> (<em>Dict</em><em>[</em><em>Text</em><em>, </em><em>Any</em><em>]</em>) – the bot’s domain</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>A dictionary of</dt>
+<dd><p class="first last"><code class="docutils literal notranslate"><span class="pre">rasa_core_sdk.events.Event</span></code> instances that is
+returned through the endpoint</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List[Dict[Text, Any]]</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <p>There is an example of a <code class="docutils literal notranslate"><span class="pre">SlotSet</span></code> event

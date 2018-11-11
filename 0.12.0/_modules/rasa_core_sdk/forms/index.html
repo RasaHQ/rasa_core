@@ -15,7 +15,6 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
 
@@ -205,179 +204,404 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">rasa_core_sdk</span> <span class="k">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Tracker</span>
-<span class="kn">from</span> <span class="nn">rasa_core_sdk.events</span> <span class="k">import</span> <span class="n">SlotSet</span><span class="p">,</span> <span class="n">EventType</span>
+<span class="kn">from</span> <span class="nn">rasa_core_sdk</span> <span class="k">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">ActionExecutionRejection</span>
+<span class="kn">from</span> <span class="nn">rasa_core_sdk.events</span> <span class="k">import</span> <span class="n">SlotSet</span><span class="p">,</span> <span class="n">Form</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rasa_core_sdk</span> <span class="k">import</span> <span class="n">Tracker</span>
+    <span class="kn">from</span> <span class="nn">rasa_core_sdk.executor</span> <span class="k">import</span> <span class="n">CollectingDispatcher</span>
+
 <span class="c1"># this slot is used to store information needed</span>
-<span class="c1"># to do the form handling, needs to be part</span>
-<span class="c1"># of the domain</span>
-<span class="n">FORM_SLOT_NAME</span> <span class="o">=</span> <span class="s2">&quot;requested_slot&quot;</span>
-
-
-<span class="k">class</span> <span class="nc">FormField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-
-    <span class="c1"># noinspection PyMethodMayBeStatic</span>
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Check if extracted value for a requested slot is valid.</span>
-
-<span class="sd">        Users should override this to implement custom validation logic,</span>
-<span class="sd">        returning None indicates a negative validation result, and the slot</span>
-<span class="sd">        will not be set.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">value</span>
-
-
-<span class="k">class</span> <span class="nc">EntityFormField</span><span class="p">(</span><span class="n">FormField</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_name</span><span class="p">,</span> <span class="n">slot_name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">entity_name</span> <span class="o">=</span> <span class="n">entity_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">slot_name</span> <span class="o">=</span> <span class="n">slot_name</span>
-
-    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (Tracker) -&gt; List[EventType]</span>
-
-        <span class="n">value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">get_latest_entity_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_name</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">validated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">validated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slot_name</span><span class="p">,</span> <span class="n">validated</span><span class="p">)]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-
-
-<span class="k">class</span> <span class="nc">BooleanFormField</span><span class="p">(</span><span class="n">FormField</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A form field that prompts the user for a yes or no answer.</span>
-<span class="sd">    The interpreter should map positive and negative answers to</span>
-<span class="sd">    the intents ``affirm_intent`` and ``deny_intent``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slot_name</span><span class="p">,</span> <span class="n">affirm_intent</span><span class="p">,</span> <span class="n">deny_intent</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">slot_name</span> <span class="o">=</span> <span class="n">slot_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">affirm_intent</span> <span class="o">=</span> <span class="n">affirm_intent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deny_intent</span> <span class="o">=</span> <span class="n">deny_intent</span>
-
-    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (Tracker) -&gt; List[EventType]</span>
-
-        <span class="n">intent</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;intent&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">intent</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">affirm_intent</span><span class="p">:</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">intent</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">deny_intent</span><span class="p">:</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-
-        <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slot_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)]</span>
-
-
-<span class="k">class</span> <span class="nc">FreeTextFormField</span><span class="p">(</span><span class="n">FormField</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slot_name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">slot_name</span> <span class="o">=</span> <span class="n">slot_name</span>
-
-    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (Tracker) -&gt; List[EventType]</span>
-
-        <span class="n">validated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">validated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slot_name</span><span class="p">,</span> <span class="n">validated</span><span class="p">)]</span>
-        <span class="k">return</span> <span class="p">[]</span>
+<span class="c1"># to do the form handling</span>
+<span class="n">REQUESTED_SLOT</span> <span class="o">=</span> <span class="s2">&quot;requested_slot&quot;</span>
 
 
 <div class="viewcode-block" id="FormAction"><a class="viewcode-back" href="../../../slotfilling/#rasa_core_sdk.forms.FormAction">[docs]</a><span class="k">class</span> <span class="nc">FormAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; Text</span>
-        <span class="sd">&quot;&quot;&quot;Unique identifier of this form action.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Unique identifier of the form&quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-    <span class="n">RANDOMIZE</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;A form must implement a name&quot;</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">required_fields</span><span class="p">():</span>
-        <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">required_slots</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
+        <span class="c1"># type: (Tracker) -&gt; List[Text]</span>
+        <span class="sd">&quot;&quot;&quot;A list of required slots that the form has to fill</span>
+
+<span class="sd">            Use `tracker` to request different list of slots</span>
+<span class="sd">            depending on the state of the dialogue</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;A form must implement required slots &quot;</span>
+                                  <span class="s2">&quot;that it has to fill&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">from_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">entity</span><span class="p">,</span>  <span class="c1"># type: Text</span>
+                    <span class="n">intent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Union[Text, List[Text]]]</span>
+                    <span class="n">not_intent</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Union[Text, List[Text]]]</span>
+                    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
+        <span class="sd">&quot;&quot;&quot;A dictionary for slot mapping to extract slot value from</span>
+<span class="sd">            - an extracted entity</span>
+<span class="sd">            - conditioned on</span>
+<span class="sd">                - intent if it is not None</span>
+<span class="sd">                - not_intent if it is not None,</span>
+<span class="sd">                    meaning user intent should not be this intent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">intent</span><span class="p">,</span> <span class="n">not_intent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_intents</span><span class="p">(</span><span class="n">intent</span><span class="p">,</span> <span class="n">not_intent</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;from_entity&quot;</span><span class="p">,</span> <span class="s2">&quot;entity&quot;</span><span class="p">:</span> <span class="n">entity</span><span class="p">,</span>
+                <span class="s2">&quot;intent&quot;</span><span class="p">:</span> <span class="n">intent</span><span class="p">,</span> <span class="s2">&quot;not_intent&quot;</span><span class="p">:</span> <span class="n">not_intent</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">from_intent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">value</span><span class="p">,</span>  <span class="c1"># type: Any</span>
+                    <span class="n">intent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Union[Text, List[Text]]]</span>
+                    <span class="n">not_intent</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Union[Text, List[Text]]]</span>
+                    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
+        <span class="sd">&quot;&quot;&quot;A dictionary for slot mapping to extract slot value from</span>
+<span class="sd">            - intent: value pair</span>
+<span class="sd">            - conditioned on</span>
+<span class="sd">                - intent if it is not None</span>
+<span class="sd">                - not_intent if it is not None,</span>
+<span class="sd">                    meaning user intent should not be this intent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">intent</span><span class="p">,</span> <span class="n">not_intent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_intents</span><span class="p">(</span><span class="n">intent</span><span class="p">,</span> <span class="n">not_intent</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;from_intent&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                <span class="s2">&quot;intent&quot;</span><span class="p">:</span> <span class="n">intent</span><span class="p">,</span> <span class="s2">&quot;not_intent&quot;</span><span class="p">:</span> <span class="n">not_intent</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">from_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">intent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Union[Text, List[Text]]]</span>
+                  <span class="n">not_intent</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Union[Text, List[Text]]]</span>
+                  <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
+        <span class="sd">&quot;&quot;&quot;A dictionary for slot mapping to extract slot value from</span>
+<span class="sd">            - a whole message</span>
+<span class="sd">            - conditioned on</span>
+<span class="sd">                - intent if it is not None</span>
+<span class="sd">                - not_intent if it is not None,</span>
+<span class="sd">                    meaning user intent should not be this intent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">intent</span><span class="p">,</span> <span class="n">not_intent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_intents</span><span class="p">(</span><span class="n">intent</span><span class="p">,</span> <span class="n">not_intent</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;from_text&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;intent&quot;</span><span class="p">:</span> <span class="n">intent</span><span class="p">,</span> <span class="s2">&quot;not_intent&quot;</span><span class="p">:</span> <span class="n">not_intent</span><span class="p">}</span>
+
+    <span class="c1"># noinspection PyMethodMayBeStatic</span>
+    <span class="k">def</span> <span class="nf">slot_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Dict[Text: Union[Dict, List[Dict]]]</span>
+        <span class="sd">&quot;&quot;&quot;A dictionary to map required slots to</span>
+<span class="sd">            - an extracted entity</span>
+<span class="sd">            - intent: value pairs</span>
+<span class="sd">            - a whole message</span>
+<span class="sd">            or a list of them, where the first match will be picked</span>
+
+<span class="sd">            Empty dict is converted to a mapping of</span>
+<span class="sd">            the slot to the extracted entity with the same name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">get_mappings_for_slot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slot_to_fill</span><span class="p">):</span>
+        <span class="c1"># type: (Text) -&gt; List[Dict[Text: Any]]</span>
+        <span class="sd">&quot;&quot;&quot;Get mappings for requested slot,</span>
+<span class="sd">            else map requested slot to an entity with the same name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">requested_slot_mappings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_list</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">slot_mappings</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">,</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">from_entity</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="c1"># check provided slot mappings</span>
+        <span class="k">for</span> <span class="n">requested_slot_mapping</span> <span class="ow">in</span> <span class="n">requested_slot_mappings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">requested_slot_mapping</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span>
+                    <span class="n">requested_slot_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Provided incompatible slot mapping&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">requested_slot_mappings</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">should_request_slot</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">slot_name</span><span class="p">):</span>
-        <span class="n">existing_val</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">slot_name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">existing_val</span> <span class="ow">is</span> <span class="kc">None</span>
+    <span class="k">def</span> <span class="nf">intent_is_desired</span><span class="p">(</span><span class="n">requested_slot_mapping</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[Text: Any], Tracker) -&gt; bool</span>
+        <span class="sd">&quot;&quot;&quot;Check whether user intent matches</span>
+<span class="sd">            intent conditions in requested_slot_mapping</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mapping_intents</span> <span class="o">=</span> <span class="n">requested_slot_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;intent&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">mapping_not_intents</span> <span class="o">=</span> <span class="n">requested_slot_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;not_intent&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">intent</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;intent&quot;</span><span class="p">,</span>
+                                            <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">((</span><span class="ow">not</span> <span class="n">mapping_intents</span> <span class="ow">and</span> <span class="n">intent</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mapping_not_intents</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="n">intent</span> <span class="ow">in</span> <span class="n">mapping_intents</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_other_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (Tracker) -&gt; List[EventType]</span>
+    <span class="c1"># noinspection PyUnusedLocal</span>
+    <span class="k">def</span> <span class="nf">extract_other_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                            <span class="n">dispatcher</span><span class="p">,</span>  <span class="c1"># type: CollectingDispatcher</span>
+                            <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: Tracker</span>
+                            <span class="n">domain</span>  <span class="c1"># type: Dict[Text, Any]</span>
+                            <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
+        <span class="sd">&quot;&quot;&quot;Extract the values of the other slots</span>
+<span class="sd">            if they are set by corresponding entities from the user input</span>
+<span class="sd">            else return None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">slot_to_fill</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">)</span>
 
-        <span class="n">requested_slot</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">FORM_SLOT_NAME</span><span class="p">)</span>
+        <span class="n">slot_values</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_slots</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
+            <span class="c1"># look for other slots</span>
+            <span class="k">if</span> <span class="n">slot</span> <span class="o">!=</span> <span class="n">slot_to_fill</span><span class="p">:</span>
+                <span class="c1"># list is used to cover the case of list slot type</span>
+                <span class="n">other_slot_mappings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mappings_for_slot</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span>
 
-        <span class="n">requested_entity</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_fields</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">slot_name</span> <span class="o">==</span> <span class="n">requested_slot</span><span class="p">:</span>
-                <span class="n">requested_entity</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;entity_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">other_slot_mapping</span> <span class="ow">in</span> <span class="n">other_slot_mappings</span><span class="p">:</span>
+                    <span class="n">intent</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;intent&quot;</span><span class="p">,</span>
+                                                        <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+                    <span class="c1"># check whether the slot should be filled</span>
+                    <span class="c1"># by entity with the same name</span>
+                    <span class="n">should_fill_slot</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">other_slot_mapping</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;from_entity&quot;</span> <span class="ow">and</span>
+                            <span class="n">other_slot_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entity&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">slot</span> <span class="ow">and</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">intent_is_desired</span><span class="p">(</span><span class="n">other_slot_mapping</span><span class="p">,</span>
+                                                   <span class="n">tracker</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">should_fill_slot</span><span class="p">:</span>
+                        <span class="c1"># list is used to cover the case of list slot type</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">get_latest_entity_values</span><span class="p">(</span><span class="n">slot</span><span class="p">))</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="n">slot_events</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">extracted_entities</span> <span class="o">=</span> <span class="p">{</span><span class="n">requested_entity</span><span class="p">}</span>
+                        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Extracted &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
+                                         <span class="s2">&quot;for extra slot &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
+                                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">slot</span><span class="p">))</span>
+                            <span class="n">slot_values</span><span class="p">[</span><span class="n">slot</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                            <span class="c1"># this slot is done, check  next</span>
+                            <span class="k">break</span>
 
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_fields</span><span class="p">():</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">EntityFormField</span><span class="p">)</span>
-                    <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">slot_name</span> <span class="o">!=</span> <span class="n">requested_slot</span>
-                    <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">entity_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extracted_entities</span><span class="p">):</span>
-                <span class="n">slot_events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">tracker</span><span class="p">))</span>
-                <span class="n">extracted_entities</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">entity_name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">slot_events</span>
+        <span class="k">return</span> <span class="n">slot_values</span>
 
-    <span class="k">def</span> <span class="nf">get_requested_slot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (Tracker) -&gt; List[EventType]</span>
+    <span class="c1"># noinspection PyUnusedLocal</span>
+    <span class="k">def</span> <span class="nf">extract_requested_slot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                               <span class="n">dispatcher</span><span class="p">,</span>  <span class="c1"># type: CollectingDispatcher</span>
+                               <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: Tracker</span>
+                               <span class="n">domain</span>  <span class="c1"># type: Dict[Text, Any]</span>
+                               <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
+        <span class="sd">&quot;&quot;&quot;Extract the value of requested slot from a user input</span>
+<span class="sd">            else return None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">slot_to_fill</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to extract requested slot &#39;</span><span class="si">{}</span><span class="s2">&#39; ...&quot;</span>
+                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">))</span>
 
-        <span class="n">requested_slot</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">FORM_SLOT_NAME</span><span class="p">)</span>
+        <span class="c1"># get mapping for requested slot</span>
+        <span class="n">requested_slot_mappings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mappings_for_slot</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">)</span>
 
-        <span class="n">required</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_fields</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">requested_slot_mapping</span> <span class="ow">in</span> <span class="n">requested_slot_mappings</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Got mapping &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requested_slot_mapping</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">RANDOMIZE</span><span class="p">:</span>
-            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">required</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">intent_is_desired</span><span class="p">(</span><span class="n">requested_slot_mapping</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+                <span class="n">mapping_type</span> <span class="o">=</span> <span class="n">requested_slot_mapping</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">requested_slot</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span>
-                      <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">required</span>
-                      <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">slot_name</span> <span class="o">==</span> <span class="n">requested_slot</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">mapping_type</span> <span class="o">==</span> <span class="s2">&quot;from_entity&quot;</span><span class="p">:</span>
+                    <span class="c1"># list is used to cover the case of list slot type</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">get_latest_entity_values</span><span class="p">(</span>
+                                    <span class="n">requested_slot_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entity&quot;</span><span class="p">)))</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">mapping_type</span> <span class="o">==</span> <span class="s2">&quot;from_intent&quot;</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">requested_slot_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">mapping_type</span> <span class="o">==</span> <span class="s2">&quot;from_text&quot;</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s1">&#39;Provided slot mapping type &#39;</span>
+                            <span class="s1">&#39;is not supported&#39;</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">fields</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unable to extract value &quot;</span>
-                             <span class="s2">&quot;for requested slot: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requested_slot</span><span class="p">))</span>
-                <span class="k">return</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully extracted &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
+                                 <span class="s2">&quot;for requested slot &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
+                                 <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">slot_to_fill</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="p">{</span><span class="n">slot_to_fill</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Failed to extract requested slot &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
+                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">{}</span>
 
-        <span class="n">events</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_requested_slot</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span> <span class="o">+</span>
-                  <span class="bp">self</span><span class="o">.</span><span class="n">get_other_slots</span><span class="p">(</span><span class="n">tracker</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -&gt; List[Dict]</span>
+        <span class="sd">&quot;&quot;&quot;Validate extracted value of requested slot</span>
+<span class="sd">            else reject execution of the form action</span>
 
-        <span class="n">temp_tracker</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
-            <span class="n">temp_tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+<span class="sd">            Subclass this method to add custom validation and rejection logic</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># extract other slots that were not requested</span>
+        <span class="c1"># but set by corresponding entity</span>
+        <span class="n">slot_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_other_slots</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_fields</span><span class="p">():</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_request_slot</span><span class="p">(</span><span class="n">temp_tracker</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">slot_name</span><span class="p">):</span>
+        <span class="c1"># extract requested slot</span>
+        <span class="n">slot_to_fill</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">slot_to_fill</span><span class="p">:</span>
+            <span class="n">slot_values</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extract_requested_slot</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span>
+                                                           <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">slot_values</span><span class="p">:</span>
+                <span class="c1"># reject to execute the form action</span>
+                <span class="c1"># if some slot was requested but nothing was extracted</span>
+                <span class="c1"># it will allow other policies to predict another action</span>
+                <span class="k">raise</span> <span class="n">ActionExecutionRejection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                                               <span class="s2">&quot;Failed to validate slot </span><span class="si">{0}</span><span class="s2"> &quot;</span>
+                                               <span class="s2">&quot;with action </span><span class="si">{1}</span><span class="s2">&quot;</span>
+                                               <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
 
-                <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span>
-                        <span class="s2">&quot;utter_ask_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">slot_name</span><span class="p">),</span>
-                        <span class="n">tracker</span><span class="p">)</span>
+        <span class="c1"># validation succeed, set slots to extracted values</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">slot</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">slot_values</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
 
-                <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">FORM_SLOT_NAME</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">slot_name</span><span class="p">))</span>
-                <span class="k">return</span> <span class="n">events</span>
+    <span class="c1"># noinspection PyUnusedLocal</span>
+    <span class="k">def</span> <span class="nf">request_next_slot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">dispatcher</span><span class="p">,</span>  <span class="c1"># type: CollectingDispatcher</span>
+                          <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: Tracker</span>
+                          <span class="n">domain</span>  <span class="c1"># type: Dict[Text, Any]</span>
+                          <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Optional[List[Dict]]</span>
+        <span class="sd">&quot;&quot;&quot;Request the next slot and utter template if needed,</span>
+<span class="sd">            else return None&quot;&quot;&quot;</span>
 
-        <span class="c1"># there is nothing more to request, so we can submit</span>
-        <span class="n">events_from_submit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">temp_tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_slots</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_should_request_slot</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Request next slot &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot</span><span class="p">))</span>
+                <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_ask_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot</span><span class="p">),</span> <span class="n">tracker</span><span class="p">)</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="n">slot</span><span class="p">)]</span>
 
-        <span class="k">return</span> <span class="n">events</span> <span class="o">+</span> <span class="n">events_from_submit</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No slots left to request&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-                <span class="s2">&quot;a form action must implement a submit method&quot;</span><span class="p">)</span></div>
+        <span class="c1"># type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -&gt; List[Dict]</span>
+        <span class="sd">&quot;&quot;&quot;Define what the form has to do</span>
+<span class="sd">            after all required slots are filled&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;A form must implement a submit method&quot;</span><span class="p">)</span>
+
+    <span class="c1"># helpers</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_to_list</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="c1"># type: (Optional[Any]) -&gt; List[Any]</span>
+        <span class="sd">&quot;&quot;&quot;Convert object to a list if it is not a list,</span>
+<span class="sd">            None converted to empty list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">_list_intents</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">intent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Union[Text, List[Text]]]</span>
+            <span class="n">not_intent</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Union[Text, List[Text]]]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; Tuple[List[Text], List[Text]]</span>
+        <span class="sd">&quot;&quot;&quot;Check provided intent and not_intent&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">intent</span> <span class="ow">and</span> <span class="n">not_intent</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Providing  both intent &#39;</span><span class="si">{}</span><span class="s2">&#39; and not_intent &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
+                             <span class="s2">&quot;is not supported&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">intent</span><span class="p">,</span> <span class="n">not_intent</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_list</span><span class="p">(</span><span class="n">intent</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_list</span><span class="p">(</span><span class="n">not_intent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_activate_if_required</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+        <span class="c1"># type: (Tracker) -&gt; List[Dict]</span>
+        <span class="sd">&quot;&quot;&quot;Return `Form` event with the name of the form</span>
+<span class="sd">            if the form was called for the first time&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;The form &#39;</span><span class="si">{}</span><span class="s2">&#39; is active&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;There is no active form&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Activated the form &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">Form</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">())]</span>
+
+    <span class="k">def</span> <span class="nf">_validate_if_required</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -&gt; List[Dict]</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of events from `self.validate(...)`</span>
+<span class="sd">            if validation is required:</span>
+<span class="sd">            - the form is active</span>
+<span class="sd">            - the form is called after `action_listen`</span>
+<span class="sd">            - form validation was not cancelled</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">==</span> <span class="s1">&#39;action_listen&#39;</span> <span class="ow">and</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">active_form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;validate&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Validating user input &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping validation&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_should_request_slot</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">slot_name</span><span class="p">):</span>
+        <span class="c1"># type: (Tracker, Text) -&gt; bool</span>
+        <span class="sd">&quot;&quot;&quot;Check whether form action should request given slot&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">slot_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_deactivate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; List[Dict]</span>
+        <span class="sd">&quot;&quot;&quot;Return `Form` event with `None` as name to deactivate the form</span>
+<span class="sd">            and reset the requested slot&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Deactivating the form &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Form</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">SlotSet</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="c1"># type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -&gt; List[Dict]</span>
+        <span class="sd">&quot;&quot;&quot;Execute the side effects of this form:</span>
+<span class="sd">            - activate if needed</span>
+<span class="sd">            - validate user input if needed</span>
+<span class="sd">            - set validated slots</span>
+<span class="sd">            - utter_ask_{slot} template with the next required slot</span>
+<span class="sd">            - submit the form if all required slots are set</span>
+<span class="sd">            - deactivate the form</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># activate the form</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_activate_if_required</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+        <span class="c1"># validate user input</span>
+        <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_validate_if_required</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
+
+        <span class="c1"># create temp tracker with populated slots from `validate` method</span>
+        <span class="n">temp_tracker</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="s1">&#39;event&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;slot&#39;</span><span class="p">:</span>
+                <span class="n">temp_tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+
+        <span class="n">next_slot_events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_next_slot</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">temp_tracker</span><span class="p">,</span>
+                                                  <span class="n">domain</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">next_slot_events</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># request next slot</span>
+            <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">next_slot_events</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># there is nothing more to request, so we can submit</span>
+            <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">temp_tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
+            <span class="c1"># deactivate the form after submission</span>
+            <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_deactivate</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">events</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;FormAction(&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">())</span></div>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>

@@ -15,7 +15,6 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
 
@@ -210,9 +209,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
-
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -233,10 +230,13 @@
                        <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;latest_message&quot;</span><span class="p">,</span> <span class="p">{}),</span>
                        <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">),</span>
                        <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paused&quot;</span><span class="p">),</span>
-                       <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;followup_action&quot;</span><span class="p">))</span>
+                       <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;followup_action&quot;</span><span class="p">),</span>
+                       <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;active_form&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+                       <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;latest_action_name&quot;</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">slots</span><span class="p">,</span>
-                 <span class="n">latest_message</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">paused</span><span class="p">,</span> <span class="n">followup_action</span><span class="p">):</span>
+                 <span class="n">latest_message</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">paused</span><span class="p">,</span> <span class="n">followup_action</span><span class="p">,</span>
+                 <span class="n">active_form</span><span class="p">,</span> <span class="n">latest_action_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the tracker.&quot;&quot;&quot;</span>
 
         <span class="c1"># list of previously seen events</span>
@@ -255,6 +255,8 @@
         <span class="c1">#                   &quot;entities&quot;: UserUttered.entities,</span>
         <span class="c1">#                   &quot;text&quot;: text}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="n">latest_message</span> <span class="k">if</span> <span class="n">latest_message</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="n">active_form</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span> <span class="o">=</span> <span class="n">latest_action_name</span>
 
     <span class="k">def</span> <span class="nf">current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; Dict[Text, Any]</span>
@@ -271,7 +273,9 @@
             <span class="s2">&quot;latest_message&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span><span class="p">,</span>
             <span class="s2">&quot;latest_event_time&quot;</span><span class="p">:</span> <span class="n">latest_event_time</span><span class="p">,</span>
             <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span><span class="p">(),</span>
-            <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span>
+            <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">,</span>
+            <span class="s2">&quot;active_form&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">,</span>
+            <span class="s2">&quot;latest_action_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span>
         <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">current_slot_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -340,7 +344,9 @@
                        <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span><span class="p">),</span>
                        <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">),</span>
                        <span class="bp">self</span><span class="o">.</span><span class="n">_paused</span><span class="p">,</span>
-                       <span class="bp">self</span><span class="o">.</span><span class="n">followup_action</span><span class="p">)</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">followup_action</span><span class="p">,</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">,</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Action</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -350,16 +356,52 @@
         <span class="c1"># type: () -&gt; Text</span>
         <span class="sd">&quot;&quot;&quot;Unique identifier of this simple action.&quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;An action must implement a name&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Action.run"><a class="viewcode-back" href="../../customactions/#rasa_core_sdk.Action.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="c1"># type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -&gt; List[dict]</span>
-        <span class="sd">&quot;&quot;&quot;Execute the side effects of this action.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Action.run"><a class="viewcode-back" href="../../customactions/#rasa_core_sdk.Action.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">dispatcher</span><span class="p">,</span>  <span class="c1"># type: CollectingDispatcher</span>
+            <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: Tracker</span>
+            <span class="n">domain</span>  <span class="c1"># type:  Dict[Text, Any]</span>
+            <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; List[Dict[Text, Any]]</span>
+        <span class="sd">&quot;&quot;&quot;Execute the side effects of this action.</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+<span class="sd">        Args:</span>
+<span class="sd">            dispatcher (CollectingDispatcher): the dispatcher which is used to</span>
+<span class="sd">                send messages back to the user. Use</span>
+<span class="sd">                ``dipatcher.utter_message()`` or any other</span>
+<span class="sd">                ``rasa_core_sdk.executor.CollectingDispatcher``</span>
+<span class="sd">                method.</span>
+<span class="sd">            tracker (Tracker): the state tracker for the current</span>
+<span class="sd">                user. You can access slot values using</span>
+<span class="sd">                ``tracker.get_slot(slot_name)``, the most recent user message</span>
+<span class="sd">                is ``tracker.latest_message.text`` and any other</span>
+<span class="sd">                ``rasa_core_sdk.Tracker`` property.</span>
+<span class="sd">            domain (Dict[Text, Any]): the bot&#39;s domain</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Dict[Text, Any]]: A dictionary of</span>
+<span class="sd">                ``rasa_core_sdk.events.Event`` instances that is</span>
+<span class="sd">                returned through the endpoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;An action must implement its run method&quot;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;Action(&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
+
+
+<span class="k">class</span> <span class="nc">ActionExecutionRejection</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raising this exception will allow other policies</span>
+<span class="sd">        to predict another action&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">=</span> <span class="n">action_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="n">message</span> <span class="ow">or</span>
+                        <span class="s2">&quot;Custom action &#39;</span><span class="si">{}</span><span class="s2">&#39; rejected execution of&quot;</span>
+                        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">action_name</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
