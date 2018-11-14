@@ -960,3 +960,27 @@ class ActionExecutionRejected(Event):
     def apply_to(self, tracker):
         # type: (DialogueStateTracker) -> None
         tracker.reject_action(self.action_name)
+
+
+# noinspection PyProtectedMember
+class NewUserGoal(Event):
+    """Wipe all of the history except the most recent user utterance."""
+
+    type_name = "new_user_goal"
+
+    def __hash__(self):
+        return hash(32143124311)
+
+    def __eq__(self, other):
+        return isinstance(other, NewUserGoal)
+
+    def __str__(self):
+        return "NewUserGoal()"
+
+    def as_story_string(self):
+        return self.type_name
+
+    def apply_to(self, tracker):
+        latest_message = tracker.latest_message
+        tracker._reset()
+        tracker.update(latest_message)

@@ -322,6 +322,39 @@ def test_traveling_back_in_time(default_domain):
     assert len(list(tracker.generate_all_prior_trackers())) == 2
 
 
+def test_new_user_goal_event(default_domain):
+    tracker = DialogueStateTracker("default", default_domain.slots)
+    # the retrieved tracker should be empty
+    assert len(tracker.events) == 0
+
+    intent = {"name": "greet", "confidence": 1.0}
+    tracker.update(ActionExecuted(ACTION_LISTEN_NAME))
+    tracker.update(UserUttered("/greet", intent, []))
+    tracker.update(ActionExecuted("my_action"))
+    tracker.update(ActionExecuted(ACTION_LISTEN_NAME))
+
+    assert len(tracker.events) == 4
+    assert tracker.latest_message.text == "/greet"
+    assert len(list(tracker.generate_all_prior_trackers())) == 4
+
+    tracker.update(NewUserGoal())
+
+    assert len(tracker.events) == 6
+    assert tracker.followup_action is None
+    assert tracker.latest_message.text == "/greet"
+    assert len(list(tracker.generate_all_prior_trackers())) == 1
+
+    dialogue = tracker.as_dialogue()
+
+    recovered = DialogueStateTracker("default", default_domain.slots)
+    recovered.recreate_from_dialogue(dialogue)
+
+    assert recovered.current_state() == tracker.current_state()
+    assert len(recovered.events) == 6
+    assert recovered.latest_message.text == "/greet"
+    assert len(list(recovered.generate_all_prior_trackers())) == 1
+
+
 def test_dump_and_restore_as_json(default_agent, tmpdir_factory):
     trackers = default_agent.load_data(DEFAULT_STORIES_FILE)
 

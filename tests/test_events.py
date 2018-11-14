@@ -14,7 +14,7 @@ from rasa_core.events import (
     ActionExecuted, AllSlotsReset,
     ReminderScheduled, ConversationResumed, ConversationPaused,
     StoryExported, ActionReverted, BotUttered, FollowupAction,
-    UserUtteranceReverted, AgentUttered)
+    UserUtteranceReverted, AgentUttered, NewUserGoal)
 
 
 @pytest.mark.parametrize("one_event,another_event", [
@@ -111,7 +111,9 @@ def test_event_has_proper_implementation(one_event, another_event):
 
     ReminderScheduled("my_action", datetime.now()),
 
-    ReminderScheduled("my_action", datetime.now(pytz.timezone('US/Central')))
+    ReminderScheduled("my_action", datetime.now(pytz.timezone('US/Central'))),
+
+    NewUserGoal(),
 ])
 def test_dict_serialisation(one_event):
     evt_dict = one_event.as_dict()
@@ -285,3 +287,13 @@ def test_json_parse_agent():
         }
     # DOCS END
     assert Event.from_parameters(evt) == AgentUttered("Hey, how are you?")
+
+
+def test_json_parse_new_user_goal():
+    # DOCS MARKER Restarted
+    evt = \
+        {
+            'event': 'new_user_goal'
+        }
+    # DOCS END
+    assert Event.from_parameters(evt) == NewUserGoal()
