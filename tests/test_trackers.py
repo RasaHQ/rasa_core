@@ -16,7 +16,7 @@ from rasa_core.channels import UserMessage
 from rasa_core.domain import Domain
 from rasa_core.events import (
     UserUttered, ActionExecuted, Restarted, ActionReverted,
-    UserUtteranceReverted)
+    UserUtteranceReverted, NewUserGoal)
 from rasa_core.tracker_store import InMemoryTrackerStore, RedisTrackerStore
 from rasa_core.tracker_store import (
     TrackerStore)
@@ -339,7 +339,7 @@ def test_new_user_goal_event(default_domain):
 
     tracker.update(NewUserGoal())
 
-    assert len(tracker.events) == 6
+    assert len(tracker.events) == 7
     assert tracker.followup_action is None
     assert tracker.latest_message.text == "/greet"
     assert len(list(tracker.generate_all_prior_trackers())) == 1
@@ -350,7 +350,7 @@ def test_new_user_goal_event(default_domain):
     recovered.recreate_from_dialogue(dialogue)
 
     assert recovered.current_state() == tracker.current_state()
-    assert len(recovered.events) == 6
+    assert len(recovered.events) == 7
     assert recovered.latest_message.text == "/greet"
     assert len(list(recovered.generate_all_prior_trackers())) == 1
 
