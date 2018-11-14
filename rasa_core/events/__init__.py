@@ -982,5 +982,5 @@ class NewUserGoal(Event):
 
     def apply_to(self, tracker):
         latest_message = tracker.latest_message
-        tracker._reset()
+        tracker.update(Restarted())
         tracker.update(latest_message)
