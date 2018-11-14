@@ -963,7 +963,7 @@ class ActionExecutionRejected(Event):
 
 
 # noinspection PyProtectedMember
-class NewUserGoal(Event):
+class NewUserGoal(Restarted):
     """Wipe all of the history except the most recent user utterance."""
 
     type_name = "new_user_goal"
@@ -982,5 +982,5 @@ class NewUserGoal(Event):
 
     def apply_to(self, tracker):
         latest_message = tracker.latest_message
-        tracker.update(Restarted())
+        tracker._reset()
         tracker.update(latest_message)
