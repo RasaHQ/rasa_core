@@ -331,15 +331,15 @@ def test_new_user_goal_event(default_domain):
     tracker.update(ActionExecuted(ACTION_LISTEN_NAME))
     tracker.update(UserUttered("/greet", intent, []))
     tracker.update(ActionExecuted("my_action"))
-    tracker.update(ActionExecuted(ACTION_LISTEN_NAME))
 
-    assert len(tracker.events) == 4
+    assert len(tracker.events) == 3
     assert tracker.latest_message.text == "/greet"
-    assert len(list(tracker.generate_all_prior_trackers())) == 4
+    assert len(list(tracker.generate_all_prior_trackers())) == 3
 
     tracker.update(NewUserGoal())
 
-    assert len(tracker.events) == 7
+    # appends new user goal event + repeated last user utterance
+    assert len(tracker.events) == 5
     assert tracker.followup_action is None
     assert tracker.latest_message.text == "/greet"
     assert len(list(tracker.generate_all_prior_trackers())) == 1
@@ -350,7 +350,7 @@ def test_new_user_goal_event(default_domain):
     recovered.recreate_from_dialogue(dialogue)
 
     assert recovered.current_state() == tracker.current_state()
-    assert len(recovered.events) == 7
+    assert len(recovered.events) == 5
     assert recovered.latest_message.text == "/greet"
     assert len(list(recovered.generate_all_prior_trackers())) == 1
 
