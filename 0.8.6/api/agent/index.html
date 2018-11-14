@@ -274,7 +274,7 @@ getting the next action, and handling a channel.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_channels">
-<code class="descname">handle_channels</code><span class="sig-paren">(</span><em>channels</em>, <em>http_port=5005</em>, <em>serve_forever=True</em>, <em>route=u'/webhooks/'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channels" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_channels</code><span class="sig-paren">(</span><em>channels</em>, <em>http_port=5005</em>, <em>serve_forever=True</em>, <em>route='/webhooks/'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start a webserver attaching the input channels and handling msgs.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">serve_forever</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, this call will be blocking.
 Otherwise the webserver will be started, and the method will
@@ -289,7 +289,7 @@ return afterwards.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_text">
-<code class="descname">handle_text</code><span class="sig-paren">(</span><em>text_message</em>, <em>message_preprocessor=None</em>, <em>output_channel=None</em>, <em>sender_id=u'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_text" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_text</code><span class="sig-paren">(</span><em>text_message</em>, <em>message_preprocessor=None</em>, <em>output_channel=None</em>, <em>sender_id='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a single message.</p>
 <p>If a message preprocessor is passed, the message will be passed to that
 function first and the return value is then used as the
