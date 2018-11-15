@@ -88,7 +88,7 @@
       
 
       <li>
-        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Join Community</button></a>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Ask the Community</button></a>
       </li>
 
     </ul>
@@ -253,17 +253,24 @@ you should store it as a slot. Slot information is always available for every fe
 </div>
 <div class="section" id="training-script-options">
 <h3>Training Script Options<a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] {default,compare,interactive} ...
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+usage: train.py [-h] {default,compare,interactive} ...
 
-Train a dialogue model for Rasa Core. The training will use your conversations
-in the story training data format and your domain definition to train a
-dialogue model to predict a bots actions.
+trains a dialogue model
 
 positional arguments:
   {default,compare,interactive}
-                        Training mode of core.
-    default             train a dialogue model
-    compare             train multiple dialogue models to compare policies
+                        mode
+    default             default mode: train a dialogue model
+    compare             compare mode: train multiple dialogue models to
+                        compare policies
     interactive         teach the bot with interactive learning
 
 optional arguments:

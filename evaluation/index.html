@@ -89,7 +89,7 @@
       
 
       <li>
-        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Join Community</button></a>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Ask the Community</button></a>
       </li>
 
     </ul>
@@ -212,15 +212,25 @@ was predicted incorrectly.</p>
 your domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
-                           [--endpoints ENDPOINTS]
-                           [--fail_on_prediction_errors] [--core CORE] [-v]
-                           [-vv] [--quiet]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+usage: evaluate.py default [-h] -s STORIES [-m MAX_STORIES] [-d CORE] [-u NLU]
+                           [-o OUTPUT] [--e2e] [--endpoints ENDPOINTS]
+                           [--fail_on_prediction_errors] [-v] [-vv] [--quiet]
 
 optional arguments:
   -h, --help            show this help message and exit
+  -s STORIES, --stories STORIES
+                        file or folder containing stories to evaluate on
   -m MAX_STORIES, --max_stories MAX_STORIES
                         maximum number of stories to test on
+  -d CORE, --core CORE  core model directory to evaluate
   -u NLU, --nlu NLU     nlu model to run with the server. None for regex
                         interpreter
   -o OUTPUT, --output OUTPUT
@@ -235,7 +245,6 @@ optional arguments:
                         If a prediction error is encountered, an exception is
                         thrown. This can be used to validate stories during
                         tests, e.g. on travis.
-  --core CORE           Path to a pre-trained core model directory
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG

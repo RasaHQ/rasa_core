@@ -697,15 +697,13 @@
                  <span class="n">kill_on_user_message</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Creates the reminder</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            action_name: name of the action to be scheduled</span>
-<span class="sd">            trigger_date_time: date at which the execution of the action</span>
-<span class="sd">                should be triggered (either utc or with tz)</span>
-<span class="sd">            name: id of the reminder. if there are multiple reminders with</span>
-<span class="sd">                 the same id only the last will be run</span>
-<span class="sd">            kill_on_user_message: ``True`` means a user message before the</span>
-<span class="sd">                 trigger date will abort the reminder</span>
-<span class="sd">            timestamp: creation date of the event</span>
+<span class="sd">        :param action_name: name of the action to be scheduled</span>
+<span class="sd">        :param trigger_date_time: date at which the execution of the action</span>
+<span class="sd">                                  should be triggered (either utc or with tz)</span>
+<span class="sd">        :param name: id of the reminder. if there are multiple reminders with</span>
+<span class="sd">                     the same id only the last will be run</span>
+<span class="sd">        :param kill_on_user_message: ``True`` means a user message before the</span>
+<span class="sd">                                     trigger date will abort the reminder</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">=</span> <span class="n">action_name</span>
