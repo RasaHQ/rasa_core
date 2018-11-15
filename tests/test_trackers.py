@@ -351,11 +351,10 @@ def test_new_user_goal_event(default_domain):
 
     tracker.update(NewUserGoal())
 
-    # appends new user goal event + repeated last user utterance
-    assert len(tracker.events) == 5
+    assert len(tracker.events) == 6
     assert tracker.followup_action is None
     assert tracker.latest_message.text == "/greet"
-    assert len(list(tracker.generate_all_prior_trackers())) == 1
+    assert len(list(tracker.generate_all_prior_trackers())) == 2
 
     dialogue = tracker.as_dialogue()
 
@@ -363,9 +362,9 @@ def test_new_user_goal_event(default_domain):
     recovered.recreate_from_dialogue(dialogue)
 
     assert recovered.current_state() == tracker.current_state()
-    assert len(recovered.events) == 5
+    assert len(recovered.events) == 6
     assert recovered.latest_message.text == "/greet"
-    assert len(list(recovered.generate_all_prior_trackers())) == 1
+    assert len(list(recovered.generate_all_prior_trackers())) == 2
 
     tracker_as_states = featurizer.prediction_states(
             [tracker], default_domain)
