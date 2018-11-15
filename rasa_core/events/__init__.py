@@ -984,5 +984,5 @@ class NewUserGoal(Restarted):
         from rasa_core.actions.action import ACTION_LISTEN_NAME
         latest_message = tracker.latest_message
         tracker._reset()
-        tracker.trigger_followup_action(ACTION_LISTEN_NAME)
+        tracker.update(ActionExecuted(ACTION_LISTEN_NAME))
         tracker.update(latest_message)
