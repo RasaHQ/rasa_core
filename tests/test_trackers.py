@@ -21,6 +21,7 @@ from rasa_core.tracker_store import InMemoryTrackerStore, RedisTrackerStore
 from rasa_core.tracker_store import (
     TrackerStore)
 from rasa_core.trackers import DialogueStateTracker, EventVerbosity
+from rasa_core.featurizers import MaxHistoryTrackerFeaturizer
 from tests.conftest import DEFAULT_STORIES_FILE
 from tests.utilities import tracker_from_dialogue_file, read_dialogue_file
 
@@ -330,6 +331,18 @@ def test_new_user_goal_event(default_domain):
     intent = {"name": "greet", "confidence": 1.0}
     tracker.update(ActionExecuted(ACTION_LISTEN_NAME))
     tracker.update(UserUttered("/greet", intent, []))
+
+    featurizer = MaxHistoryTrackerFeaturizer(max_history=4)
+    tracker_as_states = featurizer.prediction_states(
+            [tracker], default_domain)
+    states_one_turn = tracker_as_states[0]
+
+    assert states_one_turn == [
+        None,
+        None,
+        {},
+        {'intent_greet': 1.0, 'prev_action_listen': 1.0}]
+
     tracker.update(ActionExecuted("my_action"))
 
     assert len(tracker.events) == 3
@@ -353,6 +366,12 @@ def test_new_user_goal_event(default_domain):
     assert len(recovered.events) == 5
     assert recovered.latest_message.text == "/greet"
     assert len(list(recovered.generate_all_prior_trackers())) == 1
+
+    tracker_as_states = featurizer.prediction_states(
+            [tracker], default_domain)
+    states = tracker_as_states[0]
+
+    assert states == states_one_turn
 
 
 def test_dump_and_restore_as_json(default_agent, tmpdir_factory):
