@@ -156,6 +156,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.12.1/evaluation/">0.12.1</a>
               <a href="../../0.12.0/evaluation/">0.12.0</a>
               <a href="../../0.11.12/evaluation/">0.11.12</a>
               <a href="../../0.10.4/evaluation/">0.10.4</a>
@@ -189,7 +190,7 @@
 
 
 
-    <p class="scv-banner"><a href="../../0.12.0/evaluation/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.12.0.</a></p>
+    <p class="scv-banner"><a href="../../0.12.1/evaluation/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.12.1.</a></p>
 <div class="section" id="evaluating-and-testing">
 <span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
@@ -214,17 +215,15 @@ was predicted incorrectly.</p>
 your domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py default [-h] -s STORIES [-m MAX_STORIES] [-d CORE] [-u NLU]
-                           [-o OUTPUT] [--e2e] [--endpoints ENDPOINTS]
-                           [--fail_on_prediction_errors] [-v] [-vv] [--quiet]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
+                           [--endpoints ENDPOINTS]
+                           [--fail_on_prediction_errors] [--core CORE] [-v]
+                           [-vv] [--quiet]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -s STORIES, --stories STORIES
-                        file or folder containing stories to evaluate on
   -m MAX_STORIES, --max_stories MAX_STORIES
                         maximum number of stories to test on
-  -d CORE, --core CORE  core model directory to evaluate
   -u NLU, --nlu NLU     nlu model to run with the server. None for regex
                         interpreter
   -o OUTPUT, --output OUTPUT
@@ -239,6 +238,7 @@ optional arguments:
                         If a prediction error is encountered, an exception is
                         thrown. This can be used to validate stories during
                         tests, e.g. on travis.
+  --core CORE           Path to a pre-trained core model directory
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG

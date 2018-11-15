@@ -150,12 +150,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.12.0
+          viewing: 0.12.1
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.12.1/evaluation/">0.12.1</a>
               <a href=".././0.12.0/evaluation/">0.12.0</a>
               <a href=".././0.11.12/evaluation/">0.11.12</a>
               <a href=".././0.10.4/evaluation/">0.10.4</a>
@@ -199,8 +200,8 @@ combined, take a look at the section on
 <h2>Evaluating a Trained Model<a class="headerlink" href="#evaluating-a-trained-model" title="Permalink to this headline">¶</a></h2>
 <p>You can evaluate your trained model on a set of test stories
 by using the evaluate script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate -d models/dialogue <span class="se">\</span>
-  -s test_stories.md -o results
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate --core models/dialogue <span class="se">\</span>
+  --stories test_stories.md -o results
 </pre></div>
 </div>
 <p>This will print the failed stories to <code class="docutils literal notranslate"><span class="pre">results/failed_stories.md</span></code>.
@@ -211,17 +212,15 @@ was predicted incorrectly.</p>
 your domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py default [-h] -s STORIES [-m MAX_STORIES] [-d CORE] [-u NLU]
-                           [-o OUTPUT] [--e2e] [--endpoints ENDPOINTS]
-                           [--fail_on_prediction_errors] [-v] [-vv] [--quiet]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
+                           [--endpoints ENDPOINTS]
+                           [--fail_on_prediction_errors] [--core CORE] [-v]
+                           [-vv] [--quiet]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -s STORIES, --stories STORIES
-                        file or folder containing stories to evaluate on
   -m MAX_STORIES, --max_stories MAX_STORIES
                         maximum number of stories to test on
-  -d CORE, --core CORE  core model directory to evaluate
   -u NLU, --nlu NLU     nlu model to run with the server. None for regex
                         interpreter
   -o OUTPUT, --output OUTPUT
@@ -236,6 +235,7 @@ optional arguments:
                         If a prediction error is encountered, an exception is
                         thrown. This can be used to validate stories during
                         tests, e.g. on travis.
+  --core CORE           Path to a pre-trained core model directory
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG
@@ -272,8 +272,9 @@ user messages is <code class="docutils literal notranslate"><span class="pre">*<
 </div>
 <p>If you’ve saved these stories under <code class="docutils literal notranslate"><span class="pre">e2e_storied.md</span></code>,
 the full end-to-end evaluation command is this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate default -d models/dialogue --nlu models/nlu/current <span class="se">\</span>
-  -s e2e_stories.md --e2e
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate default --core models/dialogue <span class="se">\</span>
+  --nlu models/nlu/current <span class="se">\</span>
+  --stories e2e_stories.md --e2e
 </pre></div>
 </div>
 <div class="admonition note">
@@ -306,7 +307,8 @@ with 0, 5, 25, 50, 70 and 95% of your training stories excluded from the trainin
 data. This is done for multiple runs, to ensure consistent results.</p>
 <p>Once this script has finished, you can now use the evaluate script in compare
 mode to evaluate the models you just trained:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate compare -s stories_folder -d comparison_models <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate compare --stories stories_folder <span class="se">\</span>
+  --core comparison_models <span class="se">\</span>
   -o comparison_results
 </pre></div>
 </div>

@@ -152,6 +152,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.12.1/evaluation/">0.12.1</a>
               <a href="../../0.12.0/evaluation/">0.12.0</a>
               <a href="../../0.11.12/evaluation/">0.11.12</a>
               <a href="../../0.10.4/evaluation/">0.10.4</a>
@@ -185,7 +186,7 @@
 
 
 
-    <p class="scv-banner"><a href="../../0.12.0/evaluation/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.12.0.</a></p>
+    <p class="scv-banner"><a href="../../0.12.1/evaluation/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.12.1.</a></p>
 <div class="section" id="evaluating-and-testing">
 <span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="evaluating-a-trained-model">
@@ -204,18 +205,23 @@ was predicted incorrectly.</p>
 domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] {default,compare} ...
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py [-h] (-s STORIES | --url URL) {default,compare} ...
 
 evaluates a dialogue model
 
 positional arguments:
-  {default,compare}  mode
-    default          default mode: evaluate a dialogue model
-    compare          compare mode: evaluate multiple dialogue models to
-                     compare policies
+  {default,compare}     mode
+    default             default mode: evaluate a dialogue model
+    compare             compare mode: evaluate multiple dialogue models to
+                        compare policies
 
 optional arguments:
-  -h, --help         show this help message and exit
+  -h, --help            show this help message and exit
+  -s STORIES, --stories STORIES
+                        File or folder containing stories
+  --url URL             If supplied, downloads a story file from a URL and
+                        trains on it. Fetches the data by sending a GET
+                        request to the supplied URL.
 </pre></div>
 </div>
 </div>

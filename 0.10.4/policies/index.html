@@ -150,6 +150,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.12.1/policies/">0.12.1</a>
               <a href="../../0.12.0/policies/">0.12.0</a>
               <a href="../../0.11.12/policies/">0.11.12</a>
               <a href="../../0.10.4/policies/">0.10.4</a>
@@ -183,7 +184,7 @@
 
 
 
-    <p class="scv-banner"><a href="../../0.12.0/policies/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.12.0.</a></p>
+    <p class="scv-banner"><a href="../../0.12.1/policies/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.12.1.</a></p>
 <div class="section" id="training-and-policies">
 <span id="policies"></span><h1>Training and Policies<a class="headerlink" href="#training-and-policies" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="training">
@@ -254,14 +255,15 @@ you should store it as a slot. Slot information is always available for every fe
 <h3>Training Script Options<a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py [-h] {default,compare,interactive} ...
 
-trains a dialogue model
+Train a dialogue model for Rasa Core. The training will use your conversations
+in the story training data format and your domain definition to train a
+dialogue model to predict a bots actions.
 
 positional arguments:
   {default,compare,interactive}
-                        mode
-    default             default mode: train a dialogue model
-    compare             compare mode: train multiple dialogue models to
-                        compare policies
+                        Training mode of core.
+    default             train a dialogue model
+    compare             train multiple dialogue models to compare policies
     interactive         teach the bot with interactive learning
 
 optional arguments:
