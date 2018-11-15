@@ -23,6 +23,7 @@ from collections import defaultdict
 from rasa_core import training
 from rasa_core import utils
 from rasa_core.agent import Agent
+from rasa_core.actions.action import ACTION_LISTEN_NAME
 from rasa_core.events import ActionExecuted, UserUttered
 from rasa_core.interpreter import NaturalLanguageInterpreter
 from rasa_core.policies import SimplePolicyEnsemble
@@ -378,8 +379,14 @@ def _predict_tracker_actions(tracker, agent, fail_on_prediction_errors=False,
 
     tracker_actions = []
 
+    new_user_goal = False
     for event in events[1:]:
+        if isinstance(event, NewUserGoal):
+            new_user_goal = True
         if isinstance(event, ActionExecuted):
+            if new_user_goal and event.type_name == ACTION_LISTEN_NAME:
+                new_user_goal = False
+                continue
             action_executed_result, policy, confidence = \
                 _collect_action_executed_predictions(
                         processor, partial_tracker, event,
