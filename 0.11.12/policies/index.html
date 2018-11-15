@@ -265,14 +265,15 @@ you should store it as a slot. Slot information is always available for every fe
   return f(*args, **kwds)
 usage: train.py [-h] {default,compare,interactive} ...
 
-trains a dialogue model
+Train a dialogue model for Rasa Core. The training will use your conversations
+in the story training data format and your domain definition to train a
+dialogue model to predict a bots actions.
 
 positional arguments:
   {default,compare,interactive}
-                        mode
-    default             default mode: train a dialogue model
-    compare             compare mode: train multiple dialogue models to
-                        compare policies
+                        Training mode of core.
+    default             train a dialogue model
+    compare             train multiple dialogue models to compare policies
     interactive         teach the bot with interactive learning
 
 optional arguments:
