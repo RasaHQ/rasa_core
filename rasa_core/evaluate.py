@@ -24,7 +24,7 @@ from rasa_core import training
 from rasa_core import utils
 from rasa_core.agent import Agent
 from rasa_core.actions.action import ACTION_LISTEN_NAME
-from rasa_core.events import ActionExecuted, UserUttered
+from rasa_core.events import ActionExecuted, UserUttered, NewUserGoal
 from rasa_core.interpreter import NaturalLanguageInterpreter
 from rasa_core.policies import SimplePolicyEnsemble
 from rasa_core.trackers import DialogueStateTracker
