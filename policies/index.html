@@ -287,32 +287,35 @@ slot. Slot information is always available for every featurizer.</p>
   return f(*args, **kwds)
 /home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
   return f(*args, **kwds)
-usage: train.py default [-h] [--augmentation AUGMENTATION] [--dump_stories]
-                        [--debug_plots] [-v] [-vv] [--quiet] [-c CONFIG] -o
-                        OUT (-s STORIES | --url URL) -d DOMAIN
+usage: train.py default [-h] [-o OUT] -d DOMAIN [--augmentation AUGMENTATION]
+                        -c [CONFIG [CONFIG ...]] [--dump_stories]
+                        [--debug_plots] (-s STORIES | --url URL | --core CORE)
+                        [-v] [-vv] [--quiet]
 
 optional arguments:
   -h, --help            show this help message and exit
+  -o OUT, --out OUT     directory to persist the trained model in
+  -d DOMAIN, --domain DOMAIN
+                        domain specification yaml file
   --augmentation AUGMENTATION
                         how much data augmentation to use during training
+  -c [CONFIG [CONFIG ...]], --config [CONFIG [CONFIG ...]]
+                        Policy specification yaml file.
   --dump_stories        If enabled, save flattened stories to a file
   --debug_plots         If enabled, will create plots showing checkpoints and
                         their connections between story blocks in a file
                         called `story_blocks_connections.pdf`.
+  -s STORIES, --stories STORIES
+                        file or folder containing the training stories
+  --url URL             If supplied, downloads a story file from a URL and
+                        trains on it. Fetches the data by sending a GET
+                        request to the supplied URL.
+  --core CORE           path to load a pre-trained model instead of training
+                        (for interactive mode only)
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG
   --quiet               Be quiet! Sets logging level to WARNING
-  -c CONFIG, --config CONFIG
-                        Policy specification yaml file.
-  -o OUT, --out OUT     directory to persist the trained model in
-  -s STORIES, --stories STORIES
-                        File or folder containing stories
-  --url URL             If supplied, downloads a story file from a URL and
-                        trains on it. Fetches the data by sending a GET
-                        request to the supplied URL.
-  -d DOMAIN, --domain DOMAIN
-                        Domain specification (yml file)
 </pre></div>
 </div>
 </div>
