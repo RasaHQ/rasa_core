@@ -191,7 +191,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="c1"># noinspection PyPep8Naming</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">KeysView</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
 <span class="kn">from</span> <span class="nn">rasa_core.broker</span> <span class="k">import</span> <span class="n">EventChannel</span>
@@ -303,17 +303,20 @@
 
 
 <span class="k">class</span> <span class="nc">InMemoryTrackerStore</span><span class="p">(</span><span class="n">TrackerStore</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">event_broker</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span>
+                 <span class="n">event_broker</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EventChannel</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+                 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">InMemoryTrackerStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">event_broker</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="n">DialogueStateTracker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_broker</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stream_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
         <span class="n">serialised</span> <span class="o">=</span> <span class="n">InMemoryTrackerStore</span><span class="o">.</span><span class="n">serialise_tracker</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">[</span><span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">serialised</span>
 
-    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">sender_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Recreating tracker for &#39;</span>
                          <span class="s1">&#39;id </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sender_id</span><span class="p">))</span>
@@ -323,7 +326,7 @@
                          <span class="s1">&#39;id </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sender_id</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeysView</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 
 
