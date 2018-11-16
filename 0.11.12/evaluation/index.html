@@ -213,23 +213,18 @@ incorrect action was predicted instead.</p>
   return f(*args, **kwds)
 /home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
   return f(*args, **kwds)
-usage: evaluate.py [-h] (-s STORIES | --url URL) {default,compare} ...
+usage: evaluate.py [-h] {default,compare} ...
 
 evaluates a dialogue model
 
 positional arguments:
-  {default,compare}     mode
-    default             default mode: evaluate a dialogue model
-    compare             compare mode: evaluate multiple dialogue models to
-                        compare policies
+  {default,compare}  mode
+    default          default mode: evaluate a dialogue model
+    compare          compare mode: evaluate multiple dialogue models to
+                     compare policies
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -s STORIES, --stories STORIES
-                        File or folder containing stories
-  --url URL             If supplied, downloads a story file from a URL and
-                        trains on it. Fetches the data by sending a GET
-                        request to the supplied URL.
+  -h, --help         show this help message and exit
 </pre></div>
 </div>
 </div>

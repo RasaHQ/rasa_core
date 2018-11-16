@@ -222,8 +222,8 @@ incorrect action was predicted instead.</p>
   return f(*args, **kwds)
 usage: evaluate.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
                            [--endpoints ENDPOINTS]
-                           [--fail_on_prediction_errors] [--core CORE] [-v]
-                           [-vv] [--quiet]
+                           [--fail_on_prediction_errors] [--core CORE]
+                           (-s STORIES | --url URL) [-v] [-vv] [--quiet]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -244,6 +244,11 @@ optional arguments:
                         thrown. This can be used to validate stories during
                         tests, e.g. on travis.
   --core CORE           Path to a pre-trained core model directory
+  -s STORIES, --stories STORIES
+                        File or folder containing stories
+  --url URL             If supplied, downloads a story file from a URL and
+                        trains on it. Fetches the data by sending a GET
+                        request to the supplied URL.
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG
