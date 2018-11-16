@@ -179,18 +179,18 @@
 
     <p class="scv-banner"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.agent</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">zipfile</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
-
-<span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">gevent.pywsgi</span> <span class="k">import</span> <span class="n">WSGIServer</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span> <span class="k">as</span> <span class="n">IOReader</span>
 <span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="k">import</span> <span class="n">InvalidURL</span><span class="p">,</span> <span class="n">RequestException</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">rasa_core</span>
@@ -207,16 +207,16 @@
 <span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.processor</span> <span class="k">import</span> <span class="n">MessageProcessor</span>
 <span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">InMemoryTrackerStore</span>
-<span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span><span class="p">,</span> <span class="n">EventVerbosity</span>
+<span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
 <span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
 <span class="kn">from</span> <span class="nn">rasa_nlu.utils</span> <span class="k">import</span> <span class="n">is_url</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span> <span class="k">as</span> <span class="n">IOReader</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="c1"># noinspection PyPep8Naming</span>
     <span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span> <span class="k">as</span> <span class="n">NLG</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">TrackerStore</span>
 
 
 <span class="k">def</span> <span class="nf">load_from_server</span><span class="p">(</span><span class="n">interpreter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: NaturalLanguageInterpreter</span>
@@ -607,6 +607,24 @@
                                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_fingerprint</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">_max_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find maximum max_history.&quot;&quot;&quot;</span>
+
+        <span class="n">max_histories</span> <span class="o">=</span> <span class="p">[</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">max_history</span>
+                         <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span>
+                         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_histories</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_are_all_featurizers_using_a_max_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if all featurizers are MaxHistoryTrackerFeaturizer.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">and</span>
+                    <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
 <div class="viewcode-block" id="Agent.load_data"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                   <span class="n">resource_name</span><span class="p">,</span>  <span class="c1"># type: Text</span>
                   <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># type: bool</span>
@@ -620,25 +638,16 @@
         <span class="c1"># type: (...) -&gt; List[DialogueStateTracker]</span>
         <span class="sd">&quot;&quot;&quot;Load training data from a resource.&quot;&quot;&quot;</span>
 
-        <span class="c1"># find maximum max_history</span>
-        <span class="c1"># and if all featurizers are MaxHistoryTrackerFeaturizer</span>
-        <span class="n">max_max_history</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">all_max_history_featurizers</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">):</span>
-                <span class="n">max_max_history</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="o">.</span><span class="n">max_history</span><span class="p">,</span>
-                                      <span class="n">max_max_history</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">all_max_history_featurizers</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">max_history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_history</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">unique_last_num_states</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># for speed up of data generation</span>
             <span class="c1"># automatically detect unique_last_num_states</span>
             <span class="c1"># if it was not set and</span>
             <span class="c1"># if all featurizers are MaxHistoryTrackerFeaturizer</span>
-            <span class="k">if</span> <span class="n">all_max_history_featurizers</span><span class="p">:</span>
-                <span class="n">unique_last_num_states</span> <span class="o">=</span> <span class="n">max_max_history</span>
-        <span class="k">elif</span> <span class="n">unique_last_num_states</span> <span class="o">&lt;</span> <span class="n">max_max_history</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_are_all_featurizers_using_a_max_history</span><span class="p">():</span>
+                <span class="n">unique_last_num_states</span> <span class="o">=</span> <span class="n">max_history</span>
+        <span class="k">elif</span> <span class="n">unique_last_num_states</span> <span class="o">&lt;</span> <span class="n">max_history</span><span class="p">:</span>
             <span class="c1"># possibility of data loss</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;unique_last_num_states=</span><span class="si">{}</span><span class="s2"> but &quot;</span>
                            <span class="s2">&quot;maximum max_history=</span><span class="si">{}</span><span class="s2">.&quot;</span>
@@ -646,7 +655,7 @@
                            <span class="s2">&quot;It is recommended to set &quot;</span>
                            <span class="s2">&quot;unique_last_num_states to &quot;</span>
                            <span class="s2">&quot;at least maximum max_history.&quot;</span>
-                           <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unique_last_num_states</span><span class="p">,</span> <span class="n">max_max_history</span><span class="p">))</span>
+                           <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unique_last_num_states</span><span class="p">,</span> <span class="n">max_history</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">training</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
                                   <span class="n">remove_duplicates</span><span class="p">,</span> <span class="n">unique_last_num_states</span><span class="p">,</span>
@@ -662,8 +671,9 @@
         <span class="c1"># type: (...) -&gt; None</span>
         <span class="sd">&quot;&quot;&quot;Train the policies / policy ensemble using dialogue data from file.</span>
 
-<span class="sd">            :param training_trackers: trackers to train on</span>
-<span class="sd">            :param kwargs: additional arguments passed to the underlying ML</span>
+<span class="sd">        Args:</span>
+<span class="sd">            training_trackers: trackers to train on</span>
+<span class="sd">            **kwargs: additional arguments passed to the underlying ML</span>
 <span class="sd">                           trainer (e.g. keras parameters)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -770,7 +780,7 @@
     <span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                   <span class="n">resource_name</span><span class="p">,</span>  <span class="c1"># type: Text</span>
                   <span class="n">output_file</span><span class="p">,</span>  <span class="c1"># type: Text</span>
-                  <span class="n">max_history</span><span class="p">,</span>  <span class="c1"># type: int</span>
+                  <span class="n">max_history</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[int]</span>
                   <span class="n">nlu_training_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: Optional[Text]</span>
                   <span class="n">should_merge_nodes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># type: bool</span>
                   <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span>  <span class="c1"># type: int</span>
@@ -780,11 +790,15 @@
         <span class="kn">from</span> <span class="nn">rasa_core.training.dsl</span> <span class="k">import</span> <span class="n">StoryFileReader</span>
         <span class="sd">&quot;&quot;&quot;Visualize the loaded training data from the resource.&quot;&quot;&quot;</span>
 
+        <span class="c1"># if the user doesn&#39;t provide a max history, we will use the</span>
+        <span class="c1"># largest value from any policy</span>
+        <span class="n">max_history</span> <span class="o">=</span> <span class="n">max_history</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_history</span><span class="p">()</span>
+
         <span class="n">story_steps</span> <span class="o">=</span> <span class="n">StoryFileReader</span><span class="o">.</span><span class="n">read_from_folder</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span>
                                                        <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
-        <span class="n">visualize_stories</span><span class="p">(</span><span class="n">story_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">max_history</span><span class="p">,</span>
-                          <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">nlu_training_data</span><span class="p">,</span>
-                          <span class="n">should_merge_nodes</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span>
+        <span class="n">visualize_stories</span><span class="p">(</span><span class="n">story_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
+                          <span class="n">max_history</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span>
+                          <span class="n">nlu_training_data</span><span class="p">,</span> <span class="n">should_merge_nodes</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_ensure_agent_is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; None</span>

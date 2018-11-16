@@ -212,11 +212,6 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 </div>
 <div class="section" id="fixed">
 <h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">SlackBot</span></code> when created in <code class="docutils literal notranslate"><span class="pre">SlackInputChannel</span></code> inherits the
-<code class="docutils literal notranslate"><span class="pre">slack_channel</span></code> property, allowing Slack bots to post to any channel
-instead of only back to the user</li>
-</ul>
 </div>
 </div>
 <div class="section" id="id1">
@@ -226,6 +221,16 @@ instead of only back to the user</li>
 <ul class="simple">
 <li>fixed interactive learning to properly submit executed actions to the action
 server</li>
+<li>allow the specification of the policy configuration while using the
+visualisation script</li>
+<li>use default configuration if no policy configuration is passed</li>
+<li>fixed html delivery from interactive server script (package compatible)</li>
+<li><code class="docutils literal notranslate"><span class="pre">SlackBot</span></code> when created in <code class="docutils literal notranslate"><span class="pre">SlackInputChannel</span></code> inherits the
+<code class="docutils literal notranslate"><span class="pre">slack_channel</span></code> property, allowing Slack bots to post to any channel
+instead of only back to the user</li>
+<li>fix writing of new domain file from interactive learning</li>
+<li>fix reading of state featurizers from yaml</li>
+<li>fix reading of batch_size parameter in keras policy</li>
 </ul>
 </div>
 </div>

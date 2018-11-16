@@ -372,19 +372,14 @@ training data.</p>
 <dt id="rasa_core.agent.Agent.train">
 <code class="descname">train</code><span class="sig-paren">(</span><em>training_trackers</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the policies / policy ensemble using dialogue data from file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>training_trackers</strong> – trackers to train on</li>
-<li><strong>kwargs</strong> – additional arguments passed to the underlying ML
-trainer (e.g. keras parameters)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">training_trackers: trackers to train on
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: additional arguments passed to the underlying ML</p>
+<blockquote class="last">
+<div>trainer (e.g. keras parameters)</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -394,7 +389,7 @@ trainer (e.g. keras parameters)</li>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>resource_name</em>, <em>output_file</em>, <em>max_history</em>, <em>nlu_training_data=None</em>, <em>should_merge_nodes=True</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>resource_name</em>, <em>output_file</em>, <em>max_history=None</em>, <em>nlu_training_data=None</em>, <em>should_merge_nodes=True</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
