@@ -508,8 +508,7 @@ to be a fixed one.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Effect:</th><td class="field-body"><p class="first">When added to a tracker, this is the code used to update the tracker:</p>
-<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_followup_action</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -552,9 +551,7 @@ to be a fixed one.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Effect:</th><td class="field-body"><p class="first">When added to a tracker, this is the code used to update the tracker:</p>
-<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
-
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">clear_followup_action</span><span class="p">()</span>
 </pre></div>
@@ -593,8 +590,7 @@ to be a fixed one.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Effect:</th><td class="field-body"><p class="first">When added to a tracker, this is the code used to update the tracker:</p>
-<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="n">tracker</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="bp">self</span>
 </pre></div>
@@ -633,9 +629,7 @@ and the bot is waiting for a new user message.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Effect:</th><td class="field-body"><p class="first">When added to a tracker, this is the code used to update the tracker:</p>
-<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
-
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">replay_events</span><span class="p">()</span>
 </pre></div>
@@ -676,9 +670,7 @@ action.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Effect:</th><td class="field-body"><p class="first">When added to a tracker, this is the code used to update the tracker:</p>
-<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
-
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">replay_events</span><span class="p">()</span>
 </pre></div>
@@ -717,8 +709,7 @@ to the latest <code class="docutils literal notranslate"><span class="pre">Turn<
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Effect:</th><td class="field-body"><p class="first">When added to a tracker, this is the code used to update the tracker:</p>
-<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="c1"># type: (DialogueStateTracker) -&gt; None</span>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="n">tracker</span><span class="o">.</span><span class="n">set_latest_action_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">)</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">clear_followup_action</span><span class="p">()</span>

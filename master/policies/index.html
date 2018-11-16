@@ -391,16 +391,15 @@ predicts <code class="docutils literal notranslate"><span class="pre">None</span
 The default architecture is based on an LSTM, but you can override the
 <code class="docutils literal notranslate"><span class="pre">KerasPolicy.model_architecture</span></code> method to implement your own architecture.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">model_architecture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">input_shape</span><span class="p">,</span>  <span class="c1"># type: Tuple[int, int]</span>
-            <span class="n">output_shape</span>  <span class="c1"># type: Tuple[int, Optional[int]]</span>
-    <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; tf.keras.models.Sequential</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="n">output_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Build a keras model and return a compiled model.&quot;&quot;&quot;</span>
 
         <span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
-        <span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="k">import</span> \
-            <span class="n">Masking</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">TimeDistributed</span><span class="p">,</span> <span class="n">Activation</span>
+        <span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="k">import</span> <span class="p">(</span>
+            <span class="n">Masking</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">TimeDistributed</span><span class="p">,</span> <span class="n">Activation</span><span class="p">)</span>
 
         <span class="c1"># Build Model</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
@@ -447,11 +446,10 @@ The default architecture is based on an LSTM, but you can override the
 </div>
 <p>and the training is run here:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-              <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
-              <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
-              <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: Any</span>
-              <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; Dict[Text: Any]</span>
+              <span class="n">training_trackers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">],</span>
+              <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span>
+              <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+              <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize_for_training</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span>
                                                     <span class="n">domain</span><span class="p">,</span>
@@ -469,9 +467,9 @@ The default architecture is based on an LSTM, but you can override the
                                                          <span class="n">shuffled_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fitting model with </span><span class="si">{}</span><span class="s2"> total samples and a &quot;</span>
-                            <span class="s2">&quot;validation split of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">training_data</span><span class="o">.</span><span class="n">num_examples</span><span class="p">(),</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">validation_split</span><span class="p">))</span>
+                            <span class="s2">&quot;validation split of </span><span class="si">{}</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">training_data</span><span class="o">.</span><span class="n">num_examples</span><span class="p">(),</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">validation_split</span><span class="p">))</span>
                 <span class="c1"># filter out kwargs that cannot be passed to fit</span>
                 <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_valid_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -740,6 +738,7 @@ The default values are defined in <code class="docutils literal notranslate"><sp
         <span class="c1"># how many examples to use for calculation of train accuracy</span>
         <span class="s2">&quot;evaluate_on_num_examples&quot;</span><span class="p">:</span> <span class="mi">100</span>  <span class="c1"># large values may hurt performance</span>
     <span class="p">}</span>
+
 </pre></div>
 </div>
 <div class="admonition note">
