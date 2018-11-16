@@ -245,7 +245,7 @@ events in an http callback).</p>
 to the latest <code class="docutils literal notranslate"><span class="pre">Turn</span></code> in the <code class="docutils literal notranslate"><span class="pre">Tracker.turns</span></code>.</p>
 <dl class="method">
 <dt id="rasa_core.events.ActionExecuted.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecuted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecuted.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecuted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecuted.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -272,7 +272,7 @@ to the latest <code class="docutils literal notranslate"><span class="pre">Turn<
 <p>Notify Core that the execution of the action has been rejected</p>
 <dl class="method">
 <dt id="rasa_core.events.ActionExecutionRejected.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecutionRejected.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecutionRejected.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#ActionExecutionRejected.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionExecutionRejected.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -304,7 +304,7 @@ predict a new action using the state before the most recent
 action.</p>
 <dl class="method">
 <dt id="rasa_core.events.ActionReverted.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ActionReverted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionReverted.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#ActionReverted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ActionReverted.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -328,7 +328,7 @@ action.</p>
 <code class="docutils literal notranslate"><span class="pre">ActionExecuted</span></code> class. An entry is made in the <code class="docutils literal notranslate"><span class="pre">Tracker</span></code>.</p>
 <dl class="method">
 <dt id="rasa_core.events.AgentUttered.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#AgentUttered.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AgentUttered.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#AgentUttered.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.AgentUttered.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -387,7 +387,7 @@ values.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ActionExecuted</span></code> class. An entry is made in the <code class="docutils literal notranslate"><span class="pre">Tracker</span></code>.</p>
 <dl class="method">
 <dt id="rasa_core.events.BotUttered.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#BotUttered.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.BotUttered.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#BotUttered.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.BotUttered.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -469,7 +469,7 @@ a conversation and tell the <code class="xref py py-class docutils literal notra
 how to update its state.</p>
 <dl class="method">
 <dt id="rasa_core.events.Event.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Event.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#Event.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -484,17 +484,17 @@ how to update its state.</p>
 
 <dl class="staticmethod">
 <dt id="rasa_core.events.Event.from_parameters">
-<em class="property">static </em><code class="descname">from_parameters</code><span class="sig-paren">(</span><em>parameters</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Event.from_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_parameters" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">from_parameters</code><span class="sig-paren">(</span><em>parameters: Dict[str, Any], default: Optional[Type[Event]] = None</em><span class="sig-paren">)</span> &#x2192; Optional[rasa_core.events.Event]<a class="reference internal" href="../../_modules/rasa_core/events/#Event.from_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_parameters" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
 <dt id="rasa_core.events.Event.from_story_string">
-<em class="property">static </em><code class="descname">from_story_string</code><span class="sig-paren">(</span><em>event_name</em>, <em>parameters</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Event.from_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_story_string" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">from_story_string</code><span class="sig-paren">(</span><em>event_name: str, parameters: Dict[str, Any], default: Optional[Type[Event]] = None</em><span class="sig-paren">)</span> &#x2192; Optional[List[rasa_core.events.Event]]<a class="reference internal" href="../../_modules/rasa_core/events/#Event.from_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.from_story_string" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
 <dt id="rasa_core.events.Event.resolve_by_type">
-<em class="property">static </em><code class="descname">resolve_by_type</code><span class="sig-paren">(</span><em>type_name</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Event.resolve_by_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.resolve_by_type" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">resolve_by_type</code><span class="sig-paren">(</span><em>type_name: str</em>, <em>default: Optional[str] = None</em><span class="sig-paren">)</span> &#x2192; Optional[Type[rasa_core.events.Event]]<a class="reference internal" href="../../_modules/rasa_core/events/#Event.resolve_by_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event.resolve_by_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a slots class by its type name.</p>
 </dd></dl>
 
@@ -512,7 +512,7 @@ how to update its state.</p>
 <p>Enqueue a followup action.</p>
 <dl class="method">
 <dt id="rasa_core.events.FollowupAction.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#FollowupAction.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.FollowupAction.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#FollowupAction.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.FollowupAction.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -540,7 +540,7 @@ how to update its state.</p>
 else deactivates active form</p>
 <dl class="method">
 <dt id="rasa_core.events.Form.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Form.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Form.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#Form.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Form.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -568,7 +568,7 @@ else deactivates active form</p>
 whether or not to validate the user input</p>
 <dl class="method">
 <dt id="rasa_core.events.FormValidation.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#FormValidation.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.FormValidation.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#FormValidation.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.FormValidation.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -675,7 +675,7 @@ that <code class="docutils literal notranslate"><span class="pre">tracker.slots[
 <p>Story should get dumped to a file.</p>
 <dl class="method">
 <dt id="rasa_core.events.StoryExported.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#StoryExported.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.StoryExported.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#StoryExported.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.StoryExported.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -700,7 +700,7 @@ also means that the last event on the tracker is usually <cite>action_listen</ci
 and the bot is waiting for a new user message.</p>
 <dl class="method">
 <dt id="rasa_core.events.UserUtteranceReverted.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#UserUtteranceReverted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUtteranceReverted.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#UserUtteranceReverted.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUtteranceReverted.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -723,7 +723,7 @@ and the bot is waiting for a new user message.</p>
 <p>As a side effect a new <code class="docutils literal notranslate"><span class="pre">Turn</span></code> will be created in the <code class="docutils literal notranslate"><span class="pre">Tracker</span></code>.</p>
 <dl class="method">
 <dt id="rasa_core.events.UserUttered.apply_to">
-<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#UserUttered.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUttered.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_to</code><span class="sig-paren">(</span><em>tracker: DialogueStateTracker</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/events/#UserUttered.apply_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.UserUttered.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -755,7 +755,7 @@ and the bot is waiting for a new user message.</p>
 
 <dl class="function">
 <dt id="rasa_core.events.deserialise_events">
-<code class="descclassname">rasa_core.events.</code><code class="descname">deserialise_events</code><span class="sig-paren">(</span><em>serialized_events</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#deserialise_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.deserialise_events" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">rasa_core.events.</code><code class="descname">deserialise_events</code><span class="sig-paren">(</span><em>serialized_events: List[Dict[str, Any]]</em><span class="sig-paren">)</span> &#x2192; List[rasa_core.events.Event]<a class="reference internal" href="../../_modules/rasa_core/events/#deserialise_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.deserialise_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a list of dictionaries to a list of corresponding events.</p>
 <dl class="docutils">
 <dt>Example format:</dt>

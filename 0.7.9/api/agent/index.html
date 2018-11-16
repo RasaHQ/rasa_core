@@ -243,7 +243,7 @@ policy, interpreter, and the tracker store) on your own to customize them.</p>
 <p>Here we go:</p>
 <span class="target" id="module-rasa_core.agent"></span><dl class="class">
 <dt id="rasa_core.agent.Agent">
-<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain=None</em>, <em>policies=None</em>, <em>interpreter=None</em>, <em>generator=None</em>, <em>tracker_store=None</em>, <em>action_endpoint=None</em>, <em>fingerprint=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">rasa_core.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>domain: Union[str, rasa_core.domain.Domain] = None, policies: Union[rasa_core.policies.ensemble.PolicyEnsemble, List[rasa_core.policies.policy.Policy], None] = None, interpreter: Optional[rasa_core.interpreter.NaturalLanguageInterpreter] = None, generator: Union[rasa_core.utils.EndpointConfig, NLG, None] = None, tracker_store: Optional[TrackerStore] = None, action_endpoint: Optional[rasa_core.utils.EndpointConfig] = None, fingerprint: Optional[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The Agent class provides a convenient interface for the most important
 Rasa Core functionality.</p>
@@ -251,29 +251,29 @@ Rasa Core functionality.</p>
 getting the next action, and handling a channel.</p>
 <dl class="method">
 <dt id="rasa_core.agent.Agent.continue_training">
-<code class="descname">continue_training</code><span class="sig-paren">(</span><em>trackers</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.continue_training"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.continue_training" title="Permalink to this definition">¶</a></dt>
+<code class="descname">continue_training</code><span class="sig-paren">(</span><em>trackers: List[rasa_core.trackers.DialogueStateTracker], **kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.continue_training"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.continue_training" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.create_processor">
-<code class="descname">create_processor</code><span class="sig-paren">(</span><em>preprocessor=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.create_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.create_processor" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_processor</code><span class="sig-paren">(</span><em>preprocessor: Optional[Callable[str</em>, <em>str]] = None</em><span class="sig-paren">)</span> &#x2192; rasa_core.processor.MessageProcessor<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.create_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.create_processor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Instantiates a processor based on the set state of the agent.</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="rasa_core.agent.Agent.create_tracker_store">
-<em class="property">static </em><code class="descname">create_tracker_store</code><span class="sig-paren">(</span><em>store</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.create_tracker_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.create_tracker_store" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">create_tracker_store</code><span class="sig-paren">(</span><em>store: Optional[TrackerStore], domain: rasa_core.domain.Domain</em><span class="sig-paren">)</span> &#x2192; TrackerStore<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.create_tracker_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.create_tracker_store" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.execute_action">
-<code class="descname">execute_action</code><span class="sig-paren">(</span><em>sender_id</em>, <em>action</em>, <em>output_channel</em>, <em>policy</em>, <em>confidence</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.execute_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.execute_action" title="Permalink to this definition">¶</a></dt>
+<code class="descname">execute_action</code><span class="sig-paren">(</span><em>sender_id: str</em>, <em>action: str</em>, <em>output_channel: rasa_core.channels.channel.OutputChannel</em>, <em>policy: str</em>, <em>confidence: float</em><span class="sig-paren">)</span> &#x2192; rasa_core.trackers.DialogueStateTracker<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.execute_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.execute_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a single message.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_channels">
-<code class="descname">handle_channels</code><span class="sig-paren">(</span><em>channels</em>, <em>http_port=5005</em>, <em>serve_forever=True</em>, <em>route='/webhooks/'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channels" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_channels</code><span class="sig-paren">(</span><em>channels: List[rasa_core.channels.channel.InputChannel], http_port: int = 5005, serve_forever: bool = True, route: str = '/webhooks/'</em><span class="sig-paren">)</span> &#x2192; gevent.pywsgi.WSGIServer<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start a webserver attaching the input channels and handling msgs.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">serve_forever</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, this call will be blocking.
 Otherwise the webserver will be started, and the method will
@@ -282,13 +282,13 @@ return afterwards.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_message">
-<code class="descname">handle_message</code><span class="sig-paren">(</span><em>message</em>, <em>message_preprocessor=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_message" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_message</code><span class="sig-paren">(</span><em>message: rasa_core.channels.channel.UserMessage</em>, <em>message_preprocessor: Optional[Callable[str</em>, <em>str]] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Optional[List[str]]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a single message.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_text">
-<code class="descname">handle_text</code><span class="sig-paren">(</span><em>text_message</em>, <em>message_preprocessor=None</em>, <em>output_channel=None</em>, <em>sender_id='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_text" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_text</code><span class="sig-paren">(</span><em>text_message: Union[str, Dict[str, Any]], message_preprocessor: Optional[Callable[str, str]] = None, output_channel: Optional[rasa_core.channels.channel.OutputChannel] = None, sender_id: Optional[str] = 'default'</em><span class="sig-paren">)</span> &#x2192; Optional[List[str]]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a single message.</p>
 <p>If a message preprocessor is passed, the message will be passed to that
 function first and the return value is then used as the
@@ -325,37 +325,37 @@ the bot wants to respond.</p>
 
 <dl class="classmethod">
 <dt id="rasa_core.agent.Agent.load">
-<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>interpreter=None</em>, <em>generator=None</em>, <em>tracker_store=None</em>, <em>action_endpoint=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path: str</em>, <em>interpreter: Optional[rasa_core.interpreter.NaturalLanguageInterpreter] = None</em>, <em>generator: Union[rasa_core.utils.EndpointConfig</em>, <em>NLG] = None</em>, <em>tracker_store: Optional[TrackerStore] = None</em>, <em>action_endpoint: Optional[rasa_core.utils.EndpointConfig] = None</em><span class="sig-paren">)</span> &#x2192; Agent<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a persisted model from the passed path.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.load_data">
-<code class="descname">load_data</code><span class="sig-paren">(</span><em>resource_name</em>, <em>remove_duplicates=True</em>, <em>unique_last_num_states=None</em>, <em>augmentation_factor=20</em>, <em>tracker_limit=None</em>, <em>use_story_concatenation=True</em>, <em>debug_plots=False</em>, <em>exclusion_percentage=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load_data</code><span class="sig-paren">(</span><em>resource_name: str</em>, <em>remove_duplicates: bool = True</em>, <em>unique_last_num_states: Optional[int] = None</em>, <em>augmentation_factor: int = 20</em>, <em>tracker_limit: Optional[int] = None</em>, <em>use_story_concatenation: bool = True</em>, <em>debug_plots: bool = False</em>, <em>exclusion_percentage: int = None</em><span class="sig-paren">)</span> &#x2192; List[rasa_core.trackers.DialogueStateTracker]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load training data from a resource.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.log_message">
-<code class="descname">log_message</code><span class="sig-paren">(</span><em>message</em>, <em>message_preprocessor=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.log_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.log_message" title="Permalink to this definition">¶</a></dt>
+<code class="descname">log_message</code><span class="sig-paren">(</span><em>message: rasa_core.channels.channel.UserMessage</em>, <em>message_preprocessor: Optional[Callable[str</em>, <em>str]] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; rasa_core.trackers.DialogueStateTracker<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.log_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.log_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append a message to a dialogue - does not predict actions.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.persist">
-<code class="descname">persist</code><span class="sig-paren">(</span><em>model_path</em>, <em>dump_flattened_stories=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.persist" title="Permalink to this definition">¶</a></dt>
+<code class="descname">persist</code><span class="sig-paren">(</span><em>model_path: str</em>, <em>dump_flattened_stories: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.persist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Persists this agent into a directory for later loading and usage.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.predict_next">
-<code class="descname">predict_next</code><span class="sig-paren">(</span><em>sender_id</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.predict_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.predict_next" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict_next</code><span class="sig-paren">(</span><em>sender_id: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Dict[str, Any]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.predict_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.predict_next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a single message.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.toggle_memoization">
-<code class="descname">toggle_memoization</code><span class="sig-paren">(</span><em>activate</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.toggle_memoization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.toggle_memoization" title="Permalink to this definition">¶</a></dt>
+<code class="descname">toggle_memoization</code><span class="sig-paren">(</span><em>activate: bool</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.toggle_memoization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.toggle_memoization" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggles the memoization on and off.</p>
 <p>If a memoization policy is present in the ensemble, this will toggle
 the prediction of that policy. When set to <code class="docutils literal notranslate"><span class="pre">False</span></code> the Memoization
@@ -369,7 +369,7 @@ training data.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>training_trackers</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
+<code class="descname">train</code><span class="sig-paren">(</span><em>training_trackers: List[rasa_core.trackers.DialogueStateTracker], **kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the policies / policy ensemble using dialogue data from file.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -383,25 +383,25 @@ training data.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.update_model">
-<code class="descname">update_model</code><span class="sig-paren">(</span><em>domain</em>, <em>policy_ensemble</em>, <em>fingerprint</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.update_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.update_model" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_model</code><span class="sig-paren">(</span><em>domain: Union[str, rasa_core.domain.Domain], policy_ensemble: rasa_core.policies.ensemble.PolicyEnsemble, fingerprint: Optional[str]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.update_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.update_model" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>resource_name</em>, <em>output_file</em>, <em>max_history=None</em>, <em>nlu_training_data=None</em>, <em>should_merge_nodes=True</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>resource_name: str</em>, <em>output_file: str</em>, <em>max_history: Optional[int] = None</em>, <em>nlu_training_data: Optional[str] = None</em>, <em>should_merge_nodes: bool = True</em>, <em>fontsize: int = 12</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.visualize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="rasa_core.agent.load_from_server">
-<code class="descclassname">rasa_core.agent.</code><code class="descname">load_from_server</code><span class="sig-paren">(</span><em>interpreter=None</em>, <em>generator=None</em>, <em>tracker_store=None</em>, <em>action_endpoint=None</em>, <em>model_server=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#load_from_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.load_from_server" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">rasa_core.agent.</code><code class="descname">load_from_server</code><span class="sig-paren">(</span><em>interpreter: rasa_core.interpreter.NaturalLanguageInterpreter = None</em>, <em>generator: Union[rasa_core.utils.EndpointConfig</em>, <em>NLG] = None</em>, <em>tracker_store: Optional[TrackerStore] = None</em>, <em>action_endpoint: Optional[rasa_core.utils.EndpointConfig] = None</em>, <em>model_server: Optional[rasa_core.utils.EndpointConfig] = None</em><span class="sig-paren">)</span> &#x2192; Agent<a class="reference internal" href="../../_modules/rasa_core/agent/#load_from_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.load_from_server" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a persisted model from a server.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="rasa_core.agent.start_model_pulling_in_worker">
-<code class="descclassname">rasa_core.agent.</code><code class="descname">start_model_pulling_in_worker</code><span class="sig-paren">(</span><em>model_server</em>, <em>wait_time_between_pulls</em>, <em>agent</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#start_model_pulling_in_worker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.start_model_pulling_in_worker" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">rasa_core.agent.</code><code class="descname">start_model_pulling_in_worker</code><span class="sig-paren">(</span><em>model_server: rasa_core.utils.EndpointConfig</em>, <em>wait_time_between_pulls: int</em>, <em>agent: rasa_core.agent.Agent</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/agent/#start_model_pulling_in_worker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.start_model_pulling_in_worker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

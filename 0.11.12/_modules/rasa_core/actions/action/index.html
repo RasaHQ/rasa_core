@@ -188,9 +188,10 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">events</span>
-<span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="p">(</span><span class="n">DOCS_BASE_URL</span><span class="p">,</span>
-                                 <span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">,</span>
-                                 <span class="n">REQUESTED_SLOT</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">DOCS_BASE_URL</span><span class="p">,</span>
+    <span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">,</span>
+    <span class="n">REQUESTED_SLOT</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -237,22 +238,21 @@
     <span class="k">return</span> <span class="n">default_action_names</span><span class="p">()</span> <span class="o">+</span> <span class="n">unique_user_actions</span>
 
 
-<span class="k">def</span> <span class="nf">ensure_action_name_uniqueness</span><span class="p">(</span><span class="n">action_names</span><span class="p">):</span>
-    <span class="c1"># type: (List[Text]) -&gt; None</span>
+<span class="k">def</span> <span class="nf">ensure_action_name_uniqueness</span><span class="p">(</span><span class="n">action_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Check and raise an exception if there are two actions with same name.&quot;&quot;&quot;</span>
 
     <span class="n">unique_action_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># used to collect unique action names</span>
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">action_names</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">unique_action_names</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Action names are not unique! Found two actions with name&quot;</span>
-                    <span class="s2">&quot; &#39;</span><span class="si">{}</span><span class="s2">&#39;. Either rename or remove one of them.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+                <span class="s2">&quot;Action names are not unique! Found two actions with name&quot;</span>
+                <span class="s2">&quot; &#39;</span><span class="si">{}</span><span class="s2">&#39;. Either rename or remove one of them.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">unique_action_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">action_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">action_endpoint</span><span class="p">,</span> <span class="n">user_actions</span><span class="p">):</span>
-    <span class="c1"># type: (Text, Optional[EndpointConfig], List[Text]) -&gt; Action</span>
+<span class="k">def</span> <span class="nf">action_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span> <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">],</span>
+                     <span class="n">user_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Action&#39;</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return an action instance for the name.&quot;&quot;&quot;</span>
 
     <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">():</span> <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">default_actions</span><span class="p">()}</span>
@@ -265,8 +265,9 @@
         <span class="k">return</span> <span class="n">RemoteAction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">action_endpoint</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">actions_from_names</span><span class="p">(</span><span class="n">action_names</span><span class="p">,</span> <span class="n">action_endpoint</span><span class="p">,</span> <span class="n">user_actions</span><span class="p">):</span>
-    <span class="c1"># type: (List[Text], Optional[EndpointConfig], List[Text]) -&gt; List[Action]</span>
+<span class="k">def</span> <span class="nf">actions_from_names</span><span class="p">(</span><span class="n">action_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">],</span>
+                       <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">],</span>
+                       <span class="n">user_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;Action&#39;</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Converts the names of actions into class instances.&quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="p">[</span><span class="n">action_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">action_endpoint</span><span class="p">,</span> <span class="n">user_actions</span><span class="p">)</span>
@@ -282,8 +283,8 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<div class="viewcode-block" id="Action.run"><a class="viewcode-back" href="../../../../customactions/#rasa_core.actions.Action.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="c1"># type: (Dispatcher, DialogueStateTracker, Domain) -&gt; List[Event]</span>
+<div class="viewcode-block" id="Action.run"><a class="viewcode-back" href="../../../../customactions/#rasa_core.actions.Action.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+            <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;Event&#39;</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the side effects of this action.</span>
 
@@ -388,14 +389,14 @@
 
 
 <span class="k">class</span> <span class="nc">RemoteAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">action_endpoint</span><span class="p">):</span>
-        <span class="c1"># type: (Text, Optional[EndpointConfig]) -&gt; None</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                 <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_endpoint</span> <span class="o">=</span> <span class="n">action_endpoint</span>
 
-    <span class="k">def</span> <span class="nf">_action_call_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; Dict[Text, Any]</span>
+    <span class="k">def</span> <span class="nf">_action_call_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+                            <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Create the request json send to the action server.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">EventVerbosity</span>
 
@@ -452,11 +453,10 @@
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_utter_responses</span><span class="p">(</span><span class="n">responses</span><span class="p">,</span>  <span class="c1"># type: List[Dict[Text, Any]]</span>
-                         <span class="n">dispatcher</span><span class="p">,</span>  <span class="c1"># type: Dispatcher</span>
-                         <span class="n">tracker</span>  <span class="c1"># type: DialogueStateTracker</span>
-                         <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; None</span>
+    <span class="k">def</span> <span class="nf">_utter_responses</span><span class="p">(</span><span class="n">responses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+                         <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span>
+                         <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span>
+                         <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Use the responses generated by the action endpoint and utter them.</span>
 
 <span class="sd">        Uses the normal dispatcher to utter the responses from the action</span>
@@ -467,10 +467,10 @@
                 <span class="n">kwargs</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">]</span>
                 <span class="n">draft</span> <span class="o">=</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">nlg</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
-                        <span class="n">response</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">],</span>
-                        <span class="n">tracker</span><span class="p">,</span>
-                        <span class="n">dispatcher</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
-                        <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="n">response</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">],</span>
+                    <span class="n">tracker</span><span class="p">,</span>
+                    <span class="n">dispatcher</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">draft</span><span class="p">:</span>
                     <span class="k">continue</span>
 
@@ -502,13 +502,13 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Calling action endpoint to run action &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span>
                          <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_endpoint</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
-                    <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">)</span>
+                <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">400</span><span class="p">:</span>
                 <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
                 <span class="n">exception</span> <span class="o">=</span> <span class="n">ActionExecutionRejection</span><span class="p">(</span>
-                        <span class="n">response_data</span><span class="p">[</span><span class="s2">&quot;action_name&quot;</span><span class="p">],</span>
-                        <span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+                    <span class="n">response_data</span><span class="p">[</span><span class="s2">&quot;action_name&quot;</span><span class="p">],</span>
+                    <span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
                 <span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="n">exception</span>

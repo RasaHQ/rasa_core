@@ -220,16 +220,17 @@
 <div class="viewcode-block" id="Dispatcher"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher">[docs]</a><span class="k">class</span> <span class="nc">Dispatcher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Send messages back to user&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">output_channel</span><span class="p">,</span> <span class="n">nlg</span><span class="p">):</span>
-        <span class="c1"># type: (Text, OutputChannel, NaturalLanguageGenerator) -&gt; None</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                 <span class="n">output_channel</span><span class="p">:</span> <span class="n">OutputChannel</span><span class="p">,</span>
+                 <span class="n">nlg</span><span class="p">:</span> <span class="n">NaturalLanguageGenerator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span> <span class="o">=</span> <span class="n">sender_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span> <span class="o">=</span> <span class="n">output_channel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span> <span class="o">=</span> <span class="n">nlg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="Dispatcher.utter_response"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_response">[docs]</a>    <span class="k">def</span> <span class="nf">utter_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-        <span class="c1"># type: (Dict[Text, Any]) -&gt; None</span>
+<div class="viewcode-block" id="Dispatcher.utter_response"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_response">[docs]</a>    <span class="k">def</span> <span class="nf">utter_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Send a message to the client.&quot;&quot;&quot;</span>
 
         <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">),</span>
@@ -240,8 +241,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bot_message</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Dispatcher.utter_message"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_message">[docs]</a>    <span class="k">def</span> <span class="nf">utter_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-        <span class="c1"># type: (Text) -&gt; None</span>
+<div class="viewcode-block" id="Dispatcher.utter_message"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_message">[docs]</a>    <span class="k">def</span> <span class="nf">utter_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;&quot;Send a text to the output channel&quot;&quot;&quot;</span>
         <span class="c1"># Adding the text to the latest bot messages (with no data)</span>
         <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
@@ -250,8 +250,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bot_message</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send_text_message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Dispatcher.utter_custom_message"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_custom_message">[docs]</a>    <span class="k">def</span> <span class="nf">utter_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">elements</span><span class="p">):</span>
-        <span class="c1"># type: (*Dict[Text, Any]) -&gt; None</span>
+<div class="viewcode-block" id="Dispatcher.utter_custom_message"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_custom_message">[docs]</a>    <span class="k">def</span> <span class="nf">utter_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">elements</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Sends a message with custom elements to the output channel.&quot;&quot;&quot;</span>
 
         <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -260,8 +259,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bot_message</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">elements</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Dispatcher.utter_button_message"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_button_message">[docs]</a>    <span class="k">def</span> <span class="nf">utter_button_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">buttons</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># type: (Text, List[Dict[Text, Any]], Any) -&gt; None</span>
+<div class="viewcode-block" id="Dispatcher.utter_button_message"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_button_message">[docs]</a>    <span class="k">def</span> <span class="nf">utter_button_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                             <span class="n">text</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                             <span class="n">buttons</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+                             <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Sends a message with buttons to the output channel.&quot;&quot;&quot;</span>
         <span class="c1"># Adding the text and data (buttons) to the latest bot messages</span>
         <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
@@ -272,8 +273,7 @@
                                                    <span class="n">buttons</span><span class="p">,</span>
                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Dispatcher.utter_attachment"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_attachment">[docs]</a>    <span class="k">def</span> <span class="nf">utter_attachment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attachment</span><span class="p">):</span>
-        <span class="c1"># type: (Text) -&gt; None</span>
+<div class="viewcode-block" id="Dispatcher.utter_attachment"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_attachment">[docs]</a>    <span class="k">def</span> <span class="nf">utter_attachment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attachment</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Send a message to the client with attachments.&quot;&quot;&quot;</span>
         <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                  <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;attachment&quot;</span><span class="p">:</span> <span class="n">attachment</span><span class="p">})</span>
@@ -281,15 +281,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bot_message</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send_image_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">attachment</span><span class="p">)</span></div>
 
-    <span class="c1"># TODO: deprecate this function</span>
+        <span class="c1"># TODO: deprecate this function</span>
+
 <div class="viewcode-block" id="Dispatcher.utter_button_template"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_button_template">[docs]</a>    <span class="k">def</span> <span class="nf">utter_button_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                              <span class="n">template</span><span class="p">,</span>  <span class="c1"># type: Text</span>
-                              <span class="n">buttons</span><span class="p">,</span>  <span class="c1"># type: List[Dict[Text, Any]]</span>
-                              <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: DialogueStateTracker</span>
-                              <span class="n">silent_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># type: bool</span>
-                              <span class="o">**</span><span class="n">kwargs</span>   <span class="c1"># type: Any</span>
-                              <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; None</span>
+                              <span class="n">template</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                              <span class="n">buttons</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+                              <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+                              <span class="n">silent_fail</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                              <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+                              <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Sends a message template with buttons to the output channel.&quot;&quot;&quot;</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_response</span><span class="p">(</span><span class="n">template</span><span class="p">,</span>
@@ -306,12 +306,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">utter_response</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Dispatcher.utter_template"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_template">[docs]</a>    <span class="k">def</span> <span class="nf">utter_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                       <span class="n">template</span><span class="p">,</span>  <span class="c1"># type: Text</span>
-                       <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: DialogueStateTracker</span>
-                       <span class="n">silent_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># type: bool</span>
-                       <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: Any</span>
-                       <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; None</span>
+                       <span class="n">template</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                       <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+                       <span class="n">silent_fail</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                       <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+                       <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;&quot;Send a message to the client based on a template.&quot;&quot;&quot;</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_response</span><span class="p">(</span><span class="n">template</span><span class="p">,</span>
@@ -324,14 +323,12 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">utter_response</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_generate_response</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">template</span><span class="p">,</span>  <span class="c1"># type: Text</span>
-        <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: DialogueStateTracker</span>
-        <span class="n">silent_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># type: bool</span>
-        <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: Any</span>
-    <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; Dict[Text, Any]</span>
+    <span class="k">def</span> <span class="nf">_generate_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                           <span class="n">template</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                           <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+                           <span class="n">silent_fail</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                           <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+                           <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;&quot;Generate a response.&quot;&quot;&quot;</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>

@@ -181,23 +181,18 @@
 
     <p class="scv-banner"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.policies.policy</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">object</span>
-
-<span class="kn">import</span> <span class="nn">copy</span>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
 <span class="kn">from</span> <span class="nn">rasa_core.featurizers</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">MaxHistoryTrackerFeaturizer</span><span class="p">,</span> <span class="n">BinarySingleStateFeaturizer</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.featurizers</span> <span class="k">import</span> <span class="n">TrackerFeaturizer</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.training.data</span> <span class="k">import</span> <span class="n">DialogueTrainingData</span>
+<span class="kn">from</span> <span class="nn">rasa_core.featurizers</span> <span class="k">import</span> <span class="n">TrackerFeaturizer</span>
+<span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+<span class="kn">from</span> <span class="nn">rasa_core.training.data</span> <span class="k">import</span> <span class="n">DialogueTrainingData</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -211,11 +206,12 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_create_featurizer</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)</span> \
-            <span class="k">if</span> <span class="n">featurizer</span> <span class="k">else</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_standard_featurizer</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">featurizer</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_standard_featurizer</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">featurizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># type: (Optional[TrackerFeaturizer]) -&gt; None</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrackerFeaturizer</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__featurizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_featurizer</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -223,8 +219,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__featurizer</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_valid_params</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># type: (Callable, Any) -&gt; Dict</span>
+    <span class="k">def</span> <span class="nf">_get_valid_params</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="c1"># filter out kwargs that cannot be passed to func</span>
         <span class="n">valid_keys</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">arguments_of</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
 
@@ -238,12 +233,11 @@
         <span class="k">return</span> <span class="n">params</span>
 
 <div class="viewcode-block" id="Policy.featurize_for_training"><a class="viewcode-back" href="../../../../api/policy/#rasa_core.policies.Policy.featurize_for_training">[docs]</a>    <span class="k">def</span> <span class="nf">featurize_for_training</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
-            <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
-            <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: Any</span>
-    <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; DialogueTrainingData</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">training_trackers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">],</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DialogueTrainingData</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Transform training trackers into a vector representation.</span>
 <span class="sd">        The trackers, consisting of multiple turns, will be transformed</span>
 <span class="sd">        into a float vector which can be used by a ML model.&quot;&quot;&quot;</span>
@@ -260,23 +254,21 @@
         <span class="k">return</span> <span class="n">training_data</span></div>
 
 <div class="viewcode-block" id="Policy.train"><a class="viewcode-back" href="../../../../api/policy/#rasa_core.policies.Policy.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-              <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
-              <span class="n">domain</span><span class="p">,</span>  <span class="c1"># type: Domain</span>
-              <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># type: Any</span>
-              <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; None</span>
+              <span class="n">training_trackers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">],</span>
+              <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span>
+              <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+              <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Trains the policy on given training trackers.&quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
                                   <span class="s2">&quot;to train.&quot;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_training_data_for_continue_training</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">batch_size</span><span class="p">,</span>  <span class="c1"># type: int</span>
-            <span class="n">training_trackers</span><span class="p">,</span>  <span class="c1"># type: List[DialogueStateTracker]</span>
-            <span class="n">domain</span>  <span class="c1"># type: Domain</span>
-    <span class="p">):</span>
-        <span class="c1"># type: (...) -&gt; DialogueTrainingData</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">training_trackers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">],</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DialogueTrainingData</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Creates training_data for `continue_training` by</span>
 <span class="sd">            taking the new labelled example training_trackers[-1:]</span>
 <span class="sd">            and inserting it in batch_size-1 parts of the old training data,</span>
@@ -294,8 +286,10 @@
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sampled_idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">training_trackers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize_for_training</span><span class="p">(</span><span class="n">trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">continue_training</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_trackers</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># type: (List[DialogueStateTracker], Domain, Any) -&gt; None</span>
+    <span class="k">def</span> <span class="nf">continue_training</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">training_trackers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">],</span>
+                          <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span>
+                          <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Continues training an already trained policy.</span>
 
 <span class="sd">        This doesn&#39;t need to be supported by every policy. If it is supported,</span>
@@ -304,8 +298,9 @@
 
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="Policy.predict_action_probabilities"><a class="viewcode-back" href="../../../../api/policy/#rasa_core.policies.Policy.predict_action_probabilities">[docs]</a>    <span class="k">def</span> <span class="nf">predict_action_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="c1"># type: (DialogueStateTracker, Domain) -&gt; List[float]</span>
+<div class="viewcode-block" id="Policy.predict_action_probabilities"><a class="viewcode-back" href="../../../../api/policy/#rasa_core.policies.Policy.predict_action_probabilities">[docs]</a>    <span class="k">def</span> <span class="nf">predict_action_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                     <span class="n">tracker</span><span class="p">:</span> <span class="n">DialogueStateTracker</span><span class="p">,</span>
+                                     <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Predicts the next action the bot should take</span>
 <span class="sd">        after seeing the tracker.</span>
 
@@ -314,15 +309,13 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
                                   <span class="s2">&quot;to predict.&quot;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="c1"># type: (Text) -&gt; None</span>
+    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Persists the policy to a storage.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
                                   <span class="s2">&quot;to persist itself.&quot;</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="c1"># type: (Text) -&gt; Policy</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Policy&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Loads a policy from the storage.</span>
 <span class="sd">            Needs to load its featurizer&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>

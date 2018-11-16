@@ -185,9 +185,7 @@
 
     <p class="scv-banner"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.slots</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
-
-<span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
 
@@ -260,9 +258,9 @@
             <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">class_from_module_path</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Failed to find slot type. Neither a known type nor. If &quot;</span>
-                    <span class="s2">&quot;you are creating your own slot type, make sure its &quot;</span>
-                    <span class="s2">&quot;module path is correct: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
+                <span class="s2">&quot;Failed to find slot type. Neither a known type nor. If &quot;</span>
+                <span class="s2">&quot;you are creating your own slot type, make sure its &quot;</span>
+                <span class="s2">&quot;module path is correct: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">persistence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">module_path_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
@@ -288,10 +286,10 @@
 
         <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;=</span> <span class="n">max_value</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Float slot (&#39;</span><span class="si">{}</span><span class="s2">&#39;) created with an invalid range &quot;</span>
-                    <span class="s2">&quot;using min (</span><span class="si">{}</span><span class="s2">) and max (</span><span class="si">{}</span><span class="s2">) values. Make sure &quot;</span>
-                    <span class="s2">&quot;min is smaller than max.&quot;</span>
-                    <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">))</span>
+                <span class="s2">&quot;Float slot (&#39;</span><span class="si">{}</span><span class="s2">&#39;) created with an invalid range &quot;</span>
+                <span class="s2">&quot;using min (</span><span class="si">{}</span><span class="s2">) and max (</span><span class="si">{}</span><span class="s2">) values. Make sure &quot;</span>
+                <span class="s2">&quot;min is smaller than max.&quot;</span>
+                <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">initial_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
                 <span class="ow">not</span> <span class="p">(</span><span class="n">min_value</span> <span class="o">&lt;=</span> <span class="n">initial_value</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">)):</span>
@@ -397,13 +395,13 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                            <span class="s2">&quot;Categorical slot &#39;</span><span class="si">{}</span><span class="s2">&#39; is set to a value (&#39;</span><span class="si">{}</span><span class="s2">&#39;) &quot;</span>
-                            <span class="s2">&quot;that is not specified in the domain. &quot;</span>
-                            <span class="s2">&quot;Value will be ignored and the slot will &quot;</span>
-                            <span class="s2">&quot;behave as if no value is set. &quot;</span>
-                            <span class="s2">&quot;Make sure to add all values a categorical &quot;</span>
-                            <span class="s2">&quot;slot should store to the domain.&quot;</span>
-                            <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                        <span class="s2">&quot;Categorical slot &#39;</span><span class="si">{}</span><span class="s2">&#39; is set to a value (&#39;</span><span class="si">{}</span><span class="s2">&#39;) &quot;</span>
+                        <span class="s2">&quot;that is not specified in the domain. &quot;</span>
+                        <span class="s2">&quot;Value will be ignored and the slot will &quot;</span>
+                        <span class="s2">&quot;behave as if no value is set. &quot;</span>
+                        <span class="s2">&quot;Make sure to add all values a categorical &quot;</span>
+                        <span class="s2">&quot;slot should store to the domain.&quot;</span>
+                        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to featurize categorical slot.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">r</span>
