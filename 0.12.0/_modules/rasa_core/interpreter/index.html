@@ -244,7 +244,7 @@
 <span class="k">class</span> <span class="nc">RegexInterpreter</span><span class="p">(</span><span class="n">NaturalLanguageInterpreter</span><span class="p">):</span>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">allowed_prefixes</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">INTENT_MESSAGE_PREFIX</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>  <span class="c1"># _ is deprecated but supported</span>
+        <span class="k">return</span> <span class="n">INTENT_MESSAGE_PREFIX</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_entities</span><span class="p">(</span><span class="n">parsed_entities</span><span class="p">,</span> <span class="n">sidx</span><span class="p">,</span> <span class="n">eidx</span><span class="p">):</span>
@@ -329,54 +329,10 @@
                            <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;. &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_input</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="p">[]</span>
 
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">deprecated_extraction</span><span class="p">(</span><span class="n">user_input</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;DEPRECATED parse of user input message.&quot;&quot;&quot;</span>
-
-        <span class="n">value_assign_rx</span> <span class="o">=</span> <span class="s1">&#39;\s*(.+)\s*=\s*(.+)\s*&#39;</span>
-        <span class="n">prefixes</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">RegexInterpreter</span><span class="o">.</span><span class="n">allowed_prefixes</span><span class="p">())</span>
-        <span class="n">structured_message_rx</span> <span class="o">=</span> <span class="s1">&#39;^[&#39;</span> <span class="o">+</span> <span class="n">prefixes</span> <span class="o">+</span> <span class="s1">&#39;]?([^\[]+)(\[(.+)\])?&#39;</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">structured_message_rx</span><span class="p">,</span> <span class="n">user_input</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">intent</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-            <span class="n">offset</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-            <span class="n">entities_str</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-            <span class="n">entities</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">if</span> <span class="n">entities_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">entity_str</span> <span class="ow">in</span> <span class="n">entities_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">):</span>
-                    <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">value_assign_rx</span><span class="p">,</span> <span class="n">entity_str</span><span class="p">):</span>
-                        <span class="n">start</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span>
-                        <span class="n">end</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span>
-                        <span class="n">entity</span> <span class="o">=</span> <span class="p">{</span>
-                            <span class="s2">&quot;entity&quot;</span><span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-                            <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span>
-                            <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">end</span><span class="p">,</span>
-                            <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)}</span>
-                        <span class="n">entities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">intent</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">entities</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_using_deprecated_format</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Indicates if the text string is using the deprecated intent format.</span>
-
-<span class="sd">        In the deprecated format entities where annotated using `[name=Rasa]`</span>
-<span class="sd">        which has been replaced with `{&quot;name&quot;: &quot;Rasa&quot;}`.&quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span>
-                <span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">)))</span>
-
     <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parse a text message.&quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_using_deprecated_format</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-            <span class="n">intent</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">entities</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">deprecated_extraction</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">intent</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">entities</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">extract_intent_and_entities</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">intent</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_intent_and_entities</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_starts_with_intent_prefix</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
             <span class="n">message_text</span> <span class="o">=</span> <span class="n">text</span>
