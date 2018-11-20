@@ -1,0 +1,523 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Evaluating and Testing</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Development with Docker" href="../docker_walkthrough/" />
+    <link rel="prev" title="Debugging" href="../debugging/" />
+
+ <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
+    <!-- End Google Tag Manager -->
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta itemprop="image" content="https://rasa.com/assets/img/facebook-og.png">
+  <meta property="og:title" content="Evaluating and Testing" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
+  <meta property="og:url" content="https://rasa.com/docs/core/evaluation" />
+  
+    <meta name="description" content="How to evaluate a Rasa Core model" />
+    <meta itemprop="description" content="How to evaluate a Rasa Core model">
+    <meta name="twitter:description" content="How to evaluate a Rasa Core model" />
+    <meta property="og:description" content="How to evaluate a Rasa Core model" />
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@Rasa_HQ">
+  <meta name="twitter:title" content="Evaluating and Testing">
+  <meta name="twitter:creator" content="@Rasa_HQ">
+  <meta name="twitter:image" content="https://rasa.com/assets/img/facebook-og.png">
+
+  <link rel="stylesheet" href="../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <!--<script defer type="text/javascript" src="../_static/config.js"></script>
+  <script defer type="text/javascript" src="../_static/klaro.js"></script>-->
+  <script type="text/javascript" src="https://storage.googleapis.com/docs-theme/clipboard.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+
+
+  </head><body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMHSZCS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div class="nav-top">
+  <div class="nav-container">
+    <a href="/docs" class="brand-link">
+        <h1 class="brand">
+            <img src="../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa logo" alt="Rasa logo">
+        </h1>
+        <span class="logo extension">docs</span>
+    </a>
+
+    <ul class="nav">
+      <input type="text" class="search" placeholder="Search">
+      
+        
+          <li><a href=/docs/nlu/>NLU</a></li>
+        
+      
+        
+          <li class="active"><a href=/docs/core/>Core</a></li>
+        
+      
+        
+          <li><a href=/docs/platform/>Platform</a></li>
+        
+      
+
+      <li>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Ask the Community</button></a>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+  <div class="sidebar-extended"></div>
+  <div class="document">
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fallbacks/">Fallback Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/dispatcher/">Dispatcher</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
+</ul>
+
+<div class="versions">
+    <p class="caption">Versions</p>
+    <div class="versions-content">
+      <div>
+        <span class="current-version">
+          viewing: 0.12.2
+        </span>
+      </div>
+      <div class="other-versions">
+          <p>tags</p>
+          <div class="dropdown-content">
+              <a href="../../0.12.2/evaluation/">0.12.2</a>
+              <a href="../../0.12.1/evaluation/">0.12.1</a>
+              <a href="../../0.12.0/evaluation/">0.12.0</a>
+              <a href="../../0.11.12/evaluation/">0.11.12</a>
+              <a href="../../0.10.4/evaluation/">0.10.4</a>
+              <a href="../../0.9.8/index/">0.9.8</a>
+              <a href="../../0.8.6/index/">0.8.6</a>
+              <a href="../../0.7.9/index/">0.7.9</a>
+              <a href="../../0.6.9/index/">0.6.9</a>
+          </div>
+          <p>branches</p>
+          <div class="dropdown-content">
+              <a href="../../master/evaluation/">master</a>
+          </div>
+      </div>
+    </div>
+</div>
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+
+
+
+
+
+<div class="section" id="evaluating-and-testing">
+<span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you’re looking to evaluate both Rasa NLU and Rasa Core predictions
+combined, take a look at the section on
+<a class="reference internal" href="#end-to-end-evaluation"><span class="std std-ref">end-to-end evaluation</span></a>.</p>
+</div>
+<div class="section" id="evaluating-a-trained-model">
+<h2>Evaluating a Trained Model<a class="headerlink" href="#evaluating-a-trained-model" title="Permalink to this headline">¶</a></h2>
+<p>You can evaluate your trained model on a set of test stories
+by using the evaluate script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate --core models/dialogue <span class="se">\</span>
+  --stories test_stories.md -o results
+</pre></div>
+</div>
+<p>This will print the failed stories to <code class="docutils literal notranslate"><span class="pre">results/failed_stories.md</span></code>.
+We count any story as <cite>failed</cite> if at least one of the actions
+was predicted incorrectly.</p>
+<p>In addition, this will save a confusion matrix to a file called
+<code class="docutils literal notranslate"><span class="pre">results/story_confmat.pdf</span></code>. The confusion matrix shows, for each action in
+your domain, how often that action was predicted, and how often an
+incorrect action was predicted instead.</p>
+<p>The full list of options for the script is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+/home/travis/virtualenv/python3.5.6/lib/python3.5/importlib/_bootstrap.py:222: RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+  return f(*args, **kwds)
+usage: evaluate.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
+                           [--endpoints ENDPOINTS]
+                           [--fail_on_prediction_errors] [--core CORE]
+                           (-s STORIES | --url URL) [-v] [-vv] [--quiet]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -m MAX_STORIES, --max_stories MAX_STORIES
+                        maximum number of stories to test on
+  -u NLU, --nlu NLU     nlu model to run with the server. None for regex
+                        interpreter
+  -o OUTPUT, --output OUTPUT
+                        output path for the any files created from the
+                        evaluation
+  --e2e, --end-to-end   Run an end-to-end evaluation for combined action and
+                        intent prediction. Requires a story file in end-to-end
+                        format.
+  --endpoints ENDPOINTS
+                        Configuration file for the connectors as a yml file
+  --fail_on_prediction_errors
+                        If a prediction error is encountered, an exception is
+                        thrown. This can be used to validate stories during
+                        tests, e.g. on travis.
+  --core CORE           Path to a pre-trained core model directory
+  -s STORIES, --stories STORIES
+                        File or folder containing stories
+  --url URL             If supplied, downloads a story file from a URL and
+                        trains on it. Fetches the data by sending a GET
+                        request to the supplied URL.
+  -v, --verbose         Be verbose. Sets logging level to INFO
+  -vv, --debug          Print lots of debugging statements. Sets logging level
+                        to DEBUG
+  --quiet               Be quiet! Sets logging level to WARNING
+</pre></div>
+</div>
+</div>
+<div class="section" id="end-to-end-evaluation-of-rasa-nlu-and-core">
+<span id="end-to-end-evaluation"></span><h2>End-to-end evaluation of Rasa NLU and Core<a class="headerlink" href="#end-to-end-evaluation-of-rasa-nlu-and-core" title="Permalink to this headline">¶</a></h2>
+<p>Say your bot uses a dialogue model in combination with a Rasa NLU model to
+parse intent messages, and you would like to evaluate how the two models
+perform together on whole dialogues.
+The evaluate script lets you evaluate dialogues end-to-end, combining
+Rasa NLU intent predictions with Rasa Core action predictions.
+You can activate this feature with the <code class="docutils literal notranslate"><span class="pre">--e2e</span></code> option in the
+<code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code> module.</p>
+<p>The story format used for end-to-end evaluation is slightly different to
+the standard Rasa Core stories, as you’ll have to include the user
+messages in natural language instead of just their intent. The format for the
+user messages is <code class="docutils literal notranslate"><span class="pre">*</span> <span class="pre">&lt;intent&gt;:&lt;Rasa</span> <span class="pre">NLU</span> <span class="pre">example&gt;</span></code>. The NLU part follows the
+<a class="reference external" href="https://rasa.com/docs/nlu/dataformat/#markdown-format">markdown syntax for Rasa NLU training data</a>.</p>
+<p>Here’s an example of what an end-to-end story file may look like:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## end-to-end story 1</span>
+<span class="vm">* greet: </span>hello
+   - utter_ask_howcanhelp
+<span class="vm">* inform: </span>show me [chinese](cuisine) restaurants
+   - utter_ask_location
+<span class="vm">* inform: </span>in [Paris](location)
+   - utter_ask_price
+
+<span class="gh">## end-to-end story 2</span>
+...
+</pre></div>
+</div>
+<p>If you’ve saved these stories under <code class="docutils literal notranslate"><span class="pre">e2e_storied.md</span></code>,
+the full end-to-end evaluation command is this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate default --core models/dialogue <span class="se">\</span>
+  --nlu models/nlu/current <span class="se">\</span>
+  --stories e2e_stories.md --e2e
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Make sure you specify an NLU model to load with the dialogue model using the
+<code class="docutils literal notranslate"><span class="pre">--nlu</span></code> option of <code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code>. If you do not specify an NLU
+model, Rasa Core will load the default <code class="docutils literal notranslate"><span class="pre">RegexInterpreter</span></code>.</p>
+</div>
+</div>
+<div class="section" id="comparing-policies">
+<h2>Comparing Policies<a class="headerlink" href="#comparing-policies" title="Permalink to this headline">¶</a></h2>
+<p>To choose a specific policy, or to choose hyperparameters for a
+specific policy, you want to measure how well Rasa Core will <cite>generalise</cite>
+to conversations which it hasn’t seen before. Especially in the beginning
+of a project, you do not have a lot of real conversations to use to train
+your bot, so you don’t just want to throw some away to use as a test set.</p>
+<p>Rasa Core has some scripts to help you choose and fine-tune your policy.
+Once you are happy with it, you can then train your final policy on your
+full data set. To do this, you first have to train models for your different
+policies. Create two (or more) policy config files of the policies you want to
+compare (containing only one policy each), and then use the <code class="docutils literal notranslate"><span class="pre">compare</span></code> mode of
+the train script to train your models:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.train compare -c policy_config1.yml policy_config2.yml <span class="se">\</span>
+  -d domain.yml -s stories_folder -o comparison_models --runs <span class="m">3</span> --percentages <span class="se">\</span>
+  <span class="m">0</span> <span class="m">5</span> <span class="m">25</span> <span class="m">50</span> <span class="m">70</span> <span class="m">90</span> <span class="m">95</span>
+</pre></div>
+</div>
+<p>For each policy configuration provided, Rasa Core will be trained multiple times
+with 0, 5, 25, 50, 70 and 95% of your training stories excluded from the training
+data. This is done for multiple runs, to ensure consistent results.</p>
+<p>Once this script has finished, you can now use the evaluate script in compare
+mode to evaluate the models you just trained:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate compare --stories stories_folder <span class="se">\</span>
+  --core comparison_models <span class="se">\</span>
+  -o comparison_results
+</pre></div>
+</div>
+<p>This will evaluate each of the models on the training set, and plot some graphs
+to show you which policy is best.  By evaluating on the full set of stories, you
+can measure how well Rasa Core is predicting the held-out stories.</p>
+<p>If you’re not sure which policies to compare, we’d recommend trying out the
+<code class="docutils literal notranslate"><span class="pre">EmbeddingPolicy</span></code> and the <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> to see which one works better for
+you.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This training process can take a long time, so we’d suggest letting it run
+somewhere in the background where it can’t be interrupted</p>
+</div>
+</div>
+<div class="section" id="evaluating-stories-over-http">
+<h2>Evaluating stories over http<a class="headerlink" href="#evaluating-stories-over-http" title="Permalink to this headline">¶</a></h2>
+<p>Rasa Core’s server lets you to retrieve evaluations for the currently
+loaded model. Say your Rasa Core server is running locally on port 5005,
+and your story evaluation file is saved at <code class="docutils literal notranslate"><span class="pre">eval_stories.md</span></code>. The command
+to post stories to the server for evaluation is this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl --data-binary @eval_stories.md <span class="s2">&quot;localhost:5005/evaluate&quot;</span> <span class="p">|</span> python -m json.tool
+</pre></div>
+</div>
+<p>If you would like to evaluate end-to-end stories
+(<a class="reference internal" href="#end-to-end-evaluation"><span class="std std-ref">docs</span></a>),
+you may do so by adding the <code class="docutils literal notranslate"><span class="pre">e2e=true</span></code> query parameter:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl --data-binary @eval_stories.md <span class="s2">&quot;localhost:5005/evaluate?e2e=true&quot;</span> <span class="p">|</span> python -m json.tool
+</pre></div>
+</div>
+</div>
+<div class="section" id="have-questions-or-feedback">
+<h2>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
+<p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
+that is happy to help you with your questions. If you have any feedback for us or a specific
+suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
+<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+</div>
+</div>
+
+
+	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+	    <script type="text/javascript"> docsearch({
+	     apiKey: '1f9e0efb89e98543f6613a60f847b176',
+	     indexName: 'rasa',
+	     inputSelector: 'body > div.nav-top > .nav-container > .nav > input',
+	     debug: false // Set debug to true if you want to inspect the dropdown
+	    });
+	    </script>
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
+      
+
+    </div>
+
+    
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag(...arguments) {
+      dataLayer.push(...arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  <script src="https://rasa.com/assets/js/js.cookies.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- TODO: Re-Enable once Klaro is re-activated again. Remove the next two lines, then.
+  <script type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://rasa.com/assets/js/userId.js"></script>
+  -->
+  <script src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script src="https://rasa.com/assets/js/userId.js"></script>
+  <script type="text/javascript">
+    var clipboard = new ClipboardJS('.copyable');
+    clipboard.on('success', function(e) {
+      gtag('event', e.action, {
+        'event_category': 'code',
+        'event_label': e.text
+      });
+      const id = e.text.slice(0,3);
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){
+        document.getElementById(id).classList.remove('visible');},
+        800
+      );
+    });
+    clipboard.on('error', function(e) {
+      console.log(e);
+    });
+  </script>
+
+  <!-- onsite anchor fix (otherwise anchors scroll to far) -->
+  <script>
+    /* Adapted from https://stackoverflow.com/a/13067009/1906073 */
+    (function(document, history, location) {
+      var HISTORY_SUPPORT = !!(history && history.pushState);
+
+      var anchorScrolls = {
+        ANCHOR_REGEX: /^#[^ ]+$/,
+        OFFSET_HEIGHT_PX: 66,
+
+        /**
+         * Establish events, and fix initial scroll position if a hash is provided.
+         */
+        init: function() {
+          this.scrollToCurrent();
+          $(window).on('hashchange', $.proxy(this, 'scrollToCurrent'));
+          $('body').on('click', 'a', $.proxy(this, 'delegateAnchors'));
+        },
+
+        /**
+         * Return the offset amount to deduct from the normal scroll position.
+         * Modify as appropriate to allow for dynamic calculations
+         */
+        getFixedOffset: function() {
+          return this.OFFSET_HEIGHT_PX;
+        },
+
+        /**
+         * If the provided href is an anchor which resolves to an element on the
+         * page, scroll to it.
+         * @param  {String} href
+         * @return {Boolean} - Was the href an anchor.
+         */
+        scrollIfAnchor: function(href, pushToHistory) {
+          var match, anchorOffset;
+
+          if(!this.ANCHOR_REGEX.test(href)) {
+            return false;
+          }
+
+          match = document.getElementById(href.slice(1));
+
+          if(match) {
+            anchorOffset = $(match).offset().top - this.getFixedOffset();
+            $('html, body').animate({ scrollTop: anchorOffset});
+
+            // Add the state to history as-per normal anchor links
+            if(HISTORY_SUPPORT && pushToHistory) {
+              history.pushState({}, document.title, location.pathname + href);
+            }
+          }
+
+          return !!match;
+        },
+
+        /**
+         * Attempt to scroll to the current location's hash.
+         */
+        scrollToCurrent: function(e) {
+          if(this.scrollIfAnchor(window.location.hash) && e) {
+            e.preventDefault();
+          }
+        },
+
+        /**
+         * If the click event's target was an anchor, fix the scroll position.
+         */
+        delegateAnchors: function(e) {
+          var elem = e.target;
+
+          if(this.scrollIfAnchor(elem.getAttribute('href'), true)) {
+            e.preventDefault();
+          }
+        }
+      };
+
+      $(document).ready($.proxy(anchorScrolls, 'init'));
+    })(window.document, window.history, window.location);
+
+  </script>
+  <div id="webchat">
+  <script src="https://storage.googleapis.com/mrbot-cdn/webchat-0.4.2.js"></script>
+  <script>
+   WebChat.default.init({
+       selector: "#webchat",
+       initPayload: "/greet",
+       interval: 150,
+       socketUrl: "https://website-demo.rasa.com/",
+       title: "Sara",
+       subtitle: "I'm still in development",
+       profileAvatar: "https://rasa.com/assets/img/demo/sara_avatar.png",
+       showCloseButton: true,
+       fullScreenMode: false,})
+  </script>
+  </div>
+  </body>
+</html>
