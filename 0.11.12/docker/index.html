@@ -362,17 +362,17 @@ suggestion for improving the docs, feel free to share it by creating an issue on
     })(window.document, window.history, window.location);
 
   </script>
-
   <div id="webchat">
   <script src="https://storage.googleapis.com/mrbot-cdn/webchat-0.4.2.js"></script>
   <script>
    WebChat.default.init({
        selector: "#webchat",
        initPayload: "/greet",
+       interval: 150,
        socketUrl: "https://website-demo.rasa.com/",
-       title: "",
-       subtitle: "",
-       profileAvatar: "https://rasa.com/assets/img/demo/rasa_avatar.png",
+       title: "Sara",
+       subtitle: "I'm still in development",
+       profileAvatar: "https://rasa.com/assets/img/demo/sara_avatar.png",
        showCloseButton: true,
        fullScreenMode: false,})
   </script>
