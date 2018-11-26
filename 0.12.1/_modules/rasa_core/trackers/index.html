@@ -186,12 +186,11 @@
 
     <p class="scv-banner"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.trackers</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
-
-<span class="kn">import</span> <span class="nn">copy</span>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
@@ -261,7 +260,8 @@
         <span class="k">return</span> <span class="n">tracker</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">slots</span><span class="p">,</span>
-                 <span class="n">max_event_history</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">max_event_history</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the tracker.</span>
 
 <span class="sd">        A set of events can be stored externally, and we will run through all</span>
@@ -292,6 +292,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
 
     <span class="c1">###</span>
     <span class="c1"># Public tracker interface</span>
@@ -324,7 +325,8 @@
             <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">evts</span><span class="p">,</span>
             <span class="s2">&quot;latest_input_channel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latest_input_channel</span><span class="p">(),</span>
             <span class="s2">&quot;active_form&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">,</span>
-            <span class="s2">&quot;latest_action_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span>
+            <span class="s2">&quot;latest_action_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span><span class="p">,</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
         <span class="p">}</span></div>
 
     <span class="k">def</span> <span class="nf">past_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">deque</span><span class="p">:</span>
@@ -578,7 +580,7 @@
 <span class="sd">        This can be serialised and later used to recover the state</span>
 <span class="sd">        of this tracker exactly.&quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">Dialogue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Dialogue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Modify the state of the tracker according to an ``Event``. &quot;&quot;&quot;</span>
