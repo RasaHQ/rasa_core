@@ -305,7 +305,7 @@ and other policies in your Core model will be used to predict the next action.</
 <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> can also support yes/no questions and free-text input.
 The <code class="docutils literal notranslate"><span class="pre">slot_mapping</span></code> method defines how to extract slot values from user responses.</p>
 <p>Here’s an example for the restaurant bot:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">slot_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">slot_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="c1"># type: () -&gt; Dict[Text: Union[Text, Dict, List[Text, Dict]]]</span>
     <span class="sd">&quot;&quot;&quot;A dictionary to map required slots to</span>
 <span class="sd">        - an extracted entity</span>

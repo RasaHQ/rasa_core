@@ -329,23 +329,6 @@ the trackers before each action.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rasa_core.trackers.DialogueStateTracker.get_last_event_for">
-<code class="descname">get_last_event_for</code><span class="sig-paren">(</span><em>event_type: Any</em>, <em>to_exclude: List[str] = None</em>, <em>skip: int = 0</em><span class="sig-paren">)</span> &#x2192; Optional[Any]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_last_event_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_last_event_for" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the last event of a given type.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">event_type: The type of event you want to filter for.
-to_exclude: Events of type ‘ActionExecuted’ which should be excluded</p>
-<blockquote>
-<div>from the results. Can be used to skip <cite>action_listen</cite> events.</div></blockquote>
-<p class="last">skip: Skips n possible results before return an event.</p>
-</dd>
-<dt>Returns:</dt>
-<dd>event which matched the query or <cite>None</cite> if no event matched.</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.get_latest_entity_values">
 <code class="descname">get_latest_entity_values</code><span class="sig-paren">(</span><em>entity_type: str</em><span class="sig-paren">)</span> &#x2192; Iterator[str]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_latest_entity_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_latest_entity_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get entity values found for the passed entity name in latest msg.</p>
@@ -383,20 +366,6 @@ If no entity is found <cite>None</cite> is the default result.</p>
 <dt id="rasa_core.trackers.DialogueStateTracker.is_paused">
 <code class="descname">is_paused</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.is_paused"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.is_paused" title="Permalink to this definition">¶</a></dt>
 <dd><p>State whether the tracker is currently paused.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="rasa_core.trackers.DialogueStateTracker.last_executed_has">
-<code class="descname">last_executed_has</code><span class="sig-paren">(</span><em>name: str</em>, <em>skip=0</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.last_executed_has"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.last_executed_has" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns whether last event of type <cite>ActionExecuted</cite> had a specific
-name.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>name: Name of the event which should be matched.
-skip: Skips n possible results in between.</dd>
-<dt>Returns:</dt>
-<dd><cite>True</cite> if last executed event had name <cite>name</cite>, otherwise <cite>False</cite>.</dd>
-</dl>
 </dd></dl>
 
 <dl class="method">
