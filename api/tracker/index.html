@@ -87,9 +87,13 @@
           <li><a href=/docs/platform/>Platform</a></li>
         
       
-
+      
       <li>
-        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Ask the Community</button></a>
+        <a href="https://github.com/rasaHQ/" target="_blank"><button class="button btn-ghost btn-small"> <i class="fab fa-github"></i>GitHub</button></a>
+      </li>
+      
+      <li>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-small">Ask the Community</button></a>
       </li>
 
     </ul>
@@ -196,7 +200,7 @@ It is stored in a tracker store, retrieved when incoming messages for the
 conversation are received and updated after actions have been executed</p>
 <dl class="class">
 <dt id="rasa_core.trackers.DialogueStateTracker">
-<em class="property">class </em><code class="descclassname">rasa_core.trackers.</code><code class="descname">DialogueStateTracker</code><span class="sig-paren">(</span><em>sender_id</em>, <em>slots</em>, <em>max_event_history=None</em>, <em>metadata: Optional[Dict[str</em>, <em>Any]] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">rasa_core.trackers.</code><code class="descname">DialogueStateTracker</code><span class="sig-paren">(</span><em>sender_id</em>, <em>slots</em>, <em>max_event_history=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maintains the state of a conversation.</p>
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.current_state">
@@ -252,16 +256,16 @@ suggestion for improving the docs, feel free to share it by creating an issue on
 	    });
 	    </script>
           </div>
-          
+
           <div class="footer">
-            
+
             <div class="social">
               <a href="https://github.com/RasaHQ" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
               <a href="https://stackoverflow.com/search?q=rasa" target="_blank" title="Stack Overflow"><i class="fab fa-stack-overflow"></i></a>
               <a href="https://www.youtube.com/channel/UCJ0V6493mLvqdiVwOKWBODQ" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
               <a href="https://twitter.com/rasa_hq" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
             </div>
-            
+
             <div class="copyright small">
             &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
             
@@ -401,7 +405,7 @@ suggestion for improving the docs, feel free to share it by creating an issue on
    WebChat.default.init({
        selector: "#webchat",
        initPayload: "/greet",
-       interval: 150,
+       interval: 500,
        socketUrl: "https://website-demo.rasa.com/",
        title: "Sara",
        subtitle: "I'm still in development",

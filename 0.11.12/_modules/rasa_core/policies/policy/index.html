@@ -79,9 +79,13 @@
           <li><a href=/docs/platform/>Platform</a></li>
         
       
-
+      
       <li>
-        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Ask the Community</button></a>
+        <a href="https://github.com/rasaHQ/" target="_blank"><button class="button btn-ghost btn-small"> <i class="fab fa-github"></i>GitHub</button></a>
+      </li>
+      
+      <li>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-small">Ask the Community</button></a>
       </li>
 
     </ul>
@@ -321,6 +325,15 @@
 <span class="sd">            Needs to load its featurizer&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
                                   <span class="s2">&quot;to load itself.&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">confidence_scores_for</span><span class="p">(</span><span class="n">action_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">domain</span><span class="o">.</span><span class="n">num_actions</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">index_for_action</span><span class="p">(</span><span class="n">action_name</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">return</span> <span class="n">results</span>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
@@ -332,16 +345,16 @@
 	    });
 	    </script>
           </div>
-          
+
           <div class="footer">
-            
+
             <div class="social">
               <a href="https://github.com/RasaHQ" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
               <a href="https://stackoverflow.com/search?q=rasa" target="_blank" title="Stack Overflow"><i class="fab fa-stack-overflow"></i></a>
               <a href="https://www.youtube.com/channel/UCJ0V6493mLvqdiVwOKWBODQ" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
               <a href="https://twitter.com/rasa_hq" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
             </div>
-            
+
             <div class="copyright small">
             &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
             
@@ -481,7 +494,7 @@
    WebChat.default.init({
        selector: "#webchat",
        initPayload: "/greet",
-       interval: 150,
+       interval: 500,
        socketUrl: "https://website-demo.rasa.com/",
        title: "Sara",
        subtitle: "I'm still in development",

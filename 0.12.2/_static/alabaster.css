@@ -328,8 +328,8 @@ a:hover {
 
 .btn-ghost {
   background:none;
-  border: 1px solid #5B17F0;
-  color: #5B17F0
+  border: 1px solid #617287;
+  color: #617287
 }
 
 .btn-small {
@@ -830,6 +830,8 @@ pre.snippet {
     font-weight: 500;
 }
 
+
+
 tt.xref, code.xref, a tt {
     background-color: #FBFBFB;
     border-bottom: 1px solid #fff;
@@ -1011,14 +1013,14 @@ a.brand-link {
 
 .nav-top ul li a {
     font-size: 16px;
-    padding: 14px 14px;
+    padding: 14px 8px;
     text-decoration: none;
     color: #617287;
     transition: all .25s ease-out;
 }
 
 .nav-top ul li.active {
-    padding: 14px 16px;
+    padding: 14px 8px;
 }
 
 .nav-top ul li.active a {
@@ -1282,6 +1284,10 @@ div .copyable {
     opacity: 1;
 }
 
+.copyable-snippet {
+    max-width: none !important;
+}
+
 #webchat {
   font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
 }
@@ -1352,4 +1358,75 @@ div .copyable {
     top: 20px;
     width: 40px;
   }
+}
+
+/* =================== Progress Bar - Getting Started Steps */
+.progress {
+	width: 100%;
+	max-width: 800px;
+	margin: 30px auto 30px 12px;
+	display: table;
+	position: relative;
+	text-align: center;
+  z-index: 100;
+}
+.progress ul {  
+	display: table-row;
+}
+.progress ul li {
+	background-color: #eee; /* Default Bar Color */
+	display: table-cell;
+	position: relative;
+	line-height: 10px;
+	z-index: -3;
+	color: #FFF;
+	text-align: left;
+  font-weight:600;
+  font-size:16px;
+}
+.progress ul li::before {
+	content:'';
+	width: 30px;
+	height: 30px;
+	color: #FFF;
+	line-height: 20px;
+	text-align: center;
+	left: -11px;
+	background-color: #d6d6d6; /* Default Circle Color */
+	border: solid 3px #d6d6d6; /* Default Circle Color */
+	position: absolute;
+	display: block;
+	top: -10px;	
+	margin-right: auto;
+	margin-left: auto;
+	z-index: -1;
+
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+	
+	-webkit-border-radius: 50%;
+	   -moz-border-radius: 50%;
+	        border-radius: 50%;
+}
+
+/* Current step */
+.progress ul li.current {
+	display: inline-block;
+	width: 100%;
+	z-index: -3;
+	color: #5B17F0;
+	position: relative;
+}
+.progress ul li.current::before {
+	border: solid 3px #5B17F0; /* Current Step Circle Color */
+	background-color: #FFF;
+}
+
+.progress ul li:last-of-type {
+	background-color: transparent;
+}
+.progress ul li.current:last-of-type,
+.progress ul li.complete:last-of-type  {
+	background-color: transparent;
 }

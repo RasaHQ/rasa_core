@@ -80,9 +80,13 @@
           <li><a href=/docs/platform/>Platform</a></li>
         
       
-
+      
       <li>
-        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-ghost btn-small">Ask the Community</button></a>
+        <a href="https://github.com/rasaHQ/" target="_blank"><button class="button btn-ghost btn-small"> <i class="fab fa-github"></i>GitHub</button></a>
+      </li>
+      
+      <li>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-small">Ask the Community</button></a>
       </li>
 
     </ul>
@@ -186,11 +190,12 @@
 
     <p class="scv-banner"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.trackers</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
@@ -260,8 +265,7 @@
         <span class="k">return</span> <span class="n">tracker</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">slots</span><span class="p">,</span>
-                 <span class="n">max_event_history</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+                 <span class="n">max_event_history</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the tracker.</span>
 
 <span class="sd">        A set of events can be stored externally, and we will run through all</span>
@@ -292,7 +296,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_utterance</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
 
     <span class="c1">###</span>
     <span class="c1"># Public tracker interface</span>
@@ -325,8 +328,7 @@
             <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">evts</span><span class="p">,</span>
             <span class="s2">&quot;latest_input_channel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latest_input_channel</span><span class="p">(),</span>
             <span class="s2">&quot;active_form&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">,</span>
-            <span class="s2">&quot;latest_action_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span><span class="p">,</span>
-            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
+            <span class="s2">&quot;latest_action_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span>
         <span class="p">}</span></div>
 
     <span class="k">def</span> <span class="nf">past_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">deque</span><span class="p">:</span>
@@ -580,11 +582,11 @@
 <span class="sd">        This can be serialised and later used to recover the state</span>
 <span class="sd">        of this tracker exactly.&quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">Dialogue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Dialogue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Modify the state of the tracker according to an ``Event``. &quot;&quot;&quot;</span>
-
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Event</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;event to log must be an instance &quot;</span>
                              <span class="s2">&quot;of a subclass of Event.&quot;</span><span class="p">)</span>
@@ -679,7 +681,53 @@
         <span class="n">entities</span> <span class="o">=</span> <span class="n">entities</span> <span class="k">if</span> <span class="n">entities</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">entities</span>
         <span class="n">new_slots</span> <span class="o">=</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;entity&quot;</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entities</span> <span class="k">if</span>
                      <span class="n">e</span><span class="p">[</span><span class="s2">&quot;entity&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
-        <span class="k">return</span> <span class="n">new_slots</span></div>
+        <span class="k">return</span> <span class="n">new_slots</span>
+
+    <span class="k">def</span> <span class="nf">get_last_event_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                           <span class="n">event_type</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+                           <span class="n">to_exclude</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="n">skip</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Gets the last event of a given type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event_type: The type of event you want to filter for.</span>
+<span class="sd">            to_exclude: Events of type &#39;ActionExecuted&#39; which should be excluded</span>
+<span class="sd">                from the results. Can be used to skip `action_listen` events.</span>
+<span class="sd">            skip: Skips n possible results before return an event.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            event which matched the query or `None` if no event matched.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">to_exclude</span> <span class="o">=</span> <span class="n">to_exclude</span> <span class="ow">or</span> <span class="p">[]</span>
+
+        <span class="k">def</span> <span class="nf">filter_function</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="n">has_instance</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">event_type</span><span class="p">)</span>
+            <span class="n">excluded</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">)</span> <span class="ow">and</span> \
+                <span class="n">e</span><span class="o">.</span><span class="n">action_name</span> <span class="ow">in</span> <span class="n">to_exclude</span>
+
+            <span class="k">return</span> <span class="n">has_instance</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">excluded</span>
+
+        <span class="n">filtered</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="n">filter_function</span><span class="p">,</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">skip</span><span class="p">):</span>
+            <span class="nb">next</span><span class="p">(</span><span class="n">filtered</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">filtered</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">last_executed_has</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns whether last event of type `ActionExecuted` had a specific</span>
+<span class="sd">        name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the event which should be matched.</span>
+<span class="sd">            skip: Skips n possible results in between.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            `True` if last executed event had name `name`, otherwise `False`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_last_event_for</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span>
+                                       <span class="n">to_exclude</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;action_listen&#39;</span><span class="p">],</span>
+                                       <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">last</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">last</span><span class="o">.</span><span class="n">action_name</span> <span class="o">==</span> <span class="n">name</span></div>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
@@ -691,16 +739,16 @@
 	    });
 	    </script>
           </div>
-          
+
           <div class="footer">
-            
+
             <div class="social">
               <a href="https://github.com/RasaHQ" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
               <a href="https://stackoverflow.com/search?q=rasa" target="_blank" title="Stack Overflow"><i class="fab fa-stack-overflow"></i></a>
               <a href="https://www.youtube.com/channel/UCJ0V6493mLvqdiVwOKWBODQ" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
               <a href="https://twitter.com/rasa_hq" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
             </div>
-            
+
             <div class="copyright small">
             &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
             
@@ -840,7 +888,7 @@
    WebChat.default.init({
        selector: "#webchat",
        initPayload: "/greet",
-       interval: 150,
+       interval: 500,
        socketUrl: "https://website-demo.rasa.com/",
        title: "Sara",
        subtitle: "I'm still in development",
