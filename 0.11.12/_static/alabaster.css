@@ -1214,6 +1214,18 @@ div.api-content {
     width: 100%;
 }
 
+div.redoc-wrap h5 {
+  font-size:90%;
+}
+
+div.redoc-wrap pre {
+  background: unset;
+}
+
+div.redoc-wrap h3 {
+  color: unset;
+}
+
 input.jp-Stdin-input {
     height: 1.5em;
     width: 80%;
@@ -1410,6 +1422,18 @@ div .copyable {
 	        border-radius: 50%;
 }
 
+.progress li a {
+  width:200%;
+  height:200%;
+  display:block;
+  text-decoration:none;
+  color:#fff;
+}
+
+.progress ul li.current a {
+  color:#5B17F0;
+}
+
 /* Current step */
 .progress ul li.current {
 	display: inline-block;
@@ -1418,6 +1442,7 @@ div .copyable {
 	color: #5B17F0;
 	position: relative;
 }
+
 .progress ul li.current::before {
 	border: solid 3px #5B17F0; /* Current Step Circle Color */
 	background-color: #FFF;
