@@ -493,6 +493,8 @@ or initialize <code class="docutils literal notranslate"><span class="pre">Keras
 </div>
 <div class="section" id="embedding-policy">
 <span id="id2"></span><h2>Embedding policy<a class="headerlink" href="#embedding-policy" title="Permalink to this headline">¶</a></h2>
+<p>The Recurrent Embedding Dialogue Policy (REDP)
+described in our paper: <a class="reference external" href="https://arxiv.org/abs/1811.11707">https://arxiv.org/abs/1811.11707</a></p>
 <p>This policy has a pre-defined architecture, which comprises the
 following steps:</p>
 <blockquote>
@@ -524,8 +526,8 @@ current time dialogue embedding is high, overwrite current LSTM
 state with the one from the time when this action happened;</li>
 <li>for each LSTM time step, calculate the similarity between the
 dialogue embedding and embedded system actions.
-This step is based on the starspace idea from:
-<a class="reference external" href="https://arxiv.org/abs/1709.03856">https://arxiv.org/abs/1709.03856</a>.</li>
+This step is based on the
+<a class="reference external" href="https://arxiv.org/abs/1709.03856">starspace idea</a>.</li>
 </ul>
 </div></blockquote>
 <div class="admonition note">
