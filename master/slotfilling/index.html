@@ -314,7 +314,7 @@ and other policies in your Core model will be used to predict the next action.</
 <h2><a class="toc-backref" href="#id4">Custom slot mappings</a><a class="headerlink" href="#custom-slot-mappings" title="Permalink to this headline">¶</a></h2>
 <p>Some slots (like <code class="docutils literal notranslate"><span class="pre">cuisine</span></code>) can be picked up using a single entity, but a
 <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> can also support yes/no questions and free-text input.
-The <code class="docutils literal notranslate"><span class="pre">slot_mapping</span></code> method defines how to extract slot values from user responses.</p>
+The <code class="docutils literal notranslate"><span class="pre">slot_mappings</span></code> method defines how to extract slot values from user responses.</p>
 <p>Here’s an example for the restaurant bot:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">slot_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="c1"># type: () -&gt; Dict[Text: Union[Text, Dict, List[Text, Dict]]]</span>
@@ -377,7 +377,7 @@ list of supported cuisines.</p>
     <span class="sd">&quot;&quot;&quot;&quot;Validate extracted requested slot else raise an error&quot;&quot;&quot;</span>
     <span class="n">slot_to_fill</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">)</span>
 
-    <span class="c1"># extract requested slot from a user input by using `slot_mapping`</span>
+    <span class="c1"># extract requested slot from a user input by using `slot_mappings`</span>
     <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">events</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="c1"># raise an error if nothing was extracted</span>

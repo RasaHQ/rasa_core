@@ -318,17 +318,17 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
                                   <span class="s2">&quot;to predict.&quot;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Policy.persist"><a class="viewcode-back" href="../../../../api/policy/#rasa_core.policies.Policy.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Persists the policy to a storage.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
-                                  <span class="s2">&quot;to persist itself.&quot;</span><span class="p">)</span>
+                                  <span class="s2">&quot;to persist itself.&quot;</span><span class="p">)</span></div>
 
-    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Policy.load"><a class="viewcode-back" href="../../../../api/policy/#rasa_core.policies.Policy.load">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Policy&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Loads a policy from the storage.</span>
 <span class="sd">            Needs to load its featurizer&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
-                                  <span class="s2">&quot;to load itself.&quot;</span><span class="p">)</span></div>
+                                  <span class="s2">&quot;to load itself.&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
