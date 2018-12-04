@@ -82,7 +82,7 @@ You need to define three methods:
         return "restaurant_form"
 
     @staticmethod
-    def required_slots(tracker):
+    def required_slots():
         # type: () -> List[Text]
         """A list of required slots that the form has to fill"""
 
