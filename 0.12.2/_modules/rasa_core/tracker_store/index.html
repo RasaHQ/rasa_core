@@ -311,7 +311,7 @@
 <span class="k">class</span> <span class="nc">InMemoryTrackerStore</span><span class="p">(</span><span class="n">TrackerStore</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span>
-                 <span class="n">event_broker</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EventChannel</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+                 <span class="n">event_broker</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EventChannel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
                  <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">InMemoryTrackerStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">event_broker</span><span class="p">)</span>

@@ -240,9 +240,9 @@
 
     <span class="n">wait_time_between_pulls</span> <span class="o">=</span> <span class="n">model_server</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wait_time_between_pulls&#39;</span><span class="p">,</span>
                                                       <span class="mi">100</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">wait_time_between_pulls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
-        <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span>
-         <span class="n">wait_time_between_pulls</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
+    <span class="k">if</span> <span class="n">wait_time_between_pulls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">,</span>
+                       <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">wait_time_between_pulls</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
         <span class="c1"># continuously pull the model every `wait_time_between_pulls` seconds</span>
         <span class="n">start_model_pulling_in_worker</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span>
                                       <span class="nb">int</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">),</span>
@@ -616,9 +616,9 @@
         <span class="sd">&quot;&quot;&quot;Check if all featurizers are MaxHistoryTrackerFeaturizer.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">and</span>
-                    <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">)):</span>
-                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">and</span> <span class="ow">not</span>
+                    <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">)):</span>
+                        <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="Agent.load_data"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -863,9 +863,9 @@
         <span class="sd">&quot;&quot;&quot;Check whether form policy is not present</span>
 <span class="sd">            if there is a form action in the domain</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">form_names</span> <span class="ow">and</span>
-                <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">FormPolicy</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">form_names</span> <span class="ow">and</span> <span class="ow">not</span>
+                <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">FormPolicy</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">))</span></div>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
