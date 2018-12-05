@@ -87,11 +87,11 @@
           <li><a href=/docs/platform/>Platform</a></li>
         
       
-      
+
       <li>
         <a href="https://github.com/rasaHQ/" target="_blank"><button class="button btn-ghost btn-small"> <i class="fab fa-github"></i>GitHub</button></a>
       </li>
-      
+
       <li>
         <a href="https://forum.rasa.com" target="_blank"><button class="button btn-small">Ask the Community</button></a>
       </li>
@@ -473,7 +473,7 @@ suggestion for improving the docs, feel free to share it by creating an issue on
         'event_category': 'code',
         'event_label': e.text
       });
-      const id = e.text.slice(0,3);
+      const id = e.text.replace(' ','-');
       document.getElementById(id).classList.add('visible');
       setTimeout(function(){
         document.getElementById(id).classList.remove('visible');},
@@ -565,20 +565,5 @@ suggestion for improving the docs, feel free to share it by creating an issue on
     })(window.document, window.history, window.location);
 
   </script>
-  <div id="webchat">
-  <script src="https://storage.googleapis.com/mrbot-cdn/webchat-0.4.2.js"></script>
-  <script>
-   WebChat.default.init({
-       selector: "#webchat",
-       initPayload: "/greet",
-       interval: 500,
-       socketUrl: "https://website-demo.rasa.com/",
-       title: "Sara",
-       subtitle: "I'm still in development",
-       profileAvatar: "https://rasa.com/assets/img/demo/sara_avatar.png",
-       showCloseButton: true,
-       fullScreenMode: false,})
-  </script>
-  </div>
   </body>
 </html>
