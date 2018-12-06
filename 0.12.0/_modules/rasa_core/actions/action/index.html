@@ -192,22 +192,23 @@
     <p class="scv-banner"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.actions.action</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">events</span>
 <span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">DOCS_BASE_URL</span><span class="p">,</span>
     <span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">,</span>
-    <span class="n">REQUESTED_SLOT</span><span class="p">)</span>
+    <span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="n">FALLBACK_SCORE</span><span class="p">,</span> <span class="n">USER_INTENT_CONFIRM</span><span class="p">,</span> <span class="n">USER_INTENT_DENY</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="p">(</span><span class="n">UserUtteranceReverted</span><span class="p">,</span> <span class="n">UserUttered</span><span class="p">,</span>
+                              <span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">Event</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
     <span class="kn">from</span> <span class="nn">rasa_core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Event</span>
     <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -220,16 +221,22 @@
 
 <span class="n">ACTION_DEACTIVATE_FORM_NAME</span> <span class="o">=</span> <span class="s2">&quot;action_deactivate_form&quot;</span>
 
+<span class="n">ACTION_REVERT_FALLBACK_EVENTS</span> <span class="o">=</span> <span class="s1">&#39;action_revert_fallback_events&#39;</span>
 
-<span class="k">def</span> <span class="nf">default_actions</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; List[Action]</span>
+<span class="n">ACTION_DEFAULT_ASK_CONFIRMATION</span> <span class="o">=</span> <span class="s1">&#39;action_default_ask_confirmation&#39;</span>
+
+<span class="n">ACTION_DEFAULT_ASK_CLARIFICATION</span> <span class="o">=</span> <span class="s1">&#39;action_default_ask_clarification&#39;</span>
+
+
+<span class="k">def</span> <span class="nf">default_actions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;Action&#39;</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;List default actions.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">ActionListen</span><span class="p">(),</span> <span class="n">ActionRestart</span><span class="p">(),</span>
-            <span class="n">ActionDefaultFallback</span><span class="p">(),</span> <span class="n">ActionDeactivateForm</span><span class="p">()]</span>
+            <span class="n">ActionDefaultFallback</span><span class="p">(),</span> <span class="n">ActionDeactivateForm</span><span class="p">(),</span>
+            <span class="n">ActionRevertFallbackEvents</span><span class="p">(),</span> <span class="n">ActionDefaultAskConfirmation</span><span class="p">(),</span>
+            <span class="n">ActionDefaultAskClarification</span><span class="p">()]</span>
 
 
-<span class="k">def</span> <span class="nf">default_action_names</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; List[Text]</span>
+<span class="k">def</span> <span class="nf">default_action_names</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;List default action names.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">default_actions</span><span class="p">()]</span>
 
@@ -287,8 +294,7 @@
 <span class="k">class</span> <span class="nc">Action</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Next action to be taken in response to a dialogue state.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; Text</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Unique identifier of this simple action.&quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
@@ -314,7 +320,7 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;Action(&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
 
 
@@ -334,10 +340,10 @@
                                   <span class="n">tracker</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;UtterAction(&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
 
 
@@ -347,7 +353,7 @@
 <span class="sd">    The bot should stop taking further actions and wait for the user to say</span>
 <span class="sd">    something.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_LISTEN_NAME</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
@@ -359,7 +365,7 @@
 
 <span class="sd">    Utters the restart template if available.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_RESTART_NAME</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
@@ -375,7 +381,7 @@
     <span class="sd">&quot;&quot;&quot;Executes the fallback action and goes back to the previous state</span>
 <span class="sd">    of the dialogue&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_DEFAULT_FALLBACK_NAME</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
@@ -390,7 +396,7 @@
 <span class="k">class</span> <span class="nc">ActionDeactivateForm</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Deactivates a form&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_DEACTIVATE_FORM_NAME</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
@@ -554,7 +560,7 @@
 
         <span class="k">return</span> <span class="n">evts</span>
 
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
 
@@ -570,6 +576,114 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
+
+
+<span class="k">class</span> <span class="nc">ActionRevertFallbackEvents</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reverts events which were done during the `TwoStageFallbackPolicy`.</span>
+
+<span class="sd">       This reverts user messages and bot utterances were done as part of the</span>
+<span class="sd">       of the `TwoStageFallbackPolicy`. By doing so it is not necessary to</span>
+<span class="sd">       write custom stories for the different paths, but only of the happy</span>
+<span class="sd">       path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ACTION_REVERT_FALLBACK_EVENTS</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+            <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.policies.two_stage_fallback</span> <span class="k">import</span> <span class="p">(</span><span class="n">has_user_clarified</span><span class="p">,</span>
+                                                           <span class="n">has_user_confirmed</span><span class="p">)</span>
+
+        <span class="n">last_intent</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="n">revert_events</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># User confirmed</span>
+        <span class="k">if</span> <span class="n">has_user_confirmed</span><span class="p">(</span><span class="n">last_intent</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+            <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_confirmation_events</span><span class="p">()</span>
+
+            <span class="n">intent</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_last_event_for</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">intent</span><span class="o">.</span><span class="n">parse_data</span><span class="p">[</span><span class="s1">&#39;intent&#39;</span><span class="p">][</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FALLBACK_SCORE</span>
+
+            <span class="c1"># User confirms clarification</span>
+            <span class="n">clarification</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">last_executed_action_has</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">ACTION_DEFAULT_ASK_CLARIFICATION</span><span class="p">,</span>
+                <span class="n">skip</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">clarification</span><span class="p">:</span>
+                <span class="n">revert_events</span> <span class="o">+=</span> <span class="n">_revert_clarification_events</span><span class="p">(</span><span class="n">intent</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">revert_events</span> <span class="o">+=</span> <span class="p">[</span><span class="n">intent</span><span class="p">]</span>
+        <span class="c1"># User clarified</span>
+        <span class="k">elif</span> <span class="n">has_user_clarified</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
+            <span class="n">last_intent</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_last_event_for</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">)</span>
+            <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_clarification_events</span><span class="p">(</span><span class="n">last_intent</span><span class="p">)</span>
+        <span class="c1"># User clarified instead of confirmation</span>
+        <span class="k">elif</span> <span class="n">tracker</span><span class="o">.</span><span class="n">last_executed_action_has</span><span class="p">(</span><span class="n">ACTION_DEFAULT_ASK_CONFIRMATION</span><span class="p">):</span>
+            <span class="n">last_intent</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_last_event_for</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">)</span>
+            <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_confirmation_events</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">last_intent</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">revert_events</span>
+
+
+<span class="k">def</span> <span class="nf">_revert_clarification_events</span><span class="p">(</span><span class="n">last_intent</span><span class="p">:</span> <span class="n">UserUttered</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">(),</span>  <span class="c1"># remove clarification</span>
+            <span class="c1"># remove feedback and clarification request</span>
+            <span class="n">UserUtteranceReverted</span><span class="p">(),</span>
+            <span class="c1"># remove confirmation request and false intent</span>
+            <span class="n">UserUtteranceReverted</span><span class="p">(),</span>
+            <span class="c1"># replace action with action listen</span>
+            <span class="n">ActionExecuted</span><span class="p">(</span><span class="n">action_name</span><span class="o">=</span><span class="n">ACTION_LISTEN_NAME</span><span class="p">),</span>
+            <span class="n">last_intent</span><span class="p">,</span>  <span class="c1"># add right intent</span>
+            <span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_revert_confirmation_events</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">(),</span>  <span class="c1"># revert confirmation and request</span>
+            <span class="c1"># revert original intent (has to be re-added later)</span>
+            <span class="n">UserUtteranceReverted</span><span class="p">(),</span>
+            <span class="c1"># add action listen intent</span>
+            <span class="n">ActionExecuted</span><span class="p">(</span><span class="n">action_name</span><span class="o">=</span><span class="n">ACTION_LISTEN_NAME</span><span class="p">)]</span>
+
+
+<span class="k">class</span> <span class="nc">ActionDefaultAskConfirmation</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Default implementation which asks the user to confirm his intent.</span>
+
+<span class="sd">       It is suggested to overwrite this default action with a custom action</span>
+<span class="sd">       to have nicer prompts for the confirmations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ACTION_DEFAULT_ASK_CONFIRMATION</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+            <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+        <span class="n">intent_to_confirm</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="n">confirmation_message</span> <span class="o">=</span> <span class="s1">&#39;Did you have this intent: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">intent_to_confirm</span><span class="p">)</span>
+
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_button_message</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">confirmation_message</span><span class="p">,</span>
+                                        <span class="n">buttons</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Yes&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;payload&#39;</span><span class="p">:</span> <span class="s1">&#39;/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                                      <span class="n">USER_INTENT_CONFIRM</span><span class="p">)},</span>
+                                                 <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;No&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;payload&#39;</span><span class="p">:</span> <span class="s1">&#39;/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                                      <span class="n">USER_INTENT_DENY</span><span class="p">)}])</span>
+
+        <span class="k">return</span> <span class="p">[]</span>
+
+
+<span class="k">class</span> <span class="nc">ActionDefaultAskClarification</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Default implementation which asks the user to clarify his intent.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ACTION_DEFAULT_ASK_CLARIFICATION</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+            <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_ask_clarification&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
+                                  <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[]</span>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>

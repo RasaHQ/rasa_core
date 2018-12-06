@@ -246,7 +246,7 @@ conversation are received and updated after actions have been executed</p>
 <p>Maintains the state of a conversation.</p>
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.applied_events">
-<code class="descname">applied_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.applied_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.applied_events" title="Permalink to this definition">¶</a></dt>
+<code class="descname">applied_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[rasa_core.events.Event]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.applied_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.applied_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all actions that should be applied - w/o reverted events.</p>
 </dd></dl>
 
@@ -329,6 +329,24 @@ the trackers before each action.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.get_last_event_for">
+<code class="descname">get_last_event_for</code><span class="sig-paren">(</span><em>event_type: Type[rasa_core.events.Event], action_names_to_exclude: List[str] = None, skip: int = 0</em><span class="sig-paren">)</span> &#x2192; Optional[Any]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_last_event_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_last_event_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the last event of a given type which was actually applied.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">event_type: The type of event you want to find.
+action_names_to_exclude: Events of type <cite>ActionExecuted</cite> which</p>
+<blockquote>
+<div>should be excluded from the results. Can be used to skip
+<cite>action_listen</cite> events.</div></blockquote>
+<p class="last">skip: Skips n possible results before return an event.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>event which matched the query or <cite>None</cite> if no event matched.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.get_latest_entity_values">
 <code class="descname">get_latest_entity_values</code><span class="sig-paren">(</span><em>entity_type: str</em><span class="sig-paren">)</span> &#x2192; Iterator[str]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_latest_entity_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_latest_entity_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get entity values found for the passed entity name in latest msg.</p>
@@ -339,7 +357,7 @@ If no entity is found <cite>None</cite> is the default result.</p>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.get_latest_input_channel">
-<code class="descname">get_latest_input_channel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_latest_input_channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_latest_input_channel" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_latest_input_channel</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Optional[str]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_latest_input_channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_latest_input_channel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the name of the input_channel of the latest UserUttered event</p>
 </dd></dl>
 
@@ -364,8 +382,21 @@ If no entity is found <cite>None</cite> is the default result.</p>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.is_paused">
-<code class="descname">is_paused</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.is_paused"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.is_paused" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_paused</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.is_paused"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.is_paused" title="Permalink to this definition">¶</a></dt>
 <dd><p>State whether the tracker is currently paused.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rasa_core.trackers.DialogueStateTracker.last_executed_action_has">
+<code class="descname">last_executed_action_has</code><span class="sig-paren">(</span><em>name: str</em>, <em>skip=0</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.last_executed_action_has"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.last_executed_action_has" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether last <cite>ActionExecuted</cite> event had a specific name.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>name: Name of the event which should be matched.
+skip: Skips n possible results in between.</dd>
+<dt>Returns:</dt>
+<dd><cite>True</cite> if last executed action had name <cite>name</cite>, otherwise <cite>False</cite>.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
