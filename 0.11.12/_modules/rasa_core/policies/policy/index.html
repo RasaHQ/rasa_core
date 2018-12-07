@@ -328,9 +328,18 @@
                                   <span class="s2">&quot;to load itself.&quot;</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">confidence_scores_for</span><span class="p">(</span><span class="n">action_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">domain</span><span class="o">.</span><span class="n">num_actions</span>
+<span class="k">def</span> <span class="nf">confidence_scores_for</span><span class="p">(</span><span class="n">action_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns confidence scores if a single action is predicted.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        action_name: Name of action for which the score should be set.</span>
+<span class="sd">        value: Confidence for `action_name`.</span>
+<span class="sd">        domain: Domain which contains all actions.</span>
+
+<span class="sd">    Returns: List of length `len(nr_actions)`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">domain</span><span class="o">.</span><span class="n">num_actions</span>
     <span class="n">idx</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">index_for_action</span><span class="p">(</span><span class="n">action_name</span><span class="p">)</span>
     <span class="n">results</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 

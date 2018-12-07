@@ -719,7 +719,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_last_event_for</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">,</span>
                                        <span class="n">action_names_to_exclude</span><span class="o">=</span><span class="p">[</span>
-                                           <span class="s1">&#39;action_listen&#39;</span><span class="p">],</span>
+                                           <span class="n">ACTION_LISTEN_NAME</span><span class="p">],</span>
                                        <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">last</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">last</span><span class="o">.</span><span class="n">action_name</span> <span class="o">==</span> <span class="n">name</span></div>
 </pre></div>
