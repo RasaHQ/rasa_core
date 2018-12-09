@@ -198,7 +198,7 @@
 <span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">DOCS_BASE_URL</span><span class="p">,</span>
     <span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">,</span>
-    <span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="n">FALLBACK_SCORE</span><span class="p">,</span> <span class="n">USER_INTENT_CONFIRM</span><span class="p">,</span> <span class="n">USER_INTENT_DENY</span><span class="p">)</span>
+    <span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="n">FALLBACK_SCORE</span><span class="p">,</span> <span class="n">USER_INTENT_AFFIRM</span><span class="p">,</span> <span class="n">USER_INTENT_DENY</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="p">(</span><span class="n">UserUtteranceReverted</span><span class="p">,</span> <span class="n">UserUttered</span><span class="p">,</span>
                               <span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">Event</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
@@ -220,17 +220,17 @@
 
 <span class="n">ACTION_REVERT_FALLBACK_EVENTS_NAME</span> <span class="o">=</span> <span class="s1">&#39;action_revert_fallback_events&#39;</span>
 
-<span class="n">ACTION_DEFAULT_ASK_CONFIRMATION_NAME</span> <span class="o">=</span> <span class="s1">&#39;action_default_ask_confirmation&#39;</span>
+<span class="n">ACTION_DEFAULT_ASK_AFFIRMATION_NAME</span> <span class="o">=</span> <span class="s1">&#39;action_default_ask_affirmation&#39;</span>
 
-<span class="n">ACTION_DEFAULT_ASK_CLARIFICATION_NAME</span> <span class="o">=</span> <span class="s1">&#39;action_default_ask_clarification&#39;</span>
+<span class="n">ACTION_DEFAULT_ASK_REPHRASE_NAME</span> <span class="o">=</span> <span class="s1">&#39;action_default_ask_rephrase&#39;</span>
 
 
 <span class="k">def</span> <span class="nf">default_actions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;Action&#39;</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;List default actions.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">ActionListen</span><span class="p">(),</span> <span class="n">ActionRestart</span><span class="p">(),</span>
             <span class="n">ActionDefaultFallback</span><span class="p">(),</span> <span class="n">ActionDeactivateForm</span><span class="p">(),</span>
-            <span class="n">ActionRevertFallbackEvents</span><span class="p">(),</span> <span class="n">ActionDefaultAskConfirmation</span><span class="p">(),</span>
-            <span class="n">ActionDefaultAskClarification</span><span class="p">()]</span>
+            <span class="n">ActionRevertFallbackEvents</span><span class="p">(),</span> <span class="n">ActionDefaultAskAffirmation</span><span class="p">(),</span>
+            <span class="n">ActionDefaultAskRephrase</span><span class="p">()]</span>
 
 
 <span class="k">def</span> <span class="nf">default_action_names</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
@@ -589,91 +589,92 @@
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
             <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.policies.two_stage_fallback</span> <span class="k">import</span> <span class="p">(</span><span class="n">has_user_clarified</span><span class="p">,</span>
-                                                           <span class="n">has_user_confirmed</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.policies.two_stage_fallback</span> <span class="k">import</span> <span class="p">(</span><span class="n">has_user_rephrased</span><span class="p">,</span>
+                                                           <span class="n">has_user_affirmed</span><span class="p">)</span>
 
         <span class="n">last_user_event</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
         <span class="n">revert_events</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="c1"># User confirmed</span>
-        <span class="k">if</span> <span class="n">has_user_confirmed</span><span class="p">(</span><span class="n">last_user_event</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-            <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_confirmation_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
-        <span class="c1"># User clarified</span>
-        <span class="k">elif</span> <span class="n">has_user_clarified</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
-            <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_successful_confirmation</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
-        <span class="c1"># User clarified instead of confirmation</span>
+        <span class="c1"># User affirmed</span>
+        <span class="k">if</span> <span class="n">has_user_affirmed</span><span class="p">(</span><span class="n">last_user_event</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+            <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_affirmation_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+        <span class="c1"># User rephrased</span>
+        <span class="k">elif</span> <span class="n">has_user_rephrased</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
+            <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_successful_affirmation</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+        <span class="c1"># User rephrased instead of affirming</span>
         <span class="k">elif</span> <span class="n">tracker</span><span class="o">.</span><span class="n">last_executed_action_has</span><span class="p">(</span>
-                <span class="n">ACTION_DEFAULT_ASK_CONFIRMATION_NAME</span><span class="p">):</span>
-            <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_early_clarification</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+                <span class="n">ACTION_DEFAULT_ASK_AFFIRMATION_NAME</span><span class="p">):</span>
+            <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_early_rephrasing</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">revert_events</span>
 
 
-<span class="k">def</span> <span class="nf">_revert_confirmation_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_revert_affirmation_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
     <span class="kn">import</span> <span class="nn">copy</span>
-    <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_single_confirmation_events</span><span class="p">()</span>
+    <span class="n">revert_events</span> <span class="o">=</span> <span class="n">_revert_single_affirmation_events</span><span class="p">()</span>
 
     <span class="n">last_user_event</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_last_event_for</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">last_user_event</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">last_user_event</span><span class="p">)</span>
     <span class="n">last_user_event</span><span class="o">.</span><span class="n">parse_data</span><span class="p">[</span><span class="s1">&#39;intent&#39;</span><span class="p">][</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FALLBACK_SCORE</span>
 
-    <span class="c1"># User confirms clarification</span>
-    <span class="n">clarification</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">last_executed_action_has</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">ACTION_DEFAULT_ASK_CLARIFICATION_NAME</span><span class="p">,</span>
+    <span class="c1"># User affirms the rephrased intent</span>
+    <span class="n">rephrased_intent</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">last_executed_action_has</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">ACTION_DEFAULT_ASK_REPHRASE_NAME</span><span class="p">,</span>
         <span class="n">skip</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">clarification</span><span class="p">:</span>
-        <span class="n">revert_events</span> <span class="o">+=</span> <span class="n">_revert_clarification_events</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">rephrased_intent</span><span class="p">:</span>
+        <span class="n">revert_events</span> <span class="o">+=</span> <span class="n">_revert_rephrasing_events</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">revert_events</span> <span class="o">+</span> <span class="p">[</span><span class="n">last_user_event</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_revert_single_confirmation_events</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">(),</span>  <span class="c1"># revert confirmation and request</span>
+<span class="k">def</span> <span class="nf">_revert_single_affirmation_events</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">(),</span>  <span class="c1"># revert affirmation and request</span>
             <span class="c1"># revert original intent (has to be re-added later)</span>
             <span class="n">UserUtteranceReverted</span><span class="p">(),</span>
             <span class="c1"># add action listen intent</span>
             <span class="n">ActionExecuted</span><span class="p">(</span><span class="n">action_name</span><span class="o">=</span><span class="n">ACTION_LISTEN_NAME</span><span class="p">)]</span>
 
 
-<span class="k">def</span> <span class="nf">_revert_successful_confirmation</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_revert_successful_affirmation</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
     <span class="n">last_user_event</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_last_event_for</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_revert_clarification_events</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">last_user_event</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_revert_rephrasing_events</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">last_user_event</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_revert_early_clarification</span><span class="p">(</span><span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_revert_early_rephrasing</span><span class="p">(</span><span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
     <span class="n">last_user_event</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_last_event_for</span><span class="p">(</span><span class="n">UserUttered</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_revert_single_confirmation_events</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">last_user_event</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_revert_single_affirmation_events</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">last_user_event</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_revert_clarification_events</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">(),</span>  <span class="c1"># remove clarification</span>
-            <span class="c1"># remove feedback and clarification request</span>
+<span class="k">def</span> <span class="nf">_revert_rephrasing_events</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">(),</span>  <span class="c1"># remove rephrasing</span>
+            <span class="c1"># remove feedback and rephrase request</span>
             <span class="n">UserUtteranceReverted</span><span class="p">(),</span>
-            <span class="c1"># remove confirmation request and false intent</span>
+            <span class="c1"># remove affirmation request and false intent</span>
             <span class="n">UserUtteranceReverted</span><span class="p">(),</span>
             <span class="c1"># replace action with action listen</span>
             <span class="n">ActionExecuted</span><span class="p">(</span><span class="n">action_name</span><span class="o">=</span><span class="n">ACTION_LISTEN_NAME</span><span class="p">)]</span>
 
 
-<span class="k">class</span> <span class="nc">ActionDefaultAskConfirmation</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Default implementation which asks the user to confirm his intent.</span>
+<span class="k">class</span> <span class="nc">ActionDefaultAskAffirmation</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Default implementation which asks the user to affirm his intent.</span>
 
 <span class="sd">       It is suggested to overwrite this default action with a custom action</span>
-<span class="sd">       to have nicer prompts for the confirmations.</span>
+<span class="sd">       to have more meaningful prompts for the affirmations. E.g. have a</span>
+<span class="sd">       description of the intent instead of its identifier name.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ACTION_DEFAULT_ASK_CONFIRMATION_NAME</span>
+        <span class="k">return</span> <span class="n">ACTION_DEFAULT_ASK_AFFIRMATION_NAME</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
             <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
-        <span class="n">intent_to_confirm</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
-        <span class="n">confirmation_message</span> <span class="o">=</span> <span class="s2">&quot;Did you mean &#39;</span><span class="si">{}</span><span class="s2">&#39;?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">intent_to_confirm</span><span class="p">)</span>
+        <span class="n">intent_to_affirm</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="n">affirmation_message</span> <span class="o">=</span> <span class="s2">&quot;Did you mean &#39;</span><span class="si">{}</span><span class="s2">&#39;?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">intent_to_affirm</span><span class="p">)</span>
 
-        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_button_message</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">confirmation_message</span><span class="p">,</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_button_message</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">affirmation_message</span><span class="p">,</span>
                                         <span class="n">buttons</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Yes&#39;</span><span class="p">,</span>
                                                   <span class="s1">&#39;payload&#39;</span><span class="p">:</span> <span class="s1">&#39;/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                                      <span class="n">USER_INTENT_CONFIRM</span><span class="p">)},</span>
+                                                      <span class="n">USER_INTENT_AFFIRM</span><span class="p">)},</span>
                                                  <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;No&#39;</span><span class="p">,</span>
                                                   <span class="s1">&#39;payload&#39;</span><span class="p">:</span> <span class="s1">&#39;/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                                       <span class="n">USER_INTENT_DENY</span><span class="p">)}])</span>
@@ -681,15 +682,15 @@
         <span class="k">return</span> <span class="p">[]</span>
 
 
-<span class="k">class</span> <span class="nc">ActionDefaultAskClarification</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Default implementation which asks the user to clarify his intent.&quot;&quot;&quot;</span>
+<span class="k">class</span> <span class="nc">ActionDefaultAskRephrase</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Default implementation which asks the user to rephrase his intent.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ACTION_DEFAULT_ASK_CLARIFICATION_NAME</span>
+        <span class="k">return</span> <span class="n">ACTION_DEFAULT_ASK_REPHRASE_NAME</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
             <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
-        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_ask_clarification&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_ask_rephrase&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
                                   <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[]</span>
