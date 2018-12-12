@@ -123,7 +123,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Building Rasa with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -213,6 +213,10 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 <li>A support for session persistence mechanism in the <code class="docutils literal notranslate"><span class="pre">SocketIOInput</span></code>
 compatible with the example SocketIO WebChat + short explanation on
 how session persistence should be implemented in a frontend</li>
+<li><cite>TwoStageFallbackPolicy</cite> which asks the user for their affirmation if the NLU
+confidence is low for an intent, for rephrasing the intent if they deny the
+suggested intent, and does finally an ultimate fallback if it does not get
+the intent right</li>
 </ul>
 </div>
 <div class="section" id="removed">
@@ -603,7 +607,7 @@ model metadata</li>
 <li>intent confidence support in RegexInterpreter</li>
 <li>added paramter to train script to pull training data from an url instead
 of a stories file</li>
-<li>added new policy: <a class="reference internal" href="../policies/#embedding-policy"><span class="std std-ref">Embedding policy</span></a> implemented in tensorflow</li>
+<li>added new policy: <a class="reference internal" href="../policies/#embedding-policy"><span class="std std-ref">Embedding Policy</span></a> implemented in tensorflow</li>
 </ul>
 </div>
 <div class="section" id="id49">
