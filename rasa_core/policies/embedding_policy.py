@@ -9,7 +9,7 @@ import numpy as np
 import typing
 from tqdm import tqdm
 from typing import (
-    Any, List, Optional, Text, Dict, Tuple, Union)
+    Any, List, Optional, Text, Dict, Tuple, Union, Callable)
 
 from rasa_core import utils
 from rasa_core.actions.action import ACTION_LISTEN_NAME
@@ -43,7 +43,8 @@ SessionData = namedtuple("SessionData", ("X", "Y", "slots",
                                          "x_for_no_intent",
                                          "y_for_no_action",
                                          "y_for_action_listen",
-                                         "all_Y_d"))
+                                         "all_Y_d",
+                                         "topics"))
 
 
 class EmbeddingPolicy(Policy):
@@ -158,6 +159,8 @@ class EmbeddingPolicy(Policy):
         attn_embed: Optional[tf.Tensor] = None,
         copy_attn_debug: Optional[tf.Tensor] = None,
         all_time_masks: Optional[tf.Tensor] = None,
+        topics: Optional[tf.Tensor] = None,
+        cell_state: Optional[tf.Tensor] = None,
         **kwargs: Any
     ) -> None:
         if featurizer:
@@ -211,11 +214,14 @@ class EmbeddingPolicy(Policy):
         self.copy_attn_debug = copy_attn_debug
 
         self.all_time_masks = all_time_masks
+        self.topics = topics
+        self.cell_state = cell_state
 
         # internal tf instances
         self._train_op = None
         self._is_training = None
         self._loss_scales = None
+        self._true_topics = None
 
     # init helpers
     def _load_nn_architecture_params(self, config: Dict[Text, Any]) -> None:
@@ -356,10 +362,69 @@ class EmbeddingPolicy(Policy):
             # training time
             actions_for_Y = self._actions_for_Y(data_Y)
             Y = self._action_features_for_Y(actions_for_Y)
+
+            topics_dict = {
+                "utter_ask_cuisine": 0,
+                "utter_ask_people": 0,
+                "utter_ask_location": 0,
+                "utter_ask_price": 0,
+                "utter_ask_startdate": 0,
+                "utter_ask_enddate": 0,
+                "utter_suggest_restaurant": 0,
+                "utter_suggest_hotel": 0,
+                "utter_happy": 0,
+                "utter_explain_details_hotel": 2,
+                "utter_explain_details_restaurant": 2,
+                "utter_explain_enddate_hotel": 2,
+                "utter_explain_location_hotel": 2,
+                "utter_explain_location_restaurant": 2,
+                "utter_explain_people_hotel": 2,
+                "utter_explain_people_restaurant": 2,
+                "utter_explain_price_hotel": 2,
+                "utter_explain_price_restaurant": 2,
+                "utter_explain_startdate_hotel": 2,
+                "utter_explain_cuisine_restaurant": 2,
+                "utter_worked_hotel": 3,
+                "utter_worked_restaurant": 3,
+                "utter_chitchat": 1,
+                "utter_ask_details": 0,
+                "utter_filled_slots": 0,
+                "utter_correct_location_hotel": 4,
+                "utter_correct_location_restaurant": 4,
+                "utter_correct_cuisine_restaurant": 4,
+                "utter_correct_price_hotel": 4,
+                "utter_correct_price_restaurant": 4,
+                "utter_correct_people_hotel": 4,
+                "utter_correct_people_restaurant": 4,
+                "utter_correct_startdate_hotel": 4,
+                "utter_correct_enddate_hotel": 4,
+                "utter_more_info_hotel": 3,
+                "utter_more_info_restaurant": 3,
+                "action_search_restaurant": 0,
+                "action_search_hotel": 0,
+                "action_listen": 0,
+            }
+
+            topic = np.zeros(5)
+            topic[0] = 1
+            topics = []
+            for action_ids, prev_actions in zip(actions_for_Y, previous_actions):
+                _topics = []
+                for action_idx, prev_act in zip(action_ids, prev_actions):
+                    if prev_act.argmax(axis=-1) == 0:
+                        topic = np.zeros(5)
+                        topic[topics_dict[domain.action_names[action_idx]]] = 1
+
+                    _topics.append(topic)
+
+                _topics = np.stack(_topics)
+                topics.append(_topics)
+            topics = np.stack(topics)
         else:
             # prediction time
             actions_for_Y = None
             Y = None
+            topics = None
 
         x_for_no_intent = self._create_zero_vector(X)
         y_for_no_action = self._create_zero_vector(previous_actions)
@@ -375,7 +440,8 @@ class EmbeddingPolicy(Policy):
             x_for_no_intent=x_for_no_intent,
             y_for_no_action=y_for_no_action,
             y_for_action_listen=y_for_action_listen,
-            all_Y_d=all_Y_d
+            all_Y_d=all_Y_d,
+            topics=topics
         )
 
         # tf helpers:
@@ -474,8 +540,11 @@ class EmbeddingPolicy(Policy):
             self._create_embed(y_for_no_action,
                                layer_name_suffix=layer_name_suffix))
 
-    def _create_rnn_cell(self):
-        # type: () -> tf.contrib.rnn.RNNCell
+    def _create_rnn_cell(self,
+                         rnn_size: int,
+                         out_layer_size: Optional[int] = None,
+                         out_activation: Optional[Callable] = None
+                         ) -> tf.contrib.rnn.RNNCell:
         """Create one rnn cell."""
 
         # chrono initialization for forget bias
@@ -485,25 +554,19 @@ class EmbeddingPolicy(Policy):
 
         # right border that initializes forget gate close to 1
         bias_1 = np.log(self.characteristic_time - 1.0)
-        fbias = (bias_1 - bias_0) * np.random.random(self.rnn_size) + bias_0
-
-        if self.attn_after_rnn:
-            # since attention is copied to rnn output,
-            # embedding should be performed inside the cell
-            embed_layer_size = self.embed_dim
-        else:
-            embed_layer_size = None
+        fbias = (bias_1 - bias_0) * np.random.random(rnn_size) + bias_0
 
         keep_prob = 1.0 - (self.droprate['rnn'] *
                            tf.cast(self._is_training, tf.float32))
 
         return ChronoBiasLayerNormBasicLSTMCell(
-            num_units=self.rnn_size,
+            num_units=rnn_size,
             layer_norm=self.layer_norm,
             forget_bias=fbias,
             input_bias=-fbias,
             dropout_keep_prob=keep_prob,
-            out_layer_size=embed_layer_size
+            out_layer_size=out_layer_size,
+            out_activation=out_activation
         )
 
     @staticmethod
@@ -608,7 +671,8 @@ class EmbeddingPolicy(Policy):
                           real_length: tf.Tensor,
                           embed_for_no_intent: tf.Tensor,
                           embed_for_no_action: tf.Tensor,
-                          embed_for_action_listen: tf.Tensor
+                          embed_for_action_listen: tf.Tensor,
+                          topics: tf.Tensor
                           ) -> tf.contrib.rnn.RNNCell:  # type:
         """Wrap cell in attention wrapper with given memory."""
 
@@ -682,7 +746,9 @@ class EmbeddingPolicy(Policy):
                 self._tf_sim(emb_1, emb_2, None)),
             tensor_not_to_copy=embed_for_action_listen,
             output_attention=True,
-            alignment_history=True
+            alignment_history=True,
+            num_topics=5,
+            topics=topics
         )
 
     def _create_tf_dial_embed(
@@ -694,29 +760,56 @@ class EmbeddingPolicy(Policy):
             embed_for_no_intent: tf.Tensor,
             embed_for_no_action: tf.Tensor,
             embed_for_action_listen: tf.Tensor
-    ) -> Tuple[tf.Tensor, Union[tf.Tensor, 'TimeAttentionWrapperState']]:
+    ) -> Tuple[tf.Tensor,
+               Union[tf.Tensor, 'TimeAttentionWrapperState'],
+               tf.Tensor]:
         """Create rnn for dialogue level embedding."""
 
         cell_input = tf.concat([embed_utter, embed_slots,
                                 embed_prev_action], -1)
 
-        cell = self._create_rnn_cell()
+        if self.attn_after_rnn:
+            # since attention is copied to rnn output,
+            # embedding should be performed inside the cell
+            embed_layer_size = self.embed_dim
+        else:
+            embed_layer_size = None
+
+        cell = self._create_rnn_cell(rnn_size=self.rnn_size,
+                                     out_layer_size=embed_layer_size)
 
         real_length = tf.cast(tf.reduce_sum(mask, 1), tf.int32)
+
+        topic_cell = self._create_rnn_cell(rnn_size=32)
+
+        topic_out, _ = tf.nn.dynamic_rnn(
+            topic_cell, cell_input,
+            dtype=tf.float32,
+            sequence_length=real_length,
+            scope='rnn_topic_controller'
+        )
+        reg = tf.contrib.layers.l2_regularizer(self.C2)
+        topics_logits = tf.layers.dense(inputs=topic_out,
+                                        units=5,
+                                        # activation=tf.nn.softmax,
+                                        kernel_regularizer=reg,
+                                        name='topic_controller')
 
         if self.is_using_attention():
             cell = self._create_attn_cell(cell, embed_utter,
                                           embed_prev_action,
                                           real_length, embed_for_no_intent,
                                           embed_for_no_action,
-                                          embed_for_action_listen)
+                                          embed_for_action_listen,
+                                          tf.contrib.seq2seq.hardmax(topics_logits))
 
-        return tf.nn.dynamic_rnn(
+        cell_output, final_state = tf.nn.dynamic_rnn(
             cell, cell_input,
             dtype=tf.float32,
             sequence_length=real_length,
             scope='rnn_decoder'
         )
+        return cell_output, final_state, topics_logits
 
     @staticmethod
     def _alignments_history_from(
@@ -994,6 +1087,12 @@ class EmbeddingPolicy(Policy):
                 shape=(1, session_data.Y.shape[-1]),
                 name='y_for_action_listen'
             )
+            self._true_topics = tf.placeholder(
+                dtype=tf.float32,
+                shape=(None, dialogue_len,
+                       session_data.topics.shape[-1]),
+                name='topics'
+            )
             self._is_training = tf.placeholder_with_default(False, shape=())
 
             self._loss_scales = tf.placeholder(dtype=tf.float32,
@@ -1018,17 +1117,20 @@ class EmbeddingPolicy(Policy):
             mask = tf.sign(tf.reduce_max(self.a_in, -1) + 1)
 
             # get rnn output
-            cell_output, final_state = self._create_tf_dial_embed(
+            cell_output, final_state, topics_logits = self._create_tf_dial_embed(
                 self.user_embed, self.slot_embed, embed_prev_action, mask,
                 embed_for_no_intent, embed_for_no_action,
                 embed_for_action_listen
             )
+            self.topics = tf.nn.softmax(topics_logits)
             # process rnn output
             if self.is_using_attention():
                 self.alignment_history = \
                     self._alignments_history_from(final_state)
 
                 self.all_time_masks = self._all_time_masks_from(final_state)
+
+                self.cell_state = final_state.cell_state.c
 
             sims_rnn_to_max = self._sims_rnn_to_max_from(cell_output)
             self.dial_embed = self._embed_dialogue_from(cell_output)
@@ -1038,6 +1140,7 @@ class EmbeddingPolicy(Policy):
                                                 self.bot_embed, mask)
             # construct loss
             loss = self._tf_loss(self.sim_op, sim_act, sims_rnn_to_max, mask)
+            loss += tf.losses.softmax_cross_entropy(self._true_topics, topics_logits)
 
             # define which optimizer to use
             self._train_op = tf.train.AdamOptimizer(
@@ -1159,6 +1262,7 @@ class EmbeddingPolicy(Policy):
                 batch_a = session_data.X[batch_ids]
                 batch_pos_b = session_data.Y[batch_ids]
                 actions_for_b = session_data.actions_for_Y[batch_ids]
+                batch_topics = session_data.topics[batch_ids]
 
                 # add negatives - incorrect bot actions predictions
                 batch_b = self._create_batch_b(batch_pos_b, actions_for_b)
@@ -1187,7 +1291,8 @@ class EmbeddingPolicy(Policy):
                         self._y_for_action_listen_in:
                             session_data.y_for_action_listen,
                         self._is_training: True,
-                        self._loss_scales: batch_loss_scales
+                        self._loss_scales: batch_loss_scales,
+                        self._true_topics: batch_topics
                     }
                 )
                 # collect average loss over the batches
@@ -1397,6 +1502,9 @@ class EmbeddingPolicy(Policy):
 
             self._persist_tensor('all_time_masks', self.all_time_masks)
 
+            self._persist_tensor('topics', self.topics)
+            self._persist_tensor('cell_state', self.cell_state)
+
             saver = tf.train.Saver()
             saver.save(self.session, checkpoint)
 
@@ -1458,6 +1566,9 @@ class EmbeddingPolicy(Policy):
 
             all_time_masks = cls.load_tensor('all_time_masks')
 
+            topics = cls.load_tensor('topics')
+            cell_state = cls.load_tensor('cell_state')
+
         encoded_actions_file = os.path.join(
             path, "{}.encoded_all_actions.pkl".format(file_name))
 
@@ -1485,4 +1596,6 @@ class EmbeddingPolicy(Policy):
                    rnn_embed=rnn_embed,
                    attn_embed=attn_embed,
                    copy_attn_debug=copy_attn_debug,
-                   all_time_masks=all_time_masks)
+                   all_time_masks=all_time_masks,
+                   topics=topics,
+                   cell_state=cell_state)

@@ -175,13 +175,21 @@ def _compute_time_attention(attention_mechanism, attn_inputs, attention_state,
     timed_scores_state = attention_state[:, :time]
 
     # get mask for past times
-    timed_time_mask = time_mask[:, :time]
+    if time_mask is not None:
+        timed_time_mask = time_mask[:, :time]
+    else:
+        timed_time_mask = None
+
     if ignore_mask is not None:
-        timed_time_mask *= 1 - ignore_mask[:, :time]
+        if timed_time_mask is not None:
+            timed_time_mask *= 1 - ignore_mask[:, :time]
+        else:
+            timed_time_mask = 1 - ignore_mask[:, :time]
 
     # set mask for current time to 1
-    timed_time_mask = tf.concat([timed_time_mask,
-                                 tf.ones_like(time_mask[:, :1])], 1)
+    if timed_time_mask is not None:
+        timed_time_mask = tf.concat([timed_time_mask,
+                                     tf.ones_like(time_mask[:, :1])], 1)
 
     # pass these scores to NTM
     probs, next_scores_state = timed_ntm(attn_inputs, timed_scores,
@@ -252,6 +260,7 @@ class TimeAttentionWrapperState(
         )
 
 
+# noinspection PyArgumentList
 class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
     """Custom AttentionWrapper that takes into account time
         when calculating attention.
@@ -278,7 +287,9 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                  output_attention=False,
                  initial_cell_state=None,
                  name=None,
-                 attention_layer=None):
+                 attention_layer=None,
+                 num_topics=None,
+                 topics=None):
         """Construct the `TimeAttentionWrapper`.
             See the super class for the original arguments description.
 
@@ -371,6 +382,9 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         self._likelihood_fn = likelihood_fn
         self._tensor_not_to_copy = tensor_not_to_copy
 
+        self._num_topics = num_topics
+        self._topics = topics
+
     @staticmethod
     def _default_rnn_and_attn_inputs_fn(inputs, cell_state):
         if isinstance(cell_state, tf.contrib.rnn.LSTMStateTuple):
@@ -439,6 +453,9 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         zero_state = super(TimeAttentionWrapper,
                            self).zero_state(batch_size, dtype)
 
+        cell_state_c = tf.concat([tf.expand_dims(zero_state.cell_state.c, 1)] * self._num_topics, 1)
+        cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c, zero_state.cell_state.h)
+
         with tf.name_scope(type(self).__name__ + "ZeroState",
                            values=[batch_size]):
             # store time masks
@@ -472,7 +489,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                 ).write(0, zero_state.cell_state)
 
             return TimeAttentionWrapperState(
-                cell_state=zero_state.cell_state,
+                cell_state=cell_state,
                 time=zero_state.time,
                 attention=zero_state.attention,
                 alignments=zero_state.alignments,
@@ -526,7 +543,10 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
 
         # Step 1: Calculate attention based on
         #         the previous output and current input
-        cell_state = state.cell_state
+        topic = tf.expand_dims(self._topics[:, state.time, :], -1)
+        cell_state_c = tf.reduce_sum(state.cell_state.c * topic, 1)
+        cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c, state.cell_state.h)
+        # cell_state = state.cell_state
 
         rnn_inputs, attn_inputs = self._rnn_and_attn_inputs_fn(inputs,
                                                                cell_state)
@@ -654,20 +674,20 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
             )
 
             # recalculate new next_cell_state based on history_alignments
-            next_cell_state = self._new_next_cell_state(
-                prev_all_cell_states,
-                next_cell_state,
-                cell_output_with_attn,
-                history_alignments,
-                state.time
-            )
-
-            all_cell_states = self._all_cell_states(
-                prev_all_cell_states,
-                next_cell_state,
-                state.time
-            )
-
+            # next_cell_state = self._new_next_cell_state(
+            #     prev_all_cell_states,
+            #     next_cell_state,
+            #     cell_output_with_attn,
+            #     history_alignments,
+            #     state.time
+            # )
+            #
+            # all_cell_states = self._all_cell_states(
+            #     prev_all_cell_states,
+            #     next_cell_state,
+            #     state.time
+            # )
+            all_cell_states = prev_all_cell_states
             if self._output_attention:
                 # concatenate cell outputs, attention, additional likelihoods
                 # and copy_attn_debug
@@ -694,9 +714,13 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
 
         all_time_masks = state.all_time_masks.write(state.time + 1, time_mask)
 
+        next_cell_state_c = tf.concat([tf.expand_dims(next_cell_state.c, 1)] * self._num_topics, 1) * topic
+        old_cell_state_c = state.cell_state.c * (1 - topic)
+        cell_state = tf.contrib.rnn.LSTMStateTuple(next_cell_state_c + old_cell_state_c, next_cell_state.h)
+
         next_state = TimeAttentionWrapperState(
             time=state.time + 1,
-            cell_state=next_cell_state,
+            cell_state=cell_state,
             attention=attention,
             attention_state=self._item_or_tuple(all_attention_states),
             alignments=self._item_or_tuple(all_alignments),
@@ -856,6 +880,7 @@ class ChronoBiasLayerNormBasicLSTMCell(tf.contrib.rnn.LayerNormBasicLSTMCell):
                  dropout_keep_prob=1.0,
                  dropout_prob_seed=None,
                  out_layer_size=None,
+                 out_activation=None,
                  reuse=None):
         """Initializes the basic LSTM cell
 
@@ -877,6 +902,7 @@ class ChronoBiasLayerNormBasicLSTMCell(tf.contrib.rnn.LayerNormBasicLSTMCell):
         )
         self._input_bias = input_bias
         self._out_layer_size = out_layer_size
+        self._out_activation = out_activation
 
     @property
     def output_size(self):
@@ -937,6 +963,8 @@ class ChronoBiasLayerNormBasicLSTMCell(tf.contrib.rnn.LayerNormBasicLSTMCell):
         if self._out_layer_size is not None:
             with tf.variable_scope('out_layer'):
                 new_h = self._dense_layer(new_h, self._out_layer_size)
+                if self._out_activation is not None:
+                    new_h = self._out_activation(new_h)
 
         new_state = tf.contrib.rnn.LSTMStateTuple(new_c, new_h)
         return new_h, new_state
