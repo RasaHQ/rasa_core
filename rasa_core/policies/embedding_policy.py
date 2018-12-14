@@ -1140,7 +1140,9 @@ class EmbeddingPolicy(Policy):
                                                 self.bot_embed, mask)
             # construct loss
             loss = self._tf_loss(self.sim_op, sim_act, sims_rnn_to_max, mask)
-            loss += tf.losses.softmax_cross_entropy(self._true_topics, topics_logits)
+            loss += tf.losses.softmax_cross_entropy(self._true_topics,
+                                                    topics_logits,
+                                                    self._loss_scales)
 
             # define which optimizer to use
             self._train_op = tf.train.AdamOptimizer(
