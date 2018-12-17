@@ -454,6 +454,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                            self).zero_state(batch_size, dtype)
 
         cell_state_c = tf.concat([tf.expand_dims(zero_state.cell_state.c, 1)] * self._num_topics, 1)
+        # cell_state_h = tf.concat([tf.expand_dims(zero_state.cell_state.h, 1)] * self._num_topics, 1)
         cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c, zero_state.cell_state.h)
 
         with tf.name_scope(type(self).__name__ + "ZeroState",
@@ -545,6 +546,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         #         the previous output and current input
         topic = tf.expand_dims(self._topics[:, state.time, :], -1)
         cell_state_c = tf.reduce_sum(state.cell_state.c * topic, 1)
+        # cell_state_h = tf.reduce_sum(state.cell_state.h * topic, 1)
         cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c, state.cell_state.h)
         # cell_state = state.cell_state
 
@@ -613,6 +615,8 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
 
         # Step 7: Call the wrapped `cell` with these cell inputs and
         #         its previous state.
+        # attn_to_copy = all_attentions[self._index_of_attn_to_copy]
+        # cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state.c, cell_state.h + attn_to_copy)
         cell_output, next_cell_state = self._cell(cell_inputs, cell_state)
 
         prev_all_cell_states = state.all_cell_states
@@ -703,6 +707,8 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
             else:
                 output = cell_output_with_attn
 
+            cell_output = cell_output_with_attn
+
         else:
             # do not waste resources on storing history
             all_cell_states = prev_all_cell_states
@@ -715,8 +721,12 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         all_time_masks = state.all_time_masks.write(state.time + 1, time_mask)
 
         next_cell_state_c = tf.concat([tf.expand_dims(next_cell_state.c, 1)] * self._num_topics, 1) * topic
+        # next_cell_state_h = tf.concat([tf.expand_dims(cell_output, 1)] * self._num_topics, 1) * topic
         old_cell_state_c = state.cell_state.c * (1 - topic)
-        cell_state = tf.contrib.rnn.LSTMStateTuple(next_cell_state_c + old_cell_state_c, next_cell_state.h)
+        # old_cell_state_h = state.cell_state.h * (1 - topic)
+        cell_state = tf.contrib.rnn.LSTMStateTuple(next_cell_state_c + old_cell_state_c,
+                                                   cell_output)
+                                                   # next_cell_state_h + old_cell_state_h)
 
         next_state = TimeAttentionWrapperState(
             time=state.time + 1,
