@@ -16,11 +16,13 @@ Added
 - A support for session persistence mechanism in the ``SocketIOInput``
   compatible with the example SocketIO WebChat + short explanation on
   how session persistence should be implemented in a frontend
-- `TwoStageFallbackPolicy` which asks the user for their affirmation if the NLU
+- ``TwoStageFallbackPolicy`` which asks the user for their affirmation if the NLU
   confidence is low for an intent, for rephrasing the intent if they deny the
   suggested intent, and does finally an ultimate fallback if it does not get
   the intent right
-
+- Additional checks in PolicyEnsemble to ensure that custom Policy
+  classes' load function returns the correct type
+  
 Removed
 -------
 - support for deprecated intents/entities format
@@ -28,11 +30,16 @@ Removed
 Changed
 -------
 - replaced ``pytest-pep8`` with ``pytest-pycodestyle``
+- switch from ``PyInquirer`` to ``questionary`` for the display of
+  commandline interface (to avoid prompt toolkit 2 version issues)
+- if NLU classification returned ``None`` in interactive training,
+  directly ask a user for a correct intent
 
 Fixed
 -----
 - fix error during interactive learning which was caused by actions which
   dispatched messages using ``dispatcher.utter_custom_message``
+- re-added missing ``python-engineio`` dependency
 
 
 [0.12.3] - 2018-12-03
