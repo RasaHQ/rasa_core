@@ -213,7 +213,7 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 <li>A support for session persistence mechanism in the <code class="docutils literal notranslate"><span class="pre">SocketIOInput</span></code>
 compatible with the example SocketIO WebChat + short explanation on
 how session persistence should be implemented in a frontend</li>
-<li><cite>TwoStageFallbackPolicy</cite> which asks the user for their affirmation if the NLU
+<li><code class="docutils literal notranslate"><span class="pre">TwoStageFallbackPolicy</span></code> which asks the user for their affirmation if the NLU
 confidence is low for an intent, for rephrasing the intent if they deny the
 suggested intent, and does finally an ultimate fallback if it does not get
 the intent right</li>
@@ -231,6 +231,8 @@ classes’ load function returns the correct type</li>
 <h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>replaced <code class="docutils literal notranslate"><span class="pre">pytest-pep8</span></code> with <code class="docutils literal notranslate"><span class="pre">pytest-pycodestyle</span></code></li>
+<li>if NLU classification returned <code class="docutils literal notranslate"><span class="pre">None</span></code> in interactive training,
+directly ask a user for a correct intent</li>
 </ul>
 </div>
 <div class="section" id="fixed">
