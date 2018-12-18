@@ -231,6 +231,8 @@ classes’ load function returns the correct type</li>
 <h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>replaced <code class="docutils literal notranslate"><span class="pre">pytest-pep8</span></code> with <code class="docutils literal notranslate"><span class="pre">pytest-pycodestyle</span></code></li>
+<li>switch from <code class="docutils literal notranslate"><span class="pre">PyInquirer</span></code> to <code class="docutils literal notranslate"><span class="pre">questionary</span></code> for the display of
+commandline interface (to avoid prompt toolkit 2 version issues)</li>
 <li>if NLU classification returned <code class="docutils literal notranslate"><span class="pre">None</span></code> in interactive training,
 directly ask a user for a correct intent</li>
 </ul>
