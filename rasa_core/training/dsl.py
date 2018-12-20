@@ -227,13 +227,20 @@ class StoryFileReader(object):
     def _parse_event_line(line):
         """Tries to parse a single line as an event with arguments."""
 
-        # the regex matches "slot{"a": 1}"
-        m = re.search('^([^{]+)([{].+)?', line)
+        # the regex matches "topic: name{"a": 1}"
+        m = re.search(r'^([^{]+[:]\s+)?([^{]+)([{].+)?', line)
         if m is not None:
-            event_name = m.group(1).strip()
-            slots_str = m.group(2)
+            topic_name = m.group(1)
+            event_name = m.group(2).strip()
+            slots_str = m.group(3)
             parameters = StoryFileReader._parameters_from_json_string(
                 slots_str, line)
+
+            if topic_name and event_name != 'slot':
+                # remove trailing spaces and `:` sign
+                topic_name = topic_name.strip()[:-1]
+                parameters['topic'] = topic_name
+
             return event_name, parameters
         else:
             warnings.warn("Failed to parse action line '{}'. "

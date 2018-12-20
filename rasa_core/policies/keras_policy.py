@@ -138,17 +138,15 @@ class KerasPolicy(Policy):
         training_data = self.featurize_for_training(training_trackers,
                                                     domain,
                                                     **kwargs)
-
-        # noinspection PyPep8Naming
-        shuffled_X, shuffled_y = training_data.shuffled_X_y()
+        shuffled = training_data.shuffled()
 
         self.graph = tf.Graph()
         with self.graph.as_default():
             self.session = tf.Session()
             with self.session.as_default():
                 if self.model is None:
-                    self.model = self.model_architecture(shuffled_X.shape[1:],
-                                                         shuffled_y.shape[1:])
+                    self.model = self.model_architecture(shuffled.X.shape[1:],
+                                                         shuffled.y.shape[1:])
 
                 logger.info("Fitting model with {} total samples and a "
                             "validation split of {}"
@@ -157,7 +155,7 @@ class KerasPolicy(Policy):
                 # filter out kwargs that cannot be passed to fit
                 params = self._get_valid_params(self.model.fit, **kwargs)
 
-                self.model.fit(shuffled_X, shuffled_y,
+                self.model.fit(shuffled.X, shuffled.y,
                                epochs=self.epochs,
                                batch_size=self.batch_size,
                                **params)

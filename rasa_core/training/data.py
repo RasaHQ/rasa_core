@@ -3,14 +3,16 @@ import numpy as np
 
 # noinspection PyPep8Naming
 class DialogueTrainingData(object):
-    def __init__(self, X, y, true_length=None):
+    def __init__(self, X, y, topics=None, true_length=None):
         self.X = X
         self.y = y
+        self.topics = topics
         self.true_length = true_length
 
     def limit_training_data_to(self, max_samples):
         self.X = self.X[:max_samples]
         self.y = self.y[:max_samples]
+        self.topics = self.topics[:max_samples]
         self.true_length = self.true_length[:max_samples]
 
     def is_empty(self):
@@ -23,9 +25,13 @@ class DialogueTrainingData(object):
     def num_examples(self):
         return len(self.y)
 
-    def shuffled_X_y(self):
+    def shuffled(self):
         idx = np.arange(self.num_examples())
         np.random.shuffle(idx)
         shuffled_X = self.X[idx]
         shuffled_y = self.y[idx]
-        return shuffled_X, shuffled_y
+        shuffled_topics = self.topics[idx] if self.topics else self.topics
+        shuffled_true_length = (self.true_length[idx]
+                                if self.true_length else self.true_length)
+        return type(self)(shuffled_X, shuffled_y,
+                          shuffled_topics, shuffled_true_length)

@@ -115,6 +115,7 @@ class EmbeddingPolicy(Policy):
         # flag to use attention over prev bot actions
         # and copy it to output bypassing rnn
         "attn_after_rnn": True,
+        "skip_time": True,
 
         # flag to use `sparsemax` instead of `softmax` for attention
         "sparse_attention": False,  # flag to use sparsemax for probs
@@ -221,6 +222,7 @@ class EmbeddingPolicy(Policy):
         self._train_op = None
         self._is_training = None
         self._loss_scales = None
+        self._num_topics = None
         self._true_topics = None
 
     # init helpers
@@ -267,6 +269,7 @@ class EmbeddingPolicy(Policy):
         self.attn_shift_range = config['attn_shift_range']
         self.attn_after_rnn = config['attn_after_rnn']
         self.attn_before_rnn = config['attn_before_rnn']
+        self.skip_time = config['skip_time']
 
     def is_using_attention(self):
         return self.attn_after_rnn or self.attn_before_rnn
@@ -351,7 +354,8 @@ class EmbeddingPolicy(Policy):
     def _create_tf_session_data(self,
                                 domain: 'Domain',
                                 data_X: np.ndarray,
-                                data_Y: Optional[np.ndarray] = None
+                                data_Y: Optional[np.ndarray] = None,
+                                topics: Optional[np.ndarray] = None,
                                 ) -> SessionData:
         """Combine all tf session related data into a namedtuple"""
 
@@ -362,69 +366,10 @@ class EmbeddingPolicy(Policy):
             # training time
             actions_for_Y = self._actions_for_Y(data_Y)
             Y = self._action_features_for_Y(actions_for_Y)
-
-            topics_dict = {
-                "utter_ask_cuisine": 0,
-                "utter_ask_people": 0,
-                "utter_ask_location": 0,
-                "utter_ask_price": 0,
-                "utter_ask_startdate": 0,
-                "utter_ask_enddate": 0,
-                "utter_suggest_restaurant": 0,
-                "utter_suggest_hotel": 0,
-                "utter_happy": 0,
-                "utter_explain_details_hotel": 2,
-                "utter_explain_details_restaurant": 2,
-                "utter_explain_enddate_hotel": 2,
-                "utter_explain_location_hotel": 2,
-                "utter_explain_location_restaurant": 2,
-                "utter_explain_people_hotel": 2,
-                "utter_explain_people_restaurant": 2,
-                "utter_explain_price_hotel": 2,
-                "utter_explain_price_restaurant": 2,
-                "utter_explain_startdate_hotel": 2,
-                "utter_explain_cuisine_restaurant": 2,
-                "utter_worked_hotel": 3,
-                "utter_worked_restaurant": 3,
-                "utter_chitchat": 1,
-                "utter_ask_details": 0,
-                "utter_filled_slots": 0,
-                "utter_correct_location_hotel": 4,
-                "utter_correct_location_restaurant": 4,
-                "utter_correct_cuisine_restaurant": 4,
-                "utter_correct_price_hotel": 4,
-                "utter_correct_price_restaurant": 4,
-                "utter_correct_people_hotel": 4,
-                "utter_correct_people_restaurant": 4,
-                "utter_correct_startdate_hotel": 4,
-                "utter_correct_enddate_hotel": 4,
-                "utter_more_info_hotel": 3,
-                "utter_more_info_restaurant": 3,
-                "action_search_restaurant": 0,
-                "action_search_hotel": 0,
-                "action_listen": 0,
-            }
-
-            topic = np.zeros(5)
-            topic[0] = 1
-            topics = []
-            for action_ids, prev_actions in zip(actions_for_Y, previous_actions):
-                _topics = []
-                for action_idx, prev_act in zip(action_ids, prev_actions):
-                    if prev_act.argmax(axis=-1) == 0:
-                        topic = np.zeros(5)
-                        topic[topics_dict[domain.action_names[action_idx]]] = 1
-
-                    _topics.append(topic)
-
-                _topics = np.stack(_topics)
-                topics.append(_topics)
-            topics = np.stack(topics)
         else:
             # prediction time
             actions_for_Y = None
             Y = None
-            topics = None
 
         x_for_no_intent = self._create_zero_vector(X)
         y_for_no_action = self._create_zero_vector(previous_actions)
@@ -591,7 +536,8 @@ class EmbeddingPolicy(Policy):
         )
 
     def cell_input_fn(self, rnn_inputs: tf.Tensor, attention: tf.Tensor,
-                      num_cell_input_memory_units: int) -> tf.Tensor:
+                      num_cell_input_memory_units: Optional[int]
+                      ) -> tf.Tensor:
         """Combine rnn inputs and attention into cell input.
 
         Args:
@@ -742,12 +688,13 @@ class EmbeddingPolicy(Policy):
                 self.cell_input_fn(inputs, attention,
                                    num_memory_units_before_rnn)),
             index_of_attn_to_copy=index_of_attn_to_copy,
+            skip_time_if_copied=self.skip_time,
             likelihood_fn=lambda emb_1, emb_2: (
                 self._tf_sim(emb_1, emb_2, None)),
             tensor_not_to_copy=embed_for_action_listen,
             output_attention=True,
             alignment_history=True,
-            num_topics=5,
+            num_topics=self._num_topics,
             topics=topics
         )
 
@@ -790,7 +737,7 @@ class EmbeddingPolicy(Policy):
         )
         reg = tf.contrib.layers.l2_regularizer(self.C2)
         topics_logits = tf.layers.dense(inputs=topic_out,
-                                        units=5,
+                                        units=self._num_topics,
                                         # activation=tf.nn.softmax,
                                         kernel_regularizer=reg,
                                         name='topic_controller')
@@ -1036,8 +983,9 @@ class EmbeddingPolicy(Policy):
         # extract actual training data to feed to tf session
         session_data = self._create_tf_session_data(domain,
                                                     training_data.X,
-                                                    training_data.y)
-
+                                                    training_data.y,
+                                                    training_data.topics)
+        self._num_topics = session_data.topics.shape[-1]
         self.graph = tf.Graph()
 
         with self.graph.as_default():
@@ -1090,7 +1038,7 @@ class EmbeddingPolicy(Policy):
             self._true_topics = tf.placeholder(
                 dtype=tf.float32,
                 shape=(None, dialogue_len,
-                       session_data.topics.shape[-1]),
+                       self._num_topics),
                 name='topics'
             )
             self._is_training = tf.placeholder_with_default(False, shape=())
@@ -1350,9 +1298,9 @@ class EmbeddingPolicy(Policy):
                     session_data.y_for_action_listen
             }
         )
-        return np.sum((np.argmax(_sim, -1) ==
-                       session_data.actions_for_Y[ids]) *
-                      _mask) / np.sum(_mask)
+        return np.float32(np.sum((np.argmax(_sim, -1) ==
+                                  session_data.actions_for_Y[ids]) *
+                                 _mask) / np.sum(_mask))
 
     def continue_training(self,
                           training_trackers: List[DialogueStateTracker],
@@ -1369,7 +1317,8 @@ class EmbeddingPolicy(Policy):
 
             session_data = self._create_tf_session_data(domain,
                                                         training_data.X,
-                                                        training_data.y)
+                                                        training_data.y,
+                                                        training_data.topics)
 
             b = self._create_batch_b(session_data.Y,
                                      session_data.actions_for_Y)
@@ -1397,7 +1346,8 @@ class EmbeddingPolicy(Policy):
                     self._y_for_action_listen_in:
                         session_data.y_for_action_listen,
                     self._is_training: True,
-                    self._loss_scales: batch_loss_scales
+                    self._loss_scales: batch_loss_scales,
+                    self._true_topics: session_data.topics
                 }
             )
 

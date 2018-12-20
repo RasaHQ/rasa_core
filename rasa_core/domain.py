@@ -107,6 +107,7 @@ class Domain(object):
             utter_templates,
             data.get("actions", []),
             data.get("forms", []),
+            data.get("topics", []),
             **additional_arguments
         )
 
@@ -231,8 +232,9 @@ class Domain(object):
                  templates: Dict[Text, Any],
                  action_names: List[Text],
                  form_names: List[Text],
+                 topic_names: List[Optional[Text]],
                  store_entities_as_slots: bool = True,
-                 restart_intent="restart"  # type: Text
+                 restart_intent: Text = "restart"
                  ) -> None:
 
         self.intent_properties = intent_properties
@@ -240,6 +242,7 @@ class Domain(object):
         self.form_names = form_names
         self.slots = slots
         self.templates = templates
+        self.topic_names = [None] + topic_names
 
         # only includes custom actions and utterance actions
         self.user_actions = action_names
@@ -263,6 +266,13 @@ class Domain(object):
 
         # noinspection PyTypeChecker
         return len(self.action_names)
+
+    @utils.lazyproperty
+    def num_topics(self):
+        """Returns the number of available topics."""
+
+        # noinspection PyTypeChecker
+        return len(self.topic_names)
 
     @utils.lazyproperty
     def num_states(self):
@@ -314,16 +324,30 @@ class Domain(object):
         try:
             return self.action_names.index(action_name)
         except ValueError:
-            self._raise_action_not_found_exception(action_name)
+            self._raise_not_found_exception('action', action_name)
 
-    def _raise_action_not_found_exception(self, action_name):
-        action_names = "\n".join(["\t - {}".format(a)
-                                  for a in self.action_names])
-        raise NameError("Cannot access action '{}', "
+    def index_for_topic(self, topic_name: Optional[Text]) -> Optional[int]:
+        """Looks up which topic index corresponds to this topic name"""
+
+        try:
+            return self.topic_names.index(topic_name)
+        except ValueError:
+            self._raise_not_found_exception('topic', topic_name)
+
+    def _raise_not_found_exception(self, type_of_name, name):
+        if type_of_name == 'action':
+            names = self.action_names
+        elif type_of_name == 'topic':
+            names = self.topic_names
+        else:
+            names = []
+        names = "\n".join(["\t - {}".format(t)
+                           for t in names if t is not None])
+        raise NameError("Cannot access {0} '{1}', "
                         "as that name is not a registered "
-                        "action for this domain. "
-                        "Available actions are: \n{}"
-                        "".format(action_name, action_names))
+                        "{0} for this domain. "
+                        "Available {0}s are: \n{2}"
+                        "".format(type_of_name, name, names))
 
     def random_template_for(self, utter_action):
         if utter_action in self.templates:

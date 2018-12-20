@@ -84,7 +84,7 @@ class Event(object):
         # True at the same time
         return not (self == other)
 
-    def as_story_string(self):
+    def as_story_string(self) -> Optional[Text]:
         raise NotImplementedError
 
     @staticmethod
@@ -151,7 +151,7 @@ class Event(object):
     @staticmethod
     def resolve_by_type(
         type_name: Text,
-        default: Optional[Text] = None
+        default: Optional[Type['Event']] = None
     ) -> Optional[Type['Event']]:
         """Returns a slots class by its type name."""
 
@@ -718,10 +718,12 @@ class ActionExecuted(Event):
 
     def __init__(self,
                  action_name,
+                 topic=None,
                  policy=None,
                  confidence=None,
                  timestamp=None):
         self.action_name = action_name
+        self.topic = topic
         self.policy = policy
         self.confidence = confidence
         self.unpredictable = False
@@ -741,7 +743,8 @@ class ActionExecuted(Event):
             return self.action_name == other.action_name
 
     def as_story_string(self):
-        return self.action_name
+        topic_prefix = self.topic + ': ' if self.topic else ''
+        return topic_prefix + self.action_name
 
     @classmethod
     def _from_story_string(
@@ -750,6 +753,7 @@ class ActionExecuted(Event):
     ) -> Optional[List[Event]]:
 
         return [ActionExecuted(parameters.get("name"),
+                               parameters.get("topic"),
                                parameters.get("policy"),
                                parameters.get("confidence"),
                                parameters.get("timestamp")
