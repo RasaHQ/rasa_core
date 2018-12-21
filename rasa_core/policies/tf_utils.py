@@ -389,6 +389,16 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
 
         self._num_topics = num_topics
         self._topics = topics
+        if self._topics is not None:
+            if not self._num_topics:
+                raise ValueError("Number of topics 'num_topics' "
+                                 "was not provided.")
+            if not isinstance(self._cell.state_size,
+                              tf.contrib.rnn.LSTMStateTuple):
+                raise TypeError("Expected cell state to be instance of "
+                                "LSTMStateTuple. "
+                                "Received type {} instead."
+                                .format(type(self._cell.state_size)))
 
     @staticmethod
     def _default_rnn_and_attn_inputs_fn(inputs, cell_state):
@@ -458,9 +468,11 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         zero_state = super(TimeAttentionWrapper,
                            self).zero_state(batch_size, dtype)
 
-        cell_state_c = tf.concat([tf.expand_dims(zero_state.cell_state.c, 1)] * self._num_topics, 1)
-        # cell_state_h = tf.concat([tf.expand_dims(zero_state.cell_state.h, 1)] * self._num_topics, 1)
-        cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c, zero_state.cell_state.h)
+        cell_state_c = tf.concat(
+            [tf.expand_dims(zero_state.cell_state.c, 1)] * self._num_topics, 1
+        )
+        cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c,
+                                                   zero_state.cell_state.h)
 
         with tf.name_scope(type(self).__name__ + "ZeroState",
                            values=[batch_size]):
@@ -551,9 +563,8 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         #         the previous output and current input
         topic = tf.expand_dims(self._topics[:, state.time, :], -1)
         cell_state_c = tf.reduce_sum(state.cell_state.c * topic, 1)
-        # cell_state_h = tf.reduce_sum(state.cell_state.h * topic, 1)
-        cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c, state.cell_state.h)
-        # cell_state = state.cell_state
+        cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c,
+                                                   state.cell_state.h)
 
         rnn_inputs, attn_inputs = self._rnn_and_attn_inputs_fn(inputs,
                                                                cell_state)
@@ -587,10 +598,13 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         all_attention_states = []
         maybe_all_histories = []
 
-        prev_time_masks = self._read_from_tensor_array(state.all_time_masks,
-                                                       state.time)
-        prev_time_mask = prev_time_masks[:, -1, :]
-        # prev_time_mask = None
+        if self._skip_time_if_copied:
+            prev_time_masks = self._read_from_tensor_array(
+                state.all_time_masks, state.time)
+            prev_time_mask = prev_time_masks[:, -1, :]
+        else:
+            prev_time_masks = None
+            prev_time_mask = None
 
         for i, attention_mechanism in enumerate(self._attention_mechanisms):
             # Steps 2 - 5 are performed inside `_compute_time_attention`
@@ -621,15 +635,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
 
         # Step 7: Call the wrapped `cell` with these cell inputs and
         #         its previous state.
-        # attn_to_copy = all_attentions[self._index_of_attn_to_copy]
-        # cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state.c, cell_state.h + attn_to_copy)
         cell_output, next_cell_state = self._cell(cell_inputs, cell_state)
-
-        prev_all_cell_states = state.all_cell_states
-
-        time_mask = tf.concat([prev_time_mask[:, :state.time],
-                               tf.ones_like(prev_time_mask[:, :1]),
-                               prev_time_mask[:, state.time + 1:]], 1)
 
         if self._index_of_attn_to_copy is not None:
             # Step 8: Maybe copy output and cell state from history
@@ -691,7 +697,11 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
             else:
                 output = cell_output_with_attn
 
-            cell_output = cell_output_with_attn
+            if isinstance(next_cell_state, tf.contrib.rnn.LSTMStateTuple):
+                next_cell_state = tf.contrib.rnn.LSTMStateTuple(
+                    next_cell_state.c, cell_output_with_attn)
+            else:
+                next_cell_state = cell_output_with_attn
 
         else:
             if self._output_attention:
@@ -700,38 +710,46 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                 output = cell_output
 
         # recalculate next_cell_state with topics
-        next_cell_state_c = tf.concat([tf.expand_dims(next_cell_state.c, 1)] * self._num_topics, 1) * topic
-        # next_cell_state_h = tf.concat([tf.expand_dims(cell_output, 1)] * self._num_topics, 1) * topic
-        old_cell_state_c = state.cell_state.c * (1 - topic)
-        # old_cell_state_h = state.cell_state.h * (1 - topic)
-        next_cell_state = tf.contrib.rnn.LSTMStateTuple(next_cell_state_c + old_cell_state_c,
-                                                        cell_output)
+        if self._topics is not None:
+            next_cell_state_c = tf.concat(
+                [tf.expand_dims(next_cell_state.c, 1)] * self._num_topics, 1
+            ) * topic
+            old_cell_state_c = state.cell_state.c * (1 - topic)
+            next_cell_state = tf.contrib.rnn.LSTMStateTuple(
+                next_cell_state_c + old_cell_state_c,
+                next_cell_state.h
+            )
 
-        if self._index_of_attn_to_copy is not None and self._skip_time_if_copied:
+        if (self._index_of_attn_to_copy is not None and
+                self._skip_time_if_copied):
             # recalculate time_mask
+            time_mask = tf.concat([prev_time_mask[:, :state.time],
+                                   tf.ones_like(prev_time_mask[:, :1]),
+                                   prev_time_mask[:, state.time + 1:]], 1)
             time_mask = self._apply_alignments_to_history(
                 tf.cast(history_alignments, time_mask.dtype),
                 prev_time_masks[:, :-1, :],
                 time_mask
             )
-            all_time_masks = state.all_time_masks.write(state.time + 1, time_mask)
+            all_time_masks = state.all_time_masks.write(state.time + 1,
+                                                        time_mask)
 
             # recalculate new next_cell_state based on history_alignments
             next_cell_state = self._new_next_cell_state(
-                prev_all_cell_states,
+                state.all_cell_states,
                 next_cell_state,
                 history_alignments,
                 state.time
             )
             all_cell_states = self._all_cell_states(
-                prev_all_cell_states,
+                state.all_cell_states,
                 next_cell_state,
                 state.time
             )
 
         else:
             # do not waste resources on storing history
-            all_cell_states = prev_all_cell_states
+            all_cell_states = state.all_cell_states
             all_time_masks = state.all_time_masks
 
         next_state = TimeAttentionWrapperState(
@@ -806,7 +824,8 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         # the batched matmul is over memory_time, so the output shape is
         #   [batch_size, 1, memory_size].
         # we then squeeze out the singleton dim.
-        new_state = tf.squeeze(tf.matmul(expanded_alignments, history_states), [1])
+        new_state = tf.squeeze(tf.matmul(expanded_alignments,
+                                         history_states), [1])
 
         if shape.shape[0] > 3:
             new_state = tf.reshape(new_state, [shape[0], shape[2], -1])
@@ -818,9 +837,11 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
 
         # get all previous outputs from appropriate
         # attention mechanism's memory limited by current time
-        prev_outputs = tf.stop_gradient(self._attention_mechanisms[
-                                            self._index_of_attn_to_copy].values[
-                                        :, :time, :])
+        prev_outputs = tf.stop_gradient(
+            self._attention_mechanisms[
+                self._index_of_attn_to_copy
+            ].values[:, :time, :]
+        )
 
         # multiply by alignments to get one vector from one time step
         return self._apply_alignments_to_history(alignments,
@@ -871,8 +892,12 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
             return tf.contrib.rnn.LSTMStateTuple(next_cell_state_c,
                                                  next_cell_state_h)
         else:
-            return self._new_hidden_state(prev_all_cell_states,
-                                          alignments, next_cell_state, time)
+            return self._new_hidden_state(
+                prev_all_cell_states,
+                alignments,
+                next_cell_state,
+                time
+            )
 
     @staticmethod
     def _all_cell_states(prev_all_cell_states, next_cell_state, time):
