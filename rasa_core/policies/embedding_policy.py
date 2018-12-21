@@ -793,7 +793,7 @@ class EmbeddingPolicy(Policy):
         if self.attn_after_rnn:
             # extract additional debug tensors
             num_add = TimeAttentionWrapper.additional_output_size()
-            self.copy_attn_debug = cell_output[:, :, -num_add:]
+            self.copy_attn_debug = cell_output[:, :, -(num_add + self._num_topics):]
 
             # extract additional similarity to maximize
             sim_attn_to_max = cell_output[:, :, -num_add]
@@ -815,11 +815,11 @@ class EmbeddingPolicy(Policy):
             self.rnn_embed = cell_output[
                 :,
                 :,
-                self.embed_dim:(self.embed_dim + self.embed_dim)]
+                self.embed_dim:(self.embed_dim * 2)]
             self.attn_embed = cell_output[
                 :,
                 :,
-                (self.embed_dim + self.embed_dim):-num_add]
+                (self.embed_dim * 2):-(num_add + self._num_topics)]
         else:
             # add embedding layer to rnn cell output
             embed_dialogue = self._create_embed(

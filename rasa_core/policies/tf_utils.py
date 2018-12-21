@@ -1,5 +1,8 @@
 from collections import namedtuple
 import tensorflow as tf
+# noinspection PyProtectedMember
+from tensorflow.contrib.seq2seq.python.ops.attention_wrapper import (
+    _compute_attention, _prepare_memory)
 
 
 class TimedNTM(object):
@@ -127,9 +130,13 @@ class TimedNTM(object):
         return probs, next_scores_state
 
     def _rearrange_fn(self, list_tensor_1d_mask_1d):
-        """Rearranges tensor_1d to put all the values
-            where mask_1d=1 to the right and
-            where mask_1d=0 to the left and sets them to -infinity"""
+        """Rearranges tensor_1d.
+
+        Put all the values
+        - where mask_1d=1 to the right and
+        - where mask_1d=0 to the left and sets them to -infinity
+        """
+
         tensor_1d, mask_1d = list_tensor_1d_mask_1d
 
         partitioned_tensor = tf.dynamic_partition(tensor_1d,
@@ -141,12 +148,15 @@ class TimedNTM(object):
 
     @staticmethod
     def _arrange_back_fn(list_tensor_1d_mask_1d):
-        """Arranges back tensor_1d to restore original order
-            modified by `_rearrange_fn` according to mask_1d:
-            - number of 0s in mask_1d values on the left are set to
-              their corresponding places where mask_1d=0,
-            - number of 1s in mask_1d values on the right are set to
-              their corresponding places where mask_1d=1"""
+        """Arranges back tensor_1d to restore original order.
+
+        Modifies according to mask_1d:
+        - number of 0s in mask_1d values on the left are set to
+          their corresponding places where mask_1d=0,
+        - number of 1s in mask_1d values on the right are set to
+          their corresponding places where mask_1d=1
+        """
+
         tensor_1d, mask_1d = list_tensor_1d_mask_1d
 
         mask_indices = tf.dynamic_partition(tf.range(tf.shape(tensor_1d)[0]),
@@ -163,10 +173,10 @@ def _compute_time_attention(attention_mechanism, attn_inputs, attention_state,
                             # time is added to calculate time attention
                             time, timed_ntm, time_mask, ignore_mask,
                             attention_layer):
-    """Computes the attention and alignments limited by time
-        for a given attention_mechanism.
+    """Computes the attention and alignments limited by time.
 
-        Modified helper method from tensorflow."""
+    Modified helper method from tensorflow.
+    """
 
     scores, _ = attention_mechanism(attn_inputs, state=attention_state)
 
@@ -236,9 +246,9 @@ class TimeAttentionWrapperState(
     namedtuple("TimeAttentionWrapperState",
                tf.contrib.seq2seq.AttentionWrapperState._fields +
                ("all_time_masks", "all_cell_states"))):  # added
-    """Modified  from tensorflow's tf.contrib.seq2seq.AttentionWrapperState
-        see there for description of the parameters
+    """Modified  from tensorflow's tf.contrib.seq2seq.AttentionWrapperState.
 
+    See super class for description of the parameters.
     Additional fields:
         - `all_time_masks`: A mask applied to a memory
            that filters certain time steps
@@ -247,8 +257,8 @@ class TimeAttentionWrapperState(
     """
 
     def clone(self, **kwargs):
-        """Copied  from tensorflow's tf.contrib.seq2seq.AttentionWrapperState
-            see there for description of the parameters"""
+        """Copied  from tensorflow's tf.contrib.seq2seq.AttentionWrapperState.
+        """
 
         def with_same_shape(old, new):
             """Check and set new tensor's shape."""
@@ -263,15 +273,58 @@ class TimeAttentionWrapperState(
         )
 
 
+class BahdanauAttentionWithDynamicMemory(tf.contrib.seq2seq.BahdanauAttention):
+    """Custom BahdanauAttention with memory changing in time.
+
+    Modified from tensorflow's tf.contrib.seq2seq.BahdanauAttention.
+    """
+
+    def __init__(self,
+                 num_units,
+                 memory,
+                 memory_sequence_length=None,
+                 normalize=False,
+                 probability_fn=None,
+                 score_mask_value=None,
+                 dtype=None,
+                 name="BahdanauAttentionWithDynamicMemory"):
+
+        super(BahdanauAttentionWithDynamicMemory, self).__init__(
+            num_units,
+            memory,
+            memory_sequence_length,
+            normalize,
+            probability_fn,
+            score_mask_value,
+            dtype,
+            name)
+
+        self._memory_sequence_length = memory_sequence_length
+
+    def new_memory(self, new_memory):
+        """Overrides mechanisms memory."""
+
+        # recalculate keys
+        with tf.name_scope(
+                self._name, "BaseAttentionMechanismInit",
+                tf.contrib.framework.nest.flatten(new_memory)):
+            self._values = _prepare_memory(
+                new_memory, self._memory_sequence_length,
+                check_inner_dims_defined=True)
+            self._keys = (
+                self.memory_layer(self._values) if self.memory_layer
+                else self._values)
+
+
 # noinspection PyArgumentList
 class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
-    """Custom AttentionWrapper that takes into account time
-        when calculating attention.
-        Attention is calculated before calling rnn cell.
+    """Custom AttentionWrapper that takes into account time.
 
-        Modified from tensorflow's tf.contrib.seq2seq.AttentionWrapper.
+    Attention is calculated before calling rnn cell.
 
-        See our paper for details: https://arxiv.org/abs/1811.11707
+    Modified from tensorflow's tf.contrib.seq2seq.AttentionWrapper.
+
+    See our paper for details: https://arxiv.org/abs/1811.11707
     """
 
     def __init__(self, cell,
@@ -292,7 +345,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                  initial_cell_state=None,
                  name=None,
                  attention_layer=None,
-                 num_topics=None,
+                 num_topics=0,
                  topics=None):
         """Construct the `TimeAttentionWrapper`.
             See the super class for the original arguments description.
@@ -330,6 +383,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                 attention values and additional values described in
                 `additional_output_size()`, used in copy mechanism.
         """
+
         super(TimeAttentionWrapper, self).__init__(
             cell,
             attention_mechanism,
@@ -399,6 +453,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                                 "LSTMStateTuple. "
                                 "Received type {} instead."
                                 .format(type(self._cell.state_size)))
+        self._topic_attention_mech = None
 
     @staticmethod
     def _default_rnn_and_attn_inputs_fn(inputs, cell_state):
@@ -431,6 +486,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                 # and additional output
                 return (2 * self._cell.output_size +
                         self._attention_layer_size +
+                        self._num_topics +
                         self.additional_output_size())
             else:
                 return self._cell.output_size + self._attention_layer_size
@@ -473,6 +529,12 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         )
         cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c,
                                                    zero_state.cell_state.h)
+
+        self._topic_attention_mech = BahdanauAttentionWithDynamicMemory(
+            num_units=self._cell.state_size.c,
+            memory=cell_state_c,
+            normalize=True,
+        )
 
         with tf.name_scope(type(self).__name__ + "ZeroState",
                            values=[batch_size]):
@@ -561,13 +623,24 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
 
         # Step 1: Calculate attention based on
         #         the previous output and current input
-        topic = tf.expand_dims(self._topics[:, state.time, :], -1)
-        cell_state_c = tf.reduce_sum(state.cell_state.c * topic, 1)
-        cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c,
-                                                   state.cell_state.h)
+        if self._topics is not None:
+            topic = tf.expand_dims(self._topics[:, state.time, :], -1)
+            cell_state_c = tf.reduce_sum(state.cell_state.c * topic, 1)
+            cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c,
+                                                       state.cell_state.h)
 
-        rnn_inputs, attn_inputs = self._rnn_and_attn_inputs_fn(inputs,
-                                                               cell_state)
+            rnn_inputs, attn_inputs = self._rnn_and_attn_inputs_fn(inputs,
+                                                                   cell_state)
+            self._topic_attention_mech.new_memory(state.cell_state.c)
+            attn_cell_state_c, topic_alignments, _ = _compute_attention(
+                self._topic_attention_mech, attn_inputs, None, None)
+
+            cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c,
+                                                       state.cell_state.h)
+        else:
+            topic = None
+            topic_alignments = []
+            cell_state = state.cell_state
 
         cell_batch_size = (
             attn_inputs.shape[0].value or
@@ -688,6 +761,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                 output = tf.concat([cell_output_with_attn,
                                     cell_output,
                                     attention,
+                                    topic_alignments,
                                     # additional likelihoods
                                     attn_likelihood, state_likelihood,
                                     # copy_attn_debug
