@@ -273,49 +273,6 @@ class TimeAttentionWrapperState(
         )
 
 
-class BahdanauAttentionWithDynamicMemory(tf.contrib.seq2seq.BahdanauAttention):
-    """Custom BahdanauAttention with memory changing in time.
-
-    Modified from tensorflow's tf.contrib.seq2seq.BahdanauAttention.
-    """
-
-    def __init__(self,
-                 num_units,
-                 memory,
-                 memory_sequence_length=None,
-                 normalize=False,
-                 probability_fn=None,
-                 score_mask_value=None,
-                 dtype=None,
-                 name="BahdanauAttentionWithDynamicMemory"):
-
-        super(BahdanauAttentionWithDynamicMemory, self).__init__(
-            num_units,
-            memory,
-            memory_sequence_length,
-            normalize,
-            probability_fn,
-            score_mask_value,
-            dtype,
-            name)
-
-        self._memory_sequence_length = memory_sequence_length
-
-    def new_memory(self, new_memory):
-        """Overrides mechanisms memory."""
-
-        # recalculate keys
-        with tf.name_scope(
-                self._name, "BaseAttentionMechanismInit",
-                tf.contrib.framework.nest.flatten(new_memory)):
-            self._values = _prepare_memory(
-                new_memory, self._memory_sequence_length,
-                check_inner_dims_defined=True)
-            self._keys = (
-                self.memory_layer(self._values) if self.memory_layer
-                else self._values)
-
-
 # noinspection PyArgumentList
 class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
     """Custom AttentionWrapper that takes into account time.
@@ -536,11 +493,6 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         else:
             cell_state = zero_state.cell_state
 
-        # self._topic_attention_mech = BahdanauAttentionWithDynamicMemory(
-        #     num_units=self._cell.state_size.h,
-        #     memory=cell_state_h,
-        #     normalize=True,
-        # )
         topics_for_attn = 2 * tf.eye(self._num_topics,
                                      batch_shape=[batch_size]) - 1
         self._topic_attention_mech = tf.contrib.seq2seq.BahdanauAttention(
