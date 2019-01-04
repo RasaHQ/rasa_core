@@ -174,6 +174,8 @@ class EmbeddingPolicy(Policy):
                                 "".format(type(featurizer).__name__))
         super(EmbeddingPolicy, self).__init__(featurizer)
 
+        logger.debug("Policy got kwargs: {}".format(kwargs))
+
         # flag if to use the same embeddings for user and bot
         try:
             self.share_embedding = \
