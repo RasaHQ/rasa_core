@@ -66,6 +66,8 @@ class EmbeddingPolicy(Policy):
         "hidden_layers_sizes_b": [],
         # number of units in rnn cell
         "rnn_size": 64,
+        "use_topics": True,
+        "topic_rnn_size": 32,
 
         # training parameters
         # flag if to turn on layer normalization for lstm cell
@@ -91,6 +93,7 @@ class EmbeddingPolicy(Policy):
         "num_neg": 20,
         # flag if minimize only maximum similarity over incorrect actions
         "use_max_sim_neg": True,  # flag which loss function to use
+        "use_embedding_for_slots": False,
 
         # regularization
         # the scale of L2 regularization
@@ -224,6 +227,7 @@ class EmbeddingPolicy(Policy):
         self._loss_scales = None
         self._num_topics = None
         self._true_topics = None
+        self._additional_cell_output = None
 
     # init helpers
     def _load_nn_architecture_params(self, config: Dict[Text, Any]) -> None:
@@ -241,6 +245,9 @@ class EmbeddingPolicy(Policy):
                                            self.hidden_layer_sizes['b']))
 
         self.rnn_size = config['rnn_size']
+        self.use_topics = config['use_topics']
+        self.topic_rnn_size = config['topic_rnn_size']
+
         self.layer_norm = config['layer_norm']
 
         self.batch_size = config['batch_size']
@@ -254,6 +261,7 @@ class EmbeddingPolicy(Policy):
         self.similarity_type = config['similarity_type']
         self.num_neg = config['num_neg']
         self.use_max_sim_neg = config['use_max_sim_neg']
+        self.use_embedding_for_slots = config["use_embedding_for_slots"]
 
     def _load_regularization_params(self, config: Dict[Text, Any]) -> None:
         self.C2 = config['C2']
@@ -389,8 +397,7 @@ class EmbeddingPolicy(Policy):
             topics=topics
         )
 
-        # tf helpers:
-
+    # tf helpers:
     def _create_tf_nn(self,
                       x_in: tf.Tensor,
                       layer_sizes: List,
@@ -593,20 +600,17 @@ class EmbeddingPolicy(Policy):
           rnn and attention mechanisms.
         """
 
-        # the hidden state c and slots are not included,
-        # in hope that algorithm would learn correct attention
-        # regardless of the hidden state c of an lstm and slots
-        if isinstance(cell_state, tf.contrib.rnn.LSTMStateTuple):
-            attn_inputs = tf.concat([inputs[:, :self.embed_dim],
-                                     cell_state.h], -1)
-        else:
-            attn_inputs = tf.concat([inputs[:, :self.embed_dim],
-                                     cell_state], -1)
-
         # include slots in inputs but exclude previous action, since
         # rnn should get previous action from its hidden state
-        rnn_inputs = inputs[:, :(self.embed_dim +
-                                 self.embed_dim)]
+        rnn_inputs = inputs[:, :-self.embed_dim]
+
+        # the hidden state c is not included,
+        # in hope that algorithm would learn correct attention
+        # regardless of the hidden state c of an lstm
+        if isinstance(cell_state, tf.contrib.rnn.LSTMStateTuple):
+            attn_inputs = tf.concat([rnn_inputs, cell_state.h], -1)
+        else:
+            attn_inputs = tf.concat([rnn_inputs, cell_state], -1)
 
         return rnn_inputs, attn_inputs
 
@@ -618,14 +622,18 @@ class EmbeddingPolicy(Policy):
                           embed_for_no_intent: tf.Tensor,
                           embed_for_no_action: tf.Tensor,
                           embed_for_action_listen: tf.Tensor,
-                          topics: tf.Tensor
+                          topics: Optional[tf.Tensor]
                           ) -> tf.contrib.rnn.RNNCell:  # type:
         """Wrap cell in attention wrapper with given memory."""
 
         if self.attn_before_rnn:
             # create attention over previous user input
             num_memory_units_before_rnn = self._num_units(embed_utter)
-            attn_mech = self._create_attn_mech(embed_utter, real_length)
+            if topics is not None:
+                memory = tf.concat([embed_utter, topics], -1)
+            else:
+                memory = embed_utter
+            attn_mech = self._create_attn_mech(memory, real_length)
 
             # create mask for empty user input not to pay attention to it
             ignore_mask = tf.reduce_all(tf.equal(tf.expand_dims(
@@ -709,7 +717,7 @@ class EmbeddingPolicy(Policy):
             embed_for_action_listen: tf.Tensor
     ) -> Tuple[tf.Tensor,
                Union[tf.Tensor, 'TimeAttentionWrapperState'],
-               tf.Tensor]:
+               Optional[tf.Tensor]]:
         """Create rnn for dialogue level embedding."""
 
         cell_input = tf.concat([embed_utter, embed_slots,
@@ -727,28 +735,36 @@ class EmbeddingPolicy(Policy):
 
         real_length = tf.cast(tf.reduce_sum(mask, 1), tf.int32)
 
-        topic_cell = self._create_rnn_cell(rnn_size=32)
+        if self.use_topics:
+            topic_cell = self._create_rnn_cell(rnn_size=self.topic_rnn_size)
 
-        topic_out, _ = tf.nn.dynamic_rnn(
-            topic_cell, cell_input,
-            dtype=tf.float32,
-            sequence_length=real_length,
-            scope='rnn_topic_controller'
-        )
-        reg = tf.contrib.layers.l2_regularizer(self.C2)
-        topics_logits = tf.layers.dense(inputs=topic_out,
-                                        units=self._num_topics,
-                                        # activation=tf.nn.softmax,
-                                        kernel_regularizer=reg,
-                                        name='topic_controller')
+            topic_out, _ = tf.nn.dynamic_rnn(
+                topic_cell, cell_input,
+                dtype=tf.float32,
+                sequence_length=real_length,
+                scope='rnn_topic_controller'
+            )
+            reg = tf.contrib.layers.l2_regularizer(self.C2)
+            topics_logits = tf.layers.dense(inputs=topic_out,
+                                            units=self._num_topics,
+                                            kernel_regularizer=reg,
+                                            name='topic_controller')
+            topics = tf.contrib.seq2seq.hardmax(topics_logits)
+        else:
+            topics_logits = None
+            topics = None
 
         if self.is_using_attention():
-            cell = self._create_attn_cell(cell, embed_utter,
-                                          embed_prev_action,
-                                          real_length, embed_for_no_intent,
-                                          embed_for_no_action,
-                                          embed_for_action_listen,
-                                          tf.contrib.seq2seq.hardmax(topics_logits))
+            cell = self._create_attn_cell(
+                cell,
+                embed_utter,
+                embed_prev_action,
+                real_length, embed_for_no_intent,
+                embed_for_no_action,
+                embed_for_action_listen,
+                topics
+            )
+            self._additional_cell_output = cell.additional_output_size()
 
         cell_output, final_state = tf.nn.dynamic_rnn(
             cell, cell_input,
@@ -779,25 +795,30 @@ class EmbeddingPolicy(Policy):
     @staticmethod
     def _all_time_masks_from(
         final_state: 'TimeAttentionWrapperState'
-    ) -> tf.Tensor:
+    ) -> Optional[tf.Tensor]:
         """Extract all time masks form final rnn cell state."""
 
         # reshape to (batch, time, memory_time) and ignore last time
         # because time_mask is created for the next time step
-        return tf.transpose(final_state.all_time_masks.stack(),
-                            [1, 0, 2])[:, :-1, :]
+        if final_state.all_time_masks:
+            return tf.transpose(final_state.all_time_masks.stack(),
+                                [1, 0, 2])[:, :-1, :]
+        else:
+            return None
 
     def _sims_rnn_to_max_from(self, cell_output: tf.Tensor) -> List[tf.Tensor]:
         """Save intermediate tensors for debug purposes."""
 
         if self.attn_after_rnn:
             # extract additional debug tensors
-            num_add = TimeAttentionWrapper.additional_output_size()
-            self.copy_attn_debug = cell_output[:, :, -(num_add + self._num_topics):]
+            self.copy_attn_debug = cell_output[
+                :, :, -self._additional_cell_output:]
 
             # extract additional similarity to maximize
-            sim_attn_to_max = cell_output[:, :, -num_add]
-            sim_state_to_max = cell_output[:, :, -num_add + 1]
+            sim_attn_to_max = cell_output[
+                :, :, -self._additional_cell_output]
+            sim_state_to_max = cell_output[
+                :, :, -self._additional_cell_output + 1]
             return [sim_attn_to_max, sim_state_to_max]
         else:
             return []
@@ -811,7 +832,6 @@ class EmbeddingPolicy(Policy):
             embed_dialogue = cell_output[:, :, :self.embed_dim]
 
             # extract additional debug tensors
-            num_add = TimeAttentionWrapper.additional_output_size()
             self.rnn_embed = cell_output[
                 :,
                 :,
@@ -819,7 +839,7 @@ class EmbeddingPolicy(Policy):
             self.attn_embed = cell_output[
                 :,
                 :,
-                (self.embed_dim * 2):-(num_add + self._num_topics)]
+                (self.embed_dim * 2):-self._additional_cell_output]
         else:
             # add embedding layer to rnn cell output
             embed_dialogue = self._create_embed(
@@ -986,6 +1006,9 @@ class EmbeddingPolicy(Policy):
                                                     training_data.y,
                                                     training_data.topics)
         self._num_topics = session_data.topics.shape[-1]
+        if self._num_topics < 2:
+            self.use_topics = False
+
         self.graph = tf.Graph()
 
         with self.graph.as_default():
@@ -993,26 +1016,22 @@ class EmbeddingPolicy(Policy):
             # create placeholders
             self.a_in = tf.placeholder(
                 dtype=tf.float32,
-                shape=(None, dialogue_len,
-                       session_data.X.shape[-1]),
+                shape=(None, dialogue_len, session_data.X.shape[-1]),
                 name='a'
             )
             self.b_in = tf.placeholder(
                 dtype=tf.float32,
-                shape=(None, dialogue_len,
-                       None, session_data.Y.shape[-1]),
+                shape=(None, dialogue_len, None, session_data.Y.shape[-1]),
                 name='b'
             )
             self.c_in = tf.placeholder(
                 dtype=tf.float32,
-                shape=(None, dialogue_len,
-                       session_data.slots.shape[-1]),
+                shape=(None, dialogue_len, session_data.slots.shape[-1]),
                 name='slt'
             )
             self.b_prev_in = tf.placeholder(
                 dtype=tf.float32,
-                shape=(None, dialogue_len,
-                       session_data.Y.shape[-1]),
+                shape=(None, dialogue_len, session_data.Y.shape[-1]),
                 name='b_prev'
             )
             self._dialogue_len = tf.placeholder(
@@ -1037,8 +1056,7 @@ class EmbeddingPolicy(Policy):
             )
             self._true_topics = tf.placeholder(
                 dtype=tf.float32,
-                shape=(None, dialogue_len,
-                       self._num_topics),
+                shape=(None, dialogue_len, self._num_topics),
                 name='topics'
             )
             self._is_training = tf.placeholder_with_default(False, shape=())
@@ -1049,8 +1067,12 @@ class EmbeddingPolicy(Policy):
             # create embedding vectors
             self.user_embed = self._create_tf_user_embed(self.a_in)
             self.bot_embed = self._create_tf_bot_embed(self.b_in)
-            self.slot_embed = self._create_embed(self.c_in,
-                                                 layer_name_suffix='slt')
+
+            if self.use_embedding_for_slots:
+                self.slot_embed = self._create_embed(self.c_in,
+                                                     layer_name_suffix='slt')
+            else:
+                self.slot_embed = self.c_in
 
             embed_prev_action = self._create_tf_bot_embed(self.b_prev_in)
             embed_for_no_intent = self._create_tf_no_intent_embed(
@@ -1070,7 +1092,11 @@ class EmbeddingPolicy(Policy):
                 embed_for_no_intent, embed_for_no_action,
                 embed_for_action_listen
             )
-            self.topics = tf.nn.softmax(topics_logits)
+            if self.use_topics:
+                self.topics = tf.nn.softmax(topics_logits)
+            else:
+                self.topics = None
+
             # process rnn output
             if self.is_using_attention():
                 self.alignment_history = \
@@ -1088,9 +1114,10 @@ class EmbeddingPolicy(Policy):
                                                 self.bot_embed, mask)
             # construct loss
             loss = self._tf_loss(self.sim_op, sim_act, sims_rnn_to_max, mask)
-            loss += tf.losses.softmax_cross_entropy(self._true_topics,
-                                                    topics_logits,
-                                                    self._loss_scales)
+            if self.use_topics:
+                loss += tf.losses.softmax_cross_entropy(self._true_topics,
+                                                        topics_logits,
+                                                        self._loss_scales)
 
             # define which optimizer to use
             self._train_op = tf.train.AdamOptimizer(
@@ -1473,7 +1500,8 @@ class EmbeddingPolicy(Policy):
     def load(cls, path: Text) -> 'EmbeddingPolicy':
         """Loads a policy from the storage.
 
-            **Needs to load its featurizer**"""
+        **Needs to load its featurizer**
+        """
 
         if not os.path.exists(path):
             raise Exception("Failed to load dialogue model. Path {} "

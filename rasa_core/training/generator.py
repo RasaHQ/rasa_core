@@ -365,6 +365,12 @@ class TrainingDataGenerator(object):
         logger.debug("Found {} training trackers."
                      "".format(len(finished_trackers)))
 
+        # TODO remove or subsample only `finished_trackers` from augmentation
+        if self.config.augmentation_factor > 0:
+            finished_trackers = self._subsample_trackers(finished_trackers)
+            logger.debug("Subsampled to {} training trackers."
+                         "".format(len(finished_trackers)))
+
         return finished_trackers
 
     @staticmethod

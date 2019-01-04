@@ -17,15 +17,17 @@ logger = logging.getLogger(__name__)
 
 
 class SingleStateFeaturizer(object):
-    """Base class for mechanisms to transform the conversations state
-    into machine learning formats.
+    """Base class for state featurizer mechanisms.
 
+    It transforms the conversations state into machine learning formats.
     Subclasses of SingleStateFeaturizer decide how the bot will transform
     the conversation state to a format which a classifier can read:
-    feature vector."""
+    feature vector.
+    """
 
     def __init__(self):
         """Declares instant variables."""
+
         self.user_feature_len = None
         self.slot_feature_len = None
 
@@ -33,6 +35,7 @@ class SingleStateFeaturizer(object):
 
     def prepare_from_domain(self, domain: Domain) -> None:
         """Helper method to init based on domain"""
+
         pass
 
     def encode(self, state: Dict[Text, float]) -> np.ndarray:
@@ -59,15 +62,16 @@ class SingleStateFeaturizer(object):
         return y
 
     def create_encoded_all_actions(self, domain: Domain) -> np.ndarray:
-        """Create matrix with all actions from domain
-            encoded in rows."""
+        """Create matrix with all actions from domain encoded in rows."""
+
         pass
 
 
 class BinarySingleStateFeaturizer(SingleStateFeaturizer):
     """Assumes all features are binary.
 
-    All features should be either on or off, denoting them with 1 or 0."""
+    All features should be either on or off, denoting them with 1 or 0.
+    """
 
     def __init__(self):
         """Declares instant variables."""
@@ -87,22 +91,22 @@ class BinarySingleStateFeaturizer(SingleStateFeaturizer):
     def encode(self, state: Dict[Text, float]) -> np.ndarray:
         """Returns a binary vector indicating which features are active.
 
-            Given a dictionary of states (e.g. 'intent_greet',
-            'prev_action_listen',...) return a binary vector indicating which
-            features of `self.input_features` are in the bag. NB it's a
-            regular double precision float array type.
+        Given a dictionary of states (e.g. 'intent_greet',
+        'prev_action_listen',...) return a binary vector indicating which
+        features of `self.input_features` are in the bag. NB it's a
+        regular double precision float array type.
 
-            For example with two active features out of five possible features
-            this would return a vector like `[0 0 1 0 1]`
+        For example with two active features out of five possible features
+        this would return a vector like `[0 0 1 0 1]`
 
-            If intent features are given with a probability, for example
-            with two active features and two uncertain intents out
-            of five possible features this would return a vector
-            like `[0.3, 0.7, 1.0, 0, 1.0]`.
+        If intent features are given with a probability, for example
+        with two active features and two uncertain intents out
+        of five possible features this would return a vector
+        like `[0.3, 0.7, 1.0, 0, 1.0]`.
 
-            If this is just a padding vector we set all values to `-1`.
-            padding vectors are specified by a `None` or `[None]`
-            value for states.
+        If this is just a padding vector we set all values to `-1`.
+        padding vectors are specified by a `None` or `[None]`
+        value for states.
         """
 
         if not self.num_features:
@@ -134,14 +138,19 @@ class BinarySingleStateFeaturizer(SingleStateFeaturizer):
             return used_features
 
     def create_encoded_all_actions(self, domain: Domain) -> np.ndarray:
-        """Create matrix with all actions from domain
-            encoded in rows as bag of words."""
+        """Create matrix with all actions from domain.
+
+        Actions are encoded in rows as one hot.
+        """
+
         return np.eye(domain.num_actions)
 
 
 class LabelTokenizerSingleStateFeaturizer(SingleStateFeaturizer):
-    """SingleStateFeaturizer that splits user intents and
-    bot action names into tokens and uses these tokens to
+    """SingleStateFeaturizer that splits labels into tokens.
+
+    It splits user intents and bot action names
+    into tokens and uses these tokens to
     create bag-of-words feature vectors.
 
     Args:
@@ -155,7 +164,6 @@ class LabelTokenizerSingleStateFeaturizer(SingleStateFeaturizer):
     def __init__(self,
                  use_shared_vocab: bool = False,
                  split_symbol: Text = '_') -> None:
-        """inits vocabulary for label bag of words representation"""
         super(LabelTokenizerSingleStateFeaturizer, self).__init__()
 
         self.use_shared_vocab = use_shared_vocab
@@ -172,8 +180,10 @@ class LabelTokenizerSingleStateFeaturizer(SingleStateFeaturizer):
     @staticmethod
     def _create_label_token_dict(labels, split_symbol='_'):
         """Splits labels into tokens by using provided symbol.
+
         Creates the lookup dictionary for this tokens.
-        Values in this dict are used for featurization."""
+        Values in this dict are used for featurization.
+        """
 
         distinct_tokens = set([token
                                for label in labels
@@ -182,8 +192,11 @@ class LabelTokenizerSingleStateFeaturizer(SingleStateFeaturizer):
                 for idx, token in enumerate(sorted(distinct_tokens))}
 
     def prepare_from_domain(self, domain: Domain) -> None:
-        """Creates internal vocabularies for user intents
-        and bot actions to use for featurization"""
+        """Creates internal vocabularies
+
+        for user intents and bot actions to use for featurization
+        """
+
         self.user_labels = domain.intent_states + domain.entity_states
         self.slot_labels = domain.slot_states
         self.bot_labels = domain.action_names
@@ -248,8 +261,11 @@ class LabelTokenizerSingleStateFeaturizer(SingleStateFeaturizer):
             return used_features
 
     def create_encoded_all_actions(self, domain: Domain) -> np.ndarray:
-        """Create matrix with all actions from domain
-            encoded in rows as bag of words."""
+        """Create matrix with all actions from domain.
+
+        Actions are encoded in rows as bags of words.
+        """
+
         encoded_all_actions = np.zeros((domain.num_actions,
                                         len(self.bot_vocab)),
                                        dtype=int)
@@ -275,9 +291,12 @@ class TrackerFeaturizer(object):
                        is_binary_training: bool = False
                        ) -> List[Dict[Text, float]]:
         """Create states: a list of dictionaries.
-            If use_intent_probabilities is False (default behaviour),
-            pick the most probable intent out of all provided ones and
-            set its probability to 1.0, while all the others to 0.0."""
+
+        If use_intent_probabilities is False (default behaviour),
+        pick the most probable intent out of all provided ones and
+        set its probability to 1.0, while all the others to 0.0.
+        """
+
         states = tracker.past_states(domain)
 
         # during training we encounter only 1 or 0
@@ -318,6 +337,7 @@ class TrackerFeaturizer(object):
         trackers_as_states: List[List[Dict[Text, float]]]
     ) -> Tuple[np.ndarray, List[int]]:
         """Create X"""
+
         features = []
         true_lengths = []
 
@@ -400,6 +420,7 @@ class TrackerFeaturizer(object):
         domain: Domain
     ) -> Tuple[List[List[Dict]], List[List[Text]], List[List[Optional[Text]]]]:
         """Transforms list of trackers to lists of states and actions"""
+
         raise NotImplementedError("Featurizer must have the capacity to "
                                   "encode trackers to feature vectors")
 
@@ -408,6 +429,7 @@ class TrackerFeaturizer(object):
                            domain: Domain
                            ) -> DialogueTrainingData:
         """Create training data"""
+
         self.state_featurizer.prepare_from_domain(domain)
 
         (trackers_as_states,
@@ -427,6 +449,7 @@ class TrackerFeaturizer(object):
                           domain: Domain
                           ) -> List[List[Dict[Text, float]]]:
         """Transforms list of trackers to lists of states for prediction"""
+
         raise NotImplementedError("Featurizer must have the capacity to "
                                   "create feature vector")
 
@@ -460,11 +483,13 @@ class TrackerFeaturizer(object):
 
 
 class FullDialogueTrackerFeaturizer(TrackerFeaturizer):
-    """Tracker featurizer that takes the trackers
-    and creates full dialogue training data for
+    """Tracker featurizer that creates full dialogue sequences.
+
+    It takes the trackers and creates full dialogue training data for
     time distributed rnn.
     Training data is padded up to the length of the longest
-    dialogue with -1"""
+    dialogue with -1.
+    """
 
     def __init__(self,
                  state_featurizer: SingleStateFeaturizer,
@@ -493,7 +518,7 @@ class FullDialogueTrackerFeaturizer(TrackerFeaturizer):
         self,
         trackers: List[DialogueStateTracker],
         domain: Domain
-    ) -> Tuple[List[List[Dict]], List[List[Text]]]:
+    ) -> Tuple[List[List[Dict]], List[List[Text]], List[List[Optional[Text]]]]:
 
         trackers_as_states = []
         trackers_as_actions = []
@@ -555,11 +580,13 @@ class FullDialogueTrackerFeaturizer(TrackerFeaturizer):
 
 
 class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
-    """Tracker featurizer that takes the trackers,
-    slices them into max_history batches and
+    """Tracker featurizer that creates max history sequences.
+
+    It takes the trackers and slices them into max_history batches and
     creates  training data for rnn that uses last output
     for prediction.
-    Training data is padded up to the max_history with -1"""
+    Training data is padded up to the max_history with -1.
+    """
 
     MAX_HISTORY_DEFAULT = 5
 
@@ -603,7 +630,7 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
         self,
         trackers: List[DialogueStateTracker],
         domain: Domain
-    ) -> Tuple[List[List[Dict]], List[List[Text]]]:
+    ) -> Tuple[List[List[Dict]], List[List[Text]], List[List[Optional[Text]]]]:
 
         trackers_as_states = []
         trackers_as_actions = []

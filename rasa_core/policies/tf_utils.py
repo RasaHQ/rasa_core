@@ -348,7 +348,8 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                  num_topics=0,
                  topics=None):
         """Construct the `TimeAttentionWrapper`.
-            See the super class for the original arguments description.
+
+        See the super class for the original arguments description.
 
         Additional args:
             sequence_len: Python integer.
@@ -453,6 +454,8 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                                 "LSTMStateTuple. "
                                 "Received type {} instead."
                                 .format(type(self._cell.state_size)))
+        else:
+            self._num_topics = 0
         self._topic_attention_mech = None
 
     @staticmethod
@@ -462,19 +465,18 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         else:
             return inputs, tf.concat([inputs, cell_state], -1)
 
-    @staticmethod
-    def additional_output_size():
+    def additional_output_size(self):
         """Number of additional outputs:
 
         likelihoods:
             attn_likelihood, state_likelihood
         debugging info:
             current_time_prob,
-            bin_likelihood_not_to_copy, bin_likelihood_to_copy
-
-        **Method should be static**
+            bin_likelihood_not_to_copy, bin_likelihood_to_copy,
+            topic_alignments
         """
-        return 2 + 3
+
+        return 2 + 3 + self._num_topics
 
     @property
     def output_size(self):
@@ -486,7 +488,6 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                 # and additional output
                 return (2 * self._cell.output_size +
                         self._attention_layer_size +
-                        self._num_topics +
                         self.additional_output_size())
             else:
                 return self._cell.output_size + self._attention_layer_size
@@ -524,49 +525,70 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         zero_state = super(TimeAttentionWrapper,
                            self).zero_state(batch_size, dtype)
 
-        cell_state_c = tf.concat(
-            [tf.expand_dims(zero_state.cell_state.c, 1)] * self._num_topics, 1
-        )
-        cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c,
-                                                   zero_state.cell_state.h)
+        if self._topics is not None:
+            cell_state_c = tf.concat(
+                [tf.expand_dims(zero_state.cell_state.c, 1)] * self._num_topics, 1
+            )
+            cell_state_h = tf.concat(
+                [tf.expand_dims(zero_state.cell_state.h, 1)] * self._num_topics, 1
+            )
+            cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c, cell_state_h)
+        else:
+            cell_state = zero_state.cell_state
 
-        self._topic_attention_mech = BahdanauAttentionWithDynamicMemory(
-            num_units=self._cell.state_size.c,
-            memory=cell_state_c,
-            normalize=True,
+        # self._topic_attention_mech = BahdanauAttentionWithDynamicMemory(
+        #     num_units=self._cell.state_size.h,
+        #     memory=cell_state_h,
+        #     normalize=True,
+        # )
+        topics_for_attn = 2 * tf.eye(self._num_topics,
+                                     batch_shape=[batch_size]) - 1
+        self._topic_attention_mech = tf.contrib.seq2seq.BahdanauAttention(
+            num_units=self._num_topics,
+            memory=topics_for_attn,
+            # normalize=True,
+            # scale=True,
+            # probability_fn=tf.contrib.sparsemax.sparsemax
         )
 
         with tf.name_scope(type(self).__name__ + "ZeroState",
                            values=[batch_size]):
-            # store time masks
-            all_time_masks = tf.TensorArray(
-                tf.int32,
-                size=self._sequence_len + 1,
-                dynamic_size=False,
-                clear_after_read=False
-            ).write(0, tf.zeros([batch_size, self.state_size.all_time_masks],
-                                tf.int32))
+            if self._skip_time_if_copied:
+                array_size = self._sequence_len + 1
 
-            # store all cell states into a tensor array to allow
-            # copy mechanism to go back in time
-            if isinstance(self._cell.state_size,
-                          tf.contrib.rnn.LSTMStateTuple):
-                all_cell_states = tf.contrib.rnn.LSTMStateTuple(
-                    tf.TensorArray(dtype, size=self._sequence_len + 1,
-                                   dynamic_size=False,
-                                   clear_after_read=False
-                                   ).write(0, cell_state.c),
-                    tf.TensorArray(dtype, size=self._sequence_len + 1,
-                                   dynamic_size=False,
-                                   clear_after_read=False
-                                   ).write(0, cell_state.h)
-                )
-            else:
-                all_cell_states = tf.TensorArray(
-                    dtype, size=0,
+                # store time masks
+                all_time_masks = tf.TensorArray(
+                    tf.int32,
+                    size=array_size,
                     dynamic_size=False,
                     clear_after_read=False
-                ).write(0, zero_state.cell_state)
+                ).write(0, tf.zeros([batch_size,
+                                     self.state_size.all_time_masks],
+                                    tf.int32))
+
+                # store all cell states into a tensor array to allow
+                # copy mechanism to go back in time
+                if isinstance(self._cell.state_size,
+                              tf.contrib.rnn.LSTMStateTuple):
+                    all_cell_states = tf.contrib.rnn.LSTMStateTuple(
+                        tf.TensorArray(dtype, size=array_size,
+                                       dynamic_size=False,
+                                       clear_after_read=False
+                                       ).write(0, cell_state.c),
+                        tf.TensorArray(dtype, size=array_size,
+                                       dynamic_size=False,
+                                       clear_after_read=False
+                                       ).write(0, cell_state.h)
+                    )
+                else:
+                    all_cell_states = tf.TensorArray(
+                        dtype, size=array_size,
+                        dynamic_size=False,
+                        clear_after_read=False
+                    ).write(0, zero_state.cell_state)
+            else:
+                all_time_masks = ()
+                all_cell_states = ()
 
             return TimeAttentionWrapperState(
                 cell_state=cell_state,
@@ -626,21 +648,19 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         if self._topics is not None:
             topic = tf.expand_dims(self._topics[:, state.time, :], -1)
             cell_state_c = tf.reduce_sum(state.cell_state.c * topic, 1)
+            cell_state_h = tf.reduce_sum(state.cell_state.h * topic, 1)
             cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c,
-                                                       state.cell_state.h)
-
-            rnn_inputs, attn_inputs = self._rnn_and_attn_inputs_fn(inputs,
-                                                                   cell_state)
-            self._topic_attention_mech.new_memory(state.cell_state.c)
-            attn_cell_state_c, topic_alignments, _ = _compute_attention(
-                self._topic_attention_mech, attn_inputs, None, None)
-
-            cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state_c,
-                                                       state.cell_state.h)
+                                                       cell_state_h)
         else:
             topic = None
-            topic_alignments = []
             cell_state = state.cell_state
+
+        rnn_inputs, attn_inputs = self._rnn_and_attn_inputs_fn(inputs,
+                                                               cell_state)
+
+        if self._topics is not None:
+            attn_inputs = tf.concat([attn_inputs,
+                                     self._topics[:, state.time, :]], -1)
 
         cell_batch_size = (
             attn_inputs.shape[0].value or
@@ -706,6 +726,22 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
         #         `cell_input_fn` to get cell inputs.
         cell_inputs = self._cell_input_fn(rnn_inputs, attention)
 
+        if self._topics is not None:
+            cell_inputs = tf.concat([cell_inputs,
+                                     self._topics[:, state.time, :]], -1)
+
+            # self._topic_attention_mech.new_memory(state.cell_state.h)
+            # attn_cell_state_h, topic_alignments, _ = _compute_attention(
+            #     self._topic_attention_mech, attn_inputs, None, None)
+            topic_alignments, _ = self._topic_attention_mech(cell_inputs, None)
+            cell_state_h = tf.reduce_sum(
+                state.cell_state.h * tf.expand_dims(topic_alignments, -1), 1
+            )
+            cell_state = tf.contrib.rnn.LSTMStateTuple(cell_state.c,
+                                                       cell_state_h)
+        else:
+            topic_alignments = None
+
         # Step 7: Call the wrapped `cell` with these cell inputs and
         #         its previous state.
         cell_output, next_cell_state = self._cell(cell_inputs, cell_state)
@@ -758,16 +794,19 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
             if self._output_attention:
                 # concatenate cell outputs, attention, additional likelihoods
                 # and copy_attn_debug
-                output = tf.concat([cell_output_with_attn,
-                                    cell_output,
-                                    attention,
-                                    topic_alignments,
-                                    # additional likelihoods
-                                    attn_likelihood, state_likelihood,
-                                    # copy_attn_debug
-                                    bin_likelihood_not_to_copy,
-                                    bin_likelihood_to_copy,
-                                    current_time_prob], 1)
+                output_list = [cell_output_with_attn,
+                               cell_output,
+                               attention,
+                               # additional likelihoods
+                               attn_likelihood, state_likelihood,
+                               # copy_attn_debug
+                               bin_likelihood_not_to_copy,
+                               bin_likelihood_to_copy,
+                               current_time_prob]
+                if topic_alignments is not None:
+                    output_list += [topic_alignments]
+
+                output = tf.concat(output_list, 1)
             else:
                 output = cell_output_with_attn
 
@@ -778,6 +817,7 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
                 next_cell_state = cell_output_with_attn
 
         else:
+            history_alignments = None
             if self._output_attention:
                 output = tf.concat([cell_output, attention], 1)
             else:
@@ -788,10 +828,14 @@ class TimeAttentionWrapper(tf.contrib.seq2seq.AttentionWrapper):
             next_cell_state_c = tf.concat(
                 [tf.expand_dims(next_cell_state.c, 1)] * self._num_topics, 1
             ) * topic
+            next_cell_state_h = tf.concat(
+                [tf.expand_dims(next_cell_state.h, 1)] * self._num_topics, 1
+            ) * topic
             old_cell_state_c = state.cell_state.c * (1 - topic)
+            old_cell_state_h = state.cell_state.h * (1 - topic)
             next_cell_state = tf.contrib.rnn.LSTMStateTuple(
                 next_cell_state_c + old_cell_state_c,
-                next_cell_state.h
+                next_cell_state_h + old_cell_state_h
             )
 
         if (self._index_of_attn_to_copy is not None and
