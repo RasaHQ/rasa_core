@@ -575,8 +575,8 @@ def run_comparison_evaluation(models: Text,
                                           agent)
 
             failed_stories = story_eval_store.failed_stories
-            policy_name = ''.join(
-                [i for i in os.path.basename(model) if not i.isdigit()])
+            policy_name = os.path.basename(model).split('_')[0]
+            # ''.join([i for i in os.path.basename(model) if not i.isdigit()])
             num_correct_run[policy_name].append(no_of_stories -
                                                 len(failed_stories))
 

@@ -222,16 +222,16 @@ def train_comparison_models(stories,
         for i in exclusion_percentages:
             current_round = exclusion_percentages.index(i) + 1
 
-            for policy_config in policy_configs:
+            for config_idx, policy_config in enumerate(policy_configs):
                 policies = config.load(policy_config)
 
                 if len(policies) > 1:
                     raise ValueError("You can only specify one policy per "
                                      "model for comparison")
 
-                policy_name = type(policies[0]).__name__
+                policy_name = type(policies[0]).__name__ + str(config_idx)
                 output = os.path.join(output_path, 'run_' + str(r + 1),
-                                      policy_name +
+                                      policy_name + '_' +
                                       str(current_round))
 
                 logging.info("Starting to train {} round {}/{}"
