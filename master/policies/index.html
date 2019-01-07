@@ -827,13 +827,15 @@ Note that you cannot use this together with the default fallback policy.</p>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">TwoStageFallbackPolicy</span>
     <span class="l l-Scalar l-Scalar-Plain">nlu_threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.3</span>
     <span class="l l-Scalar l-Scalar-Plain">core_threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.3</span>
-    <span class="l l-Scalar l-Scalar-Plain">fallback_action_name</span><span class="p p-Indicator">:</span> <span class="s">&quot;action_default_fallback&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">fallback_core_action_name</span><span class="p p-Indicator">:</span> <span class="s">&quot;action_default_fallback&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">fallback_nlu_action_name</span><span class="p p-Indicator">:</span> <span class="s">&quot;action_default_fallback&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">deny_suggestion_intent_name</span><span class="p p-Indicator">:</span> <span class="s">&quot;out_of_scope&quot;</span>
 </pre></div>
 </div>
 <table border="1" class="docutils">
 <colgroup>
-<col width="41%" />
-<col width="59%" />
+<col width="42%" />
+<col width="58%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">nlu_threshold</span></code></td>
@@ -844,10 +846,20 @@ prediction</td>
 <td>Min confidence needed to accept an action
 prediction from Rasa Core</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">fallback_action_name</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">fallback_core_action_name</span></code></td>
 <td>Name of the action to be called if the
-confidence of intent / action prediction
-is below the threshold</td>
+confidence of the Rasa Core action
+classification is below the threshold</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">fallback_nlu_action_name</span></code></td>
+<td>Name of the action to be called if the
+confidence of Rasa NLU intent
+classification is below the threshold</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">deny_suggestion_intent_name</span></code></td>
+<td>The name of the intent which is used to
+detect that the user denies the suggested
+intents</td>
 </tr>
 </tbody>
 </table>
@@ -862,8 +874,8 @@ denies a suggestion.</p>
 <h4><a class="toc-backref" href="#id17">Default Actions for Affirmation and Rephrasing</a><a class="headerlink" href="#default-actions-for-affirmation-and-rephrasing" title="Permalink to this headline">¶</a></h4>
 <p>Rasa Core provides the default implementations
 <code class="docutils literal notranslate"><span class="pre">action_default_ask_affirmation</span></code> and <code class="docutils literal notranslate"><span class="pre">action_default_ask_rephrase</span></code>
-which are triggered when the bot should ask the user to affirm
-or to rephrase their intent.
+which are triggered when the bot asks the user to affirm
+or rephrase their intent.
 The default implementation of <code class="docutils literal notranslate"><span class="pre">action_default_ask_rephrase</span></code> action utters
 the response template <code class="docutils literal notranslate"><span class="pre">utter_ask_rephrase</span></code>.
 The implementation of both actions can be overwritten with <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>.</p>
