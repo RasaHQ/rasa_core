@@ -31,6 +31,15 @@ COPY . .
 
 RUN pip install -e . --no-cache-dir
 
+ENV APP_ROOT=/app
+ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
+RUN chmod -R u+x ${APP_ROOT} && \
+    chgrp -R 0 ${APP_ROOT} && \
+    chmod -R g=u ${APP_ROOT}
+
+USER 10001
+WORKDIR ${APP_ROOT}
+
 VOLUME ["/app/model", "/app/config", "/app/project"]
 
 EXPOSE 5005
