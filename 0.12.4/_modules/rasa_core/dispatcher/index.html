@@ -1,0 +1,504 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>rasa_core.dispatcher</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+
+ <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
+    <!-- End Google Tag Manager -->
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta itemprop="image" content="https://rasa.com/assets/img/facebook-og.png">
+  <meta property="og:title" content="rasa_core.dispatcher" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
+  <meta property="og:url" content="https://rasa.com/docs/core/_modules/rasa_core/dispatcher" />
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@Rasa_HQ">
+  <meta name="twitter:title" content="rasa_core.dispatcher">
+  <meta name="twitter:creator" content="@Rasa_HQ">
+  <meta name="twitter:image" content="https://rasa.com/assets/img/facebook-og.png">
+
+  <link rel="stylesheet" href="../../../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <!--<script defer type="text/javascript" src="../../../_static/config.js"></script>
+  <script defer type="text/javascript" src="../../../_static/klaro.js"></script>-->
+  <script type="text/javascript" src="https://storage.googleapis.com/docs-theme/clipboard.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+
+
+  </head><body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMHSZCS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div class="nav-top">
+  <div class="nav-container">
+    <a href="/docs" class="brand-link">
+        <h1 class="brand">
+            <img src="../../../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa logo" alt="Rasa logo">
+        </h1>
+        <span class="logo extension">docs</span>
+    </a>
+
+    <ul class="nav">
+      <input type="text" class="search" placeholder="Search">
+      
+        
+          <li><a href=/docs/nlu/>NLU</a></li>
+        
+      
+        
+          <li class="active"><a href=/docs/core/>Core</a></li>
+        
+      
+        
+          <li><a href=/docs/platform/>Platform</a></li>
+        
+      
+
+      <li>
+        <a href="https://github.com/rasaHQ/" target="_blank"><button class="button btn-ghost btn-small"> <i class="fab fa-github"></i>GitHub</button></a>
+      </li>
+
+      <li>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-small">Ask the Community</button></a>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+  <div class="sidebar-extended"></div>
+  <div class="document">
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../customactions/">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../responses/">Bot Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fallbacks/">Fallback Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../debugging/">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_walkthrough/">Development with Docker</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/dispatcher/">Dispatcher</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tracker_stores/">Tracker Stores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker/">Using Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support/">Getting Support</a></li>
+</ul>
+
+<div class="versions">
+    <p class="caption">Versions</p>
+    <div class="versions-content">
+      <div>
+        <span class="current-version">
+          viewing: 0.12.4
+        </span>
+      </div>
+      <div class="other-versions">
+          <p>tags</p>
+          <div class="dropdown-content">
+              <a href="../../../../0.12.4/_modules/rasa_core/dispatcher/">0.12.4</a>
+              <a href="../../../../0.12.3/index/">0.12.3</a>
+              <a href="../../../../0.12.2/index/">0.12.2</a>
+              <a href="../../../../0.12.1/index/">0.12.1</a>
+              <a href="../../../../0.12.0/index/">0.12.0</a>
+              <a href="../../../../0.11.12/index/">0.11.12</a>
+              <a href="../../../../0.10.4/index/">0.10.4</a>
+              <a href="../../../../0.9.8/index/">0.9.8</a>
+              <a href="../../../../0.8.6/index/">0.8.6</a>
+              <a href="../../../../0.7.9/index/">0.7.9</a>
+              <a href="../../../../0.6.9/index/">0.6.9</a>
+          </div>
+          <p>branches</p>
+          <div class="dropdown-content">
+              <a href="../../../../master/index/">master</a>
+          </div>
+      </div>
+    </div>
+</div>
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+
+
+
+
+
+<h1>Source code for rasa_core.dispatcher</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">OutputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+
+
+<span class="k">class</span> <span class="nc">Element</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="n">__acceptable_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;item_url&#39;</span><span class="p">,</span> <span class="s1">&#39;image_url&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;subtitle&#39;</span><span class="p">,</span> <span class="s1">&#39;buttons&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span>
+                  <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                  <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__acceptable_keys</span><span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">Element</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="c1"># Makes a named tuple with entries text and data</span>
+<span class="n">BotMessage</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;BotMessage&quot;</span><span class="p">,</span> <span class="s2">&quot;text data&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Button</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Dispatcher"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher">[docs]</a><span class="k">class</span> <span class="nc">Dispatcher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send messages back to user&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                 <span class="n">output_channel</span><span class="p">:</span> <span class="n">OutputChannel</span><span class="p">,</span>
+                 <span class="n">nlg</span><span class="p">:</span> <span class="n">NaturalLanguageGenerator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span> <span class="o">=</span> <span class="n">sender_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span> <span class="o">=</span> <span class="n">output_channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span> <span class="o">=</span> <span class="n">nlg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Dispatcher.utter_response"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_response">[docs]</a>    <span class="k">def</span> <span class="nf">utter_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Send a message to the client.&quot;&quot;&quot;</span>
+
+        <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">),</span>
+                                 <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;elements&quot;</span><span class="p">),</span>
+                                       <span class="s2">&quot;buttons&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;buttons&quot;</span><span class="p">),</span>
+                                       <span class="s2">&quot;attachment&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;image&quot;</span><span class="p">)})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bot_message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dispatcher.utter_message"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_message">[docs]</a>    <span class="k">def</span> <span class="nf">utter_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Send a text to the output channel&quot;&quot;&quot;</span>
+        <span class="c1"># Adding the text to the latest bot messages (with no data)</span>
+        <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
+                                 <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bot_message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send_text_message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dispatcher.utter_custom_message"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_custom_message">[docs]</a>    <span class="k">def</span> <span class="nf">utter_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">elements</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Sends a message with custom elements to the output channel.&quot;&quot;&quot;</span>
+
+        <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="n">elements</span><span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bot_message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">elements</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dispatcher.utter_button_message"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_button_message">[docs]</a>    <span class="k">def</span> <span class="nf">utter_button_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                             <span class="n">text</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                             <span class="n">buttons</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+                             <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Sends a message with buttons to the output channel.&quot;&quot;&quot;</span>
+        <span class="c1"># Adding the text and data (buttons) to the latest bot messages</span>
+        <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
+                                 <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;buttons&quot;</span><span class="p">:</span> <span class="n">buttons</span><span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bot_message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send_text_with_buttons</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span>
+                                                   <span class="n">buttons</span><span class="p">,</span>
+                                                   <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dispatcher.utter_attachment"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_attachment">[docs]</a>    <span class="k">def</span> <span class="nf">utter_attachment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attachment</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Send a message to the client with attachments.&quot;&quot;&quot;</span>
+        <span class="n">bot_message</span> <span class="o">=</span> <span class="n">BotMessage</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;attachment&quot;</span><span class="p">:</span> <span class="n">attachment</span><span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_bot_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bot_message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send_image_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">attachment</span><span class="p">)</span></div>
+
+    <span class="c1"># TODO: deprecate this function</span>
+<div class="viewcode-block" id="Dispatcher.utter_button_template"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_button_template">[docs]</a>    <span class="k">def</span> <span class="nf">utter_button_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">template</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                              <span class="n">buttons</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+                              <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+                              <span class="n">silent_fail</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                              <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+                              <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Sends a message template with buttons to the output channel.&quot;&quot;&quot;</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_response</span><span class="p">(</span><span class="n">template</span><span class="p">,</span>
+                                          <span class="n">tracker</span><span class="p">,</span>
+                                          <span class="n">silent_fail</span><span class="p">,</span>
+                                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="s2">&quot;buttons&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+            <span class="n">message</span><span class="p">[</span><span class="s2">&quot;buttons&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">buttons</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span><span class="p">[</span><span class="s2">&quot;buttons&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">buttons</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">utter_response</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dispatcher.utter_template"><a class="viewcode-back" href="../../../api/dispatcher/#rasa_core.dispatcher.Dispatcher.utter_template">[docs]</a>    <span class="k">def</span> <span class="nf">utter_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                       <span class="n">template</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                       <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+                       <span class="n">silent_fail</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                       <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+                       <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Send a message to the client based on a template.&quot;&quot;&quot;</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_response</span><span class="p">(</span><span class="n">template</span><span class="p">,</span>
+                                          <span class="n">tracker</span><span class="p">,</span>
+                                          <span class="n">silent_fail</span><span class="p">,</span>
+                                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">utter_response</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_generate_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                           <span class="n">template</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                           <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+                           <span class="n">silent_fail</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                           <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+                           <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Generate a response.&quot;&quot;&quot;</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">silent_fail</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t create message for template &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span>
+                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">template</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">message</span></div>
+</pre></div>
+
+	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+	    <script type="text/javascript"> docsearch({
+	     apiKey: '1f9e0efb89e98543f6613a60f847b176',
+	     indexName: 'rasa',
+	     inputSelector: 'body > div.nav-top > .nav-container > .nav > input',
+	     debug: false // Set debug to true if you want to inspect the dropdown
+	    });
+	    </script>
+          </div>
+
+          <div class="footer">
+
+            <div class="social">
+              <a href="https://github.com/RasaHQ" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+              <a href="https://stackoverflow.com/search?q=rasa" target="_blank" title="Stack Overflow"><i class="fab fa-stack-overflow"></i></a>
+              <a href="https://www.youtube.com/channel/UCJ0V6493mLvqdiVwOKWBODQ" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+              <a href="https://twitter.com/rasa_hq" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+
+            <div class="copyright small">
+            &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
+            
+            </div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+
+    
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag(...arguments) {
+      dataLayer.push(...arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  <script src="https://rasa.com/assets/js/js.cookies.js"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- TODO: Re-Enable once Klaro is re-activated again. Remove the next two lines, then.
+  <script type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://rasa.com/assets/js/userId.js"></script>
+  -->
+  <script src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script src="https://rasa.com/assets/js/userId.js"></script>
+  <script type="text/javascript">
+    var clipboard = new ClipboardJS('.copyable');
+    clipboard.on('success', function(e) {
+      gtag('event', e.action, {
+        'event_category': 'code',
+        'event_label': e.text
+      });
+      const id = e.text.replace(' ','-');
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){
+        document.getElementById(id).classList.remove('visible');},
+        800
+      );
+    });
+    clipboard.on('error', function(e) {
+      console.log(e);
+    });
+  </script>
+
+  <!-- onsite anchor fix (otherwise anchors scroll to far) -->
+  <script>
+    /* Adapted from https://stackoverflow.com/a/13067009/1906073 */
+    (function(document, history, location) {
+      var HISTORY_SUPPORT = !!(history && history.pushState);
+
+      var anchorScrolls = {
+        ANCHOR_REGEX: /^#[^ ]+$/,
+        OFFSET_HEIGHT_PX: 66,
+
+        /**
+         * Establish events, and fix initial scroll position if a hash is provided.
+         */
+        init: function() {
+          this.scrollToCurrent();
+          $(window).on('hashchange', $.proxy(this, 'scrollToCurrent'));
+          $('body').on('click', 'a', $.proxy(this, 'delegateAnchors'));
+        },
+
+        /**
+         * Return the offset amount to deduct from the normal scroll position.
+         * Modify as appropriate to allow for dynamic calculations
+         */
+        getFixedOffset: function() {
+          return this.OFFSET_HEIGHT_PX;
+        },
+
+        /**
+         * If the provided href is an anchor which resolves to an element on the
+         * page, scroll to it.
+         * @param  {String} href
+         * @return {Boolean} - Was the href an anchor.
+         */
+        scrollIfAnchor: function(href, pushToHistory) {
+          var match, anchorOffset;
+
+          if(!this.ANCHOR_REGEX.test(href)) {
+            return false;
+          }
+
+          match = document.getElementById(href.slice(1));
+
+          if(match) {
+            anchorOffset = $(match).offset().top - this.getFixedOffset();
+            $('html, body').animate({ scrollTop: anchorOffset});
+
+            // Add the state to history as-per normal anchor links
+            if(HISTORY_SUPPORT && pushToHistory) {
+              history.pushState({}, document.title, location.pathname + href);
+            }
+          }
+
+          return !!match;
+        },
+
+        /**
+         * Attempt to scroll to the current location's hash.
+         */
+        scrollToCurrent: function(e) {
+          if(this.scrollIfAnchor(window.location.hash) && e) {
+            e.preventDefault();
+          }
+        },
+
+        /**
+         * If the click event's target was an anchor, fix the scroll position.
+         */
+        delegateAnchors: function(e) {
+          var elem = e.target;
+
+          if(this.scrollIfAnchor(elem.getAttribute('href'), true)) {
+            e.preventDefault();
+          }
+        }
+      };
+
+      $(document).ready($.proxy(anchorScrolls, 'init'));
+    })(window.document, window.history, window.location);
+
+  </script>
+  </body>
+</html>

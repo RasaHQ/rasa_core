@@ -1,0 +1,595 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>rasa_core.tracker_store</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/banner.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+
+ <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MMHSZCS');</script>
+    <!-- End Google Tag Manager -->
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta itemprop="image" content="https://rasa.com/assets/img/facebook-og.png">
+  <meta property="og:title" content="rasa_core.tracker_store" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
+  <meta property="og:url" content="https://rasa.com/docs/core/_modules/rasa_core/tracker_store" />
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@Rasa_HQ">
+  <meta name="twitter:title" content="rasa_core.tracker_store">
+  <meta name="twitter:creator" content="@Rasa_HQ">
+  <meta name="twitter:image" content="https://rasa.com/assets/img/facebook-og.png">
+
+  <link rel="stylesheet" href="../../../_static/xq-light.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/fontawesome/css/fontawesome-all.css" type="text/css" />
+  <!--<script defer type="text/javascript" src="../../../_static/config.js"></script>
+  <script defer type="text/javascript" src="../../../_static/klaro.js"></script>-->
+  <script type="text/javascript" src="https://storage.googleapis.com/docs-theme/clipboard.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+
+
+  </head><body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMHSZCS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div class="nav-top">
+  <div class="nav-container">
+    <a href="/docs" class="brand-link">
+        <h1 class="brand">
+            <img src="../../../_static/rasa_logo.svg" width="80px" height="40px" title="Rasa logo" alt="Rasa logo">
+        </h1>
+        <span class="logo extension">docs</span>
+    </a>
+
+    <ul class="nav">
+      <input type="text" class="search" placeholder="Search">
+      
+        
+          <li><a href=/docs/nlu/>NLU</a></li>
+        
+      
+        
+          <li class="active"><a href=/docs/core/>Core</a></li>
+        
+      
+        
+          <li><a href=/docs/platform/>Platform</a></li>
+        
+      
+
+      <li>
+        <a href="https://github.com/rasaHQ/" target="_blank"><button class="button btn-ghost btn-small"> <i class="fab fa-github"></i>GitHub</button></a>
+      </li>
+
+      <li>
+        <a href="https://forum.rasa.com" target="_blank"><button class="button btn-small">Ask the Community</button></a>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+  <div class="sidebar-extended"></div>
+  <div class="document">
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/">High-Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectors/">Chat &amp; Voice platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../customactions/">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slots/">Using Slots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../slotfilling/">Slot Filling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../responses/">Bot Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interactive_learning/">Interactive Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fallbacks/">Fallback Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policies/">Training and Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../debugging/">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../evaluation/">Evaluating and Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_walkthrough/">Development with Docker</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../domains/">Domain Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../stories/">Story Data Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/slots_api/">Slot Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server/">HTTP API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/agent/">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/events/">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/tracker/">Dialogue State Tracker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/interpreter/">Interpreters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/policy/">Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/featurizer/">Featurization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/dispatcher/">Dispatcher</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../migrations/">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tracker_stores/">Tracker Stores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../brokers/">Event Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker/">Using Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support/">Getting Support</a></li>
+</ul>
+
+<div class="versions">
+    <p class="caption">Versions</p>
+    <div class="versions-content">
+      <div>
+        <span class="current-version">
+          viewing: 0.12.4
+        </span>
+      </div>
+      <div class="other-versions">
+          <p>tags</p>
+          <div class="dropdown-content">
+              <a href="../../../../0.12.4/_modules/rasa_core/tracker_store/">0.12.4</a>
+              <a href="../../../../0.12.3/index/">0.12.3</a>
+              <a href="../../../../0.12.2/index/">0.12.2</a>
+              <a href="../../../../0.12.1/index/">0.12.1</a>
+              <a href="../../../../0.12.0/index/">0.12.0</a>
+              <a href="../../../../0.11.12/index/">0.11.12</a>
+              <a href="../../../../0.10.4/index/">0.10.4</a>
+              <a href="../../../../0.9.8/index/">0.9.8</a>
+              <a href="../../../../0.8.6/index/">0.8.6</a>
+              <a href="../../../../0.7.9/index/">0.7.9</a>
+              <a href="../../../../0.6.9/index/">0.6.9</a>
+          </div>
+          <p>branches</p>
+          <div class="dropdown-content">
+              <a href="../../../../master/index/">master</a>
+          </div>
+      </div>
+    </div>
+</div>
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+
+
+
+
+
+<h1>Source code for rasa_core.tracker_store</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="c1"># noinspection PyPep8Naming</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">KeysView</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
+<span class="kn">from</span> <span class="nn">rasa_core.broker</span> <span class="k">import</span> <span class="n">EventChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+<span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">DialogueStateTracker</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">,</span>
+    <span class="n">EventVerbosity</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">class_from_module_path</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TrackerStore"><a class="viewcode-back" href="../../../tracker_stores/#rasa_core.tracker_store.TrackerStore">[docs]</a><span class="k">class</span> <span class="nc">TrackerStore</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">],</span>
+                 <span class="n">event_broker</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EventChannel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_broker</span> <span class="o">=</span> <span class="n">event_broker</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">find_tracker_store</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">event_broker</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">store</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">store</span><span class="o">.</span><span class="n">store_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">InMemoryTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">event_broker</span><span class="o">=</span><span class="n">event_broker</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">store</span><span class="o">.</span><span class="n">store_type</span> <span class="o">==</span> <span class="s1">&#39;redis&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RedisTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
+                                     <span class="n">host</span><span class="o">=</span><span class="n">store</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                                     <span class="n">event_broker</span><span class="o">=</span><span class="n">event_broker</span><span class="p">,</span>
+                                     <span class="o">**</span><span class="n">store</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">store</span><span class="o">.</span><span class="n">store_type</span> <span class="o">==</span> <span class="s1">&#39;mongod&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MongoTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
+                                     <span class="n">host</span><span class="o">=</span><span class="n">store</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                                     <span class="n">event_broker</span><span class="o">=</span><span class="n">event_broker</span><span class="p">,</span>
+                                     <span class="o">**</span><span class="n">store</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TrackerStore</span><span class="o">.</span><span class="n">load_tracker_from_module_string</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">store</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load_tracker_from_module_string</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+        <span class="n">custom_tracker</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">custom_tracker</span> <span class="o">=</span> <span class="n">class_from_module_path</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">store_type</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Store type </span><span class="si">{}</span><span class="s2"> not found. &quot;</span>
+                           <span class="s2">&quot;Using InMemoryTrackerStore instead&quot;</span>
+                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">store_type</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">custom_tracker</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">custom_tracker</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
+                                  <span class="n">url</span><span class="o">=</span><span class="n">store</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">store</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">InMemoryTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_or_create_tracker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">):</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tracker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_tracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tracker</span>
+
+    <span class="k">def</span> <span class="nf">init_tracker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DialogueStateTracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">create_tracker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">append_action_listen</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a new tracker for the sender_id.</span>
+
+<span class="sd">        The tracker is initially listening.&quot;&quot;&quot;</span>
+
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_tracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">append_action_listen</span><span class="p">:</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ActionExecuted</span><span class="p">(</span><span class="n">ACTION_LISTEN_NAME</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tracker</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">stream_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="n">DialogueStateTracker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">old_tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_tracker</span><span class="o">.</span><span class="n">events</span><span class="p">)</span> <span class="k">if</span> <span class="n">old_tracker</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">evts</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">events</span>
+        <span class="k">for</span> <span class="n">evt</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">evts</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">evts</span><span class="p">))):</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;sender_id&quot;</span><span class="p">:</span> <span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="n">body</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">evt</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">event_broker</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Optional[List[Text]]</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">serialise_tracker</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
+        <span class="n">dialogue</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">as_dialogue</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dialogue</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">deserialise_tracker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">_json</span><span class="p">):</span>
+        <span class="n">dialogue</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">_json</span><span class="p">)</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_tracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">recreate_from_dialogue</span><span class="p">(</span><span class="n">dialogue</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tracker</span></div>
+
+
+<span class="k">class</span> <span class="nc">InMemoryTrackerStore</span><span class="p">(</span><span class="n">TrackerStore</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span>
+                 <span class="n">event_broker</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EventChannel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">InMemoryTrackerStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">event_broker</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="n">DialogueStateTracker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_broker</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+        <span class="n">serialised</span> <span class="o">=</span> <span class="n">InMemoryTrackerStore</span><span class="o">.</span><span class="n">serialise_tracker</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">[</span><span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">serialised</span>
+
+    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">sender_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Recreating tracker for &#39;</span>
+                         <span class="s1">&#39;id </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sender_id</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">deserialise_tracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">[</span><span class="n">sender_id</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Creating a new tracker for &#39;</span>
+                         <span class="s1">&#39;id </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sender_id</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeysView</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">RedisTrackerStore</span><span class="p">(</span><span class="n">TrackerStore</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+                 <span class="n">port</span><span class="o">=</span><span class="mi">6379</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">event_broker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">record_exp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="kn">import</span> <span class="nn">redis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">red</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">StrictRedis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">db</span><span class="p">,</span>
+                                     <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">record_exp</span> <span class="o">=</span> <span class="n">record_exp</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RedisTrackerStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">event_broker</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_broker</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">timeout</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">record_exp</span><span class="p">:</span>
+            <span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">record_exp</span>
+
+        <span class="n">serialised_tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialise_tracker</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">red</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">serialised_tracker</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">):</span>
+        <span class="n">stored</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">red</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stored</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">deserialise_tracker</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">stored</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">class</span> <span class="nc">MongoTrackerStore</span><span class="p">(</span><span class="n">TrackerStore</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">domain</span><span class="p">,</span>
+                 <span class="n">host</span><span class="o">=</span><span class="s2">&quot;mongodb://localhost:27017&quot;</span><span class="p">,</span>
+                 <span class="n">db</span><span class="o">=</span><span class="s2">&quot;rasa&quot;</span><span class="p">,</span>
+                 <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">auth_source</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                 <span class="n">collection</span><span class="o">=</span><span class="s2">&quot;conversations&quot;</span><span class="p">,</span>
+                 <span class="n">event_broker</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">pymongo.database</span> <span class="k">import</span> <span class="n">Database</span>
+        <span class="kn">from</span> <span class="nn">pymongo</span> <span class="k">import</span> <span class="n">MongoClient</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">host</span><span class="p">,</span>
+                                  <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>
+                                  <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+                                  <span class="n">authSource</span><span class="o">=</span><span class="n">auth_source</span><span class="p">,</span>
+                                  <span class="c1"># delay connect until process forking is done</span>
+                                  <span class="n">connect</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">collection</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MongoTrackerStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">event_broker</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_indices</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">conversations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_ensure_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;sender_id&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_broker</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">current_state</span><span class="p">(</span><span class="n">EventVerbosity</span><span class="o">.</span><span class="n">ALL</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;sender_id&quot;</span><span class="p">:</span> <span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;$set&quot;</span><span class="p">:</span> <span class="n">state</span><span class="p">},</span>
+            <span class="n">upsert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">):</span>
+        <span class="n">stored</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;sender_id&quot;</span><span class="p">:</span> <span class="n">sender_id</span><span class="p">})</span>
+
+        <span class="c1"># look for conversations which have used an `int` sender_id in the past</span>
+        <span class="c1"># and update them.</span>
+        <span class="k">if</span> <span class="n">stored</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sender_id</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="kn">from</span> <span class="nn">pymongo</span> <span class="k">import</span> <span class="n">ReturnDocument</span>
+            <span class="n">stored</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">find_one_and_update</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;sender_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)},</span>
+                <span class="p">{</span><span class="s2">&quot;$set&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;sender_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)}},</span>
+                <span class="n">return_document</span><span class="o">=</span><span class="n">ReturnDocument</span><span class="o">.</span><span class="n">AFTER</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stored</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DialogueStateTracker</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span>
+                                                      <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">),</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Can&#39;t recreate tracker from mongo storage &quot;</span>
+                               <span class="s2">&quot;because no domain is set. Returning `None` &quot;</span>
+                               <span class="s2">&quot;instead.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;sender_id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">find</span><span class="p">()]</span>
+</pre></div>
+
+	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+	    <script type="text/javascript"> docsearch({
+	     apiKey: '1f9e0efb89e98543f6613a60f847b176',
+	     indexName: 'rasa',
+	     inputSelector: 'body > div.nav-top > .nav-container > .nav > input',
+	     debug: false // Set debug to true if you want to inspect the dropdown
+	    });
+	    </script>
+          </div>
+
+          <div class="footer">
+
+            <div class="social">
+              <a href="https://github.com/RasaHQ" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+              <a href="https://stackoverflow.com/search?q=rasa" target="_blank" title="Stack Overflow"><i class="fab fa-stack-overflow"></i></a>
+              <a href="https://www.youtube.com/channel/UCJ0V6493mLvqdiVwOKWBODQ" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+              <a href="https://twitter.com/rasa_hq" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+
+            <div class="copyright small">
+            &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
+            
+            </div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+
+    
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag(...arguments) {
+      dataLayer.push(...arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-87333416-1', {
+      'anonymize_ip': true,
+    });
+  </script>
+  <script src="https://rasa.com/assets/js/js.cookies.js"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- TODO: Re-Enable once Klaro is re-activated again. Remove the next two lines, then.
+  <script type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script type="opt-in" data-name="googleanalytics" data-type="text/javascript" data-src="https://rasa.com/assets/js/userId.js"></script>
+  -->
+  <script src="https://www.googletagmanager.com/gtag/js?id=UA-87333416-1"></script>
+  <script src="https://rasa.com/assets/js/userId.js"></script>
+  <script type="text/javascript">
+    var clipboard = new ClipboardJS('.copyable');
+    clipboard.on('success', function(e) {
+      gtag('event', e.action, {
+        'event_category': 'code',
+        'event_label': e.text
+      });
+      const id = e.text.replace(' ','-');
+      document.getElementById(id).classList.add('visible');
+      setTimeout(function(){
+        document.getElementById(id).classList.remove('visible');},
+        800
+      );
+    });
+    clipboard.on('error', function(e) {
+      console.log(e);
+    });
+  </script>
+
+  <!-- onsite anchor fix (otherwise anchors scroll to far) -->
+  <script>
+    /* Adapted from https://stackoverflow.com/a/13067009/1906073 */
+    (function(document, history, location) {
+      var HISTORY_SUPPORT = !!(history && history.pushState);
+
+      var anchorScrolls = {
+        ANCHOR_REGEX: /^#[^ ]+$/,
+        OFFSET_HEIGHT_PX: 66,
+
+        /**
+         * Establish events, and fix initial scroll position if a hash is provided.
+         */
+        init: function() {
+          this.scrollToCurrent();
+          $(window).on('hashchange', $.proxy(this, 'scrollToCurrent'));
+          $('body').on('click', 'a', $.proxy(this, 'delegateAnchors'));
+        },
+
+        /**
+         * Return the offset amount to deduct from the normal scroll position.
+         * Modify as appropriate to allow for dynamic calculations
+         */
+        getFixedOffset: function() {
+          return this.OFFSET_HEIGHT_PX;
+        },
+
+        /**
+         * If the provided href is an anchor which resolves to an element on the
+         * page, scroll to it.
+         * @param  {String} href
+         * @return {Boolean} - Was the href an anchor.
+         */
+        scrollIfAnchor: function(href, pushToHistory) {
+          var match, anchorOffset;
+
+          if(!this.ANCHOR_REGEX.test(href)) {
+            return false;
+          }
+
+          match = document.getElementById(href.slice(1));
+
+          if(match) {
+            anchorOffset = $(match).offset().top - this.getFixedOffset();
+            $('html, body').animate({ scrollTop: anchorOffset});
+
+            // Add the state to history as-per normal anchor links
+            if(HISTORY_SUPPORT && pushToHistory) {
+              history.pushState({}, document.title, location.pathname + href);
+            }
+          }
+
+          return !!match;
+        },
+
+        /**
+         * Attempt to scroll to the current location's hash.
+         */
+        scrollToCurrent: function(e) {
+          if(this.scrollIfAnchor(window.location.hash) && e) {
+            e.preventDefault();
+          }
+        },
+
+        /**
+         * If the click event's target was an anchor, fix the scroll position.
+         */
+        delegateAnchors: function(e) {
+          var elem = e.target;
+
+          if(this.scrollIfAnchor(elem.getAttribute('href'), true)) {
+            e.preventDefault();
+          }
+        }
+      };
+
+      $(document).ready($.proxy(anchorScrolls, 'init'));
+    })(window.document, window.history, window.location);
+
+  </script>
+  </body>
+</html>
