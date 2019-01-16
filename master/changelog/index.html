@@ -222,7 +222,10 @@ the intent right</li>
 classes’ load function returns the correct type</li>
 <li>Travis script now clones and tests the Rasa stack starter pack</li>
 <li>Entries for tensorflow and sklearn versions to the policy metadata</li>
-<li>Sanitization mechanism for SlackInput that (in its current shape and form)
+<li>SlackInput wont ignore <cite>app_mention</cite> event anymore.
+Will handle messages containing &#64;mentions to bots and will respond to these
+(as long as the event itself is enabled in the application hosting the bot)</li>
+<li>Added sanitization mechanism for SlackInput that (in its current shape and form)
 strips bot’s self mentions from messages posted using the said &#64;mentions.</li>
 </ul>
 </div>
@@ -249,6 +252,7 @@ directly ask a user for a correct intent</li>
 dispatched messages using <code class="docutils literal notranslate"><span class="pre">dispatcher.utter_custom_message</span></code></li>
 <li>re-added missing <code class="docutils literal notranslate"><span class="pre">python-engineio</span></code> dependency</li>
 <li>fixed not working examples in <code class="docutils literal notranslate"><span class="pre">examples/</span></code></li>
+<li>strip newlins from messages so you don’t have something like “n/restartn”</li>
 </ul>
 </div>
 </div>
