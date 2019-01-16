@@ -335,7 +335,7 @@ class TrackerFeaturizer(object):
     def _featurize_states(
         self,
         trackers_as_states: List[List[Dict[Text, float]]]
-    ) -> Tuple[np.ndarray, List[int]]:
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """Create X"""
 
         features = []
@@ -359,6 +359,7 @@ class TrackerFeaturizer(object):
 
         # noinspection PyPep8Naming
         X = np.array(features)
+        true_lengths = np.array(true_lengths)
 
         return X, true_lengths
 

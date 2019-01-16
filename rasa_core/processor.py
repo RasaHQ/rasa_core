@@ -150,19 +150,25 @@ class MessageProcessor(object):
         return tracker
 
     def predict_next_action(self,
-                            tracker: DialogueStateTracker
+                            tracker: DialogueStateTracker,
+                            use_topics: bool = False,
                             ) -> Tuple[Action, Text, float]:
         """Predicts the next action the bot should take after seeing x.
 
         This should be overwritten by more advanced policies to use
         ML to predict the action. Returns the index of the next action."""
 
-        probabilities, policy = self._get_next_action_probabilities(tracker)
+        probabilities, policy = self._get_next_action_probabilities(tracker, use_topics)
 
         max_index = int(np.argmax(probabilities))
-        action = self.domain.action_for_index(max_index, self.action_endpoint)
-        logger.debug("Predicted next action '{}' with prob {:.2f}.".format(
-            action.name(), probabilities[max_index]))
+        if use_topics:
+            action = self.domain.topic_names[max_index]
+            logger.debug("Predicted next topic '{}' with prob {:.2f}.".format(
+                action, probabilities[max_index]))
+        else:
+            action = self.domain.action_for_index(max_index, self.action_endpoint)
+            logger.debug("Predicted next action '{}' with prob {:.2f}.".format(
+                action.name(), probabilities[max_index]))
         return action, policy, probabilities[max_index]
 
     @staticmethod
@@ -446,7 +452,8 @@ class MessageProcessor(object):
 
     def _get_next_action_probabilities(
         self,
-        tracker: DialogueStateTracker
+        tracker: DialogueStateTracker,
+        use_topics: bool = False
     ) -> Tuple[Optional[List[float]], Optional[Text]]:
 
         followup_action = tracker.followup_action
@@ -465,4 +472,4 @@ class MessageProcessor(object):
                 self.domain.restart_intent):
             return self._prob_array_for_action(ACTION_RESTART_NAME)
         return self.policy_ensemble.probabilities_using_best_policy(
-            tracker, self.domain)
+            tracker, self.domain, use_topics)

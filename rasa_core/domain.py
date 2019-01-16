@@ -242,7 +242,7 @@ class Domain(object):
         self.form_names = form_names
         self.slots = slots
         self.templates = templates
-        self.topic_names = [None] + topic_names
+        self.topic_names = topic_names if None in topic_names else [None] + topic_names
 
         # only includes custom actions and utterance actions
         self.user_actions = action_names
@@ -582,7 +582,8 @@ class Domain(object):
             "slots": self._slot_definitions(),
             "templates": self.templates,
             "actions": self.user_actions,  # class names of the actions
-            "forms": self.form_names
+            "forms": self.form_names,
+            "topics": self.topic_names
         }
 
     def persist(self, filename: Text) -> None:

@@ -69,7 +69,8 @@ class PolicyEnsemble(object):
 
     def probabilities_using_best_policy(self,
                                         tracker: DialogueStateTracker,
-                                        domain: Domain
+                                        domain: Domain,
+                                        use_topics: bool = False
                                         ) -> Tuple[List[float], Text]:
         raise NotImplementedError
 
@@ -297,17 +298,26 @@ class SimplePolicyEnsemble(PolicyEnsemble):
 
     def probabilities_using_best_policy(self,
                                         tracker: DialogueStateTracker,
-                                        domain: Domain
+                                        domain: Domain,
+                                        use_topics: bool = False
                                         ) -> Tuple[List[float], Text]:
         result = None
         max_confidence = -1
         best_policy_name = None
 
         for i, p in enumerate(self.policies):
-            probabilities = p.predict_action_probabilities(tracker, domain)
+            if use_topics:
+                probabilities = p.predict_topic_probabilities(tracker, domain)
+            else:
+                probabilities = p.predict_action_probabilities(tracker, domain)
+
+            if probabilities is None:
+                continue
+
             if isinstance(tracker.events[-1], ActionExecutionRejected):
                 probabilities[domain.index_for_action(
                     tracker.events[-1].action_name)] = 0.0
+
             confidence = np.max(probabilities)
             if confidence > max_confidence:
                 max_confidence = confidence

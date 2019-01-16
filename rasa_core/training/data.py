@@ -30,8 +30,11 @@ class DialogueTrainingData(object):
         np.random.shuffle(idx)
         shuffled_X = self.X[idx]
         shuffled_y = self.y[idx]
-        shuffled_topics = self.topics[idx] if self.topics else self.topics
+        shuffled_topics = (self.topics[idx]
+                           if self.topics is not None
+                           else self.topics)
         shuffled_true_length = (self.true_length[idx]
-                                if self.true_length else self.true_length)
+                                if self.true_length is not None
+                                else self.true_length)
         return type(self)(shuffled_X, shuffled_y,
                           shuffled_topics, shuffled_true_length)

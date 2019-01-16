@@ -134,8 +134,9 @@ class MemoizationPolicy(Policy):
         self.lookup = {}
 
         (trackers_as_states,
-         trackers_as_actions) = self.featurizer.training_states_and_actions(
-            training_trackers, domain)
+         trackers_as_actions,
+         _) = self.featurizer.training_states_and_actions(training_trackers,
+                                                          domain)
         self._add_states_to_lookup(trackers_as_states, trackers_as_actions,
                                    domain)
         logger.debug("Memorized {} unique examples."

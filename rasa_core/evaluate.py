@@ -89,6 +89,10 @@ def add_args_to_parser(parser):
         help="If a prediction error is encountered, an exception "
              "is thrown. This can be used to validate stories during "
              "tests, e.g. on travis.")
+    parser.add_argument(
+        '--topics',
+        action='store_true',
+        help="Run evaluation of topic predictions.")
 
     cli.arguments.add_core_model_arg(parser)
 
@@ -186,15 +190,22 @@ class WronglyPredictedAction(ActionExecuted):
     type_name = "wrong_action"
 
     def __init__(self, correct_action, predicted_action,
-                 policy, confidence, timestamp=None):
+                 policy, confidence, timestamp=None, use_topics=None, action_name=None):
         self.predicted_action = predicted_action
-        super(WronglyPredictedAction, self).__init__(correct_action,
+        if use_topics:
+            name = action_name
+            topic = correct_action
+        else:
+            name = correct_action
+            topic = None
+        super(WronglyPredictedAction, self).__init__(name,
+                                                     topic,
                                                      policy,
                                                      confidence,
                                                      timestamp=timestamp)
 
     def as_story_string(self):
-        return "{}   <!-- predicted: {} -->".format(self.action_name,
+        return "{}   <!-- predicted: {} -->".format(super(WronglyPredictedAction, self).as_story_string(),
                                                     self.predicted_action)
 
 
@@ -321,13 +332,17 @@ def _collect_user_uttered_predictions(event,
 
 
 def _collect_action_executed_predictions(processor, partial_tracker, event,
-                                         fail_on_prediction_errors):
+                                         fail_on_prediction_errors, use_topics):
     action_executed_eval_store = EvaluationStore()
 
-    action, policy, confidence = processor.predict_next_action(partial_tracker)
+    action, policy, confidence = processor.predict_next_action(partial_tracker, use_topics)
 
-    predicted = action.name()
-    gold = event.action_name
+    if use_topics:
+        predicted = action or 'None'
+        gold = event.topic or 'None'
+    else:
+        predicted = action.name()
+        gold = event.action_name
 
     action_executed_eval_store.add_to_store(action_predictions=predicted,
                                             action_targets=gold)
@@ -336,7 +351,9 @@ def _collect_action_executed_predictions(processor, partial_tracker, event,
         partial_tracker.update(WronglyPredictedAction(gold, predicted,
                                                       event.policy,
                                                       event.confidence,
-                                                      event.timestamp))
+                                                      event.timestamp,
+                                                      use_topics,
+                                                      event.action_name))
         if fail_on_prediction_errors:
             raise ValueError(
                 "Model predicted a wrong action. Failed Story: "
@@ -348,7 +365,7 @@ def _collect_action_executed_predictions(processor, partial_tracker, event,
 
 
 def _predict_tracker_actions(tracker, agent, fail_on_prediction_errors=False,
-                             use_e2e=False):
+                             use_e2e=False, use_topics=False):
     processor = agent.create_processor()
     tracker_eval_store = EvaluationStore()
 
@@ -365,7 +382,7 @@ def _predict_tracker_actions(tracker, agent, fail_on_prediction_errors=False,
             action_executed_result, policy, confidence = \
                 _collect_action_executed_predictions(
                     processor, partial_tracker, event,
-                    fail_on_prediction_errors
+                    fail_on_prediction_errors, use_topics
                 )
             tracker_eval_store.merge_store(action_executed_result)
             tracker_actions.append(
@@ -402,7 +419,8 @@ def collect_story_predictions(
     completed_trackers: List[DialogueStateTracker],
     agent: Agent,
     fail_on_prediction_errors: bool = False,
-    use_e2e: bool = False
+    use_e2e: bool = False,
+    use_topics: bool = False
 ) -> Tuple[StoryEvalution, int]:
     """Test the stories from a file, running them through the stored model."""
 
@@ -419,7 +437,8 @@ def collect_story_predictions(
     for tracker in tqdm(completed_trackers):
         tracker_results, predicted_tracker, tracker_actions = \
             _predict_tracker_actions(tracker, agent,
-                                     fail_on_prediction_errors, use_e2e)
+                                     fail_on_prediction_errors,
+                                     use_e2e, use_topics)
 
         story_eval_store.merge_store(tracker_results)
 
@@ -436,7 +455,10 @@ def collect_story_predictions(
     report, precision, f1, accuracy = get_evaluation_metrics(
         [1] * len(completed_trackers), correct_dialogues)
 
-    in_training_data_fraction = _in_training_data_fraction(action_list)
+    if use_topics:
+        in_training_data_fraction = 0
+    else:
+        in_training_data_fraction = _in_training_data_fraction(action_list)
 
     log_evaluation_table([1] * len(completed_trackers),
                          "END-TO-END" if use_e2e else "CONVERSATION",
@@ -469,7 +491,8 @@ def run_story_evaluation(resource_name, agent,
                          max_stories=None,
                          out_directory=None,
                          fail_on_prediction_errors=False,
-                         use_e2e=False):
+                         use_e2e=False,
+                         use_topics=False):
     """Run the evaluation of the stories, optionally plots the results."""
 
     completed_trackers = _generate_trackers(resource_name, agent,
@@ -477,7 +500,7 @@ def run_story_evaluation(resource_name, agent,
 
     story_evaluation, _ = collect_story_predictions(completed_trackers, agent,
                                                     fail_on_prediction_errors,
-                                                    use_e2e)
+                                                    use_e2e, use_topics)
 
     evaluation_store = story_evaluation.evaluation_store
 
@@ -652,7 +675,8 @@ if __name__ == '__main__':
                              cmdline_arguments.max_stories,
                              cmdline_arguments.output,
                              cmdline_arguments.fail_on_prediction_errors,
-                             cmdline_arguments.e2e)
+                             cmdline_arguments.e2e,
+                             cmdline_arguments.topics)
 
     elif cmdline_arguments.mode == 'compare':
         run_comparison_evaluation(cmdline_arguments.core,
