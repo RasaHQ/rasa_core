@@ -314,7 +314,8 @@ class SimplePolicyEnsemble(PolicyEnsemble):
             if probabilities is None:
                 continue
 
-            if isinstance(tracker.events[-1], ActionExecutionRejected):
+            if not use_topics and isinstance(tracker.events[-1],
+                                             ActionExecutionRejected):
                 probabilities[domain.index_for_action(
                     tracker.events[-1].action_name)] = 0.0
 
@@ -324,7 +325,8 @@ class SimplePolicyEnsemble(PolicyEnsemble):
                 result = probabilities
                 best_policy_name = 'policy_{}_{}'.format(i, type(p).__name__)
 
-        if (result.index(max_confidence) ==
+        if (not use_topics and
+                result.index(max_confidence) ==
                 domain.index_for_action(ACTION_LISTEN_NAME) and
                 tracker.latest_action_name == ACTION_LISTEN_NAME and
                 self.is_not_memo_policy(best_policy_name)):

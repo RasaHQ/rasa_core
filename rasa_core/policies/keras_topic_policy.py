@@ -85,7 +85,7 @@ class KerasTopicPolicy(KerasPolicy):
     def predict_action_probabilities(self,
                                      tracker: DialogueStateTracker,
                                      domain: Domain) -> List[float]:
-        return None
+        pass
 
     def predict_topic_probabilities(self,
                                     tracker: DialogueStateTracker,
