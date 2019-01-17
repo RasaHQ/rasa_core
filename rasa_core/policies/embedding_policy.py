@@ -1380,6 +1380,28 @@ class EmbeddingPolicy(Policy):
                 }
             )
 
+    def tf_feed_dict_for_prediction(self,
+                                 tracker: DialogueStateTracker,
+                                 domain: Domain) -> Dict:
+        # noinspection PyPep8Naming
+        data_X = self.featurizer.create_X([tracker], domain)
+        session_data = self._create_tf_session_data(domain, data_X)
+        # noinspection PyPep8Naming
+        all_Y_d_x = np.stack([session_data.all_Y_d
+                              for _ in range(session_data.X.shape[0])])
+
+        return {self.a_in: session_data.X,
+                self.b_in: all_Y_d_x,
+                self.c_in: session_data.slots,
+                self.b_prev_in: session_data.previous_actions,
+                self._dialogue_len: session_data.X.shape[1],
+                self._x_for_no_intent_in:
+                    session_data.x_for_no_intent,
+                self._y_for_no_action_in:
+                    session_data.y_for_no_action,
+                self._y_for_action_listen_in:
+                    session_data.y_for_action_listen}
+
     def predict_action_probabilities(self,
                                      tracker: DialogueStateTracker,
                                      domain: Domain) -> List[float]:
@@ -1394,28 +1416,9 @@ class EmbeddingPolicy(Policy):
                          "didn't receive enough training data")
             return [0.0] * domain.num_actions
 
-        # noinspection PyPep8Naming
-        data_X = self.featurizer.create_X([tracker], domain)
-        session_data = self._create_tf_session_data(domain, data_X)
-        # noinspection PyPep8Naming
-        all_Y_d_x = np.stack([session_data.all_Y_d
-                              for _ in range(session_data.X.shape[0])])
-
         _sim = self.session.run(
             self.sim_op,
-            feed_dict={
-                self.a_in: session_data.X,
-                self.b_in: all_Y_d_x,
-                self.c_in: session_data.slots,
-                self.b_prev_in: session_data.previous_actions,
-                self._dialogue_len: session_data.X.shape[1],
-                self._x_for_no_intent_in:
-                    session_data.x_for_no_intent,
-                self._y_for_no_action_in:
-                    session_data.y_for_no_action,
-                self._y_for_action_listen_in:
-                    session_data.y_for_action_listen
-            }
+            feed_dict=self.tf_feed_dict_for_prediction(tracker, domain)
         )
 
         result = _sim[0, -1, :]
@@ -1428,6 +1431,23 @@ class EmbeddingPolicy(Policy):
             result /= np.sum(result)
 
         return result.tolist()
+
+    def predict_topic_probabilities(self,
+                                    tracker: DialogueStateTracker,
+                                    domain: Domain):
+
+        if self.session is None:
+            logger.error("There is no trained tf.session: "
+                         "component is either not trained or "
+                         "didn't receive enough training data")
+            return [0.0] * domain.num_topics
+
+        _topics = self.session.run(
+            self.topics,
+            feed_dict=self.tf_feed_dict_for_prediction(tracker, domain)
+        )
+
+        return _topics[0, -1, :].tolist()
 
     def _persist_tensor(self, name: Text, tensor: tf.Tensor) -> None:
         if tensor is not None:
