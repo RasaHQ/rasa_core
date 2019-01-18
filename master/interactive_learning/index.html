@@ -206,8 +206,8 @@ to explore what your bot can do, and the easiest way to fix any mistakes
 it makes. One advantage of machine learning-based dialogue is that when
 your bot doesn’t know how to do something yet, you can just teach it!
 Some people call this <a class="reference external" href="https://medium.com/&#64;karpathy/software-2-0-a64152b37c35">Software 2.0</a>.</p>
-<div class="section" id="load-up-an-existing-bot">
-<h2>Load up an existing bot<a class="headerlink" href="#load-up-an-existing-bot" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running-interactive-learning">
+<h2>Running Interactive Learning<a class="headerlink" href="#running-interactive-learning" title="Permalink to this headline">¶</a></h2>
 <p>We have created some initial stories, and now want to improve our bot
 by providing feedback on mistakes it makes.</p>
 <p>Run the following command to start interactive learning:</p>
@@ -215,14 +215,23 @@ by providing feedback on mistakes it makes.</p>
 
 python -m rasa_core.train <span class="se">\</span>
   interactive -o models/dialogue <span class="se">\</span>
-  -d domain.yml -s stories.md <span class="se">\</span>
+  -d domain.yml -c policy_config.yml <span class="se">\</span>
+  -s data/stories.md <span class="se">\</span>
   --nlu models/current/nlu <span class="se">\</span>
   --endpoints endpoints.yml
 </pre></div>
 </div>
 <p>The first command starts the action server (see <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>).</p>
-<p>The second command starts the bot in interactive mode.
-In interactive mode, the bot will ask you to confirm every prediction
+<p>The second command trains the bot from your stories and then starts it
+in interactive mode.  Alternatively, you can load an existing core
+model with the <code class="docutils literal notranslate"><span class="pre">--core</span></code> flag like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.train <span class="se">\</span>
+  interactive --core models/dialogue <span class="se">\</span>
+  --nlu models/current/nlu <span class="se">\</span>
+  --endpoints endpoints.yml
+</pre></div>
+</div>
+<p>In interactive mode, the bot will ask you to confirm every prediction
 made by NLU and Core before proceeding.
 Here’s an example:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Bot loaded. Type a message and press enter (use &#39;/stop&#39; to exit).
