@@ -213,34 +213,29 @@
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">NaturalLanguageInterpreter</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">obj</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">name_parts</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">endpoint</span><span class="p">:</span>
-                    <span class="c1"># using the default project name</span>
-                    <span class="k">return</span> <span class="n">RasaNLUHttpInterpreter</span><span class="p">(</span><span class="n">name_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                                  <span class="n">endpoint</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="n">model_directory</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">endpoint</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">RasaNLUHttpInterpreter</span><span class="p">(</span><span class="n">name_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                                  <span class="n">endpoint</span><span class="p">,</span>
-                                                  <span class="n">name_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="n">model_directory</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">endpoint</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                        <span class="s2">&quot;You have configured an endpoint to use for &quot;</span>
-                        <span class="s2">&quot;the NLU model. To use it, you need to &quot;</span>
-                        <span class="s2">&quot;specify the model to use with &quot;</span>
-                        <span class="s2">&quot;`--nlu project/model`.&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="n">model_directory</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">RegexInterpreter</span><span class="p">()</span>  <span class="c1"># default interpreter</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">endpoint</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="n">model_directory</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="n">name_parts</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># using the default project name</span>
+            <span class="k">return</span> <span class="n">RasaNLUHttpInterpreter</span><span class="p">(</span><span class="n">name_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                          <span class="n">endpoint</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RasaNLUHttpInterpreter</span><span class="p">(</span><span class="n">name_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                          <span class="n">endpoint</span><span class="p">,</span>
+                                          <span class="n">name_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;You have configured an endpoint to use for &quot;</span>
+                <span class="s2">&quot;the NLU model. To use it, you need to &quot;</span>
+                <span class="s2">&quot;specify the model to use with &quot;</span>
+                <span class="s2">&quot;`--nlu project/model`.&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">RegexInterpreter</span><span class="p">(</span><span class="n">NaturalLanguageInterpreter</span><span class="p">):</span>
