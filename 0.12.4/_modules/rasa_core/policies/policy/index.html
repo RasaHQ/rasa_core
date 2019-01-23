@@ -191,8 +191,6 @@
 <h1>Source code for rasa_core.policies.policy</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">cpu_count</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">)</span>
 
@@ -221,43 +219,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_standard_featurizer</span><span class="p">()</span>
 
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_load_tf_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Prepare tf.ConfigProto for training&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tf_config&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">ConfigProto</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;tf_config&quot;</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrackerFeaturizer</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__featurizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_featurizer</span><span class="p">(</span><span class="n">featurizer</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">featurizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__featurizer</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">tf_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;tf_config&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;device_count&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;CPU&quot;</span><span class="p">:</span> <span class="n">cpu_count</span><span class="p">()},</span>
-                <span class="c1"># tell tf.Session to use CPU limit, if you have</span>
-                <span class="c1"># more CPU, you can increase this value appropriately</span>
-                <span class="s2">&quot;inter_op_parallelism_threads&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="c1"># the number of threads in the thread pool available</span>
-                <span class="c1"># for each process for blocking operation nodes set to 0</span>
-                <span class="c1"># to allow the system to select the appropriate value.</span>
-                <span class="s2">&quot;intra_op_parallelism_threads&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># tells the degree of thread</span>
-                <span class="c1"># parallelism of the tf.Session operation.</span>
-                <span class="c1"># the smaller the value, the less reuse the thread will have</span>
-                <span class="c1"># and the more likely it will use more CPU cores.</span>
-                <span class="c1"># if the value is 0,</span>
-                <span class="c1"># tensorflow will automatically select an appropriate value.</span>
-                <span class="s2">&quot;gpu_options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;allow_growth&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
-                <span class="c1"># if set True, will try to allocate</span>
-                <span class="c1"># as much GPU memory as possible to support running</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_valid_params</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
