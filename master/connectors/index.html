@@ -1063,7 +1063,7 @@ and the following <code class="docutils literal notranslate"><span class="pre">J
 use the <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.channel.RestInput</span></code> class as a template.
 The methods you need to implement are <code class="docutils literal notranslate"><span class="pre">blueprint</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code>. The method
 needs to create a Flask blueprint that can be attached to a flask server.</p>
-<p>This allows you to add <cite>REST</cite> endpoints to the server, the external
+<p>This allows you to add <cite>REST</cite> endpoints to the server, which the external
 messaging service can call to deliver messages.</p>
 <p>Your blueprint should have at least the two routes <code class="docutils literal notranslate"><span class="pre">health</span></code> on <code class="docutils literal notranslate"><span class="pre">/</span></code>
 and <code class="docutils literal notranslate"><span class="pre">receive</span></code> on the http route <code class="docutils literal notranslate"><span class="pre">/webhook</span></code>.</p>
@@ -1087,13 +1087,18 @@ are methods to send text and images) or you can use the
 <code class="docutils literal notranslate"><span class="pre">CollectingOutputChannel</span></code> to collect the bot responses Core
 creates while the bot is processing your messages and return
 them as part of your endpoint response. This is the way the <code class="docutils literal notranslate"><span class="pre">RestInput</span></code>
-is implemented. For examples on how to create and use your own output
+channel is implemented. For examples on how to create and use your own output
 channel, please take a look at the implementations of the other
 output channels, e.g. the <code class="docutils literal notranslate"><span class="pre">SlackBot</span></code> in <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.slack</span></code>.</p>
-<p>To use a custom channel, you can use the <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code> script,
-passing in the classpath of your custom channel using
-<code class="docutils literal notranslate"><span class="pre">--channel</span> <span class="pre">mypackage.MyIO</span></code> or you can write your own code
-hooking up the agent with the channel.</p>
+<p>To use a custom channel, you need to supply a credentials configuration file
+<code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code> with the command line argument <code class="docutils literal notranslate"><span class="pre">--credentials</span></code>.
+This credentials file has to contain the module path of your custom channel and
+any required configuration parameters. This could e.g. look like:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">mypackage.MyIO</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">username</span><span class="p p-Indicator">:</span> <span class="s">&quot;user_name&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">another_parameter</span><span class="p p-Indicator">:</span> <span class="s">&quot;some</span><span class="nv"> </span><span class="s">value&quot;</span>
+</pre></div>
+</div>
 <p>Example implementation for an input channel that receives the messages,
 hands them over to Rasa Core, collects the bot utterances and returns
 these bot utterances as the json response to the webhook call that
