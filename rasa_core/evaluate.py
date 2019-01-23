@@ -207,6 +207,7 @@ class WronglyPredictedAction(ActionExecuted):
     def as_story_string(self):
         return "{}   <!-- predicted: {} -->".format(super(WronglyPredictedAction, self).as_story_string(),
                                                     self.predicted_action)
+        # return self.predicted_action + ': ' + self.action_name
 
 
 class EndToEndUserUtterance(UserUttered):
