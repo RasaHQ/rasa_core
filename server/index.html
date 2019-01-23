@@ -123,7 +123,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Building Rasa with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -154,12 +154,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.12.4
+          viewing: 0.13.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.13.0/server/">0.13.0</a>
               <a href=".././0.12.4/server/">0.12.4</a>
               <a href=".././0.12.3/server/">0.12.3</a>
               <a href=".././0.12.2/server/">0.12.2</a>
@@ -239,7 +240,7 @@ the trackers.</p>
 <p>You can run a simple http server that handles requests using your
 models with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.run <span class="se">\</span>
-    --enable_api
+    --enable_api <span class="se">\</span>
     -d models/dialogue <span class="se">\</span>
     -u models/nlu/current <span class="se">\</span>
     -o out.log
@@ -410,7 +411,7 @@ please see <a class="reference internal" href="../brokers/#brokers"><span class=
 <div class="section" id="endpoints">
 <h2><a class="toc-backref" href="#id10">Endpoints</a><a class="headerlink" href="#endpoints" title="Permalink to this headline">¶</a></h2>
 <p>Documentation of the server API as
-<a class="reference download internal" download="" href="../_downloads/82aa240381bf0644e0da1fe4a54cf403/server.yml"><code class="xref download docutils literal notranslate"><span class="pre">OpenAPI</span> <span class="pre">Spec</span></code></a>.</p>
+<a class="reference download internal" download="" href="../_downloads/ec7d1a2ee8e42328dfac5139b50e1f94/server.yml"><code class="xref download docutils literal notranslate"><span class="pre">OpenAPI</span> <span class="pre">Spec</span></code></a>.</p>
 
 
 <body>

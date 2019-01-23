@@ -123,7 +123,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Building Rasa with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -154,12 +154,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.12.4
+          viewing: 0.13.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.13.0/interactive_learning/">0.13.0</a>
               <a href=".././0.12.4/interactive_learning/">0.12.4</a>
               <a href=".././0.12.3/interactive_learning/">0.12.3</a>
               <a href=".././0.12.2/interactive_learning/">0.12.2</a>
@@ -203,8 +204,8 @@ to explore what your bot can do, and the easiest way to fix any mistakes
 it makes. One advantage of machine learning-based dialogue is that when
 your bot doesn’t know how to do something yet, you can just teach it!
 Some people call this <a class="reference external" href="https://medium.com/&#64;karpathy/software-2-0-a64152b37c35">Software 2.0</a>.</p>
-<div class="section" id="load-up-an-existing-bot">
-<h2>Load up an existing bot<a class="headerlink" href="#load-up-an-existing-bot" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running-interactive-learning">
+<h2>Running Interactive Learning<a class="headerlink" href="#running-interactive-learning" title="Permalink to this headline">¶</a></h2>
 <p>We have created some initial stories, and now want to improve our bot
 by providing feedback on mistakes it makes.</p>
 <p>Run the following command to start interactive learning:</p>
@@ -212,14 +213,23 @@ by providing feedback on mistakes it makes.</p>
 
 python -m rasa_core.train <span class="se">\</span>
   interactive -o models/dialogue <span class="se">\</span>
-  -d domain.yml -s stories.md <span class="se">\</span>
+  -d domain.yml -c policy_config.yml <span class="se">\</span>
+  -s data/stories.md <span class="se">\</span>
   --nlu models/current/nlu <span class="se">\</span>
   --endpoints endpoints.yml
 </pre></div>
 </div>
 <p>The first command starts the action server (see <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>).</p>
-<p>The second command starts the bot in interactive mode.
-In interactive mode, the bot will ask you to confirm every prediction
+<p>The second command trains the bot from your stories and then starts it
+in interactive mode.  Alternatively, you can load an existing core
+model with the <code class="docutils literal notranslate"><span class="pre">--core</span></code> flag like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.train <span class="se">\</span>
+  interactive --core models/dialogue <span class="se">\</span>
+  --nlu models/current/nlu <span class="se">\</span>
+  --endpoints endpoints.yml
+</pre></div>
+</div>
+<p>In interactive mode, the bot will ask you to confirm every prediction
 made by NLU and Core before proceeding.
 Here’s an example:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Bot loaded. Type a message and press enter (use &#39;/stop&#39; to exit).
@@ -255,7 +265,7 @@ until the bot chooses the wrong action.</p>
 <h2>Providing feedback on errors<a class="headerlink" href="#providing-feedback-on-errors" title="Permalink to this headline">¶</a></h2>
 <p>For this example we are going to use the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example,
 so make sure you have the domain &amp; data for it. You can download
-the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/0.12.4/examples/concertbot">github examples/concertbot</a>.</p>
+the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/0.13.0/examples/concertbot">github examples/concertbot</a>.</p>
 <p>If you ask <code class="docutils literal notranslate"><span class="pre">/search_concerts</span></code>, the bot should suggest
 <code class="docutils literal notranslate"><span class="pre">action_search_concerts</span></code> and then <code class="docutils literal notranslate"><span class="pre">action_listen</span></code> (the confidence at which
 the policy selected its next action will be displayed next to the action name).
@@ -334,7 +344,7 @@ when using interactive learning.</p>
 The machine learning policies should not have to learn this behavior, and should
 not get confused if you later change your form action, for example by adding or
 removing a required slot.
-When you user interactive learning to generate stories containing a form,
+When you use interactive learning to generate stories containing a form,
 the conversation steps handled by the form
 get a <code class="code docutils literal notranslate"><span class="pre">form:</span></code> prefix. This tells Rasa Core to ignore these steps when training
 your other policies. There is nothing special you have to do here, all of the form’s

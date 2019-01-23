@@ -116,7 +116,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../evaluation/">Evaluating and Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../docker_walkthrough/">Development with Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docker_walkthrough/">Building Rasa with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -147,13 +147,14 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.12.4
+          viewing: 0.13.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
-              <a href="../../../.././0.12.4/_modules/rasa_core/policies/policy/">0.12.4</a>
+              <a href="../../../.././0.13.0/_modules/rasa_core/policies/policy/">0.13.0</a>
+              <a href="../../../.././0.12.4/index/">0.12.4</a>
               <a href="../../../.././0.12.3/index/">0.12.3</a>
               <a href="../../../.././0.12.2/index/">0.12.2</a>
               <a href="../../../.././0.12.1/index/">0.12.1</a>
@@ -317,17 +318,17 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
                                   <span class="s2">&quot;to predict.&quot;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Policy.persist"><a class="viewcode-back" href="../../../../api/policy/#rasa_core.policies.Policy.persist">[docs]</a>    <span class="k">def</span> <span class="nf">persist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Persists the policy to a storage.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
-                                  <span class="s2">&quot;to persist itself.&quot;</span><span class="p">)</span>
+                                  <span class="s2">&quot;to persist itself.&quot;</span><span class="p">)</span></div>
 
-    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Policy.load"><a class="viewcode-back" href="../../../../api/policy/#rasa_core.policies.Policy.load">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Policy&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Loads a policy from the storage.</span>
 <span class="sd">            Needs to load its featurizer&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Policy must have the capacity &quot;</span>
-                                  <span class="s2">&quot;to load itself.&quot;</span><span class="p">)</span></div>
+                                  <span class="s2">&quot;to load itself.&quot;</span><span class="p">)</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">confidence_scores_for</span><span class="p">(</span><span class="n">action_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>

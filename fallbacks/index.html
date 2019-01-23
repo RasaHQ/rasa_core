@@ -123,7 +123,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../policies/">Training and Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../debugging/">Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation/">Evaluating and Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Development with Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_walkthrough/">Building Rasa with Docker</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -154,12 +154,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.12.4
+          viewing: 0.13.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.13.0/fallbacks/">0.13.0</a>
               <a href=".././0.12.4/fallbacks/">0.12.4</a>
               <a href=".././0.12.3/fallbacks/">0.12.3</a>
               <a href=".././0.12.2/fallbacks/">0.12.2</a>
@@ -250,12 +251,21 @@ You can take a look at the source of the action below:</p>
 of the dialogue</p>
 </dd></dl>
 
+<p>You can also create your own custom action to use as a fallback. If you do, then
+make sure to pass the custom fallback action to <code class="docutils literal notranslate"><span class="pre">FallbackPolicy</span></code> inside your
+policy configuration file. For example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;FallbackPolicy&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">nlu_threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.4</span>
+    <span class="l l-Scalar l-Scalar-Plain">core_threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.3</span>
+    <span class="l l-Scalar l-Scalar-Plain">fallback_action_name</span><span class="p p-Indicator">:</span> <span class="s">&quot;my_fallback_action&quot;</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">You can also create your own custom action to use as a fallback. Be aware
-that if this action does not return a <code class="docutils literal notranslate"><span class="pre">UserUtteranceReverted</span></code> event, the
-next predictions of your bot may become inaccurate, as it very likely that the
-fallback action is not present in your stories</p>
+<p class="last">If your custom fallback action does not return a <code class="docutils literal notranslate"><span class="pre">UserUtteranceReverted</span></code> event,
+the next predictions of your bot may become inaccurate, as it is very likely that
+the fallback action is not present in your stories.</p>
 </div>
 <p>If you have a specific intent that will trigger this, let’s say it’s
 called <code class="docutils literal notranslate"><span class="pre">out_of_scope</span></code>, then you should add this as a story:</p>
