@@ -369,18 +369,18 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">EndpointConfig</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">DEFAULT_SERVER_URL</span><span class="p">)</span>
 
-<div class="viewcode-block" id="RasaNLUHttpInterpreter.parse"><a class="viewcode-back" href="../../../api/interpreter/#rasa_core.interpreter.RasaNLUHttpInterpreter.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">message_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RasaNLUHttpInterpreter.parse"><a class="viewcode-back" href="../../../api/interpreter/#rasa_core.interpreter.RasaNLUHttpInterpreter.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parse a text message.</span>
 
 <span class="sd">        Return a default value if the parsing of the text failed.&quot;&quot;&quot;</span>
 
         <span class="n">default_return</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;intent&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
                           <span class="s2">&quot;entities&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rasa_http_parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">message_id</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rasa_http_parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span> <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">default_return</span></div>
 
-    <span class="k">def</span> <span class="nf">_rasa_http_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">message_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_rasa_http_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Send a text message to a running rasa NLU http server.</span>
 
 <span class="sd">        Return `None` on failure.&quot;&quot;&quot;</span>
@@ -395,10 +395,8 @@
             <span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">token</span><span class="p">,</span>
             <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
             <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
-            <span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
-            <span class="s2">&quot;message_id&quot;</span><span class="p">:</span> <span class="n">message_id</span>
+            <span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="n">text</span>
         <span class="p">}</span>
-
         <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/parse&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
