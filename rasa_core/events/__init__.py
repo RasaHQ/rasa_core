@@ -721,11 +721,13 @@ class ActionExecuted(Event):
                  topic=None,
                  policy=None,
                  confidence=None,
+                 flag=None,
                  timestamp=None):
         self.action_name = action_name
         self.topic = topic
         self.policy = policy
         self.confidence = confidence
+        self.flag = flag
         self.unpredictable = False
         super(ActionExecuted, self).__init__(timestamp)
 
@@ -744,7 +746,8 @@ class ActionExecuted(Event):
 
     def as_story_string(self):
         topic_prefix = self.topic + ': ' if self.topic else ''
-        return topic_prefix + self.action_name
+        flag_suffix = ' -> ' + self.flag if self.flag else ''
+        return topic_prefix + self.action_name + flag_suffix
 
     @classmethod
     def _from_story_string(
@@ -756,6 +759,7 @@ class ActionExecuted(Event):
                                parameters.get("topic"),
                                parameters.get("policy"),
                                parameters.get("confidence"),
+                               parameters.get("flag"),
                                parameters.get("timestamp")
                                )]
 

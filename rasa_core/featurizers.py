@@ -31,8 +31,6 @@ class SingleStateFeaturizer(object):
         self.user_feature_len = None
         self.slot_feature_len = None
 
-        self._previous_topic = None
-
     def prepare_from_domain(self, domain: Domain) -> None:
         """Helper method to init based on domain"""
 
@@ -54,9 +52,6 @@ class SingleStateFeaturizer(object):
 
     def topic_as_one_hot(self, topic: Text, domain: Domain) -> np.ndarray:
 
-        # topic = topic or self._previous_topic
-
-        self._previous_topic = topic
         y = np.zeros(domain.num_topics, dtype=int)
         y[domain.index_for_topic(topic)] = 1
         return y

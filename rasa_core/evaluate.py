@@ -190,7 +190,7 @@ class WronglyPredictedAction(ActionExecuted):
     type_name = "wrong_action"
 
     def __init__(self, correct_action, predicted_action,
-                 policy, confidence, timestamp=None, use_topics=None, action_name=None):
+                 policy, confidence, flag=None, timestamp=None, use_topics=None, action_name=None):
         self.predicted_action = predicted_action
         if use_topics:
             name = action_name
@@ -202,6 +202,7 @@ class WronglyPredictedAction(ActionExecuted):
                                                      topic,
                                                      policy,
                                                      confidence,
+                                                     flag,
                                                      timestamp=timestamp)
 
     def as_story_string(self):
@@ -352,6 +353,7 @@ def _collect_action_executed_predictions(processor, partial_tracker, event,
         partial_tracker.update(WronglyPredictedAction(gold, predicted,
                                                       event.policy,
                                                       event.confidence,
+                                                      event.flag,
                                                       event.timestamp,
                                                       use_topics,
                                                       event.action_name))
