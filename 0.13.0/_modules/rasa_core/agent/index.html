@@ -243,8 +243,11 @@
                   <span class="n">tracker_store</span><span class="o">=</span><span class="n">tracker_store</span><span class="p">,</span>
                   <span class="n">action_endpoint</span><span class="o">=</span><span class="n">action_endpoint</span><span class="p">)</span>
 
-    <span class="n">wait_time_between_pulls</span> <span class="o">=</span> <span class="n">model_server</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wait_time_between_pulls&#39;</span><span class="p">,</span>
-                                                      <span class="mi">100</span><span class="p">)</span>
+    <span class="n">wait_time_between_pulls</span> <span class="o">=</span> <span class="n">model_server</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s1">&#39;wait_time_between_pulls&#39;</span><span class="p">,</span>
+        <span class="mi">100</span>
+    <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">wait_time_between_pulls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="nb">isinstance</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">,</span>
                        <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">wait_time_between_pulls</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
@@ -675,18 +678,23 @@
 <span class="sd">            **kwargs: additional arguments passed to the underlying ML</span>
 <span class="sd">                           trainer (e.g. keras parameters)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">AgentNotReady</span><span class="p">(</span><span class="s2">&quot;Can&#39;t train without a policy ensemble.&quot;</span><span class="p">)</span>
 
         <span class="c1"># deprecation tests</span>
-        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;featurizer&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_history&#39;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Passing `featurizer` and `max_history` &quot;</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;featurizer&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Passing `featurizer` &quot;</span>
                             <span class="s2">&quot;to `agent.train(...)` is not supported anymore. &quot;</span>
-                            <span class="s2">&quot;Pass appropriate featurizer &quot;</span>
-                            <span class="s2">&quot;directly to the policy instead. More info &quot;</span>
-                            <span class="s2">&quot;https://rasa.com/docs/core/migrations.html#x-to&quot;</span>
-                            <span class="s2">&quot;-0-9-0&quot;</span><span class="p">)</span>
+                            <span class="s2">&quot;Pass appropriate featurizer directly&quot;</span>
+                            <span class="s2">&quot; to the policy configuration instead. More info &quot;</span>
+                            <span class="s2">&quot;https://rasa.com/docs/core/migrations.html&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;epochs&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_history&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s1">&#39;batch_size&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Passing policy configuration parameters &quot;</span>
+                            <span class="s2">&quot;to `agent.train(...)` is not supported &quot;</span>
+                            <span class="s2">&quot;anymore. Specify parameters directly in the&quot;</span>
+                            <span class="s2">&quot; policy configuration instead. More info &quot;</span>
+                            <span class="s2">&quot;https://rasa.com/docs/core/migrations.html&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="c1"># the user most likely passed in a file name to load training</span>
@@ -696,7 +704,13 @@
                             <span class="s2">&quot;`data = agent.load_data(file_name)` and pass it &quot;</span>
                             <span class="s2">&quot;to `agent.train(data)`.&quot;</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Agent trainer got kwargs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">kwargs</span> <span class="o">==</span> <span class="p">{}):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Agent trainer got kwargs: </span><span class="si">{}</span><span class="s2">. These args will be &quot;</span>
+                         <span class="s2">&quot;ignored. Passing policy configuration parameters &quot;</span>
+                         <span class="s2">&quot;to `agent.train(...)` is not supported anymore. &quot;</span>
+                         <span class="s2">&quot;Specify parameters directly in the policy &quot;</span>
+                         <span class="s2">&quot;configuration instead.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+
         <span class="n">check_domain_sanity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
