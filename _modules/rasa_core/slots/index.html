@@ -255,16 +255,17 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">resolve_by_type</span><span class="p">(</span><span class="n">type_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a slots class by its type name.&quot;&quot;&quot;</span>
+
         <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">all_subclasses</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">type_name</span> <span class="o">==</span> <span class="n">type_name</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">cls</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">class_from_module_path</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">(</span><span class="ne">ImportError</span><span class="p">):</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Failed to find slot type, &#39;</span><span class="si">{}</span><span class="s2">&#39; is neither a known type nor &quot;</span>
-                <span class="s2">&quot;user-defined. If you are creating your own slot type, make &quot;</span>
-                <span class="s2">&quot;sure its module path is correct:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
+                <span class="s2">&quot;Failed to find slot type. Neither a known type nor. If &quot;</span>
+                <span class="s2">&quot;you are creating your own slot type, make sure its &quot;</span>
+                <span class="s2">&quot;module path is correct: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">persistence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">module_path_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
