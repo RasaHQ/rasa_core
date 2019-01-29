@@ -296,7 +296,7 @@ class TrainingDataGenerator(object):
 
                 if not step.end_checkpoints:
                     log_duplicates = (
-                            phase == 0 and not everything_reachable_is_reached)
+                        phase == 0 and not everything_reachable_is_reached)
                     unique_ends = self._remove_duplicate_story_end_trackers(
                         trackers, log_duplicates=log_duplicates)
                     story_end_trackers.extend(unique_ends)
