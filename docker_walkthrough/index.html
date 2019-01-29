@@ -154,12 +154,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.13.0
+          viewing: 0.13.1
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.13.1/docker_walkthrough/">0.13.1</a>
               <a href=".././0.13.0/docker_walkthrough/">0.13.0</a>
               <a href=".././0.12.4/docker_walkthrough/">0.12.4</a>
               <a href=".././0.12.3/docker_walkthrough/">0.12.3</a>
@@ -713,8 +714,8 @@ the user a joke to cheer the user up.</p>
 <p>Start with creating the custom actions in a directory <code class="docutils literal notranslate"><span class="pre">actions</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir actions
 <span class="c1"># Rasa Core SDK expects a python module.</span>
-<span class="c1"># Therefore, make sure that you have this file in the direcotry.</span>
-touch __init__.py
+<span class="c1"># Therefore, make sure that you have this file in the directory.</span>
+touch actions/__init__.py
 touch actions/actions.py
 </pre></div>
 </div>
@@ -768,7 +769,7 @@ with Rasa Core and Rasa NLU and to execute your custom actions.</p>
 you can add these by extending the official image.</p>
 <p>To do so create a Dockerfile, extend the official image and add your custom
 dependencies, e.g.:</p>
-<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="c"># Extend the offical Rasa Core SDK image</span>
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="c"># Extend the official Rasa Core SDK image</span>
 <span class="k">FROM</span><span class="s"> rasa/rasa_core_sdk:latest</span>
 
 <span class="c"># Add a custom system library (e.g. git)</span>
