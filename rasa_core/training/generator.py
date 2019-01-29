@@ -168,7 +168,7 @@ class TrainingDataGenerator(object):
             rand=random.Random(42)
         )
         # hashed featurization of all finished trackers
-        self.hashed_featurizations = set()
+        self.hashed_featurizations = {}
 
     @staticmethod
     def _phase_name(everything_reachable_is_reached, phase):
@@ -295,8 +295,10 @@ class TrainingDataGenerator(object):
                         unused_checkpoints.add(start_name)
 
                 if not step.end_checkpoints:
+                    log_duplicates = (
+                            phase == 0 and not everything_reachable_is_reached)
                     unique_ends = self._remove_duplicate_story_end_trackers(
-                        trackers)
+                        trackers, log_duplicates=log_duplicates)
                     story_end_trackers.extend(unique_ends)
 
             num_finished = len(finished_trackers) + len(story_end_trackers)
@@ -544,8 +546,9 @@ class TrainingDataGenerator(object):
                         unique_trackers.append(tracker)
                     elif (len(states) > len(last_states) and
                           hashed not in self.hashed_featurizations):
-                        self.hashed_featurizations.add(hashed)
+                        self.hashed_featurizations[hashed] = tracker.sender_id
                         end_trackers.append(tracker)
+
                 else:
                     unique_trackers.append(tracker)
 
@@ -555,7 +558,8 @@ class TrainingDataGenerator(object):
 
     def _remove_duplicate_story_end_trackers(
         self,
-        trackers: List[TrackerWithCachedStates]
+        trackers: List[TrackerWithCachedStates],
+        log_duplicates: bool = False
     ) -> List[TrackerWithCachedStates]:
         """Removes trackers that reached story end and
             created equal featurizations."""
@@ -574,8 +578,12 @@ class TrainingDataGenerator(object):
             # hashed_featurization we haven't observed
 
             if hashed not in self.hashed_featurizations:
-                self.hashed_featurizations.add(hashed)
+                self.hashed_featurizations[hashed] = tracker.sender_id
                 unique_trackers.append(tracker)
+            elif log_duplicates:
+                logger.warning("Story '{}' is a duplicate of story '{}'."
+                               "".format(tracker.sender_id,
+                                         self.hashed_featurizations[hashed]))
 
         return unique_trackers
 
