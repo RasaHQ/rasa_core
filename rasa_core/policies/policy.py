@@ -131,6 +131,12 @@ class Policy(object):
                                     domain: Domain) -> List[float]:
         pass
 
+    def predict_flag_probabilities(self,
+                                   tracker: DialogueStateTracker,
+                                   domain: Domain,
+                                   event) -> List[float]:
+        pass
+
     def persist(self, path: Text) -> None:
         """Persists the policy to a storage."""
         raise NotImplementedError("Policy must have the capacity "

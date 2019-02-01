@@ -773,8 +773,10 @@ class ActionExecuted(Event):
         return d
 
     def apply_to(self, tracker: 'DialogueStateTracker') -> None:
+        topic_prefix = self.topic + ': ' if self.topic else ''
+        flag_suffix = ' -> ' + self.flag if self.flag else ''
 
-        tracker.set_latest_action_name(self.action_name)
+        tracker.set_latest_action_name(topic_prefix + self.action_name + flag_suffix)
         tracker.clear_followup_action()
 
 

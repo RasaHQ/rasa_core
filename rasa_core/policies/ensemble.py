@@ -70,7 +70,8 @@ class PolicyEnsemble(object):
     def probabilities_using_best_policy(self,
                                         tracker: DialogueStateTracker,
                                         domain: Domain,
-                                        use_topics: bool = False
+                                        use_topics: bool = False,
+                                        event: ActionExecuted = None
                                         ) -> Tuple[List[float], Text]:
         raise NotImplementedError
 
@@ -299,7 +300,8 @@ class SimplePolicyEnsemble(PolicyEnsemble):
     def probabilities_using_best_policy(self,
                                         tracker: DialogueStateTracker,
                                         domain: Domain,
-                                        use_topics: bool = False
+                                        use_topics: bool = False,
+                                        event: ActionExecuted = None
                                         ) -> Tuple[List[float], Text]:
         result = None
         max_confidence = -1
@@ -324,6 +326,20 @@ class SimplePolicyEnsemble(PolicyEnsemble):
                 max_confidence = confidence
                 result = probabilities
                 best_policy_name = 'policy_{}_{}'.format(i, type(p).__name__)
+
+        if use_topics:
+            max_index = int(np.argmax(result))
+            event.topic = domain.topic_names[max_index]
+            for i, p in enumerate(self.policies):
+                probabilities = p.predict_flag_probabilities(tracker, domain, event)
+                if probabilities is None:
+                    if i == len(self.policies) - 1:
+                        result = [result, [0.0, 0.0]]
+                    else:
+                        continue
+                else:
+                    result = [result, probabilities]
+                    break
 
         if (not use_topics and
                 result.index(max_confidence) ==
@@ -355,7 +371,7 @@ class SimplePolicyEnsemble(PolicyEnsemble):
                     type(fallback_policy).__name__)
 
         # normalize probablilities
-        if np.sum(result) != 0:
+        if np.sum(result) != 0 and not use_topics:
             result = result / np.nansum(result)
 
         logger.debug("Predicted next action using {}"

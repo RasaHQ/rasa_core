@@ -135,7 +135,7 @@ class MemoizationPolicy(Policy):
 
         (trackers_as_states,
          trackers_as_actions,
-         _) = self.featurizer.training_states_and_actions(training_trackers,
+         _, _) = self.featurizer.training_states_and_actions(training_trackers,
                                                           domain)
         self._add_states_to_lookup(trackers_as_states, trackers_as_actions,
                                    domain)

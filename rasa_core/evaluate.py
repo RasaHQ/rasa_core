@@ -190,14 +190,18 @@ class WronglyPredictedAction(ActionExecuted):
     type_name = "wrong_action"
 
     def __init__(self, correct_action, predicted_action,
-                 policy, confidence, flag=None, timestamp=None, use_topics=None, action_name=None):
+                 policy, confidence, timestamp=None, use_topics=None, action_name=None):
         self.predicted_action = predicted_action
         if use_topics:
             name = action_name
-            topic = correct_action
+            topic = predicted_action.split(' -> ')[0]
+            topic = None if topic == 'None' else topic
+            flag = predicted_action.split(' -> ')[1]
+            flag = None if flag == 'None' else flag
         else:
             name = correct_action
             topic = None
+            flag = None
         super(WronglyPredictedAction, self).__init__(name,
                                                      topic,
                                                      policy,
@@ -205,10 +209,12 @@ class WronglyPredictedAction(ActionExecuted):
                                                      flag,
                                                      timestamp=timestamp)
 
-    def as_story_string(self):
-        return "{}   <!-- predicted: {} -->".format(super(WronglyPredictedAction, self).as_story_string(),
-                                                    self.predicted_action)
-        # return self.predicted_action + ': ' + self.action_name
+    # def as_story_string(self):
+    #     return "{}   <!-- predicted: {} -->".format(super(WronglyPredictedAction, self).as_story_string(),
+    #                                                 self.predicted_action)
+    #     # return "{} {:.3f}".format(super(WronglyPredictedAction, self).as_story_string(),
+    #     #                           self.confidence[-1])
+    #     # return self.predicted_action + ': ' + self.action_name
 
 
 class EndToEndUserUtterance(UserUttered):
@@ -337,14 +343,17 @@ def _collect_action_executed_predictions(processor, partial_tracker, event,
                                          fail_on_prediction_errors, use_topics):
     action_executed_eval_store = EvaluationStore()
 
-    action, policy, confidence = processor.predict_next_action(partial_tracker, use_topics)
+    if use_topics:
+        gold = (event.topic or 'None') + ' -> ' + (event.flag or 'None')
+    else:
+        gold = event.action_name
+
+    action, policy, confidence = processor.predict_next_action(partial_tracker, use_topics, event)
 
     if use_topics:
-        predicted = action or 'None'
-        gold = event.topic or 'None'
+        predicted = (action[0] or 'None') + ' -> ' + (action[1] or 'None')
     else:
         predicted = action.name()
-        gold = event.action_name
 
     action_executed_eval_store.add_to_store(action_predictions=predicted,
                                             action_targets=gold)
@@ -352,8 +361,7 @@ def _collect_action_executed_predictions(processor, partial_tracker, event,
     if action_executed_eval_store.has_prediction_target_mismatch():
         partial_tracker.update(WronglyPredictedAction(gold, predicted,
                                                       event.policy,
-                                                      event.confidence,
-                                                      event.flag,
+                                                      confidence,
                                                       event.timestamp,
                                                       use_topics,
                                                       event.action_name))

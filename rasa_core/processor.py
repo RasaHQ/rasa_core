@@ -152,24 +152,36 @@ class MessageProcessor(object):
     def predict_next_action(self,
                             tracker: DialogueStateTracker,
                             use_topics: bool = False,
+                            event: ActionExecuted = None
                             ) -> Tuple[Action, Text, float]:
         """Predicts the next action the bot should take after seeing x.
 
         This should be overwritten by more advanced policies to use
         ML to predict the action. Returns the index of the next action."""
 
-        probabilities, policy = self._get_next_action_probabilities(tracker, use_topics)
+        probabilities, policy = self._get_next_action_probabilities(tracker, use_topics, event)
 
-        max_index = int(np.argmax(probabilities))
         if use_topics:
-            action = self.domain.topic_names[max_index]
+            max_index = int(np.argmax(probabilities[0]))
+            topic = self.domain.topic_names[max_index]
+            topic_prob = probabilities[0][max_index]
             logger.debug("Predicted next topic '{}' with prob {:.2f}.".format(
-                action, probabilities[max_index]))
+                topic, topic_prob))
+            max_index = int(np.argmax(probabilities[1]))
+            flag = self.domain.flag_names[max_index]
+            flag_prob = probabilities[1][max_index]
+            logger.debug("Predicted next flag '{}' with prob {:.2f}.".format(
+                flag, flag_prob))
+            action = [topic, flag]
+            action_prob = [topic_prob, flag_prob]
         else:
+            max_index = int(np.argmax(probabilities))
             action = self.domain.action_for_index(max_index, self.action_endpoint)
+            action_prob = probabilities[max_index]
             logger.debug("Predicted next action '{}' with prob {:.2f}.".format(
-                action.name(), probabilities[max_index]))
-        return action, policy, probabilities[max_index]
+                action.name(), action_prob))
+
+        return action, policy, action_prob
 
     @staticmethod
     def _is_reminder_still_valid(tracker: DialogueStateTracker,
@@ -453,11 +465,12 @@ class MessageProcessor(object):
     def _get_next_action_probabilities(
         self,
         tracker: DialogueStateTracker,
-        use_topics: bool = False
+        use_topics: bool = False,
+        event: ActionExecuted = None
     ) -> Tuple[Optional[List[float]], Optional[Text]]:
 
         followup_action = tracker.followup_action
-        if followup_action:
+        if followup_action and not use_topics:
             tracker.clear_followup_action()
             result = self._prob_array_for_action(followup_action)
             if result:
@@ -470,6 +483,9 @@ class MessageProcessor(object):
 
         if (tracker.latest_message.intent.get("name") ==
                 self.domain.restart_intent):
-            return self._prob_array_for_action(ACTION_RESTART_NAME)
+            if use_topics:
+                return [[0.0] * self.domain.num_topics, [0.0] * self.domain.num_flags], None
+            else:
+                return self._prob_array_for_action(ACTION_RESTART_NAME)
         return self.policy_ensemble.probabilities_using_best_policy(
-            tracker, self.domain, use_topics)
+            tracker, self.domain, use_topics, event)

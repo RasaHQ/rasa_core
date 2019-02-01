@@ -108,6 +108,7 @@ class Domain(object):
             data.get("actions", []),
             data.get("forms", []),
             data.get("topics", []),
+            data.get("flags", []),
             **additional_arguments
         )
 
@@ -233,6 +234,7 @@ class Domain(object):
                  action_names: List[Text],
                  form_names: List[Text],
                  topic_names: List[Optional[Text]],
+                 flag_names: List[Optional[Text]],
                  store_entities_as_slots: bool = True,
                  restart_intent: Text = "restart"
                  ) -> None:
@@ -243,6 +245,7 @@ class Domain(object):
         self.slots = slots
         self.templates = templates
         self.topic_names = topic_names if None in topic_names else [None] + topic_names
+        self.flag_names = flag_names if None in flag_names else [None] + flag_names
 
         # only includes custom actions and utterance actions
         self.user_actions = action_names
@@ -275,6 +278,13 @@ class Domain(object):
         return len(self.topic_names)
 
     @utils.lazyproperty
+    def num_flags(self):
+        """Returns the number of available flags."""
+
+        # noinspection PyTypeChecker
+        return len(self.flag_names)
+
+    @utils.lazyproperty
     def num_states(self):
         """Number of used input states for the action prediction."""
 
@@ -292,7 +302,7 @@ class Domain(object):
         """Looks up which action corresponds to this action name."""
 
         if action_name not in self.action_names:
-            self._raise_action_not_found_exception(action_name)
+            self._raise_not_found_exception('action', action_name, self.action_names)
 
         return action.action_from_name(action_name,
                                        action_endpoint,
@@ -324,7 +334,7 @@ class Domain(object):
         try:
             return self.action_names.index(action_name)
         except ValueError:
-            self._raise_not_found_exception('action', action_name)
+            self._raise_not_found_exception('action', action_name, self.action_names)
 
     def index_for_topic(self, topic_name: Optional[Text]) -> Optional[int]:
         """Looks up which topic index corresponds to this topic name"""
@@ -332,15 +342,19 @@ class Domain(object):
         try:
             return self.topic_names.index(topic_name)
         except ValueError:
-            self._raise_not_found_exception('topic', topic_name)
+            self._raise_not_found_exception('topic', topic_name, self.topic_names)
 
-    def _raise_not_found_exception(self, type_of_name, name):
-        if type_of_name == 'action':
-            names = self.action_names
-        elif type_of_name == 'topic':
-            names = self.topic_names
-        else:
-            names = []
+    def index_for_flag(self, flag_name: Optional[Text]) -> Optional[int]:
+        """Looks up which flag index corresponds to this flag name"""
+
+        try:
+            return self.flag_names.index(flag_name)
+        except ValueError:
+            self._raise_not_found_exception('flag', flag_name, self.flag_names)
+
+    @staticmethod
+    def _raise_not_found_exception(type_of_name, name, names):
+
         names = "\n".join(["\t - {}".format(t)
                            for t in names if t is not None])
         raise NameError("Cannot access {0} '{1}', "
@@ -397,6 +411,18 @@ class Domain(object):
         # type: () -> List[Text]
         return ["active_form_{0}".format(f) for f in self.form_names]
 
+    # noinspection PyTypeChecker
+    @utils.lazyproperty
+    def topic_states(self):
+        # type: () -> List[Text]
+        return ["prev_topic_{0}".format(f) for f in self.topic_names]
+
+    # noinspection PyTypeChecker
+    @utils.lazyproperty
+    def flag_states(self):
+        # type: () -> List[Text]
+        return ["prev_flag_{0}".format(f) for f in self.flag_names]
+
     def index_of_state(self, state_name: Text) -> Optional[int]:
         """Provides the index of a state."""
 
@@ -418,7 +444,9 @@ class Domain(object):
             self.entity_states + \
             self.slot_states + \
             self.prev_action_states + \
-            self.form_states
+            self.form_states + \
+            self.topic_states + \
+            self.flag_states
 
     def get_parsing_states(self,
                            tracker: 'DialogueStateTracker'
@@ -467,9 +495,23 @@ class Domain(object):
 
         latest_action = tracker.latest_action_name
         if latest_action:
-            prev_action_name = PREV_PREFIX + latest_action
+            import re
+            m = re.search(r'^([^{]+:\s+)?(\s*[^{\s]+)({.+)?(\s+->.+)?', latest_action)
+
+            topic_name = m.group(1)
+            action_name = m.group(2).strip()
+            flag_name = m.group(4)
+
+            if topic_name:
+                # remove trailing spaces and `:` sign
+                topic_name = topic_name.strip()[:-1]
+
+            if flag_name:
+                flag_name = flag_name.strip()[3:]
+
+            prev_action_name = PREV_PREFIX + action_name
             if prev_action_name in self.input_state_map:
-                return {prev_action_name: 1.0}
+                return {prev_action_name: 1.0, "prev_topic_{0}".format(topic_name): 1.0, "prev_flag_{0}".format(flag_name): 1.0}
             else:
                 logger.warning(
                     "Failed to use action '{}' in history. "
@@ -583,7 +625,8 @@ class Domain(object):
             "templates": self.templates,
             "actions": self.user_actions,  # class names of the actions
             "forms": self.form_names,
-            "topics": self.topic_names
+            "topics": self.topic_names,
+            "flags": self.flag_names
         }
 
     def persist(self, filename: Text) -> None:
