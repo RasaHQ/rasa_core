@@ -107,7 +107,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../customactions/">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../run-code-in-custom-actions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../responses/">Bot Responses</a></li>
@@ -352,7 +352,7 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;An action must implement a name&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Action.run"><a class="viewcode-back" href="../../customactions/#rasa_core_sdk.Action.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="Action.run"><a class="viewcode-back" href="../../run-code-in-custom-actions/#rasa_core_sdk.Action.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
             <span class="n">dispatcher</span><span class="p">,</span>  <span class="c1"># type: CollectingDispatcher</span>
             <span class="n">tracker</span><span class="p">,</span>  <span class="c1"># type: Tracker</span>
             <span class="n">domain</span>  <span class="c1"># type:  Dict[Text, Any]</span>
