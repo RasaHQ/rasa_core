@@ -343,7 +343,7 @@ class SimplePolicyEnsemble(PolicyEnsemble):
 
         if use_topics:
             max_index = int(np.argmax(result))
-            event.topic = domain.topic_names[max_index]
+            # event.topic = domain.topic_names[max_index]
             for i, p in enumerate(self.policies):
                 probabilities = p.predict_flag_probabilities(tracker, domain, event)
                 if probabilities is None:

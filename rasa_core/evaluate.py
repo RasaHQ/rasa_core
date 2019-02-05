@@ -194,9 +194,9 @@ class WronglyPredictedAction(ActionExecuted):
         self.predicted_action = predicted_action
         if use_topics:
             name = action_name
-            topic = predicted_action.split(' -> ')[0]
+            topic = correct_action.split(' -> ')[0]
             topic = None if topic == 'None' else topic
-            flag = predicted_action.split(' -> ')[1]
+            flag = correct_action.split(' -> ')[1]
             flag = None if flag == 'None' else flag
         else:
             name = correct_action
@@ -209,12 +209,12 @@ class WronglyPredictedAction(ActionExecuted):
                                                      flag,
                                                      timestamp=timestamp)
 
-    # def as_story_string(self):
-    #     return "{}   <!-- predicted: {} -->".format(super(WronglyPredictedAction, self).as_story_string(),
-    #                                                 self.predicted_action)
-    #     # return "{} {:.3f}".format(super(WronglyPredictedAction, self).as_story_string(),
-    #     #                           self.confidence[-1])
-    #     # return self.predicted_action + ': ' + self.action_name
+    def as_story_string(self):
+        return "{}   <!-- predicted: {} -->".format(super(WronglyPredictedAction, self).as_story_string(),
+                                                    self.predicted_action)
+        # return "{} {:.3f}".format(super(WronglyPredictedAction, self).as_story_string(),
+        #                           self.confidence[-1])
+        # return self.predicted_action + ': ' + self.action_name
 
 
 class EndToEndUserUtterance(UserUttered):
