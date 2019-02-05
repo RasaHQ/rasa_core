@@ -219,6 +219,8 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 <div class="section" id="changed">
 <h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">MessageProcessor</span></code> now also passes <code class="docutils literal notranslate"><span class="pre">message_id</span></code> to the interpreter
+when parsing with a <code class="docutils literal notranslate"><span class="pre">RasaNLUHttpInterpreter</span></code></li>
 <li>starter packs are now tested in parallel with the unittests,
 and only on master and branches ending in <code class="docutils literal notranslate"><span class="pre">.x</span></code> (i.e. new version releases)</li>
 </ul>
@@ -233,9 +235,9 @@ and only on master and branches ending in <code class="docutils literal notransl
 <div class="section" id="id1">
 <h2>[0.13.1] - 2019-01-29<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id2">
-<h3>Removed<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>Added<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">message_id</span></code> can now be passed in the payload to the <code class="docutils literal notranslate"><span class="pre">NLUHttpInterpreter</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">message_id</span></code> can now be passed in the payload to the <code class="docutils literal notranslate"><span class="pre">RasaNLUHttpInterpreter</span></code></li>
 </ul>
 </div>
 <div class="section" id="id3">
