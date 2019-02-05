@@ -1380,7 +1380,7 @@ div .copyable {
 	display: table;
 	position: relative;
 	text-align: center;
-  z-index: 100;
+  z-index: 1;
 }
 .progress ul {  
 	display: table-row;
