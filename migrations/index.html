@@ -154,12 +154,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.13.1
+          viewing: 0.13.2
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.13.2/migrations/">0.13.2</a>
               <a href=".././0.13.1/migrations/">0.13.1</a>
               <a href=".././0.13.0/migrations/">0.13.0</a>
               <a href=".././0.12.4/migrations/">0.12.4</a>
@@ -201,6 +202,25 @@
 <span id="migration"></span><h1>Migration Guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h1>
 <p>This page contains information about changes between major versions and
 how you can migrate from one version to another.</p>
+<div class="section" id="x-to-0-13-0">
+<span id="migration-to-0-13-0"></span><h2>0.12.x to 0.13.0<a class="headerlink" href="#x-to-0-13-0" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Python 2 support has now been completely dropped: to upgrade to
+this version you <strong>must use Python 3</strong>.  As always, <strong>make sure</strong>
+<strong>you retrain your models when switching to this version</strong></p>
+</div>
+<div class="section" id="general">
+<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Support for Python 2 has now been completely removed from Rasa Core, please
+upgrade to Python 3.5 or 3.6 to continue using the software</li>
+<li>If you were using the deprecated intent/entity format (<code class="docutils literal notranslate"><span class="pre">_intent[entity1=val1,</span> <span class="pre">entity=val2]</span></code>),
+then you will have to update your training data to the standard format
+(<code class="docutils literal notranslate"><span class="pre">/intent{&quot;entity1&quot;:</span> <span class="pre">val1,</span> <span class="pre">&quot;entity2&quot;:</span> <span class="pre">val2</span></code>} because it is no longer supported</li>
+</ul>
+</div>
+</div>
 <div class="section" id="x-to-0-12-0">
 <span id="migration-to-0-12-0"></span><h2>0.11.x to 0.12.0<a class="headerlink" href="#x-to-0-12-0" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
@@ -273,8 +293,8 @@ as on the API level. Please take a careful look at the mentioned
 before updating. Please make sure to
 <strong>retrain your models when switching to this version</strong>.</p>
 </div>
-<div class="section" id="general">
-<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">TL;DR these are the most important surface changes. But if you have
