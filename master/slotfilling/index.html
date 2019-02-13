@@ -457,6 +457,9 @@ list of supported cuisines.</p>
         <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">slot</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">slot_values</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
 </pre></div>
 </div>
+<p>You can also deactivate the form directly during this validation step (in case the
+slot is filled with something that you are certain can’t be handled) by returning
+<code class="docutils literal notranslate"><span class="pre">self.deactivate()</span></code></p>
 <p>If nothing is extracted from the user’s utterance for any of the required slots, an
 <code class="docutils literal notranslate"><span class="pre">ActionExecutionRejection</span></code> error will be raised, meaning the action execution
 was rejected and therefore Core will fall back onto a different policy to
