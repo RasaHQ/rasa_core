@@ -20,10 +20,10 @@ var klaroConfig = {
 
     // You can customize the name of the cookie that Klaro will use to
     // store user consent. If undefined, Klaro will use 'klaro'.
- 
+
     // Put a link to your privacy policy here (relative or absolute).
     privacyPolicy: '/privacy-policy',
-    
+
     // Defines the default state for applications (true=enabled by default).
     default: true,
 
@@ -46,37 +46,23 @@ var klaroConfig = {
     // Example config that shows how to overwrite translations:
     // https://github.com/DPKit/klaro/blob/master/src/configs/i18n.js
     translations: {
-        consentModal : {
-            description : {
-                en: ' Here you can see and customize the information that we collect about you.',
+        // If you erase the "consentModal" translations, Klaro will use the
+        // defaults as defined in translations.yml
+        en: {
+            consentModal: {
+                description: 'Here you can see and customize the information that we collect about you.',
             },
+            googleanalytics: {
+                description: 'Collecting of visitor statistics',
+            },
+            googletagmanager: {
+                description: 'Analysing browsing behaviour',
+            },
+            purposes: {
+                analytics: 'Analytics',
+            }
         },
-        // Add an entry for each app that you define below, using the name of
-        // the app that you chose.
-        googleanalytics : {
-            description : {
-                en : 'Collecting of visitor statistics',
-            },
-        },
-         googletagmanager: {
-            description: {
-                en : 'Enabling livechat',
-            },
-        },
-      
-        // The purposes will be displayed in the consent notice, make sure
-        // to add translations for each purposes you give in the 'apps' section.
-        purposes: {
-            analytics : {
-                en : 'Analytics',
-            },
-            livechat : {
-                en: 'Live Chat',
-            },
-        
-        },    
     },
-    
 
     // This is a list of third-party apps that Klaro will manage for you.
     apps : [
@@ -91,20 +77,20 @@ var klaroConfig = {
             // If "onlyOnce" is set to true, the app will only be executed
             // once regardless how often the user toggles it on and off.
             onlyOnce: true,
-            
+
             // The title of you app as listed in the consent modal.
             title : 'Google Analytics',
 
             // The purpose(s) of this app. Will be listed on the consent notice.
             // Do not forget to add translations for all purposes you list here.
             purposes : ['analytics'],
-            
+
             // A list of regex expressions or strings giving the names of
             // cookies set by this app. If the user withdraws consent for a
             // given app, Klaro will then automatically delete all matching
             // cookies.
             cookies : [/^_pk_.*$/, 'googleanalytics_ignore'],
-            
+
             // An optional callback function that will be called each time
             // the consent state for the app changes (true=consented). Passes
             // the `app` config as the second parameter as well.
@@ -126,13 +112,13 @@ var klaroConfig = {
             default: 'true',
             onlyOnce: 'true',
             title: 'Google Tag Manager',
-            purposes: ['livechat'],
+            purposes: ['analytics'],
             cookies: [/^_dc_gtm_*$/, 'googletagmanager_ignore'],
             callback: function(consent, app){
                 console.log("User consent for app "+app.name+": consent="+consent)
             },
             required : false,
-            optOut : false, 
+            optOut : false,
         },
 
     ],
