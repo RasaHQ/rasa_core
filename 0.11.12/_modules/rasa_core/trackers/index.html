@@ -504,7 +504,8 @@
         <span class="sd">&quot;&quot;&quot;Returns all actions that should be applied - w/o reverted events.&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">undo_till_previous</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="n">done_events</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Removes events from `done_events` until `event_type` is found.&quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;Removes events from `done_events` until `event_type` is</span>
+<span class="sd">               found.&quot;&quot;&quot;</span>
             <span class="c1"># list gets modified - hence we need to copy events!</span>
             <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">done_events</span><span class="p">[:]):</span>
                 <span class="k">del</span> <span class="n">done_events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>

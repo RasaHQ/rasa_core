@@ -266,6 +266,7 @@
             <span class="s2">&quot;latest_event_time&quot;</span><span class="p">:</span> <span class="n">latest_event_time</span><span class="p">,</span>
             <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span><span class="p">(),</span>
             <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">,</span>
+            <span class="s2">&quot;latest_input_channel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latest_input_channel</span><span class="p">(),</span>
             <span class="s2">&quot;active_form&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span><span class="p">,</span>
             <span class="s2">&quot;latest_action_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_action_name</span>
         <span class="p">}</span>
@@ -297,6 +298,14 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">entities</span>
                 <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entity&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">entity_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_latest_input_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Optional[Text]</span>
+        <span class="sd">&quot;&quot;&quot;Get the name of the input_channel of the latest UserUttered event&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;event&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;input_channel&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">is_paused</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; bool</span>

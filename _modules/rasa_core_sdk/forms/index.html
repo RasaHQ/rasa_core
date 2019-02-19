@@ -445,8 +445,14 @@
         <span class="c1"># extract requested slot</span>
         <span class="n">slot_to_fill</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">slot_to_fill</span><span class="p">:</span>
-            <span class="n">slot_values</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extract_requested_slot</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span>
-                                                           <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">slot</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_requested_slot</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span>
+                                                           <span class="n">tracker</span><span class="p">,</span>
+                                                           <span class="n">domain</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">validate_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;validate_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot</span><span class="p">),</span>
+                                        <span class="k">lambda</span> <span class="o">*</span><span class="n">x</span><span class="p">:</span> <span class="n">value</span><span class="p">)</span>
+                <span class="n">slot_values</span><span class="p">[</span><span class="n">slot</span><span class="p">]</span> <span class="o">=</span> <span class="n">validate_func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
+                                                  <span class="n">domain</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="ow">not</span> <span class="n">slot_values</span><span class="p">:</span>
                 <span class="c1"># reject to execute the form action</span>
                 <span class="c1"># if some slot was requested but nothing was extracted</span>
@@ -473,7 +479,10 @@
         <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_slots</span><span class="p">(</span><span class="n">tracker</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_should_request_slot</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Request next slot &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot</span><span class="p">))</span>
-                <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_ask_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot</span><span class="p">),</span> <span class="n">tracker</span><span class="p">)</span>
+                <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_ask_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot</span><span class="p">),</span>
+                                          <span class="n">tracker</span><span class="p">,</span>
+                                          <span class="n">silent_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                          <span class="o">**</span><span class="n">tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
                 <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="n">slot</span><span class="p">)]</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No slots left to request&quot;</span><span class="p">)</span>
@@ -554,7 +563,7 @@
 
         <span class="k">return</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">slot_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_deactivate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">deactivate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; List[Dict]</span>
         <span class="sd">&quot;&quot;&quot;Return `Form` event with `None` as name to deactivate the form</span>
 <span class="sd">            and reset the requested slot&quot;&quot;&quot;</span>
@@ -576,22 +585,26 @@
         <span class="c1"># validate user input</span>
         <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_validate_if_required</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
 
-        <span class="c1"># create temp tracker with populated slots from `validate` method</span>
-        <span class="n">temp_tracker</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="s1">&#39;event&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;slot&#39;</span><span class="p">:</span>
-                <span class="n">temp_tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+        <span class="c1"># check that the form wasn&#39;t deactivated in validation</span>
+        <span class="k">if</span> <span class="n">Form</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
 
-        <span class="n">next_slot_events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_next_slot</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">temp_tracker</span><span class="p">,</span>
-                                                  <span class="n">domain</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">next_slot_events</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># request next slot</span>
-            <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">next_slot_events</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># there is nothing more to request, so we can submit</span>
-            <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">temp_tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
-            <span class="c1"># deactivate the form after submission</span>
-            <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_deactivate</span><span class="p">())</span>
+            <span class="c1"># create temp tracker with populated slots from `validate` method</span>
+            <span class="n">temp_tracker</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="s1">&#39;event&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;slot&#39;</span><span class="p">:</span>
+                    <span class="n">temp_tracker</span><span class="o">.</span><span class="n">slots</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+
+            <span class="n">next_slot_events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_next_slot</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">temp_tracker</span><span class="p">,</span>
+                                                      <span class="n">domain</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">next_slot_events</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># request next slot</span>
+                <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">next_slot_events</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># there is nothing more to request, so we can submit</span>
+                <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">temp_tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
+                <span class="c1"># deactivate the form after submission</span>
+                <span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deactivate</span><span class="p">())</span>
 
         <span class="k">return</span> <span class="n">events</span>
 
