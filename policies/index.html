@@ -154,12 +154,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.13.2
+          viewing: 0.13.3
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.13.3/policies/">0.13.3</a>
               <a href=".././0.13.2/policies/">0.13.2</a>
               <a href=".././0.13.1/policies/">0.13.1</a>
               <a href=".././0.13.0/policies/">0.13.0</a>
@@ -403,11 +404,6 @@ are equal.</p>
                <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">KerasPolicy</span><span class="p">()])</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">By default, Rasa Core uses the <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> in combination with
-the <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code>.</p>
-</div>
 </div>
 <div class="section" id="memoization-policy">
 <h3><a class="toc-backref" href="#id12">Memoization Policy</a><a class="headerlink" href="#memoization-policy" title="Permalink to this headline">¶</a></h3>
@@ -576,18 +572,19 @@ This step is based on the
 <p><strong>Configuration</strong>:</p>
 <blockquote>
 <div><blockquote>
-<div><p>Configuration parameters can be passed to <code class="docutils literal notranslate"><span class="pre">agent.train(...)</span></code> method.</p>
+<div><p>Configuration parameters can be passed as parameters to the
+<code class="docutils literal notranslate"><span class="pre">EmbeddingPolicy</span></code> within the policy configuration file.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Pass an appropriate <code class="docutils literal notranslate"><span class="pre">epochs</span></code> number to <code class="docutils literal notranslate"><span class="pre">agent.train(...)</span></code>
-method, otherwise the policy will be trained only for <code class="docutils literal notranslate"><span class="pre">1</span></code> epoch.
-Since this is embedding based policy, it requires a large
+<p class="last">Pass an appropriate number of <code class="docutils literal notranslate"><span class="pre">epochs</span></code> to the <code class="docutils literal notranslate"><span class="pre">EmbeddingPolicy</span></code>,
+otherwise the policy will be trained only for <code class="docutils literal notranslate"><span class="pre">1</span></code>
+epoch. Since this is an embedding based policy, it requires a large
 number of epochs, which depends on the complexity of the
 training data and whether attention is used or not.</p>
 </div>
 <p>The main feature of this policy is an <strong>attention</strong> mechanism over
 previous user input and system actions.
-<strong>Attention is turned on by default</strong>, in order to turn it off,
+<strong>Attention is turned on by default</strong>; in order to turn it off,
 configure the following parameters:</p>
 <blockquote>
 <div><ul class="simple">
@@ -635,7 +632,7 @@ cell is turned on,  default <code class="docutils literal notranslate"><span cla
 forward/backward pass, the higher the batch size, the more
 memory space you’ll need;</li>
 <li><code class="docutils literal notranslate"><span class="pre">epochs</span></code> sets the number of times the algorithm will see
-training data, where <code class="docutils literal notranslate"><span class="pre">one</span> <span class="pre">epoch</span></code> = one forward pass and
+training data, where one <code class="docutils literal notranslate"><span class="pre">epoch</span></code> equals one forward pass and
 one backward pass of all the training examples;</li>
 <li><code class="docutils literal notranslate"><span class="pre">random_seed</span></code> if set to any int will get reproducible
 training results for the same inputs;</li>
@@ -708,7 +705,7 @@ In order to do it pass a list to <code class="docutils literal notranslate"><spa
 <code class="docutils literal notranslate"><span class="pre">batch_size</span></code> is required, pass an <code class="docutils literal notranslate"><span class="pre">int</span></code>, e.g.
 <code class="docutils literal notranslate"><span class="pre">&quot;batch_size&quot;:</span> <span class="pre">8</span></code>.</p>
 </div>
-<p>These parameters can be passed to <code class="docutils literal notranslate"><span class="pre">Agent.train(...)</span></code> method.
+<p>These parameters can be specified in the policy configuration file.
 The default values are defined in <code class="docutils literal notranslate"><span class="pre">EmbeddingPolicy.defaults</span></code>:</p>
 </div></blockquote>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span>
