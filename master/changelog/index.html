@@ -222,6 +222,7 @@ for tensorflow based pipelines</li>
 <li>utility functions for colored logging</li>
 <li>open webbrowser when visualizing stories</li>
 <li>added ability to use multiple env vars per line in yaml files</li>
+<li>added <code class="docutils literal notranslate"><span class="pre">priority</span></code> property of policies to influence best policy in the case of equal confidence</li>
 </ul>
 </div>
 <div class="section" id="changed">
@@ -233,6 +234,7 @@ and only on master and branches ending in <code class="docutils literal notransl
 <li>renamed <code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code> to <code class="docutils literal notranslate"><span class="pre">rasa_core.test</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">scores</span></code> array returned by the <code class="docutils literal notranslate"><span class="pre">/conversations/{sender_id}/predict</span></code>
 endpoint is now sorted according to the actions’ scores.</li>
+<li>changed payloads from “text” to “message” in files: server.yml, docs/connectors.rst, rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py</li>
 </ul>
 </div>
 <div class="section" id="removed">
@@ -1253,18 +1255,6 @@ wrong predictions</li>
 <div class="section" id="v0-2-0">
 <span id="id143"></span><h2>[0.2.0] - 2017-05-18<a class="headerlink" href="#v0-2-0" title="Permalink to this headline">¶</a></h2>
 <p>First released version.</p>
-<div class="section" id="id144">
-<h3>Added<a class="headerlink" href="#id144" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>Added <cite>priority</cite> property of policies to influence best policy in the case of equal confidence</li>
-</ul>
-</div>
-<div class="section" id="id145">
-<h3>Changed<a class="headerlink" href="#id145" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>Change payloads from “text” to “message” in files: server.yml, docs/connectors.rst, rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py</li>
-</ul>
-</div>
 </div>
 </div>
 
