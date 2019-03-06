@@ -202,7 +202,6 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">rasa_nlu.training_data.formats</span> <span class="k">import</span> <span class="n">MarkdownWriter</span><span class="p">,</span> <span class="n">MarkdownReader</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
@@ -240,6 +239,8 @@
 
 
 <span class="k">def</span> <span class="nf">md_format_message</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">intent</span><span class="p">,</span> <span class="n">entities</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">rasa_nlu.training_data.formats</span> <span class="k">import</span> <span class="n">MarkdownWriter</span><span class="p">,</span> <span class="n">MarkdownReader</span>
+
     <span class="n">message_from_md</span> <span class="o">=</span> <span class="n">MarkdownReader</span><span class="p">()</span><span class="o">.</span><span class="n">_parse_training_example</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="n">deserialised_entities</span> <span class="o">=</span> <span class="n">deserialise_entities</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">MarkdownWriter</span><span class="p">()</span><span class="o">.</span><span class="n">_generate_message_md</span><span class="p">(</span>

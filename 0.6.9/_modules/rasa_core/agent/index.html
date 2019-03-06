@@ -207,7 +207,6 @@
 <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">rasa_core</span>
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">training</span><span class="p">,</span> <span class="n">constants</span>
 <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span><span class="p">,</span> <span class="n">OutputChannel</span><span class="p">,</span> <span class="n">InputChannel</span>
 <span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="n">DEFAULT_REQUEST_TIMEOUT</span>
@@ -395,18 +394,7 @@
                 <span class="s2">&quot;FormPolicy to your policy ensemble.&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">NaturalLanguageInterpreter</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">interpreter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="s2">&quot;Passing a value for interpreter to an agent &quot;</span>
-                    <span class="s2">&quot;where the value is not an interpreter &quot;</span>
-                    <span class="s2">&quot;is deprecated. Construct the interpreter, before&quot;</span>
-                    <span class="s2">&quot;passing it to the agent, e.g. &quot;</span>
-                    <span class="s2">&quot;`interpreter = NaturalLanguageInterpreter.create(&quot;</span>
-                    <span class="s2">&quot;nlu)`.&quot;</span><span class="p">)</span>
-            <span class="n">interpreter</span> <span class="o">=</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interpreter</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="o">=</span> <span class="n">interpreter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="o">=</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interpreter</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span> <span class="o">=</span> <span class="n">NaturalLanguageGenerator</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_tracker_store</span><span class="p">(</span>
@@ -543,7 +531,7 @@
         <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">output_channel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OutputChannel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">sender_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
         <span class="sd">&quot;&quot;&quot;Handle a single message.</span>
 
 <span class="sd">        If a message preprocessor is passed, the message will be passed to that</span>
@@ -725,6 +713,7 @@
 <span class="sd">        Otherwise the webserver will be started, and the method will</span>
 <span class="sd">        return afterwards.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Flask</span>
+        <span class="kn">import</span> <span class="nn">rasa_core</span>
 
         <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="n">rasa_core</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span>
@@ -808,8 +797,7 @@
                           <span class="n">max_history</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span>
                           <span class="n">nlu_training_data</span><span class="p">,</span> <span class="n">should_merge_nodes</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_ensure_agent_is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; None</span>
+    <span class="k">def</span> <span class="nf">_ensure_agent_is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks that an interpreter and a tracker store are set.</span>
 
 <span class="sd">        Necessary before a processor can be instantiated from this agent.</span>
@@ -875,8 +863,7 @@
                 <span class="s2">&quot;of type &#39;</span><span class="si">{}</span><span class="s2">&#39;, but should be policy, an array of &quot;</span>
                 <span class="s2">&quot;policies, or a policy ensemble&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">passed_type</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_form_policy_not_present</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; bool</span>
+    <span class="k">def</span> <span class="nf">_form_policy_not_present</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check whether form policy is not present</span>
 <span class="sd">            if there is a form action in the domain</span>
 <span class="sd">        &quot;&quot;&quot;</span>
