@@ -222,8 +222,12 @@ for tensorflow based pipelines</li>
 <li>Added max_event_history in tracker_store to set this value in DialogueStateTracker</li>
 <li>utility functions for colored logging</li>
 <li>open webbrowser when visualizing stories</li>
+<li>added <code class="docutils literal notranslate"><span class="pre">/parse</span></code> endpoint to query for NLU results</li>
+<li>File based event store</li>
+<li>ability to configure event store using the endpoints file</li>
 <li>added ability to use multiple env vars per line in yaml files</li>
-<li>added <code class="docutils literal notranslate"><span class="pre">priority</span></code> property of policies to influence best policy in the case of equal confidence</li>
+<li>added <code class="docutils literal notranslate"><span class="pre">priority</span></code> property of policies to influence best policy in
+the case of equal confidence</li>
 </ul>
 </div>
 <div class="section" id="changed">
@@ -233,9 +237,14 @@ for tensorflow based pipelines</li>
 and only on master and branches ending in <code class="docutils literal notranslate"><span class="pre">.x</span></code> (i.e. new version releases)</li>
 <li>renamed <code class="docutils literal notranslate"><span class="pre">train_dialogue_model</span></code> to <code class="docutils literal notranslate"><span class="pre">train</span></code></li>
 <li>renamed <code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code> to <code class="docutils literal notranslate"><span class="pre">rasa_core.test</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">event_broker.publish</span></code> receives the event as a dict instead of text</li>
+<li>configuration key <code class="docutils literal notranslate"><span class="pre">store_type</span></code> of the tracker store endpoint configuration
+has been renamed to <code class="docutils literal notranslate"><span class="pre">type</span></code> to allow usage across endpoints</li>
+<li>renamed <code class="docutils literal notranslate"><span class="pre">policy_metadata.json</span></code> to <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> for persisted models</li>
 <li><code class="docutils literal notranslate"><span class="pre">scores</span></code> array returned by the <code class="docutils literal notranslate"><span class="pre">/conversations/{sender_id}/predict</span></code>
 endpoint is now sorted according to the actions’ scores.</li>
-<li>changed payloads from “text” to “message” in files: server.yml, docs/connectors.rst, rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py</li>
+<li>changed payloads from “text” to “message” in files: server.yml, docs/connectors.rst,
+rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py</li>
 </ul>
 </div>
 <div class="section" id="removed">
@@ -247,8 +256,12 @@ endpoint is now sorted according to the actions’ scores.</li>
 <div class="section" id="fixed">
 <h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Handles slot names which contain characters that are invalid as python variable name (e.g. dot) in a template</li>
-<li>When a <code class="docutils literal notranslate"><span class="pre">fork</span></code> is used in interactive learning, every forked storyline is saved (not just the last)</li>
+<li>When a <code class="docutils literal notranslate"><span class="pre">fork</span></code> is used in interactive learning, every forked
+storyline is saved (not just the last)</li>
+<li>Handles slot names which contain characters that are invalid as python
+variable name (e.g. dot) in a template</li>
+<li>When a <code class="docutils literal notranslate"><span class="pre">fork</span></code> is used in interactive learning, every forked storyline
+is saved (not just the last)</li>
 </ul>
 </div>
 </div>

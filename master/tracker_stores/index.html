@@ -264,7 +264,7 @@ Redis is a fast in-memory key-value store which can optionally also persist data
 <li><p class="first">Add required configuration to your <cite>endpoints.yml</cite></p>
 <blockquote>
 <div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">tracker_store</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">store_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">redis</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">redis</span>
     <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;host of the redis instance, e.g. localhost&gt;</span>
     <span class="l l-Scalar l-Scalar-Plain">port</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;port of your redis instance, usually 6379&gt;</span>
     <span class="l l-Scalar l-Scalar-Plain">db</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;number of your database within redis, e.g. 0&gt;</span>
@@ -313,7 +313,7 @@ MongoDB is a free and open-source cross-platform document-oriented NoSQL databas
 <li><p class="first">Add required configuration to your <cite>endpoints.yml</cite></p>
 <blockquote>
 <div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">tracker_store</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">store_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">mongod</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">mongod</span>
     <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;url to your mongo instance, e.g. mongodb://localhost:27017&gt;</span>
     <span class="l l-Scalar l-Scalar-Plain">db</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;name of the db within your mongo instance, e.g. rasa&gt;</span>
     <span class="l l-Scalar l-Scalar-Plain">username</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;username used for authentication&gt;</span>
@@ -374,7 +374,7 @@ provide a parameter <code class="docutils literal notranslate"><span class="pre"
 and the parameters you require:</p>
 <blockquote>
 <div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">tracker_store</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">store_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">path.to.your.module.Class</span>
+  <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">path.to.your.module.Class</span>
   <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
   <span class="l l-Scalar l-Scalar-Plain">a_parameter</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a value</span>
   <span class="l l-Scalar l-Scalar-Plain">another_parameter</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">another value</span>

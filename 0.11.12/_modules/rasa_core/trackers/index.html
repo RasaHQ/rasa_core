@@ -237,7 +237,10 @@
 
 
 <div class="viewcode-block" id="DialogueStateTracker"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker">[docs]</a><span class="k">class</span> <span class="nc">DialogueStateTracker</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Maintains the state of a conversation.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Maintains the state of a conversation.</span>
+
+<span class="sd">    The field max_event_history will only give you these last events,</span>
+<span class="sd">    it can be set in the tracker_store&quot;&quot;&quot;</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
