@@ -437,7 +437,14 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lazy_init</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_load_interpreter</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># TODO: hotfix to append attributes that NLU is adding as a server</span>
+        <span class="c1">#   but where the interpreter does not add them</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;current&quot;</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
     <span class="k">def</span> <span class="nf">_load_interpreter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">rasa_nlu.model</span> <span class="k">import</span> <span class="n">Interpreter</span>

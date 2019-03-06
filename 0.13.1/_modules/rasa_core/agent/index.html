@@ -203,14 +203,12 @@
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">import</span> <span class="nn">zipfile</span>
 <span class="kn">from</span> <span class="nn">gevent.pywsgi</span> <span class="k">import</span> <span class="n">WSGIServer</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span> <span class="k">as</span> <span class="n">IOReader</span>
 <span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="k">import</span> <span class="n">InvalidURL</span><span class="p">,</span> <span class="n">RequestException</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">training</span><span class="p">,</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">training</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span><span class="p">,</span> <span class="n">OutputChannel</span><span class="p">,</span> <span class="n">InputChannel</span>
 <span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="n">DEFAULT_REQUEST_TIMEOUT</span>
 <span class="kn">from</span> <span class="nn">rasa_core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
@@ -283,6 +281,38 @@
     <span class="k">return</span> <span class="n">fingerprint</span><span class="p">,</span> <span class="n">model_directory</span>
 
 
+<span class="k">def</span> <span class="nf">_is_stack_model</span><span class="p">(</span><span class="n">model_directory</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Decide whether a persisted model is a stack or a core model.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;fingerprint.json&quot;</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_load_and_set_updated_model</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span><span class="p">,</span>
+                                <span class="n">model_directory</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                                <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load the persisted model into memory and set the model on the agent.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">_is_stack_model</span><span class="p">(</span><span class="n">model_directory</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RasaNLUInterpreter</span>
+        <span class="n">nlu_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;nlu&quot;</span><span class="p">)</span>
+        <span class="n">core_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;core&quot;</span><span class="p">)</span>
+        <span class="n">interpreter</span> <span class="o">=</span> <span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="n">model_directory</span><span class="o">=</span><span class="n">nlu_model</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">interpreter</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">interpreter</span>
+        <span class="n">core_model</span> <span class="o">=</span> <span class="n">model_directory</span>
+
+    <span class="n">domain_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">core_model</span><span class="p">),</span> <span class="s2">&quot;domain.yml&quot;</span><span class="p">)</span>
+    <span class="n">domain</span> <span class="o">=</span> <span class="n">Domain</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">domain_path</span><span class="p">)</span>
+
+    <span class="c1"># noinspection PyBroadException</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">policy_ensemble</span> <span class="o">=</span> <span class="n">PolicyEnsemble</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">core_model</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">update_model</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">policy_ensemble</span><span class="p">,</span> <span class="n">fingerprint</span><span class="p">,</span> <span class="n">interpreter</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to load policy and update agent. &quot;</span>
+                         <span class="s2">&quot;The previous model will stay loaded instead.&quot;</span><span class="p">)</span>
+
+
 <span class="k">def</span> <span class="nf">_update_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span><span class="p">,</span>
                               <span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span>
                               <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -296,11 +326,8 @@
     <span class="n">new_model_fingerprint</span> <span class="o">=</span> <span class="n">_pull_model_and_fingerprint</span><span class="p">(</span>
         <span class="n">model_server</span><span class="p">,</span> <span class="n">model_directory</span><span class="p">,</span> <span class="n">agent</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">new_model_fingerprint</span><span class="p">:</span>
-        <span class="n">domain_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_directory</span><span class="p">),</span>
-                                   <span class="s2">&quot;domain.yml&quot;</span><span class="p">)</span>
-        <span class="n">domain</span> <span class="o">=</span> <span class="n">Domain</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">domain_path</span><span class="p">)</span>
-        <span class="n">policy_ensemble</span> <span class="o">=</span> <span class="n">PolicyEnsemble</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span>
-        <span class="n">agent</span><span class="o">.</span><span class="n">update_model</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">policy_ensemble</span><span class="p">,</span> <span class="n">new_model_fingerprint</span><span class="p">)</span>
+        <span class="n">_load_and_set_updated_model</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">model_directory</span><span class="p">,</span>
+                                    <span class="n">new_model_fingerprint</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No new model found at &quot;</span>
                      <span class="s2">&quot;URL </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
@@ -343,9 +370,8 @@
                        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="n">zip_ref</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">IOReader</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
-    <span class="n">zip_ref</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unzipped model to </span><span class="si">{}</span><span class="s2">&quot;</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">unarchive</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">model_directory</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unzipped model to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
                  <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)))</span>
 
     <span class="c1"># get the new fingerprint</span>
@@ -409,9 +435,14 @@
     <span class="k">def</span> <span class="nf">update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                      <span class="n">domain</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Domain</span><span class="p">],</span>
                      <span class="n">policy_ensemble</span><span class="p">:</span> <span class="n">PolicyEnsemble</span><span class="p">,</span>
-                     <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                     <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">],</span>
+                     <span class="n">interpreter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NaturalLanguageInterpreter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="o">=</span> <span class="n">policy_ensemble</span>
+
+        <span class="k">if</span> <span class="n">interpreter</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span> <span class="o">=</span> <span class="n">NaturalLanguageInterpreter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">interpreter</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_fingerprint</span><span class="p">(</span><span class="n">fingerprint</span><span class="p">)</span>
 
@@ -749,7 +780,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">model_path</span><span class="p">):</span>
             <span class="k">return</span>
 
-        <span class="n">domain_spec_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="s1">&#39;policy_metadata.json&#39;</span><span class="p">)</span>
+        <span class="n">domain_spec_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="s1">&#39;metadata.json&#39;</span><span class="p">)</span>
         <span class="c1"># check if there were a model before</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">domain_spec_path</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Model directory </span><span class="si">{}</span><span class="s2"> exists and contains old &quot;</span>

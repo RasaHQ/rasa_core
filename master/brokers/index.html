@@ -219,6 +219,14 @@ the Python client library for <a class="reference external" href="https://www.ra
 <p>You can use an endpoint configuration file to instruct Rasa Core to stream
 all events to your event broker. To do so, add the following section to your
 endpoint configuration, e.g. <code class="docutils literal notranslate"><span class="pre">endpoints.yml</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">event_broker</span><span class="p">:</span>
+  <span class="n">url</span><span class="p">:</span> <span class="n">localhost</span>
+  <span class="n">username</span><span class="p">:</span> <span class="n">username</span>
+  <span class="n">password</span><span class="p">:</span> <span class="n">password</span>
+  <span class="n">queue</span><span class="p">:</span> <span class="n">queue</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">pika</span>
+</pre></div>
+</div>
 <p>Then instruct Rasa Core to use the endpoint configuration by adding
 <code class="docutils literal notranslate"><span class="pre">--endpoints</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">your</span> <span class="pre">endpoint</span> <span class="pre">configuration</span></code> when running it.</p>
 </div>
