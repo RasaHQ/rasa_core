@@ -233,7 +233,8 @@ was predicted incorrectly.</p>
 your domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: evaluate.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calling `rasa_core.evaluate` is deprecated. Please use `rasa_core.test` instead.
+usage: evaluate.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
                            [--endpoints ENDPOINTS]
                            [--fail_on_prediction_errors] [--core CORE]
                            (-s STORIES | --url URL) [-v] [-vv] [--quiet]
@@ -262,6 +263,8 @@ optional arguments:
   --url URL             If supplied, downloads a story file from a URL and
                         trains on it. Fetches the data by sending a GET
                         request to the supplied URL.
+
+Python Logging Options:
   -v, --verbose         Be verbose. Sets logging level to INFO
   -vv, --debug          Print lots of debugging statements. Sets logging level
                         to DEBUG
@@ -396,7 +399,7 @@ suggestion for improving the docs, feel free to share it by creating an issue on
             </div>
 
             <div class="copyright small">
-            &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
+            &copy;2019, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
             
             </div>
 

@@ -255,7 +255,7 @@ return afterwards.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_text">
-<code class="descname">handle_text</code><span class="sig-paren">(</span><em>text_message: Union[str, Dict[str, Any]], message_preprocessor: Optional[Callable[str, str]] = None, output_channel: Optional[rasa_core.channels.channel.OutputChannel] = None, sender_id: Optional[str] = 'default'</em><span class="sig-paren">)</span> &#x2192; Optional[List[str]]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_text" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_text</code><span class="sig-paren">(</span><em>text_message: Union[str, Dict[str, Any]], message_preprocessor: Optional[Callable[str, str]] = None, output_channel: Optional[rasa_core.channels.channel.OutputChannel] = None, sender_id: Optional[str] = 'default'</em><span class="sig-paren">)</span> &#x2192; Optional[List[Dict[str, Any]]]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a single message.</p>
 <p>If a message preprocessor is passed, the message will be passed to that
 function first and the return value is then used as the
@@ -385,7 +385,7 @@ suggestion for improving the docs, feel free to share it by creating an issue on
             </div>
 
             <div class="copyright small">
-            &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
+            &copy;2019, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
             
             </div>
 
