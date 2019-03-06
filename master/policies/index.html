@@ -325,9 +325,7 @@ slot. Slot information is always available for every featurizer.</p>
 </div>
 <div class="section" id="training-script-options">
 <h3><a class="toc-backref" href="#id8">Training Script Options</a><a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/opt/python/3.5.6/lib/python3.5/runpy.py:125: RuntimeWarning: &#39;rasa_core.train&#39; found in sys.modules after import of package &#39;rasa_core&#39;, but prior to execution of &#39;rasa_core.train&#39;; this may result in unpredictable behaviour
-  warn(RuntimeWarning(msg))
-usage: train.py default [-h] [--augmentation AUGMENTATION] [--dump_stories]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: train.py default [-h] [--augmentation AUGMENTATION] [--dump_stories]
                         [--debug_plots] [-v] [-vv] [--quiet] [-c CONFIG] -o
                         OUT (-s STORIES | --url URL) -d DOMAIN
 
@@ -339,6 +337,10 @@ optional arguments:
   --debug_plots         If enabled, will create plots showing checkpoints and
                         their connections between story blocks in a file
                         called `story_blocks_connections.html`.
+  -v, --verbose         Be verbose. Sets logging level to INFO
+  -vv, --debug          Print lots of debugging statements. Sets logging level
+                        to DEBUG
+  --quiet               Be quiet! Sets logging level to WARNING
   -c CONFIG, --config CONFIG
                         Policy specification yaml file.
   -o OUT, --out OUT     directory to persist the trained model in
@@ -349,12 +351,6 @@ optional arguments:
                         request to the supplied URL.
   -d DOMAIN, --domain DOMAIN
                         Domain specification (yml file)
-
-Python Logging Options:
-  -v, --verbose         Be verbose. Sets logging level to INFO
-  -vv, --debug          Print lots of debugging statements. Sets logging level
-                        to DEBUG
-  --quiet               Be quiet! Sets logging level to WARNING
 </pre></div>
 </div>
 </div>
