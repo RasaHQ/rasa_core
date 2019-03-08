@@ -318,6 +318,7 @@ MongoDB is a free and open-source cross-platform document-oriented NoSQL databas
     <span class="l l-Scalar l-Scalar-Plain">db</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;name of the db within your mongo instance, e.g. rasa&gt;</span>
     <span class="l l-Scalar l-Scalar-Plain">username</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;username used for authentication&gt;</span>
     <span class="l l-Scalar l-Scalar-Plain">password</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;password used for authentication&gt;</span>
+    <span class="l l-Scalar l-Scalar-Plain">auth_source</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;database name associated with the user’s credentials&gt;</span>
 </pre></div>
 </div>
 <p>You can also add more advanced configurations (like enabling ssl) by appending
@@ -345,6 +346,7 @@ a parameter to the url field, e.g. mongodb://localhost:27017/?ssl=true</p>
 <li><code class="docutils literal notranslate"><span class="pre">password</span></code> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>): The password which is used for authentication</li>
 <li><code class="docutils literal notranslate"><span class="pre">collection</span></code> (default: <code class="docutils literal notranslate"><span class="pre">conversations</span></code>): The collection name which is
 used to store the conversations</li>
+<li><code class="docutils literal notranslate"><span class="pre">auth_source</span></code> (default: <code class="docutils literal notranslate"><span class="pre">admin</span></code>): database name associated with the user’s credentials.</li>
 </ul>
 </td>
 </tr>
