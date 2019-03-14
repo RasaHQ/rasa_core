@@ -398,12 +398,8 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_from_parse_data</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">parse_data</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_channel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">UserUttered</span><span class="p">(</span><span class="n">text</span><span class="p">,</span>
-                           <span class="n">parse_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;intent&quot;</span><span class="p">),</span>
-                           <span class="n">parse_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entities&quot;</span><span class="p">,</span> <span class="p">[]),</span>
-                           <span class="n">parse_data</span><span class="p">,</span>
-                           <span class="n">timestamp</span><span class="p">,</span>
-                           <span class="n">input_channel</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">UserUttered</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">parse_data</span><span class="p">[</span><span class="s2">&quot;intent&quot;</span><span class="p">],</span> <span class="n">parse_data</span><span class="p">[</span><span class="s2">&quot;entities&quot;</span><span class="p">],</span>
+                           <span class="n">parse_data</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
