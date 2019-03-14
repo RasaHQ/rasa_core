@@ -244,6 +244,9 @@ has been renamed to <code class="docutils literal notranslate"><span class="pre"
 <li>renamed <code class="docutils literal notranslate"><span class="pre">policy_metadata.json</span></code> to <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> for persisted models</li>
 <li><code class="docutils literal notranslate"><span class="pre">scores</span></code> array returned by the <code class="docutils literal notranslate"><span class="pre">/conversations/{sender_id}/predict</span></code>
 endpoint is now sorted according to the actions’ scores.</li>
+<li>now randomly created augmented stories are subsampled during training and marked,
+so that memo policies can ignore them</li>
+<li>changed payloads from “text” to “message” in files: server.yml, docs/connectors.rst, rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py</li>
 <li>changed payloads from “text” to “message” in files: server.yml, docs/connectors.rst,
 rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py</li>
 <li>dialogue files in <code class="docutils literal notranslate"><span class="pre">/data/test_dialogues</span></code> were updated with conversations
