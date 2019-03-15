@@ -1051,6 +1051,11 @@ a.brand-link {
     margin-left: 24px;
 }
 
+.column + .column + .column {
+    margin-left: 0;
+    margin-top:24px;
+}
+
 .chat-bubble {
     background-color: #F1F0F0;
     -webkit-border-radius: 8px;
@@ -1071,6 +1076,15 @@ a.brand-link {
 
 .chat-bubble.bot {
     margin-left: 100px;
+}
+
+.chat-bubble.quickreply {
+    margin-left: 100px;
+    background-color: #fff!important;
+    border: 1px solid #E8E8E8;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
 }
 
 .rating-container {
@@ -1458,4 +1472,82 @@ div .copyable {
 .progress ul li.current:last-of-type,
 .progress ul li.complete:last-of-type  {
 	background-color: transparent;
+}
+
+/* =================== Dialogue Elements */
+
+.dialogue-element .tabcontent {
+  display: none;
+  padding: 16px;
+  border: 1px solid #E8E8E8;
+  border-top: none;
+}
+
+.dialogue-element .tab {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background: #5B17F0;
+  color: #444;
+  font-size: 14px;
+}
+
+/* Style the buttons that are used to open the tab content */
+.dialogue-element .tab button {
+  background-color: #5B17F0;
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif;
+  color: #fff;
+  font-size: 16px;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-weight: bold;
+}
+
+.dialogue-element .tab button:hover {
+    color: #fff;
+}
+
+.dialogue-element .tab button.active {
+    background-color:#3400A6;
+    color: #fff;
+}
+
+.dialogue-example {
+    width:300px;
+    float: left;
+    border:1px solid #E8E8E8;
+    padding:12px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.03);
+    border:1px solid #E8E8E8;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+}
+
+.dialogue-example .chat-bubble {
+    background-color: #F1F0F0;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    padding:2px;
+    position: relative;
+    margin: 0 auto;
+    margin-top: 6px;
+    font-size:16px;
+}
+
+.dialogue-example .chat-bubble.user {
+    background-color: #0783FC;
+    color:#fff;
+    margin-left: 50px;
+}
+
+.dialogue-example .chat-bubble.bot {
+    margin-left: 2px;
+}
+
+.dialogue-example .chat-bubble.bot p, .dialogue-example .chat-bubble.user p, .dialogue-example .chat-bubble.quickreply p {
+    margin:8px;
 }
