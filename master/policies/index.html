@@ -36,14 +36,14 @@
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
   <meta property="og:url" content="https://rasa.com/docs/core/policies" />
   
-    <meta name="description" content="Define and train custom policies to optimise your contextual assistant
-for longer context or unseen utterances which require generalisation." />
-    <meta itemprop="description" content="Define and train custom policies to optimise your contextual assistant
-for longer context or unseen utterances which require generalisation.">
-    <meta name="twitter:description" content="Define and train custom policies to optimise your contextual assistant
-for longer context or unseen utterances which require generalisation." />
-    <meta property="og:description" content="Define and train custom policies to optimise your contextual assistant
-for longer context or unseen utterances which require generalisation." />
+    <meta name="description" content="Define and train custom policies to optimize your contextual assistant
+for longer context or unseen utterances which require generalization." />
+    <meta itemprop="description" content="Define and train custom policies to optimize your contextual assistant
+for longer context or unseen utterances which require generalization.">
+    <meta name="twitter:description" content="Define and train custom policies to optimize your contextual assistant
+for longer context or unseen utterances which require generalization." />
+    <meta property="og:description" content="Define and train custom policies to optimize your contextual assistant
+for longer context or unseen utterances which require generalization." />
   
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@Rasa_HQ">
@@ -207,38 +207,39 @@ for longer context or unseen utterances which require generalisation." />
 
     <p class="scv-banner"><a href="../../0.13.3/policies/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.13.3.</a></p>
 <div class="section" id="training-and-policies">
-<span id="policies"></span><h1><a class="toc-backref" href="#id3">Training and Policies</a><a class="headerlink" href="#training-and-policies" title="Permalink to this headline">¶</a></h1>
+<span id="policies"></span><h1><a class="toc-backref" href="#id7">Training and Policies</a><a class="headerlink" href="#training-and-policies" title="Permalink to this headline">¶</a></h1>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#training-and-policies" id="id3">Training and Policies</a><ul>
-<li><a class="reference internal" href="#training" id="id4">Training</a></li>
-<li><a class="reference internal" href="#default-configuration" id="id5">Default configuration</a><ul>
-<li><a class="reference internal" href="#data-augmentation" id="id6">Data Augmentation</a></li>
-<li><a class="reference internal" href="#max-history" id="id7">Max History</a></li>
-<li><a class="reference internal" href="#training-script-options" id="id8">Training Script Options</a></li>
+<li><a class="reference internal" href="#training-and-policies" id="id7">Training and Policies</a><ul>
+<li><a class="reference internal" href="#training" id="id8">Training</a><ul>
+<li><a class="reference internal" href="#training-script-options" id="id9">Training Script Options</a></li>
+<li><a class="reference internal" href="#data-augmentation" id="id10">Data Augmentation</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id1" id="id9">Policies</a><ul>
-<li><a class="reference internal" href="#configuring-polices-using-a-configuration-file" id="id10">Configuring polices using a configuration file</a></li>
-<li><a class="reference internal" href="#configuring-polices-in-code" id="id11">Configuring polices in code</a></li>
-<li><a class="reference internal" href="#memoization-policy" id="id12">Memoization Policy</a></li>
-<li><a class="reference internal" href="#keras-policy" id="id13">Keras Policy</a></li>
-<li><a class="reference internal" href="#embedding-policy" id="id14">Embedding Policy</a></li>
-<li><a class="reference internal" href="#two-stage-fallback-policy" id="id15">Two-stage Fallback Policy</a><ul>
-<li><a class="reference internal" href="#configuration" id="id16">Configuration</a></li>
-<li><a class="reference internal" href="#default-actions-for-affirmation-and-rephrasing" id="id17">Default Actions for Affirmation and Rephrasing</a></li>
+<li><a class="reference internal" href="#id1" id="id11">Policies</a><ul>
+<li><a class="reference internal" href="#configuration-of-policies" id="id12">Configuration of Policies</a><ul>
+<li><a class="reference internal" href="#configuring-policies-using-a-configuration-file" id="id13">Configuring policies using a configuration file</a></li>
+<li><a class="reference internal" href="#default-configuration" id="id14">Default configuration</a></li>
+<li><a class="reference internal" href="#max-history" id="id15">Max History</a></li>
+<li><a class="reference internal" href="#configuring-policies-in-code" id="id16">Configuring policies in code</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#keras-policy" id="id17">Keras Policy</a></li>
+<li><a class="reference internal" href="#embedding-policy" id="id18">Embedding Policy</a></li>
+<li><a class="reference internal" href="#memoization-policy" id="id19">Memoization Policy</a></li>
+<li><a class="reference internal" href="#form-policy" id="id20">Form Policy</a></li>
+<li><a class="reference internal" href="#fallback-policy" id="id21">Fallback Policy</a></li>
+<li><a class="reference internal" href="#two-stage-fallback-policy" id="id22">Two-Stage Fallback Policy</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#have-questions-or-feedback" id="id18">Have questions or feedback?</a></li>
+<li><a class="reference internal" href="#have-questions-or-feedback" id="id23">Have questions or feedback?</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="training">
-<h2><a class="toc-backref" href="#id4">Training</a><a class="headerlink" href="#training" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">Training</a><a class="headerlink" href="#training" title="Permalink to this headline">¶</a></h2>
 <p>Rasa Core works by creating training data from your stories and
 training a model on that data.</p>
 <p>You can run training from the command line like in the <a class="reference internal" href="../quickstart/#quickstart"><span class="std std-ref">Quickstart</span></a>:</p>
@@ -254,78 +255,8 @@ training a model on that data.</p>
 <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="default-configuration">
-<span id="default-config"></span><h2><a class="toc-backref" href="#id5">Default configuration</a><a class="headerlink" href="#default-configuration" title="Permalink to this headline">¶</a></h2>
-<p>By default, we try to provide you with a good set of configuration values
-and policies that suit most people. But you are encouraged to modify
-these to your needs:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">policies</span><span class="p">:</span>
-  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">KerasPolicy</span>
-    <span class="n">epochs</span><span class="p">:</span> <span class="mi">100</span>
-    <span class="n">max_history</span><span class="p">:</span> <span class="mi">5</span>
-  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">FallbackPolicy</span>
-    <span class="n">fallback_action_name</span><span class="p">:</span> <span class="s1">&#39;action_default_fallback&#39;</span>
-  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">MemoizationPolicy</span>
-    <span class="n">max_history</span><span class="p">:</span> <span class="mi">5</span>
-  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">FormPolicy</span>
-</pre></div>
-</div>
-<div class="section" id="data-augmentation">
-<h3><a class="toc-backref" href="#id6">Data Augmentation</a><a class="headerlink" href="#data-augmentation" title="Permalink to this headline">¶</a></h3>
-<p>By default, Rasa Core will create longer stories by randomly glueing together
-the ones in your stories file. This is because if you have stories like:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># thanks</span>
-<span class="vm">* thankyou</span>
-<span class="vm">   </span>- utter_youarewelcome
-
-<span class="gh"># bye</span>
-<span class="vm">* goodbye</span>
-<span class="vm">   </span>- utter_goodbye
-</pre></div>
-</div>
-<p>You actually want to teach your policy to <strong>ignore</strong> the dialogue history
-when it isn’t relevant and just respond with the same action no matter
-what happened before.</p>
-<p>You can alter this behaviour with the <code class="docutils literal notranslate"><span class="pre">--augmentation</span></code> flag.
-<code class="docutils literal notranslate"><span class="pre">--augmentation</span> <span class="pre">0</span></code> disables this behavior.</p>
-<p>In python, you can pass the <code class="docutils literal notranslate"><span class="pre">augmentation_factor</span></code> argument to the
-<code class="docutils literal notranslate"><span class="pre">Agent.load_data</span></code> method.</p>
-</div>
-<div class="section" id="max-history">
-<h3><a class="toc-backref" href="#id7">Max History</a><a class="headerlink" href="#max-history" title="Permalink to this headline">¶</a></h3>
-<p>One important hyperparameter for Rasa Core policies is the <code class="docutils literal notranslate"><span class="pre">max_history</span></code>.
-This controls how much dialogue history the model looks at to decide which
-action to take next.</p>
-<p>You can set the <code class="docutils literal notranslate"><span class="pre">max_history</span></code> by passing it to your policy’s <code class="docutils literal notranslate"><span class="pre">Featurizer</span></code>
-in the policy configuration yaml file.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Only the <code class="docutils literal notranslate"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> uses a max history,
-whereas the <code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer</span></code> always looks at
-the full conversation history.</p>
-</div>
-<p>As an example, let’s say you have an <code class="docutils literal notranslate"><span class="pre">out_of_scope</span></code> intent which
-describes off-topic user messages. If your bot sees this intent multiple
-times in a row, you might want to tell the user what you <cite>can</cite> help them
-with. So your story might look like this:</p>
-<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="vm">* out_of_scope</span>
-<span class="vm">   </span>- utter_default
-<span class="vm">* out_of_scope</span>
-<span class="vm">   </span>- utter_default
-<span class="vm">* out_of_scope</span>
-<span class="vm">   </span>- utter_help_message
-</pre></div>
-</div>
-<p>For Rasa Core to learn this pattern, the <code class="docutils literal notranslate"><span class="pre">max_history</span></code>
-has to be <cite>at least</cite> <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
-<p>If you increase your <code class="docutils literal notranslate"><span class="pre">max_history</span></code>, your model will become bigger and
-training will take longer. If you have some information that should
-affect the dialogue very far into the future, you should store it as a
-slot. Slot information is always available for every featurizer.</p>
-</div>
 <div class="section" id="training-script-options">
-<h3><a class="toc-backref" href="#id8">Training Script Options</a><a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Training Script Options</a><a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/opt/python/3.5.6/lib/python3.5/runpy.py:125: RuntimeWarning: &#39;rasa_core.train&#39; found in sys.modules after import of package &#39;rasa_core&#39;, but prior to execution of &#39;rasa_core.train&#39;; this may result in unpredictable behaviour
   warn(RuntimeWarning(msg))
 usage: train.py default [-h] [--augmentation AUGMENTATION] [--dump_stories]
@@ -359,17 +290,41 @@ Python Logging Options:
 </pre></div>
 </div>
 </div>
+<div class="section" id="data-augmentation">
+<h3><a class="toc-backref" href="#id10">Data Augmentation</a><a class="headerlink" href="#data-augmentation" title="Permalink to this headline">¶</a></h3>
+<p>By default, Rasa Core will create longer stories by randomly glueing together
+the ones in your stories file. This is because if you have stories like:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh"># thanks</span>
+<span class="vm">* thankyou</span>
+<span class="vm">   </span>- utter_youarewelcome
+
+<span class="gh"># bye</span>
+<span class="vm">* goodbye</span>
+<span class="vm">   </span>- utter_goodbye
+</pre></div>
+</div>
+<p>You actually want to teach your policy to <strong>ignore</strong> the dialogue history
+when it isn’t relevant and just respond with the same action no matter
+what happened before.</p>
+<p>You can alter this behaviour with the <code class="docutils literal notranslate"><span class="pre">--augmentation</span></code> flag.
+<code class="docutils literal notranslate"><span class="pre">--augmentation</span> <span class="pre">0</span></code> disables this behavior.</p>
+<p>In python, you can pass the <code class="docutils literal notranslate"><span class="pre">augmentation_factor</span></code> argument to the
+<code class="docutils literal notranslate"><span class="pre">Agent.load_data</span></code> method.</p>
+</div>
 </div>
 <div class="section" id="id1">
-<h2><a class="toc-backref" href="#id9">Policies</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id11">Policies</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="../api/policy/#rasa_core.policies.Policy" title="rasa_core.policies.Policy"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.policies.Policy</span></code></a> class decides which action to take
 at every step in the conversation.</p>
 <p>There are different policies to choose from, and you can include
 multiple policies in a single <a class="reference internal" href="../api/agent/#rasa_core.agent.Agent" title="rasa_core.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.agent.Agent</span></code></a>. At
 every turn, the policy which predicts the next action with the
-highest confidence will be used.</p>
-<div class="section" id="configuring-polices-using-a-configuration-file">
-<span id="policy-file"></span><h3><a class="toc-backref" href="#id10">Configuring polices using a configuration file</a><a class="headerlink" href="#configuring-polices-using-a-configuration-file" title="Permalink to this headline">¶</a></h3>
+highest confidence will be used. If two policies predict with equal
+confidence, the policy with the higher priority will be used.</p>
+<div class="section" id="configuration-of-policies">
+<h3><a class="toc-backref" href="#id12">Configuration of Policies</a><a class="headerlink" href="#configuration-of-policies" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="configuring-policies-using-a-configuration-file">
+<span id="policy-file"></span><h4><a class="toc-backref" href="#id13">Configuring policies using a configuration file</a><a class="headerlink" href="#configuring-policies-using-a-configuration-file" title="Permalink to this headline">¶</a></h4>
 <p>If you are using the training script, you must set the policies you would like
 the Core model to use in a YAML file.</p>
 <p>For example:</p>
@@ -392,35 +347,83 @@ the Core model to use in a YAML file.</p>
 </div>
 <p>Pass the YAML file’s name to the train script using the <code class="docutils literal notranslate"><span class="pre">--config</span></code>
 argument (or just <code class="docutils literal notranslate"><span class="pre">-c</span></code>). There is a default config file you can use to
-get started: <a class="reference internal" href="#default-config"><span class="std std-ref">Default configuration</span></a>.</p>
+get started in <code class="docutils literal notranslate"><span class="pre">default_config.yml</span></code>, which is already implemented
+as the provided <code class="docutils literal notranslate"><span class="pre">policies.yml</span></code> file in the starter pack.</p>
+</div>
+<div class="section" id="default-configuration">
+<span id="default-config"></span><h4><a class="toc-backref" href="#id14">Default configuration</a><a class="headerlink" href="#default-configuration" title="Permalink to this headline">¶</a></h4>
+<p>By default, we try to provide you with a good set of configuration values
+and policies that suit most people. But you are encouraged to modify
+these to your needs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">policies</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">KerasPolicy</span>
+    <span class="n">epochs</span><span class="p">:</span> <span class="mi">100</span>
+    <span class="n">max_history</span><span class="p">:</span> <span class="mi">5</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">FallbackPolicy</span>
+    <span class="n">fallback_action_name</span><span class="p">:</span> <span class="s1">&#39;action_default_fallback&#39;</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">MemoizationPolicy</span>
+    <span class="n">max_history</span><span class="p">:</span> <span class="mi">5</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">FormPolicy</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="max-history">
+<h4><a class="toc-backref" href="#id15">Max History</a><a class="headerlink" href="#max-history" title="Permalink to this headline">¶</a></h4>
+<p>One important hyperparameter for Rasa Core policies is the <code class="docutils literal notranslate"><span class="pre">max_history</span></code>.
+This controls how much dialogue history the model looks at to decide which
+action to take next.</p>
+<p>You can set the <code class="docutils literal notranslate"><span class="pre">max_history</span></code> by passing it to your policy’s <code class="docutils literal notranslate"><span class="pre">Featurizer</span></code>
+in the policy configuration yaml file.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Policies specified higher in the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> will take
-precedence over a policy specified lower if the confidences
-are equal.</p>
+<p class="last">Only the <code class="docutils literal notranslate"><span class="pre">MaxHistoryTrackerFeaturizer</span></code> uses a max history,
+whereas the <code class="docutils literal notranslate"><span class="pre">FullDialogueTrackerFeaturizer</span></code> always looks at
+the full conversation history.</p>
 </div>
+<p>As an example, let’s say you have an <code class="docutils literal notranslate"><span class="pre">out_of_scope</span></code> intent which
+describes off-topic user messages. If your bot sees this intent multiple
+times in a row, you might want to tell the user what you <cite>can</cite> help them
+with. So your story might look like this:</p>
+<div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="vm">* out_of_scope</span>
+<span class="vm">   </span>- utter_default
+<span class="vm">* out_of_scope</span>
+<span class="vm">   </span>- utter_default
+<span class="vm">* out_of_scope</span>
+<span class="vm">   </span>- utter_help_message
+</pre></div>
 </div>
-<div class="section" id="configuring-polices-in-code">
-<h3><a class="toc-backref" href="#id11">Configuring polices in code</a><a class="headerlink" href="#configuring-polices-in-code" title="Permalink to this headline">¶</a></h3>
-<p>You can pass a list of policies when you create an agent:</p>
+<p>For Rasa Core to learn this pattern, the <code class="docutils literal notranslate"><span class="pre">max_history</span></code>
+has to be <cite>at least</cite> <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+<p>If you increase your <code class="docutils literal notranslate"><span class="pre">max_history</span></code>, your model will become bigger and
+training will take longer. If you have some information that should
+affect the dialogue very far into the future, you should store it as a
+slot. Slot information is always available for every featurizer.</p>
+</div>
+<div class="section" id="configuring-policies-in-code">
+<h4><a class="toc-backref" href="#id16">Configuring policies in code</a><a class="headerlink" href="#configuring-policies-in-code" title="Permalink to this headline">¶</a></h4>
+<p>You can load a policy configuration file named <code class="docutils literal notranslate"><span class="pre">&quot;policies.yml&quot;</span></code> from your
+code like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core</span> <span class="kn">import</span> <span class="n">config</span> <span class="k">as</span> <span class="n">policy_config</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+
+<span class="n">policies</span> <span class="o">=</span> <span class="n">policy_config</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;policies.yml&quot;</span><span class="p">)</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span> <span class="n">policies</span><span class="o">=</span><span class="n">policies</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, you can pass a list of policies directly
+when you create an agent:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="kn">import</span> <span class="n">MemoizationPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="kn">import</span> <span class="n">KerasPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span>
-               <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">KerasPolicy</span><span class="p">()])</span>
+              <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">KerasPolicy</span><span class="p">()])</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="memoization-policy">
-<h3><a class="toc-backref" href="#id12">Memoization Policy</a><a class="headerlink" href="#memoization-policy" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code> just memorizes the conversations in your
-training data. It predicts the next action with confidence <code class="docutils literal notranslate"><span class="pre">1.0</span></code>
-if this exact conversation exists in the training data, otherwise it
-predicts <code class="docutils literal notranslate"><span class="pre">None</span></code> with confidence <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
 </div>
 <div class="section" id="keras-policy">
-<h3><a class="toc-backref" href="#id13">Keras Policy</a><a class="headerlink" href="#keras-policy" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id17">Keras Policy</a><a class="headerlink" href="#keras-policy" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> uses a neural network implemented in
 <a class="reference external" href="http://keras.io">Keras</a> to select the next action.
 The default architecture is based on an LSTM, but you can override the
@@ -531,7 +534,7 @@ or initialize <code class="docutils literal notranslate"><span class="pre">Keras
 set the <code class="docutils literal notranslate"><span class="pre">random_seed</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">KerasPolicy</span></code> to any integer.</p>
 </div>
 <div class="section" id="embedding-policy">
-<span id="id2"></span><h3><a class="toc-backref" href="#id14">Embedding Policy</a><a class="headerlink" href="#embedding-policy" title="Permalink to this headline">¶</a></h3>
+<span id="id2"></span><h3><a class="toc-backref" href="#id18">Embedding Policy</a><a class="headerlink" href="#embedding-policy" title="Permalink to this headline">¶</a></h3>
 <p>The Recurrent Embedding Dialogue Policy (REDP)
 described in our paper: <a class="reference external" href="https://arxiv.org/abs/1811.11707">https://arxiv.org/abs/1811.11707</a></p>
 <p>This policy has a pre-defined architecture, which comprises the
@@ -577,9 +580,8 @@ This step is based on the
 <p>It is recommended to use
 <code class="docutils literal notranslate"><span class="pre">state_featurizer=LabelTokenizerSingleStateFeaturizer(...)</span></code>
 (see <a class="reference internal" href="../api/featurizer/#featurization"><span class="std std-ref">Featurization</span></a> for details).</p>
-<p><strong>Configuration</strong>:</p>
+<p><strong>Configuration:</strong></p>
 <blockquote>
-<div><blockquote>
 <div><p>Configuration parameters can be passed as parameters to the
 <code class="docutils literal notranslate"><span class="pre">EmbeddingPolicy</span></code> within the policy configuration file.</p>
 <div class="admonition note">
@@ -715,7 +717,6 @@ In order to do it pass a list to <code class="docutils literal notranslate"><spa
 </div>
 <p>These parameters can be specified in the policy configuration file.
 The default values are defined in <code class="docutils literal notranslate"><span class="pre">EmbeddingPolicy.defaults</span></code>:</p>
-</div></blockquote>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span>
         <span class="c1"># nn architecture</span>
         <span class="c1"># a list of hidden layers sizes before user embed layer</span>
@@ -801,9 +802,80 @@ the original starspace algorithm in the case
 </div>
 </div></blockquote>
 </div>
+<div class="section" id="memoization-policy">
+<h3><a class="toc-backref" href="#id19">Memoization Policy</a><a class="headerlink" href="#memoization-policy" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code> just memorizes the conversations in your
+training data. It predicts the next action with confidence <code class="docutils literal notranslate"><span class="pre">1.0</span></code>
+if this exact conversation exists in the training data, otherwise it
+predicts <code class="docutils literal notranslate"><span class="pre">None</span></code> with confidence <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</div>
+<div class="section" id="form-policy">
+<h3><a class="toc-backref" href="#id20">Form Policy</a><a class="headerlink" href="#form-policy" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">FormPolicy</span></code> is an extension of the <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code> which
+handles the filling of forms. Once a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> is called, the
+<code class="docutils literal notranslate"><span class="pre">FormPolicy</span></code> will continually predict the <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> until all slots
+in the form are filled. For more information, see <a class="reference external" href="https://rasa.com/docs/core/slotfilling/">Slot Filling</a>.</p>
+</div>
+<div class="section" id="fallback-policy">
+<span id="id3"></span><h3><a class="toc-backref" href="#id21">Fallback Policy</a><a class="headerlink" href="#fallback-policy" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">FallbackPolicy</span></code> invokes a <a class="reference external" href="https://rasa.com/docs/core/fallbacks/">fallback action</a> if the intent recognition
+has a confidence below <code class="docutils literal notranslate"><span class="pre">nlu_threshold</span></code> or if none of the dialogue
+policies predict an action with confidence higher than <code class="docutils literal notranslate"><span class="pre">core_threshold</span></code>.</p>
+<p><strong>Configuration:</strong></p>
+<blockquote>
+<div><p>The thresholds and fallback action can be adjusted in the policy configuration
+file as parameters of the <code class="docutils literal notranslate"><span class="pre">FallbackPolicy</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;FallbackPolicy&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">nlu_threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.3</span>
+    <span class="l l-Scalar l-Scalar-Plain">core_threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.3</span>
+    <span class="l l-Scalar l-Scalar-Plain">fallback_action_name</span><span class="p p-Indicator">:</span> <span class="s">&#39;action_default_fallback&#39;</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">nlu_threshold</span></code></td>
+<td>Min confidence needed to accept an NLU
+prediction</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">core_threshold</span></code></td>
+<td>Min confidence needed to accept an action
+prediction from Rasa Core</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">fallback_action_name</span></code></td>
+<td>Name of the <a class="reference external" href="https://rasa.com/docs/core/fallbacks/">fallback action</a>
+to be called if the confidence of intent
+or action is below the respective threshold</td>
+</tr>
+</tbody>
+</table>
+<p>You can also configure the <code class="docutils literal notranslate"><span class="pre">FallbackPolicy</span></code> in your python code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.policies.fallback</span> <span class="kn">import</span> <span class="n">FallbackPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="kn">import</span> <span class="n">KerasPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+
+<span class="n">fallback</span> <span class="o">=</span> <span class="n">FallbackPolicy</span><span class="p">(</span><span class="n">fallback_action_name</span><span class="o">=</span><span class="s2">&quot;action_default_fallback&quot;</span><span class="p">,</span>
+                          <span class="n">core_threshold</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                          <span class="n">nlu_threshold</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span> <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">KerasPolicy</span><span class="p">(),</span> <span class="n">fallback</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can include either the <code class="docutils literal notranslate"><span class="pre">FallbackPolicy</span></code> or the
+<code class="docutils literal notranslate"><span class="pre">TwoStageFallbackPolicy</span></code> in your configuration, but not both.</p>
+</div>
+</div></blockquote>
+</div>
 <div class="section" id="two-stage-fallback-policy">
-<h3><a class="toc-backref" href="#id15">Two-stage Fallback Policy</a><a class="headerlink" href="#two-stage-fallback-policy" title="Permalink to this headline">¶</a></h3>
-<p>This policy handles low NLU confidence in multiple stages.</p>
+<h3><a class="toc-backref" href="#id22">Two-Stage Fallback Policy</a><a class="headerlink" href="#two-stage-fallback-policy" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">TwoStageFallbackPolicy</span></code> handles low NLU confidence in multiple stages
+by trying to disambiguate the user input.</p>
 <ul>
 <li><p class="first">If a NLU prediction has a low confidence score, the user is asked to affirm
 the classification of the intent.</p>
@@ -830,16 +902,17 @@ is asked to affirm the classified intent.</li>
 <div><ul class="simple">
 <li>If the user affirms the intent, the story continues as if the user had
 this intent from the beginning.</li>
-<li>If the user denies, an ultimate fallback action is triggered
-(e.g. a handoff to a human).</li>
+<li>If the user denies, the original intent is classified as the specified
+<code class="docutils literal notranslate"><span class="pre">deny_suggestion_intent_name</span></code>, and an ultimate fallback action
+is triggered (e.g. a handoff to a human).</li>
 </ul>
 </div></blockquote>
 </li>
 </ul>
-<div class="section" id="configuration">
-<h4><a class="toc-backref" href="#id16">Configuration</a><a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h4>
-<p>To use this policy, include the following in your policy configuration.
-Note that you cannot use this together with the default fallback policy.</p>
+<p><strong>Configuration:</strong></p>
+<blockquote>
+<div><p>To use the <code class="docutils literal notranslate"><span class="pre">TwoStageFallbackPolicy</span></code>, include the following in your
+policy configuration.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">TwoStageFallbackPolicy</span>
     <span class="l l-Scalar l-Scalar-Plain">nlu_threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.3</span>
@@ -864,14 +937,16 @@ prediction</td>
 prediction from Rasa Core</td>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">fallback_core_action_name</span></code></td>
-<td>Name of the action to be called if the
-confidence of the Rasa Core action
-classification is below the threshold</td>
+<td>Name of the <a class="reference external" href="https://rasa.com/docs/core/fallbacks/">fallback action</a>
+to be called if the confidence of Rasa
+Core action prediction is below the
+<code class="docutils literal notranslate"><span class="pre">core_threshold</span></code></td>
 </tr>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">fallback_nlu_action_name</span></code></td>
-<td>Name of the action to be called if the
-confidence of Rasa NLU intent
-classification is below the threshold</td>
+<td>Name of the <a class="reference external" href="https://rasa.com/docs/core/fallbacks/">fallback action</a>
+to be called if the confidence of Rasa
+NLU intent classification is below the
+<code class="docutils literal notranslate"><span class="pre">nlu_threshold</span></code></td>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">deny_suggestion_intent_name</span></code></td>
 <td>The name of the intent which is used to
@@ -882,25 +957,14 @@ intents</td>
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">It is required to have the two intents <code class="docutils literal notranslate"><span class="pre">affirm</span></code> and <code class="docutils literal notranslate"><span class="pre">deny</span></code> in the
-domain of the bot, to determine whether the user affirms or
-denies a suggestion.</p>
+<p class="last">You can include either the <code class="docutils literal notranslate"><span class="pre">FallbackPolicy</span></code> or the
+<code class="docutils literal notranslate"><span class="pre">TwoStageFallbackPolicy</span></code> in your configuration, but not both.</p>
 </div>
-</div>
-<div class="section" id="default-actions-for-affirmation-and-rephrasing">
-<h4><a class="toc-backref" href="#id17">Default Actions for Affirmation and Rephrasing</a><a class="headerlink" href="#default-actions-for-affirmation-and-rephrasing" title="Permalink to this headline">¶</a></h4>
-<p>Rasa Core provides the default implementations
-<code class="docutils literal notranslate"><span class="pre">action_default_ask_affirmation</span></code> and <code class="docutils literal notranslate"><span class="pre">action_default_ask_rephrase</span></code>
-which are triggered when the bot asks the user to affirm
-or rephrase their intent.
-The default implementation of <code class="docutils literal notranslate"><span class="pre">action_default_ask_rephrase</span></code> action utters
-the response template <code class="docutils literal notranslate"><span class="pre">utter_ask_rephrase</span></code>.
-The implementation of both actions can be overwritten with <a class="reference internal" href="../run-code-in-custom-actions/#customactions"><span class="std std-ref">Actions</span></a>.</p>
-</div>
+</div></blockquote>
 </div>
 </div>
 <div class="section" id="have-questions-or-feedback">
-<h2><a class="toc-backref" href="#id18">Have questions or feedback?</a><a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id23">Have questions or feedback?</a><a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
