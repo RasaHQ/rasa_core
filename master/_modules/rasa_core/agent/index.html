@@ -196,18 +196,17 @@
 
     <p class="scv-banner"><b>Warning:</b> This document is for the development version of Rasa Core.</p>
 <h1>Source code for rasa_core.agent</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
-
-<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">gevent.pywsgi</span> <span class="k">import</span> <span class="n">WSGIServer</span>
 <span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="k">import</span> <span class="n">InvalidURL</span><span class="p">,</span> <span class="n">RequestException</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">training</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span><span class="p">,</span> <span class="n">OutputChannel</span><span class="p">,</span> <span class="n">InputChannel</span>
@@ -282,17 +281,10 @@
     <span class="k">return</span> <span class="n">fingerprint</span><span class="p">,</span> <span class="n">model_directory</span>
 
 
-<span class="k">def</span> <span class="nf">_get_stack_model_directory</span><span class="p">(</span><span class="n">model_directory</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Decide whether a persisted model is a stack or a core model.</span>
+<span class="k">def</span> <span class="nf">_is_stack_model</span><span class="p">(</span><span class="n">model_directory</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Decide whether a persisted model is a stack or a core model.&quot;&quot;&quot;</span>
 
-<span class="sd">    Return the root stack model directory if it&#39;s a stack model.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">model_directory</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;fingerprint.json&quot;</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">root</span>
-
-    <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;fingerprint.json&quot;</span><span class="p">))</span>
 
 
 <span class="k">def</span> <span class="nf">_load_and_set_updated_model</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span><span class="p">,</span>
@@ -300,11 +292,10 @@
                                 <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Text</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load the persisted model into memory and set the model on the agent.&quot;&quot;&quot;</span>
 
-    <span class="n">stack_model_directory</span> <span class="o">=</span> <span class="n">_get_stack_model_directory</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">stack_model_directory</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_is_stack_model</span><span class="p">(</span><span class="n">model_directory</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RasaNLUInterpreter</span>
-        <span class="n">nlu_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stack_model_directory</span><span class="p">,</span> <span class="s2">&quot;nlu&quot;</span><span class="p">)</span>
-        <span class="n">core_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stack_model_directory</span><span class="p">,</span> <span class="s2">&quot;core&quot;</span><span class="p">)</span>
+        <span class="n">nlu_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;nlu&quot;</span><span class="p">)</span>
+        <span class="n">core_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;core&quot;</span><span class="p">)</span>
         <span class="n">interpreter</span> <span class="o">=</span> <span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="n">model_directory</span><span class="o">=</span><span class="n">nlu_model</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">interpreter</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">interpreter</span>
@@ -412,14 +403,14 @@
 <span class="sd">     getting the next action, and handling a channel.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">domain</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">policies</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PolicyEnsemble</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Policy</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">interpreter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NaturalLanguageInterpreter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">,</span> <span class="s1">&#39;NLG&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">tracker_store</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;TrackerStore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">policies</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PolicyEnsemble</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Policy</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">interpreter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NaturalLanguageInterpreter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">,</span> <span class="s1">&#39;NLG&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tracker_store</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;TrackerStore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="c1"># Initializing variables with the passed parameters.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
@@ -504,10 +495,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.handle_message"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_message">[docs]</a>    <span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">message</span><span class="p">:</span> <span class="n">UserMessage</span><span class="p">,</span>
-            <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">message</span><span class="p">:</span> <span class="n">UserMessage</span><span class="p">,</span>
+        <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Handle a single message.&quot;&quot;&quot;</span>
 
@@ -530,9 +521,9 @@
 
     <span class="c1"># noinspection PyUnusedLocal</span>
 <div class="viewcode-block" id="Agent.predict_next"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.predict_next">[docs]</a>    <span class="k">def</span> <span class="nf">predict_next</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Handle a single message.&quot;&quot;&quot;</span>
 
@@ -541,10 +532,10 @@
 
     <span class="c1"># noinspection PyUnusedLocal</span>
 <div class="viewcode-block" id="Agent.log_message"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.log_message">[docs]</a>    <span class="k">def</span> <span class="nf">log_message</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">message</span><span class="p">:</span> <span class="n">UserMessage</span><span class="p">,</span>
-            <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">message</span><span class="p">:</span> <span class="n">UserMessage</span><span class="p">,</span>
+        <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DialogueStateTracker</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Append a message to a dialogue - does not predict actions.&quot;&quot;&quot;</span>
 
@@ -552,12 +543,12 @@
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">log_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.execute_action"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.execute_action">[docs]</a>    <span class="k">def</span> <span class="nf">execute_action</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-            <span class="n">action</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-            <span class="n">output_channel</span><span class="p">:</span> <span class="n">OutputChannel</span><span class="p">,</span>
-            <span class="n">policy</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-            <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+        <span class="n">action</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+        <span class="n">output_channel</span><span class="p">:</span> <span class="n">OutputChannel</span><span class="p">,</span>
+        <span class="n">policy</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+        <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DialogueStateTracker</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Handle a single message.&quot;&quot;&quot;</span>
 
@@ -569,11 +560,11 @@
                                         <span class="n">confidence</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.handle_text"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_text">[docs]</a>    <span class="k">def</span> <span class="nf">handle_text</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">text_message</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
-            <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">output_channel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OutputChannel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">sender_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">text_message</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_channel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OutputChannel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sender_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
         <span class="sd">&quot;&quot;&quot;Handle a single message.</span>
 
@@ -609,8 +600,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">message_preprocessor</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.toggle_memoization"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.toggle_memoization">[docs]</a>    <span class="k">def</span> <span class="nf">toggle_memoization</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">activate</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">activate</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Toggles the memoization on and off.</span>
 
@@ -658,8 +649,8 @@
         <span class="sd">&quot;&quot;&quot;Check if all featurizers are MaxHistoryTrackerFeaturizer.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">and</span>
-                    <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">and</span> <span class="ow">not</span>
+                    <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">)):</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
 
@@ -891,7 +882,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_create_ensemble</span><span class="p">(</span>
-            <span class="n">policies</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Policy</span><span class="p">],</span> <span class="n">PolicyEnsemble</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">policies</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Policy</span><span class="p">],</span> <span class="n">PolicyEnsemble</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PolicyEnsemble</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">policies</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -910,9 +901,9 @@
         <span class="sd">&quot;&quot;&quot;Check whether form policy is not present</span>
 <span class="sd">            if there is a form action in the domain</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">form_names</span> <span class="ow">and</span>
-                <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">FormPolicy</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">form_names</span> <span class="ow">and</span> <span class="ow">not</span>
+                <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">FormPolicy</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">))</span></div>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
