@@ -235,7 +235,7 @@ getting the next action, and handling a channel.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.execute_action">
-<code class="descname">execute_action</code><span class="sig-paren">(</span><em>sender_id: str</em>, <em>action: str</em>, <em>output_channel: rasa_core.channels.channel.OutputChannel</em>, <em>policy: str</em>, <em>confidence: float</em><span class="sig-paren">)</span> &#x2192; rasa_core.trackers.DialogueStateTracker<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.execute_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.execute_action" title="Permalink to this definition">¶</a></dt>
+<em class="property">await </em><code class="descname">execute_action</code><span class="sig-paren">(</span><em>sender_id: str</em>, <em>action: str</em>, <em>output_channel: rasa_core.channels.channel.OutputChannel</em>, <em>policy: str</em>, <em>confidence: float</em><span class="sig-paren">)</span> &#x2192; rasa_core.trackers.DialogueStateTracker<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.execute_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.execute_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a single message.</p>
 </dd></dl>
 
@@ -250,13 +250,13 @@ return afterwards.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_message">
-<code class="descname">handle_message</code><span class="sig-paren">(</span><em>message: rasa_core.channels.channel.UserMessage</em>, <em>message_preprocessor: Optional[Callable[str</em>, <em>str]] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Optional[List[str]]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_message" title="Permalink to this definition">¶</a></dt>
+<em class="property">await </em><code class="descname">handle_message</code><span class="sig-paren">(</span><em>message: rasa_core.channels.channel.UserMessage</em>, <em>message_preprocessor: Optional[Callable[str</em>, <em>str]] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Optional[List[str]]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a single message.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_text">
-<code class="descname">handle_text</code><span class="sig-paren">(</span><em>text_message: Union[str, Dict[str, Any]], message_preprocessor: Optional[Callable[str, str]] = None, output_channel: Optional[rasa_core.channels.channel.OutputChannel] = None, sender_id: Optional[str] = 'default'</em><span class="sig-paren">)</span> &#x2192; Optional[List[Dict[str, Any]]]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_text" title="Permalink to this definition">¶</a></dt>
+<em class="property">await </em><code class="descname">handle_text</code><span class="sig-paren">(</span><em>text_message: Union[str, Dict[str, Any]], message_preprocessor: Optional[Callable[str, str]] = None, output_channel: Optional[rasa_core.channels.channel.OutputChannel] = None, sender_id: Optional[str] = 'default'</em><span class="sig-paren">)</span> &#x2192; Optional[List[Dict[str, Any]]]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a single message.</p>
 <p>If a message preprocessor is passed, the message will be passed to that
 function first and the return value is then used as the
@@ -291,7 +291,7 @@ the bot wants to respond.</p>
 <dd><p>Check if all necessary components are instantiated to use agent.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="rasa_core.agent.Agent.load">
 <em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path: str</em>, <em>interpreter: Optional[rasa_core.interpreter.NaturalLanguageInterpreter] = None</em>, <em>generator: Union[rasa_core.utils.EndpointConfig</em>, <em>NLG] = None</em>, <em>tracker_store: Optional[TrackerStore] = None</em>, <em>action_endpoint: Optional[rasa_core.utils.EndpointConfig] = None</em><span class="sig-paren">)</span> &#x2192; Agent<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a persisted model from the passed path.</p>
@@ -299,13 +299,13 @@ the bot wants to respond.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.load_data">
-<code class="descname">load_data</code><span class="sig-paren">(</span><em>resource_name: str</em>, <em>remove_duplicates: bool = True</em>, <em>unique_last_num_states: Optional[int] = None</em>, <em>augmentation_factor: int = 20</em>, <em>tracker_limit: Optional[int] = None</em>, <em>use_story_concatenation: bool = True</em>, <em>debug_plots: bool = False</em>, <em>exclusion_percentage: int = None</em><span class="sig-paren">)</span> &#x2192; List[rasa_core.trackers.DialogueStateTracker]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load_data" title="Permalink to this definition">¶</a></dt>
+<em class="property">await </em><code class="descname">load_data</code><span class="sig-paren">(</span><em>resource_name: str</em>, <em>remove_duplicates: bool = True</em>, <em>unique_last_num_states: Optional[int] = None</em>, <em>augmentation_factor: int = 20</em>, <em>tracker_limit: Optional[int] = None</em>, <em>use_story_concatenation: bool = True</em>, <em>debug_plots: bool = False</em>, <em>exclusion_percentage: int = None</em><span class="sig-paren">)</span> &#x2192; List[rasa_core.trackers.DialogueStateTracker]<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.load_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.load_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load training data from a resource.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.log_message">
-<code class="descname">log_message</code><span class="sig-paren">(</span><em>message: rasa_core.channels.channel.UserMessage</em>, <em>message_preprocessor: Optional[Callable[str</em>, <em>str]] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; rasa_core.trackers.DialogueStateTracker<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.log_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.log_message" title="Permalink to this definition">¶</a></dt>
+<em class="property">await </em><code class="descname">log_message</code><span class="sig-paren">(</span><em>message: rasa_core.channels.channel.UserMessage</em>, <em>message_preprocessor: Optional[Callable[str</em>, <em>str]] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; rasa_core.trackers.DialogueStateTracker<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.log_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.log_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append a message to a dialogue - does not predict actions.</p>
 </dd></dl>
 

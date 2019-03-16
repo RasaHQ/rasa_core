@@ -212,6 +212,51 @@ Rasa Core and how you can migrate from one version to another." />
 how you can migrate from one version to another.</p>
 <div class="section" id="x-to-0-14-0">
 <span id="migration-to-0-14-0"></span><h2>0.13.x to 0.14.0<a class="headerlink" href="#x-to-0-14-0" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>deprecated <code class="docutils literal notranslate"><span class="pre">remote.py</span></code> got removed - the API should be consumed directly
+instead or with the help of the <code class="docutils literal notranslate"><span class="pre">rasa_core_sdk</span></code>.</li>
+</ul>
+<div class="section" id="asynchronous-first">
+<h3>Asynchronous First<a class="headerlink" href="#asynchronous-first" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>No more flask.</strong> The flask webserver has been replaced with an asyncronous
+webserver called Sanic. If you run the server in production using a wsgi
+runner, there are instructions here on how to recreate that with the
+sanic webserver:
+<a class="reference external" href="https://sanic.readthedocs.io/en/latest/sanic/deploying.html#running-via-gunicorn">https://sanic.readthedocs.io/en/latest/sanic/deploying.html#running-via-gunicorn</a></li>
+<li><strong>Agent</strong>: some of the method signatures changed from normal functions to
+async coroutines. These functions need to be awaited when called, e.g.
+<code class="docutils literal notranslate"><span class="pre">await</span> <span class="pre">agent.handle_message(...)</span></code>. Changed functions include
+- <code class="docutils literal notranslate"><span class="pre">handle_message</span></code>
+- <code class="docutils literal notranslate"><span class="pre">handle_text</span></code>
+- <code class="docutils literal notranslate"><span class="pre">log_message</span></code>
+- <code class="docutils literal notranslate"><span class="pre">execute_action</span></code>
+- <code class="docutils literal notranslate"><span class="pre">load_data</span></code>
+- <code class="docutils literal notranslate"><span class="pre">visualize</span></code></li>
+</ul>
+</div>
+<div class="section" id="custom-input-output-channels">
+<h3>Custom Input / Output Channels<a class="headerlink" href="#custom-input-output-channels" title="Permalink to this headline">¶</a></h3>
+<p>If you wrote your own input output channels, there are a couple of changes
+necessary to make the channels work properly with the asyncio server operation:</p>
+<ul>
+<li><p class="first"><strong>Need to provide Sanic blueprints.</strong> To make the server fully asynchronous
+the input channels need to provide Sanic blueprints instead of flask
+blueprints. Imports should change from
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">flask</span> <span class="pre">import</span> <span class="pre">Blueprint,</span> <span class="pre">request</span></code> to
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">sanic</span> <span class="pre">import</span> <span class="pre">Blueprint,</span> <span class="pre">response</span></code>. All route functions, e.g.
+<code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">webhook(...)</span></code> need to be async and accept a request parameter as
+their first argument, e.g. <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">def</span> <span class="pre">webhook(request,</span> <span class="pre">...)</span></code>.</p>
+<p>Calls to <code class="docutils literal notranslate"><span class="pre">on_new_message(...)</span></code> need to be awaited:
+<code class="docutils literal notranslate"><span class="pre">await</span> <span class="pre">on_new_message(...)</span></code>.</p>
+<p>All output channel functions need to be async:
+<code class="docutils literal notranslate"><span class="pre">send_text_message</span></code>, <code class="docutils literal notranslate"><span class="pre">send_image_url</span></code>, <code class="docutils literal notranslate"><span class="pre">send_attachment</span></code>,
+<code class="docutils literal notranslate"><span class="pre">send_response</span></code>, <code class="docutils literal notranslate"><span class="pre">send_text_with_buttons</span></code> and <code class="docutils literal notranslate"><span class="pre">send_custom_message</span></code>.
+And all internal calls to these methods need to be awaited.</p>
+<p>For inspiration, feel free to check the code of the existing channels.</p>
+</li>
+</ul>
+</div>
 <div class="section" id="function-naming">
 <h3>Function Naming<a class="headerlink" href="#function-naming" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">

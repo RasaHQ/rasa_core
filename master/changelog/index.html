@@ -218,9 +218,11 @@ This project adheres to <a class="reference external" href="http://semver.org/">
 <li><code class="docutils literal notranslate"><span class="pre">tf.ConfigProto</span></code> configuration can now be specified
 for tensorflow based pipelines</li>
 <li>open api spec for the Rasa Core SDK action server</li>
-<li>added tracker store persisting trackers into a SQL database (<code class="docutils literal notranslate"><span class="pre">SQLTrackerStore</span></code>)</li>
+<li>added tracker store persisting trackers into a SQL database
+(<code class="docutils literal notranslate"><span class="pre">SQLTrackerStore</span></code>)</li>
 <li>documentation about early deactivation of a form in validation</li>
-<li>Added max_event_history in tracker_store to set this value in DialogueStateTracker</li>
+<li>Added max_event_history in tracker_store to set this value in
+<code class="docutils literal notranslate"><span class="pre">DialogueStateTracker</span></code></li>
 <li>utility functions for colored logging</li>
 <li>open webbrowser when visualizing stories</li>
 <li>added <code class="docutils literal notranslate"><span class="pre">/parse</span></code> endpoint to query for NLU results</li>
@@ -248,11 +250,10 @@ has been renamed to <code class="docutils literal notranslate"><span class="pre"
 <li>renamed <code class="docutils literal notranslate"><span class="pre">policy_metadata.json</span></code> to <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> for persisted models</li>
 <li><code class="docutils literal notranslate"><span class="pre">scores</span></code> array returned by the <code class="docutils literal notranslate"><span class="pre">/conversations/{sender_id}/predict</span></code>
 endpoint is now sorted according to the actions’ scores.</li>
-<li>now randomly created augmented stories are subsampled during training and marked,
-so that memo policies can ignore them</li>
-<li>changed payloads from “text” to “message” in files: server.yml, docs/connectors.rst, rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py</li>
-<li>changed payloads from “text” to “message” in files: server.yml, docs/connectors.rst,
-rasa_core/server.py, rasa_core/training/interactive.py, tests/test_interactive.py</li>
+<li>made <code class="docutils literal notranslate"><span class="pre">message_id</span></code> an additional argument to <code class="docutils literal notranslate"><span class="pre">interpreter.parse</span></code></li>
+<li>now randomly created augmented stories are subsampled during training
+and marked, so that memo policies can ignore them</li>
+<li>changed payloads from “text” to “message” in documentation files</li>
 <li>dialogue files in <code class="docutils literal notranslate"><span class="pre">/data/test_dialogues</span></code> were updated with conversations
 from the bots in <code class="docutils literal notranslate"><span class="pre">/examples</span></code></li>
 </ul>
@@ -346,7 +347,7 @@ loaded, or if <code class="docutils literal notranslate"><span class="pre">polic
 <div class="section" id="id10">
 <h3>Removed<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>support for deprecated intents/entities format</li>
+<li>removed support for deprecated intents/entities format</li>
 </ul>
 </div>
 <div class="section" id="id11">
@@ -362,6 +363,7 @@ only if previous action is <code class="docutils literal notranslate"><span clas
 <li>updated docs for interactive learning to inform users of the
 <code class="docutils literal notranslate"><span class="pre">--core</span></code> flag</li>
 <li>Change memoization policies confidence score to 1.1 to override ML policies</li>
+<li>replaced flask server with async sanic</li>
 </ul>
 </div>
 <div class="section" id="id12">

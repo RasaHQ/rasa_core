@@ -280,7 +280,9 @@ opening <code class="docutils literal notranslate"><span class="pre">graph.html<
 <img alt="../_images/concert_stories.png" src="../_images/concert_stories.png" />
 <p>We can also run the visualisation directly from code. For this example, we can
 create a <code class="docutils literal notranslate"><span class="pre">visualize.py</span></code> in <code class="docutils literal notranslate"><span class="pre">examples/concertbot</span></code> with the following code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="k">import</span> <span class="n">KerasPolicy</span>
 <span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
 
@@ -288,8 +290,10 @@ create a <code class="docutils literal notranslate"><span class="pre">visualize.
     <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span>
                   <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">KerasPolicy</span><span class="p">()])</span>
 
-    <span class="n">agent</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="s2">&quot;data/stories.md&quot;</span><span class="p">,</span>
-                    <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;graph.html&quot;</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="s2">&quot;data/stories.md&quot;</span><span class="p">,</span>
+                        <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;graph.html&quot;</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Which will create the same image as the previous command.
