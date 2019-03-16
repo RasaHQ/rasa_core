@@ -261,7 +261,7 @@ getting the next action, and handling a channel.</p>
 
 <dl class="method">
 <dt id="rasa_core.agent.Agent.handle_channels">
-<code class="descname">handle_channels</code><span class="sig-paren">(</span><em>channels: List[rasa_core.channels.channel.InputChannel], http_port: int = 5005, serve_forever: bool = True, route: str = '/webhooks/'</em><span class="sig-paren">)</span> &#x2192; gevent.pywsgi.WSGIServer<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channels" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_channels</code><span class="sig-paren">(</span><em>channels: List[rasa_core.channels.channel.InputChannel], http_port: int = 5005, route: str = '/webhooks/', cors=None</em><span class="sig-paren">)</span> &#x2192; Sanic<a class="reference internal" href="../../_modules/rasa_core/agent/#Agent.handle_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.Agent.handle_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start a webserver attaching the input channels and handling msgs.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">serve_forever</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, this call will be blocking.
 Otherwise the webserver will be started, and the method will
@@ -295,7 +295,7 @@ the bot wants to respond.</p>
 <span class="gp">... </span><span class="s2">&quot;examples/restaurantbot/models/nlu/current&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;examples/restaurantbot/models/dialogue&quot;</span><span class="p">,</span>
 <span class="gp">... </span><span class="n">interpreter</span><span class="o">=</span><span class="n">interpreter</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span><span class="o">.</span><span class="n">handle_text</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">agent</span><span class="o">.</span><span class="n">handle_text</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
 <span class="go">[u&#39;how can I help you?&#39;]</span>
 </pre></div>
 </div>
@@ -383,13 +383,13 @@ training data.</p>
 
 <dl class="function">
 <dt id="rasa_core.agent.load_from_server">
-<code class="descclassname">rasa_core.agent.</code><code class="descname">load_from_server</code><span class="sig-paren">(</span><em>interpreter: Optional[rasa_core.interpreter.NaturalLanguageInterpreter] = None</em>, <em>generator: Union[rasa_core.utils.EndpointConfig</em>, <em>NLG</em>, <em>None] = None</em>, <em>tracker_store: Optional[TrackerStore] = None</em>, <em>action_endpoint: Optional[rasa_core.utils.EndpointConfig] = None</em>, <em>model_server: Optional[rasa_core.utils.EndpointConfig] = None</em><span class="sig-paren">)</span> &#x2192; Agent<a class="reference internal" href="../../_modules/rasa_core/agent/#load_from_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.load_from_server" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">rasa_core.agent.</code><code class="descname">load_from_server</code><span class="sig-paren">(</span><em>agent</em>, <em>model_server: Optional[rasa_core.utils.EndpointConfig] = None</em><span class="sig-paren">)</span> &#x2192; rasa_core.agent.Agent<a class="reference internal" href="../../_modules/rasa_core/agent/#load_from_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.load_from_server" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a persisted model from a server.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="rasa_core.agent.start_model_pulling_in_worker">
-<code class="descclassname">rasa_core.agent.</code><code class="descname">start_model_pulling_in_worker</code><span class="sig-paren">(</span><em>model_server: rasa_core.utils.EndpointConfig</em>, <em>wait_time_between_pulls: int</em>, <em>agent: rasa_core.agent.Agent</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/agent/#start_model_pulling_in_worker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.start_model_pulling_in_worker" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa_core.agent.schedule_model_pulling">
+<code class="descclassname">rasa_core.agent.</code><code class="descname">schedule_model_pulling</code><span class="sig-paren">(</span><em>model_server: rasa_core.utils.EndpointConfig</em>, <em>wait_time_between_pulls: int</em>, <em>agent: rasa_core.agent.Agent</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/agent/#schedule_model_pulling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.agent.schedule_model_pulling" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
