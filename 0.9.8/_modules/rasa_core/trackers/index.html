@@ -352,9 +352,12 @@
 <div class="viewcode-block" id="DialogueStateTracker.change_form_to"><a class="viewcode-back" href="../../../api/tracker/#rasa_core.trackers.DialogueStateTracker.change_form_to">[docs]</a>    <span class="k">def</span> <span class="nf">change_form_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_name</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Activate or deactivate a form&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">form_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">form_name</span><span class="p">,</span>
-                                <span class="s1">&#39;validate&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                                <span class="s1">&#39;rejected&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">form_name</span><span class="p">,</span>
+                <span class="s1">&#39;validate&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">&#39;rejected&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s1">&#39;trigger_message&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">parse_data</span>
+            <span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">active_form</span> <span class="o">=</span> <span class="p">{}</span></div>
 
