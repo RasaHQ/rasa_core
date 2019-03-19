@@ -332,7 +332,7 @@ the trackers before each action.</p>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.get_last_event_for">
-<code class="descname">get_last_event_for</code><span class="sig-paren">(</span><em>event_type: Type[rasa_core.events.Event], action_names_to_exclude: List[str] = None, skip: int = 0</em><span class="sig-paren">)</span> &#x2192; Optional[Any]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_last_event_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_last_event_for" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_last_event_for</code><span class="sig-paren">(</span><em>event_type: Type[rasa_core.events.Event], action_names_to_exclude: List[str] = None, skip: int = 0</em><span class="sig-paren">)</span> &#x2192; Optional[rasa_core.events.Event]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_last_event_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_last_event_for" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the last event of a given type which was actually applied.</p>
 <dl class="docutils">
 <dt>Args:</dt>

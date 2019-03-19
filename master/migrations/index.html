@@ -211,14 +211,20 @@ Rasa Core and how you can migrate from one version to another." />
 <span id="migration"></span><h1>Migration Guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h1>
 <p>This page contains information about changes between major versions and
 how you can migrate from one version to another.</p>
-<div class="section" id="x-to-0-14-0">
-<span id="migration-to-0-14-0"></span><h2>0.13.x to 0.14.0<a class="headerlink" href="#x-to-0-14-0" title="Permalink to this headline">¶</a></h2>
+<p id="migration-to-0-14-0">0.13.x to 0.14.0</p>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>-The <cite>MappingPolicy</cite> is now included in <cite>default_config.yml</cite>. If you are using</dt>
+<dd>a custom policy configuration make sure to update it appropriately.</dd>
+</dl>
 <ul class="simple">
 <li>deprecated <code class="docutils literal notranslate"><span class="pre">remote.py</span></code> got removed - the API should be consumed directly
 instead or with the help of the <code class="docutils literal notranslate"><span class="pre">rasa_core_sdk</span></code>.</li>
 </ul>
+</div>
 <div class="section" id="asynchronous-first">
-<h3>Asynchronous First<a class="headerlink" href="#asynchronous-first" title="Permalink to this headline">¶</a></h3>
+<h2>Asynchronous First<a class="headerlink" href="#asynchronous-first" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><strong>No more flask.</strong> The flask webserver has been replaced with an asyncronous
 webserver called Sanic. If you run the server in production using a wsgi
@@ -237,7 +243,7 @@ async coroutines. These functions need to be awaited when called, e.g.
 </ul>
 </div>
 <div class="section" id="custom-input-output-channels">
-<h3>Custom Input / Output Channels<a class="headerlink" href="#custom-input-output-channels" title="Permalink to this headline">¶</a></h3>
+<h2>Custom Input / Output Channels<a class="headerlink" href="#custom-input-output-channels" title="Permalink to this headline">¶</a></h2>
 <p>If you wrote your own input output channels, there are a couple of changes
 necessary to make the channels work properly with the asyncio server operation:</p>
 <ul>
@@ -259,25 +265,25 @@ And all internal calls to these methods need to be awaited.</p>
 </ul>
 </div>
 <div class="section" id="function-naming">
-<h3>Function Naming<a class="headerlink" href="#function-naming" title="Permalink to this headline">¶</a></h3>
+<h2>Function Naming<a class="headerlink" href="#function-naming" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>renamed <code class="docutils literal notranslate"><span class="pre">train_dialogue_model</span></code> to <code class="docutils literal notranslate"><span class="pre">train</span></code>. Please use <code class="docutils literal notranslate"><span class="pre">train</span></code> from
 now on.</li>
 <li>renamed <code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code> to <code class="docutils literal notranslate"><span class="pre">rasa_core.test</span></code>. Please use <code class="docutils literal notranslate"><span class="pre">test</span></code>
 from now on.</li>
 </ul>
-</div>
-</div>
 <div class="section" id="x-to-0-13-0">
-<span id="migration-to-0-13-0"></span><h2>0.12.x to 0.13.0<a class="headerlink" href="#x-to-0-13-0" title="Permalink to this headline">¶</a></h2>
+<span id="migration-to-0-13-0"></span><h3>0.12.x to 0.13.0<a class="headerlink" href="#x-to-0-13-0" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Python 2 support has now been completely dropped: to upgrade to
 this version you <strong>must use Python 3</strong>.  As always, <strong>make sure</strong>
 <strong>you retrain your models when switching to this version</strong></p>
 </div>
-<div class="section" id="general">
-<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Support for Python 2 has now been completely removed from Rasa Core, please
 upgrade to Python 3.5 or 3.6 to continue using the software</li>
@@ -285,10 +291,8 @@ upgrade to Python 3.5 or 3.6 to continue using the software</li>
 then you will have to update your training data to the standard format
 (<code class="docutils literal notranslate"><span class="pre">/intent{&quot;entity1&quot;:</span> <span class="pre">val1,</span> <span class="pre">&quot;entity2&quot;:</span> <span class="pre">val2</span></code>} because it is no longer supported</li>
 </ul>
-</div>
-</div>
 <div class="section" id="x-to-0-12-0">
-<span id="migration-to-0-12-0"></span><h2>0.11.x to 0.12.0<a class="headerlink" href="#x-to-0-12-0" title="Permalink to this headline">¶</a></h2>
+<span id="migration-to-0-12-0"></span><h3>0.11.x to 0.12.0<a class="headerlink" href="#x-to-0-12-0" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">This is major new version with a lot of changes under the hood as well
@@ -296,8 +300,10 @@ as on the API level. Please take a careful look at the mentioned
 before updating. Please make sure to
 <strong>retrain your models when switching to this version</strong>.</p>
 </div>
+</div>
+</div>
 <div class="section" id="train-script">
-<h3>Train script<a class="headerlink" href="#train-script" title="Permalink to this headline">¶</a></h3>
+<h2>Train script<a class="headerlink" href="#train-script" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>You <strong>must</strong> pass a policy config flag with <code class="docutils literal notranslate"><span class="pre">-c/--config</span></code> now when training
 a model, see <a class="reference internal" href="../policies/#policy-file"><span class="std std-ref">Configuring policies using a configuration file</span></a>. There is a default config file in the
@@ -313,7 +319,7 @@ see <a class="reference internal" href="../policies/#policy-file"><span class="s
 </ul>
 </div>
 <div class="section" id="visualisation-script">
-<h3>Visualisation script<a class="headerlink" href="#visualisation-script" title="Permalink to this headline">¶</a></h3>
+<h2>Visualisation script<a class="headerlink" href="#visualisation-script" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>You <strong>must</strong> pass a policy config flag with <code class="docutils literal notranslate"><span class="pre">-c/--config</span></code> now,
 see <a class="reference internal" href="../policies/#policy-file"><span class="std std-ref">Configuring policies using a configuration file</span></a>. There is a default config file in the
@@ -321,7 +327,7 @@ documentation <a class="reference internal" href="../policies/#default-config"><
 </ul>
 </div>
 <div class="section" id="evaluation-script">
-<h3>Evaluation script<a class="headerlink" href="#evaluation-script" title="Permalink to this headline">¶</a></h3>
+<h2>Evaluation script<a class="headerlink" href="#evaluation-script" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>The <code class="docutils literal notranslate"><span class="pre">--output</span></code> flag now takes one argument: the name of the folder
 any files generated from the script should be written to</li>
@@ -330,7 +336,7 @@ flag now</li>
 </ul>
 </div>
 <div class="section" id="forms">
-<h3>Forms<a class="headerlink" href="#forms" title="Permalink to this headline">¶</a></h3>
+<h2>Forms<a class="headerlink" href="#forms" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Forms were completely reworked, please follow <a class="reference internal" href="../slotfilling/#slotfilling"><span class="std std-ref">Slot Filling</span></a>
 for instructions how to use them.</li>
@@ -348,10 +354,8 @@ it is recommended to use interactive learning to create form stories</li>
 <li>overwrite <code class="docutils literal notranslate"><span class="pre">FormAction.validate(...)</span></code> method to validate user input against
 the slot requested by the form</li>
 </ul>
-</div>
-</div>
 <div class="section" id="x-to-0-11-0">
-<span id="migration-to-0-11-0"></span><h2>0.10.x to 0.11.0<a class="headerlink" href="#x-to-0-11-0" title="Permalink to this headline">¶</a></h2>
+<span id="migration-to-0-11-0"></span><h3>0.10.x to 0.11.0<a class="headerlink" href="#x-to-0-11-0" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">This is major new version with a lot of changes under the hood as well
@@ -359,8 +363,10 @@ as on the API level. Please take a careful look at the mentioned
 before updating. Please make sure to
 <strong>retrain your models when switching to this version</strong>.</p>
 </div>
-<div class="section" id="id1">
-<h3>General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>General<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">TL;DR these are the most important surface changes. But if you have
@@ -382,7 +388,7 @@ instead of the classpath (e.g. change <code class="docutils literal notranslate"
 </ul>
 </div>
 <div class="section" id="http-server-endpoints">
-<h3>HTTP Server endpoints<a class="headerlink" href="#http-server-endpoints" title="Permalink to this headline">¶</a></h3>
+<h2>HTTP Server endpoints<a class="headerlink" href="#http-server-endpoints" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>We removed <code class="docutils literal notranslate"><span class="pre">/parse</span></code> and <code class="docutils literal notranslate"><span class="pre">/continue</span></code> endpoints used for running actions
 remotely. This has been replaced by the action server that allows you
@@ -394,7 +400,7 @@ More information can be found in the updated docs for <a class="reference intern
 </ul>
 </div>
 <div class="section" id="webhooks">
-<h3>Webhooks<a class="headerlink" href="#webhooks" title="Permalink to this headline">¶</a></h3>
+<h2>Webhooks<a class="headerlink" href="#webhooks" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p class="first">The endpoints for the webhooks changed. All webhooks are now at
 <code class="docutils literal notranslate"><span class="pre">/webhooks/CHANNEL_NAME/webhook</span></code>. For example, the webhook
@@ -414,7 +420,7 @@ has changed to allow for multiple channels in one file:</p>
 </ul>
 </div>
 <div class="section" id="changes-to-input-and-output-channels">
-<h3>Changes to Input and Output Channels<a class="headerlink" href="#changes-to-input-and-output-channels" title="Permalink to this headline">¶</a></h3>
+<h2>Changes to Input and Output Channels<a class="headerlink" href="#changes-to-input-and-output-channels" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">ConsoleOutputChannel</span></code> and <code class="docutils literal notranslate"><span class="pre">ConsoleInputChannel</span></code> have been removed. Either
 use the <a class="reference external" href="https://github.com/RasaHQ/rasa_core/blob/master/rasa_core/run.py">run script</a>
@@ -465,10 +471,8 @@ doesn’t do this anymore), e.g.:</p>
 </div>
 </li>
 </ul>
-</div>
-</div>
 <div class="section" id="x-to-0-10-0">
-<span id="migration-to-0-10-0"></span><h2>0.9.x to 0.10.0<a class="headerlink" href="#x-to-0-10-0" title="Permalink to this headline">¶</a></h2>
+<span id="migration-to-0-10-0"></span><h3>0.9.x to 0.10.0<a class="headerlink" href="#x-to-0-10-0" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">This is a release <strong>breaking backwards compatibility</strong>.
@@ -507,7 +511,7 @@ instance of <code class="docutils literal notranslate"><span class="pre">Endpoin
 </ul>
 </div>
 <div class="section" id="x-to-0-9-0">
-<span id="migration-to-0-9-0"></span><h2>0.8.x to 0.9.0<a class="headerlink" href="#x-to-0-9-0" title="Permalink to this headline">¶</a></h2>
+<span id="migration-to-0-9-0"></span><h3>0.8.x to 0.9.0<a class="headerlink" href="#x-to-0-9-0" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">This is a release <strong>breaking backwards compatibility</strong>.
@@ -562,7 +566,7 @@ present in an utterance</p>
 </ul>
 </div>
 <div class="section" id="x-to-0-8-0">
-<span id="migration-to-0-8-0"></span><h2>0.7.x to 0.8.0<a class="headerlink" href="#x-to-0-8-0" title="Permalink to this headline">¶</a></h2>
+<span id="migration-to-0-8-0"></span><h3>0.7.x to 0.8.0<a class="headerlink" href="#x-to-0-8-0" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">Credentials for the facebook connector changed. Instead of providing:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># OLD FORMAT</span>
@@ -615,11 +619,12 @@ deprecated). Instead of writing:</p>
 </ul>
 </div>
 <div class="section" id="have-questions-or-feedback">
-<h2>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h2>
+<h3>Have questions or feedback?<a class="headerlink" href="#have-questions-or-feedback" title="Permalink to this headline">¶</a></h3>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
 <a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+</div>
 </div>
 </div>
 
