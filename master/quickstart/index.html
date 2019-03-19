@@ -423,7 +423,7 @@ leave out the <code class="docutils literal notranslate"><span class="pre">!</sp
 into <code class="docutils literal notranslate"><span class="pre">models/dialogue</span></code>.</p>
 
 
-  <pre data-executable>!python -m rasa_core.train -d domain.yml -s stories.md -o models/dialogue
+  <pre data-executable>!python3 -m rasa_core.train -d domain.yml -s stories.md -o models/dialogue
 
 print("Finished training!")</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
@@ -456,7 +456,7 @@ structured data to our bot directly.</p>
 To do this, start your message with a <code class="docutils literal notranslate"><span class="pre">/</span></code>.
 Give it a try by sending the message <code class="docutils literal notranslate"><span class="pre">/greet</span></code>.</p>
 <p>If you are running these commands locally, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue
 </pre></div>
 </div>
 <p>If you are running the cells here in the docs, run this cell:</p>
@@ -633,7 +633,7 @@ first).</p>
 <p>Let’s run</p>
 
 
-  <pre data-executable>!python -m rasa_nlu.train -c nlu_config.yml --data nlu.md -o models --fixed_model_name nlu --project current --verbose</pre>
+  <pre data-executable>!python3 -m rasa_nlu.train -c nlu_config.yml --data nlu.md -o models --fixed_model_name nlu --project current --verbose</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
   <script>
     new Juniper({ repo: 'RasaHQ/rasa_core', branch: 'master', isolateCells: false , theme: 'xq-light', eventName: 'core-train-nlu' })
@@ -669,7 +669,7 @@ head over to the <a class="reference external" href="https://rasa.com/docs/nlu/"
 rather than typing in structured input. Let’s start up your full bot, including
 both Rasa Core and Rasa NLU models!</p>
 <p>If you are running these commands locally, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/current/nlu
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/current/nlu
 </pre></div>
 </div>
 <p>If you are running the cells here in the docs, run this cell:</p>
@@ -775,7 +775,7 @@ into <code class="docutils literal notranslate"><span class="pre">credentials.ym
 <p>If you are new to Facebook Messenger bots, head over to
 <a class="reference internal" href="../connectors/#facebook-connector"><span class="std std-ref">Facebook Setup</span></a> for an explanation of the different values.</p>
 <p>After setting that up, we can now run the bot using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
    --port <span class="m">5002</span>--credentials credentials.yml
 </pre></div>
 </div>

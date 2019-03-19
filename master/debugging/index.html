@@ -216,7 +216,7 @@ clear the tracker and start a new conversation by sending the message <code clas
 </div>
 <p>To debug your bot, run it on the command line with the <code class="docutils literal notranslate"><span class="pre">--debug</span></code> flag.</p>
 <p>For example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current --debug
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current --debug
 </pre></div>
 </div>
 <p>This will print lots of information to help you understand what’s going on.
@@ -272,7 +272,7 @@ are described within a story file. To make debugging easier and to ease
 discussions about bot flows, you can visualize the content of a story file.</p>
 <p>You can visualize stories with this command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/concertbot/
-python -m rasa_core.visualize -d domain.yml -s data/stories.md -o graph.html -c config.yml
+python3 -m rasa_core.visualize -d domain.yml -s data/stories.md -o graph.html -c config.yml
 </pre></div>
 </div>
 <p>This will run through the stories of the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example in

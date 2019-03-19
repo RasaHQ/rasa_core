@@ -224,9 +224,9 @@ Some people call this <a class="reference external" href="https://medium.com/&#6
 <p>We have created some initial stories, and now want to improve our bot
 by providing feedback on mistakes it makes.</p>
 <p>Run the following command to start interactive learning:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core_sdk.endpoint --actions actions<span class="p">&amp;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core_sdk.endpoint --actions actions<span class="p">&amp;</span>
 
-python -m rasa_core.train <span class="se">\</span>
+python3 -m rasa_core.train <span class="se">\</span>
   interactive -o models/dialogue <span class="se">\</span>
   -d domain.yml -c policy_config.yml <span class="se">\</span>
   -s data/stories.md <span class="se">\</span>
@@ -238,7 +238,7 @@ python -m rasa_core.train <span class="se">\</span>
 <p>The second command trains the bot from your stories and then starts it
 in interactive mode.  Alternatively, you can load an existing core
 model with the <code class="docutils literal notranslate"><span class="pre">--core</span></code> flag like so:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m rasa_core.train <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.train <span class="se">\</span>
   interactive --core models/dialogue <span class="se">\</span>
   --nlu models/current/nlu <span class="se">\</span>
   --endpoints endpoints.yml

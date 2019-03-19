@@ -477,7 +477,7 @@ the trained Rasa NLU model:</p>
   -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/models/rasa_nlu:/app/models <span class="se">\</span>
   rasa/rasa_nlu:latest-spacy <span class="se">\</span>
   run <span class="se">\</span>
-    python -m rasa_nlu.train <span class="se">\</span>
+    python3 -m rasa_nlu.train <span class="se">\</span>
     -c config.yml <span class="se">\</span>
     -d project/data/nlu.md <span class="se">\</span>
     -o models <span class="se">\</span>
@@ -495,7 +495,7 @@ trained Rasa NLU model.</li>
 <li><code class="docutils literal notranslate"><span class="pre">rasa/rasa_nlu:latest-spacy</span></code>: Using the latest Rasa NLU which uses
 the <cite>spaCy</cite> <a class="reference external" href="https://rasa.com/docs/nlu/choosing_pipeline/">pipeline</a> .</li>
 <li><code class="docutils literal notranslate"><span class="pre">run</span></code>: Entrypoint parameter to run any command within the NLU container</li>
-<li><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">rasa_nlu.train</span></code>: Starts the NLU training with<ul>
+<li><code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">rasa_nlu.train</span></code>: Starts the NLU training with<ul>
 <li><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">config.yml</span></code>: Uses the default NLU pipeline configuration which is
 provided by the Docker image</li>
 <li><code class="docutils literal notranslate"><span class="pre">-d</span> <span class="pre">project/data/nlu.md</span></code>: Path to the NLU training data</li>
@@ -672,7 +672,7 @@ and specify it in the run command:</p>
   -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/config:/app/config <span class="se">\</span>
   rasa/rasa_nlu:latest-spacy <span class="se">\</span>
   run <span class="se">\</span>
-    python -m rasa_nlu.train <span class="se">\</span>
+    python3 -m rasa_nlu.train <span class="se">\</span>
     -c config/nlu_config.yml <span class="se">\</span>
     -d project/data/nlu.md <span class="se">\</span>
     -o models <span class="se">\</span>

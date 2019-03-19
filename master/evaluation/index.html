@@ -223,7 +223,7 @@ combined, take a look at the section on
 <h2>Evaluating a Trained Model<a class="headerlink" href="#evaluating-a-trained-model" title="Permalink to this headline">¶</a></h2>
 <p>You can evaluate your trained model on a set of test stories
 by using the evaluate script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate --core models/dialogue <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa_core.evaluate --core models/dialogue <span class="se">\</span>
   --stories test_stories.md -o results
 </pre></div>
 </div>
@@ -303,7 +303,7 @@ user messages is <code class="docutils literal notranslate"><span class="pre">*<
 </div>
 <p>If you’ve saved these stories under <code class="docutils literal notranslate"><span class="pre">e2e_stories.md</span></code>,
 the full end-to-end evaluation command is this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate default --core models/dialogue <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa_core.evaluate default --core models/dialogue <span class="se">\</span>
   --nlu models/nlu/current <span class="se">\</span>
   --stories e2e_stories.md --e2e
 </pre></div>
@@ -328,7 +328,7 @@ full data set. To do this, you first have to train models for your different
 policies. Create two (or more) policy config files of the policies you want to
 compare (containing only one policy each), and then use the <code class="docutils literal notranslate"><span class="pre">compare</span></code> mode of
 the train script to train your models:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.train compare -c policy_config1.yml policy_config2.yml <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa_core.train compare -c policy_config1.yml policy_config2.yml <span class="se">\</span>
   -d domain.yml -s stories_folder -o comparison_models --runs <span class="m">3</span> --percentages <span class="se">\</span>
   <span class="m">0</span> <span class="m">5</span> <span class="m">25</span> <span class="m">50</span> <span class="m">70</span> <span class="m">90</span> <span class="m">95</span>
 </pre></div>
@@ -338,7 +338,7 @@ with 0, 5, 25, 50, 70 and 95% of your training stories excluded from the trainin
 data. This is done for multiple runs, to ensure consistent results.</p>
 <p>Once this script has finished, you can now use the evaluate script in compare
 mode to evaluate the models you just trained:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m rasa_core.evaluate compare --stories stories_folder <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa_core.evaluate compare --stories stories_folder <span class="se">\</span>
   --core comparison_models <span class="se">\</span>
   -o comparison_results
 </pre></div>
