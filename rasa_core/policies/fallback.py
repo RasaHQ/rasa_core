@@ -29,7 +29,6 @@ class FallbackPolicy(Policy):
                  nlu_threshold: float = 0.3,
                  core_threshold: float = 0.3,
                  fallback_action_name: Text = "action_default_fallback",
-                 core_threshold_set: bool = False,
                  ) -> None:
         """Create a new Fallback policy.
 
@@ -48,7 +47,7 @@ class FallbackPolicy(Policy):
         self.nlu_threshold = nlu_threshold
         self.core_threshold = core_threshold
         self.fallback_action_name = fallback_action_name
-        self.core_threshold_set = core_threshold_set
+        self.core_threshold_set = False
 
     def train(self,
               training_trackers: List[DialogueStateTracker],
