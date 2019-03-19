@@ -589,6 +589,23 @@ whether or not to validate the user input</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="rasa_core.events.ReminderCancelled">
+<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ReminderCancelled</code><span class="sig-paren">(</span><em>action_name</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ReminderCancelled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ReminderCancelled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
+<p>Cancel all jobs with a specific name.</p>
+<dl class="method">
+<dt id="rasa_core.events.ReminderCancelled.as_story_string">
+<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ReminderCancelled.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ReminderCancelled.as_story_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rasa_core.events.ReminderCancelled.type_name">
+<code class="descname">type_name</code><em class="property"> = 'cancel_reminder'</em><a class="headerlink" href="#rasa_core.events.ReminderCancelled.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="rasa_core.events.ReminderScheduled">
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ReminderScheduled</code><span class="sig-paren">(</span><em>action_name</em>, <em>trigger_date_time</em>, <em>name=None</em>, <em>kill_on_user_message=True</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ReminderScheduled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ReminderScheduled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
