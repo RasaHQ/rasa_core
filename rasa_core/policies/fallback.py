@@ -28,7 +28,8 @@ class FallbackPolicy(Policy):
                  priority: int = 3,
                  nlu_threshold: float = 0.3,
                  core_threshold: float = 0.3,
-                 fallback_action_name: Text = "action_default_fallback"
+                 fallback_action_name: Text = "action_default_fallback",
+                 core_threshold_set: bool = False,
                  ) -> None:
         """Create a new Fallback policy.
 
@@ -47,6 +48,7 @@ class FallbackPolicy(Policy):
         self.nlu_threshold = nlu_threshold
         self.core_threshold = core_threshold
         self.fallback_action_name = fallback_action_name
+        self.core_threshold_set = core_threshold_set
 
     def train(self,
               training_trackers: List[DialogueStateTracker],
@@ -112,6 +114,7 @@ class FallbackPolicy(Policy):
             # predict fallback action with confidence `core_threshold`
             # if this is the highest confidence in the ensemble,
             # the fallback action will be executed.
+            self.core_threshold_set = True
             result = self.fallback_scores(domain, self.core_threshold)
 
         return result
