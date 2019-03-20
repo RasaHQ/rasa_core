@@ -38,7 +38,7 @@ state of the conversation before the user message that caused the
 fallback, so that it will not influence the prediction of future actions.
 You can take a look at the source of the action below:
 
-.. autoclass:: rasa_core.actions.action.ActionDefaultFallback
+.. autoclass:: rasa.core.actions.action.ActionDefaultFallback
 
 
 You can also create your own custom action to use as a fallback (see

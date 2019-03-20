@@ -17,7 +17,7 @@ that lets you access most of Rasa Core's functionality.
     policy, interpreter, and the tracker store) on your own to customize them.
 
 
-.. autoclass:: rasa_core.agent.Agent
+.. autoclass:: rasa.core.agent.Agent
     :members:
 
 

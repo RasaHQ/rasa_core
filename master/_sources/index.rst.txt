@@ -105,5 +105,5 @@ The Rasa Core dialogue engine
    tracker_stores
    brokers
    docker
-   changelog
+   old_core_changelog
    support

@@ -20,14 +20,14 @@ You can run training from the command line like in the :ref:`quickstart`:
 
 .. code-block:: bash
 
-   python3 -m rasa_core.train -d domain.yml -s data/stories.md \
+   python3 -m rasa.core.train -d domain.yml -s data/stories.md \
      -o models/current/dialogue -c config.yml
 
 Or by creating an agent and running the train method yourself:
 
 .. testcode::
 
-   from rasa_core.agent import Agent
+   from rasa.core.agent import Agent
 
    agent = Agent()
    data = agent.load_data("stories.md")
@@ -37,7 +37,7 @@ Or by creating an agent and running the train method yourself:
 Training Script Options
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. program-output:: python3 -m rasa_core.train default -h
+.. program-output:: python3 -m rasa.core.train default -h
 
 
 Data Augmentation
@@ -70,11 +70,11 @@ In python, you can pass the ``augmentation_factor`` argument to the
 Policies
 --------
 
-The :class:`rasa_core.policies.Policy` class decides which action to take
+The :class:`rasa.core.policies.Policy` class decides which action to take
 at every step in the conversation.
 
 There are different policies to choose from, and you can include
-multiple policies in a single :class:`rasa_core.agent.Agent`. At
+multiple policies in a single :class:`rasa.core.agent.Agent`. At
 every turn, the policy which predicts the next action with the
 highest confidence will be used. If two policies predict with equal
 confidence, the policy with the higher priority will be used.
@@ -125,7 +125,7 @@ By default, we try to provide you with a good set of configuration values
 and policies that suit most people. But you are encouraged to modify
 these to your needs:
 
-.. literalinclude:: ../rasa_core/default_config.yml
+.. literalinclude:: ../../rasa/core/default_config.yml
 
 
 Max History
@@ -175,8 +175,8 @@ code like so:
 
 .. code-block:: python
 
-    from rasa_core import config as policy_config
-    from rasa_core.agent import Agent
+    from rasa.core import config as policy_config
+    from rasa.core.agent import Agent
 
     policies = policy_config.load("policies.yml")
     agent = Agent("domain.yml", policies=policies)
@@ -187,9 +187,9 @@ when you create an agent:
 
 .. code-block:: python
 
-   from rasa_core.policies.memoization import MemoizationPolicy
-   from rasa_core.policies.keras_policy import KerasPolicy
-   from rasa_core.agent import Agent
+   from rasa.core.policies.memoization import MemoizationPolicy
+   from rasa.core.policies.keras_policy import KerasPolicy
+   from rasa.core.agent import Agent
 
    agent = Agent("domain.yml",
                  policies=[MemoizationPolicy(), KerasPolicy()])
@@ -203,12 +203,12 @@ The default architecture is based on an LSTM, but you can override the
 ``KerasPolicy.model_architecture`` method to implement your own architecture.
 
 
-.. literalinclude:: ../rasa_core/policies/keras_policy.py
+.. literalinclude:: ../../rasa/core/policies/keras_policy.py
    :pyobject: KerasPolicy.model_architecture
 
 and the training is run here:
 
-.. literalinclude:: ../rasa_core/policies/keras_policy.py
+.. literalinclude:: ../../rasa/core/policies/keras_policy.py
    :pyobject: KerasPolicy.train
 
 You can implement the model of your choice by overriding these methods,
@@ -387,7 +387,7 @@ It is recommended to use
     These parameters can be specified in the policy configuration file.
     The default values are defined in ``EmbeddingPolicy.defaults``:
 
-    .. literalinclude:: ../rasa_core/policies/embedding_policy.py
+    .. literalinclude:: ../../rasa/core/policies/embedding_policy.py
        :start-after: # default properties (DOC MARKER - don't remove)
        :end-before: # end default properties (DOC MARKER - don't remove)
 
@@ -491,9 +491,9 @@ policies predict an action with confidence higher than ``core_threshold``.
 
     .. code-block:: python
 
-       from rasa_core.policies.fallback import FallbackPolicy
-       from rasa_core.policies.keras_policy import KerasPolicy
-       from rasa_core.agent import Agent
+       from rasa.core.policies.fallback import FallbackPolicy
+       from rasa.core.policies.keras_policy import KerasPolicy
+       from rasa.core.agent import Agent
 
        fallback = FallbackPolicy(fallback_action_name="action_default_fallback",
                                  core_threshold=0.3,

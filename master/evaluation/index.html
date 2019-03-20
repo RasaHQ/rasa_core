@@ -153,7 +153,7 @@ AI Assistant." />
 <li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
@@ -223,7 +223,7 @@ combined, take a look at the section on
 <h2>Evaluating a Trained Model<a class="headerlink" href="#evaluating-a-trained-model" title="Permalink to this headline">¶</a></h2>
 <p>You can evaluate your trained model on a set of test stories
 by using the evaluate script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa_core.evaluate --core models/dialogue <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa.core.test --core models/dialogue <span class="se">\</span>
   --stories test_stories.md -o results
 </pre></div>
 </div>
@@ -235,7 +235,7 @@ was predicted incorrectly.</p>
 your domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/opt/python/3.5.6/lib/python3.5/runpy.py:125: RuntimeWarning: &#39;rasa_core.test&#39; found in sys.modules after import of package &#39;rasa_core&#39;, but prior to execution of &#39;rasa_core.test&#39;; this may result in unpredictable behaviour
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/opt/python/3.5.6/lib/python3.5/runpy.py:125: RuntimeWarning: &#39;rasa.core.test&#39; found in sys.modules after import of package &#39;rasa.core&#39;, but prior to execution of &#39;rasa.core.test&#39;; this may result in unpredictable behaviour
   warn(RuntimeWarning(msg))
 usage: test.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
                        [--endpoints ENDPOINTS] [--fail_on_prediction_errors]
@@ -283,7 +283,7 @@ perform together on whole dialogues.
 The evaluate script lets you evaluate dialogues end-to-end, combining
 Rasa NLU intent predictions with Rasa Core action predictions.
 You can activate this feature with the <code class="docutils literal notranslate"><span class="pre">--e2e</span></code> option in the
-<code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code> module.</p>
+<code class="docutils literal notranslate"><span class="pre">rasa.core.test</span></code> module.</p>
 <p>The story format used for end-to-end evaluation is slightly different to
 the standard Rasa Core stories, as you’ll have to include the user
 messages in natural language instead of just their intent. The format for the
@@ -304,7 +304,7 @@ user messages is <code class="docutils literal notranslate"><span class="pre">*<
 </div>
 <p>If you’ve saved these stories under <code class="docutils literal notranslate"><span class="pre">e2e_stories.md</span></code>,
 the full end-to-end evaluation command is this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa_core.evaluate default --core models/dialogue <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa.core.test default --core models/dialogue <span class="se">\</span>
   --nlu models/nlu/current <span class="se">\</span>
   --stories e2e_stories.md --e2e
 </pre></div>
@@ -312,7 +312,7 @@ the full end-to-end evaluation command is this:</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Make sure you specify an NLU model to load with the dialogue model using the
-<code class="docutils literal notranslate"><span class="pre">--nlu</span></code> option of <code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code>. If you do not specify an NLU
+<code class="docutils literal notranslate"><span class="pre">--nlu</span></code> option of <code class="docutils literal notranslate"><span class="pre">rasa.core.test</span></code>. If you do not specify an NLU
 model, Rasa Core will load the default <code class="docutils literal notranslate"><span class="pre">RegexInterpreter</span></code>.</p>
 </div>
 </div>
@@ -329,7 +329,7 @@ full data set. To do this, you first have to train models for your different
 policies. Create two (or more) policy config files of the policies you want to
 compare (containing only one policy each), and then use the <code class="docutils literal notranslate"><span class="pre">compare</span></code> mode of
 the train script to train your models:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa_core.train compare -c policy_config1.yml policy_config2.yml <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa.core.train compare -c policy_config1.yml policy_config2.yml <span class="se">\</span>
   -d domain.yml -s stories_folder -o comparison_models --runs <span class="m">3</span> --percentages <span class="se">\</span>
   <span class="m">0</span> <span class="m">5</span> <span class="m">25</span> <span class="m">50</span> <span class="m">70</span> <span class="m">90</span> <span class="m">95</span>
 </pre></div>
@@ -339,7 +339,7 @@ with 0, 5, 25, 50, 70 and 95% of your training stories excluded from the trainin
 data. This is done for multiple runs, to ensure consistent results.</p>
 <p>Once this script has finished, you can now use the evaluate script in compare
 mode to evaluate the models you just trained:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa_core.evaluate compare --stories stories_folder <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 -m rasa.core.test compare --stories stories_folder <span class="se">\</span>
   --core comparison_models <span class="se">\</span>
   -o comparison_results
 </pre></div>
@@ -377,7 +377,7 @@ you may do so by adding the <code class="docutils literal notranslate"><span cla
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 

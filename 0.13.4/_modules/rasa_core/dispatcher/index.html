@@ -200,13 +200,13 @@
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">OutputChannel</span>
-<span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span>
+<span class="kn">from</span> <span class="nn">rasa.core.channels</span> <span class="k">import</span> <span class="n">OutputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa.core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+    <span class="kn">from</span> <span class="nn">rasa.core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
 
 
 <span class="k">class</span> <span class="nc">Element</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>

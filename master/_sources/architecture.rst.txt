@@ -32,7 +32,7 @@ The steps are:
   like a button press.
 
 
-The process is handled by the :class:`rasa_core.agent.Agent` class.
+The process is handled by the :class:`rasa.core.agent.Agent` class.
 
 
 .. include:: feedback.inc

@@ -14,7 +14,7 @@ custom input channel.
 
 .. contents::
 
-Input channels are defined in the ``rasa_core.channels`` module.
+Input channels are defined in the ``rasa.core.channels`` module.
 Currently, there is code for connecting to
 facebook, slack, telegram, mattermost and twilio. If the connection
 you want is missing, this is a great place to start contributing!
@@ -31,7 +31,7 @@ To connect to most channels, you will need to add some credentials
 credentials file in yaml format, here is an example containing most
 channels:
 
-.. literalinclude:: ../examples/moodbot/credentials.yml
+.. literalinclude:: ../../examples/moodbot/credentials.yml
 
 .. note::
 
@@ -46,7 +46,7 @@ Facebook Setup
 
 You first need to retrieve some credentials to connect to the
 Facebook Messenger. Once you have them you can
-**either** attach the input channel running the provided ``rasa_core.run``
+**either** attach the input channel running the provided ``rasa.core.run``
 script, or you can attach it in your own code.
 
 Getting Credentials
@@ -69,7 +69,7 @@ You need to set up a Facebook app and a page.
      This will be your ``secret``.
   5. Use the collected ``secret`` and ``page-access-token`` in your
      ``credentials.yml``, and add a field called ``verify`` containing
-     a string of your choice. Start ``rasa_core.run`` with the
+     a string of your choice. Start ``rasa.core.run`` with the
      ``--credentials credentials.yml`` option.
   6. Set up a *Webhook* and select at least the *messaging* and
      *messaging_postback* subscriptions. Insert your callback URL which will
@@ -88,7 +88,7 @@ If you want to connect to facebook using the run script, e.g. using:
 
 .. code-block:: bash
 
-  python3 -m rasa_core.run -d models/dialogue -u models/nlu/current \
+  python3 -m rasa.core.run -d models/dialogue -u models/nlu/current \
       --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -115,7 +115,7 @@ from your webserver creation logic.
 Code to create a Messenger-compatible webserver looks like this:
 
 
-.. literalinclude:: ../tests/test_channels.py
+.. literalinclude:: ../../tests/core/test_channels.py
    :pyobject: test_facebook_channel
    :start-after: START DOC INCLUDE
    :dedent: 8
@@ -128,7 +128,7 @@ Cisco Webex Teams Setup
 -----------------------
 
 You first need to retrieve some credentials, once you have them you can
-**either** attach the input channel running the provided ``rasa_core.run``
+**either** attach the input channel running the provided ``rasa.core.run``
 script, or you can attach it in your own code.
 
 Getting Credentials
@@ -156,7 +156,7 @@ script, e.g. using:
 
 .. code-block:: bash
 
-  python3 -m rasa_core.run -d models/dialogue -u models/nlu/current \
+  python3 -m rasa.core.run -d models/dialogue -u models/nlu/current \
       --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -189,7 +189,7 @@ from your webserver creation logic.
 Code to create a WebexTeams-compatible webserver looks like this:
 
 
-.. literalinclude:: ../tests/test_channels.py
+.. literalinclude:: ../../tests/core/test_channels.py
    :pyobject: test_webexteams_channel
    :start-after: START DOC INCLUDE
    :dedent: 8
@@ -201,7 +201,7 @@ Slack Setup
 -----------
 
 You first need to retrieve some credentials, once you have them you can
-**either** attach the input channel running the provided ``rasa_core.run``
+**either** attach the input channel running the provided ``rasa.core.run``
 script, or you can attach it in your own code.
 
 Getting Credentials
@@ -231,7 +231,7 @@ script, e.g. using:
 
 .. code-block:: bash
 
-  python3 -m rasa_core.run -d models/dialogue -u models/nlu/current \
+  python3 -m rasa.core.run -d models/dialogue -u models/nlu/current \
       --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -264,7 +264,7 @@ from your webserver creation logic.
 Code to create a Messenger-compatible webserver looks like this:
 
 
-.. literalinclude:: ../tests/test_channels.py
+.. literalinclude:: ../../tests/core/test_channels.py
    :pyobject: test_slack_channel
    :start-after: START DOC INCLUDE
    :dedent: 8
@@ -276,7 +276,7 @@ Mattermost Setup
 ----------------
 
 You first need to retrieve some credentials, once you have them you can
-**either** attach the input channel running the provided ``rasa_core.run``
+**either** attach the input channel running the provided ``rasa.core.run``
 script, or you can attach it in your own code.
 
 Getting Credentials
@@ -308,7 +308,7 @@ run script, e.g. using:
 
 .. code-block:: bash
 
- python3 -m rasa_core.run -d models/dialogue -u models/nlu/current \
+ python3 -m rasa.core.run -d models/dialogue -u models/nlu/current \
      --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -331,7 +331,7 @@ from your webserver creation logic.
 
 Code to create a Mattermost-compatible webserver looks like this:
 
-.. literalinclude:: ../tests/test_channels.py
+.. literalinclude:: ../../tests/core/test_channels.py
    :pyobject: test_mattermost_channel
    :start-after: START DOC INCLUDE
    :dedent: 8
@@ -348,7 +348,7 @@ Telegram Setup
 --------------
 
 You first need to retrieve some credentials, once you have them you can
-**either** attach the input channel running the provided ``rasa_core.run``
+**either** attach the input channel running the provided ``rasa.core.run``
 script, or you can attach it in your own code.
 
 Getting Credentials
@@ -375,7 +375,7 @@ If you want to connect to telegram using the run script, e.g. using:
 
 .. code-block:: bash
 
-  python3 -m rasa_core.run -d models/dialogue -u models/nlu/current
+  python3 -m rasa.core.run -d models/dialogue -u models/nlu/current
       --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -397,7 +397,7 @@ from your webserver creation logic.
 
 Code to create a Messenger-compatible webserver looks like this:
 
-.. literalinclude:: ../tests/test_channels.py
+.. literalinclude:: ../../tests/core/test_channels.py
    :pyobject: test_telegram_channel
    :start-after: START DOC INCLUDE
    :dedent: 8
@@ -416,7 +416,7 @@ Twilio Setup
 --------------
 
 You first need to retrieve some credentials, once you have them you can
-**either** attach the input channel running the provided ``rasa_core.run``
+**either** attach the input channel running the provided ``rasa.core.run``
 script, or you can attach it in your own code.
 
 Getting Credentials
@@ -445,7 +445,7 @@ script, e.g. using:
 
 .. code-block:: bash
 
-  python3 -m rasa_core.run -d models/dialogue -u models/nlu/current
+  python3 -m rasa.core.run -d models/dialogue -u models/nlu/current
       --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -466,7 +466,7 @@ from your webserver creation logic.
 
 Code to create a Twilio-compatible webserver looks like this:
 
-.. literalinclude:: ../tests/test_channels.py
+.. literalinclude:: ../../tests/core/test_channels.py
    :pyobject: test_twilio_channel
    :start-after: START DOC INCLUDE
    :dedent: 8
@@ -515,7 +515,7 @@ script, e.g. using:
 
 .. code-block:: bash
 
-  python3 -m rasa_core.run -d models/dialogue -u models/nlu/current
+  python3 -m rasa.core.run -d models/dialogue -u models/nlu/current
       --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -536,7 +536,7 @@ from your webserver creation logic.
 
 Code to create a RocketChat-compatible webserver looks like this:
 
-.. literalinclude:: ../tests/test_channels.py
+.. literalinclude:: ../../tests/core/test_channels.py
    :pyobject: test_rocketchat_channel
    :start-after: START DOC INCLUDE
    :dedent: 8
@@ -559,7 +559,7 @@ run script, e.g. using:
 
 .. code-block:: bash
 
- python3 -m rasa_core.run -d models/dialogue -u models/nlu/current \
+ python3 -m rasa.core.run -d models/dialogue -u models/nlu/current \
      --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -579,7 +579,7 @@ from your webserver creation logic.
 
 Code to create a Microsoft Bot Framework-compatible webserver looks like this:
 
-.. literalinclude:: ../tests/test_channels.py
+.. literalinclude:: ../../tests/core/test_channels.py
    :pyobject: test_botframework_channel
    :start-after: START DOC INCLUDE
    :dedent: 8
@@ -596,7 +596,7 @@ SocketIO Setup
 --------------
 
 You can **either** attach the input channel running the provided
-``rasa_core.run`` script, or you can attach the channel in your
+``rasa.core.run`` script, or you can attach the channel in your
 own code.
 
 Using run script
@@ -607,7 +607,7 @@ script, e.g. using:
 
 .. code-block:: bash
 
-  python3 -m rasa_core.run -d models/dialogue -u models/nlu/current
+  python3 -m rasa.core.run -d models/dialogue -u models/nlu/current
       --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -637,7 +637,7 @@ Directly using python
 
 Code to create a Socket.IO-compatible webserver looks like this:
 
-.. literalinclude:: ../tests/test_channels.py
+.. literalinclude:: ../../tests/core/test_channels.py
    :pyobject: test_socketio_channel
    :start-after: START DOC INCLUDE
    :dedent: 8
@@ -696,7 +696,7 @@ using the run script:
 
 .. code-block:: bash
 
- python3 -m rasa_core.run -d models/dialogue -u models/nlu/current \
+ python3 -m rasa.core.run -d models/dialogue -u models/nlu/current \
      --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -739,7 +739,7 @@ Here is an example on how to connect the
 
 .. code-block:: bash
 
- python3 -m rasa_core.run -d models/dialogue -u models/nlu/current \
+ python3 -m rasa.core.run -d models/dialogue -u models/nlu/current \
      --port 5002 --credentials credentials.yml
 
 you need to supply a ``credentials.yml`` with the following content:
@@ -776,7 +776,7 @@ Creating a new Channel
 ----------------------
 
 You can also implement your own, custom channel. You can
-use the ``rasa_core.channels.channel.RestInput`` class as a template.
+use the ``rasa.core.channels.channel.RestInput`` class as a template.
 The methods you need to implement are ``blueprint`` and ``name``. The method
 needs to create a sanic blueprint that can be attached to a sanic server.
 
@@ -812,7 +812,7 @@ creates while the bot is processing your messages and return
 them as part of your endpoint response. This is the way the ``RestInput``
 channel is implemented. For examples on how to create and use your own output
 channel, please take a look at the implementations of the other
-output channels, e.g. the ``SlackBot`` in ``rasa_core.channels.slack``.
+output channels, e.g. the ``SlackBot`` in ``rasa.core.channels.slack``.
 
 To use a custom channel, you need to supply a credentials configuration file
 ``credentials.yml`` with the command line argument ``--credentials``.
@@ -830,7 +830,7 @@ hands them over to Rasa Core, collects the bot utterances and returns
 these bot utterances as the json response to the webhook call that
 posted this message to the channel:
 
-.. literalinclude:: ../rasa_core/channels/channel.py
+.. literalinclude:: ../../rasa/core/channels/channel.py
    :pyobject: RestInput
 
 

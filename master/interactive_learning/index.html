@@ -153,7 +153,7 @@ open source dialogue management." />
 <li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
@@ -226,7 +226,7 @@ by providing feedback on mistakes it makes.</p>
 <p>Run the following command to start interactive learning:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core_sdk.endpoint --actions actions<span class="p">&amp;</span>
 
-python3 -m rasa_core.train <span class="se">\</span>
+python3 -m rasa.core.train <span class="se">\</span>
   interactive -o models/dialogue <span class="se">\</span>
   -d domain.yml -c policy_config.yml <span class="se">\</span>
   -s data/stories.md <span class="se">\</span>
@@ -238,7 +238,7 @@ python3 -m rasa_core.train <span class="se">\</span>
 <p>The second command trains the bot from your stories and then starts it
 in interactive mode.  Alternatively, you can load an existing core
 model with the <code class="docutils literal notranslate"><span class="pre">--core</span></code> flag like so:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.train <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.train <span class="se">\</span>
   interactive --core models/dialogue <span class="se">\</span>
   --nlu models/current/nlu <span class="se">\</span>
   --endpoints endpoints.yml
@@ -280,7 +280,7 @@ until the bot chooses the wrong action.</p>
 <h2>Providing feedback on errors<a class="headerlink" href="#providing-feedback-on-errors" title="Permalink to this headline">¶</a></h2>
 <p>For this example we are going to use the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example,
 so make sure you have the domain &amp; data for it. You can download
-the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/0.14.0a8/examples/concertbot">github examples/concertbot</a>.</p>
+the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/tree/0.14.0a9/examples/concertbot">github examples/concertbot</a>.</p>
 <p>If you ask <code class="docutils literal notranslate"><span class="pre">/search_concerts</span></code>, the bot should suggest
 <code class="docutils literal notranslate"><span class="pre">action_search_concerts</span></code> and then <code class="docutils literal notranslate"><span class="pre">action_listen</span></code> (the confidence at which
 the policy selected its next action will be displayed next to the action name).
@@ -412,9 +412,9 @@ Current slots:
   preferences: None, requested_slot: outdoor_seating
 
 ------
-2018-11-05 21:36:53 DEBUG    rasa_core.tracker_store  - Recreating tracker for id &#39;default&#39;
+2018-11-05 21:36:53 DEBUG    rasa.core.tracker_store  - Recreating tracker for id &#39;default&#39;
 ? The bot wants to run &#39;restaurant_form&#39;, correct?  Yes
-2018-11-05 21:37:08 DEBUG    rasa_core.tracker_store  - Recreating tracker for id &#39;default&#39;
+2018-11-05 21:37:08 DEBUG    rasa.core.tracker_store  - Recreating tracker for id &#39;default&#39;
 ? Should &#39;restaurant_form&#39; validate user input to fill the slot &#39;outdoor_seating&#39;?  (Y/n)
 </pre></div>
 </div>
@@ -444,7 +444,7 @@ interactive learning</p>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 </div>

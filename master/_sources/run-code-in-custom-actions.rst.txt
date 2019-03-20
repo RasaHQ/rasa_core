@@ -77,7 +77,7 @@ The only thing your action server needs to install is ``rasa_core_sdk``:
 
 .. note::
 
-    You do not need to install ``rasa_core`` for your action server.
+    You do not need to install ``rasa`` for your action server.
     E.g. it is recommended to run Rasa Core in a docker container and
     create a separate container for your action server. In this
     separate container, you only need to install ``rasa_core_sdk``.

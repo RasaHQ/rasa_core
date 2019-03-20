@@ -153,7 +153,7 @@ management." />
 <li class="toctree-l1"><a class="reference internal" href="../../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../support/">Getting Support</a></li>
 </ul>
 
@@ -233,7 +233,7 @@ been specified.</p>
 </div>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#rasa_core.slots.Slot" title="rasa_core.slots.Slot"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.slots.Slot</span></code></a>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#rasa.core.slots.Slot" title="rasa.core.slots.Slot"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa.core.slots.Slot</span></code></a>
 Results in the feature of the slot being set to <code class="docutils literal notranslate"><span class="pre">1</span></code> if any value is set.
 Otherwise the feature will be set to <code class="docutils literal notranslate"><span class="pre">0</span></code> (no value is set).</p>
 </td>
@@ -399,19 +399,19 @@ action the bot should run.</p>
 <div class="section" id="the-slot-base-class">
 <h2>The Slot base class<a class="headerlink" href="#the-slot-base-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="rasa_core.slots.Slot">
-<em class="property">class </em><code class="descclassname">rasa_core.slots.</code><code class="descname">Slot</code><span class="sig-paren">(</span><em>name</em>, <em>initial_value=None</em>, <em>value_reset_delay=None</em>, <em>auto_fill=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/slots/#Slot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.slots.Slot">
+<em class="property">class </em><code class="descclassname">rasa.core.slots.</code><code class="descname">Slot</code><span class="sig-paren">(</span><em>name</em>, <em>initial_value=None</em>, <em>value_reset_delay=None</em>, <em>auto_fill=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa/core/slots/#Slot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.slots.Slot" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
-<dt id="rasa_core.slots.Slot.feature_dimensionality">
-<code class="descname">feature_dimensionality</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/slots/#Slot.feature_dimensionality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot.feature_dimensionality" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.slots.Slot.feature_dimensionality">
+<code class="descname">feature_dimensionality</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa/core/slots/#Slot.feature_dimensionality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.slots.Slot.feature_dimensionality" title="Permalink to this definition">¶</a></dt>
 <dd><p>How many features this single slot creates.</p>
 <p>The dimensionality of the array returned by <cite>as_feature</cite> needs
 to correspond to this value.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rasa_core.slots.Slot.as_feature">
-<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/slots/#Slot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.slots.Slot.as_feature" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.slots.Slot.as_feature">
+<code class="descname">as_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa/core/slots/#Slot.as_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.slots.Slot.as_feature" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -422,7 +422,7 @@ to correspond to this value.</p>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 

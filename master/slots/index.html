@@ -153,7 +153,7 @@ continues." />
 <li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
@@ -232,7 +232,7 @@ If you just want to store some data, but don’t want it to affect the flow
 of the conversation, use an <code class="docutils literal notranslate"><span class="pre">unfeaturized</span></code> slot.</p>
 <div class="section" id="how-rasa-uses-slots">
 <h2>How Rasa Uses Slots<a class="headerlink" href="#how-rasa-uses-slots" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="../api/policy/#rasa_core.policies.Policy" title="rasa_core.policies.Policy"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.policies.Policy</span></code></a> doesn’t have access to the
+<p>The <a class="reference internal" href="../api/policy/#rasa.core.policies.Policy" title="rasa.core.policies.Policy"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa.core.policies.Policy</span></code></a> doesn’t have access to the
 value of your slots. It receives a <code class="docutils literal notranslate"><span class="pre">featurized</span></code> representation.
 As mentioned above, for a <code class="docutils literal notranslate"><span class="pre">text</span></code> slot the value is irrelevant.
 The policy just sees a <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">0</span></code> depending on whether it is set.</p>
@@ -288,7 +288,7 @@ In this case, your stories need to include the slots.
 For example, you have a custom action to fetch a user’s profile, and
 you have a <code class="docutils literal notranslate"><span class="pre">categorical</span></code> slot called <code class="docutils literal notranslate"><span class="pre">account_type</span></code>.
 When the <code class="docutils literal notranslate"><span class="pre">fetch_profile</span></code> action is run, it returns a
-<a class="reference internal" href="../api/events/#rasa_core.events.SlotSet" title="rasa_core.events.SlotSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.SlotSet</span></code></a> event:</p>
+<a class="reference internal" href="../api/events/#rasa.core.events.SlotSet" title="rasa.core.events.SlotSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa.core.events.SlotSet</span></code></a> event:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">slots</span><span class="p p-Indicator">:</span>
    <span class="l l-Scalar l-Scalar-Plain">account_type</span><span class="p p-Indicator">:</span>
       <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical</span>
@@ -363,7 +363,7 @@ a vector of length <code class="docutils literal notranslate"><span class="pre">
 </tr>
 </tbody>
 </table>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.slots</span> <span class="kn">import</span> <span class="n">Slot</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.slots</span> <span class="kn">import</span> <span class="n">Slot</span>
 
 <span class="k">class</span> <span class="nc">NumberOfPeopleSlot</span><span class="p">(</span><span class="n">Slot</span><span class="p">):</span>
 
@@ -398,7 +398,7 @@ can learn from these how to handle the different situations:</p>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 

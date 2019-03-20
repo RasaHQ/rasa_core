@@ -24,7 +24,7 @@ The default format is to include the utterances in your domain file.
 This file then contains references to all your custom actions,
 available entities, slots and intents.
 
-.. literalinclude:: ../data/test_domains/default_with_slots.yml
+.. literalinclude:: ../../data/test_domains/default_with_slots.yml
    :language: yaml
 
 In this example domain file, the section ``templates`` contains the
@@ -53,14 +53,14 @@ external HTTP server with a ``POST`` request. To configure this endpoint,
 you need to create an ``endpoints.yml`` and pass it either to the ``run``
 or ``server`` script. The content of the ``endpoints.yml`` should be
 
-.. literalinclude:: ../data/test_endpoints/example_endpoints.yml
+.. literalinclude:: ../../data/test_endpoints/example_endpoints.yml
    :language: yaml
 
 and you can use this file like this:
 
 .. code-block:: bash
 
-    $ python3 -m rasa_core.run \
+    $ python3 -m rasa.core.run \
        --enable_api \
        -d examples/babi/models/policy/current \
        -u examples/babi/models/nlu/current_py2 \

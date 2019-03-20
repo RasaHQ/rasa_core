@@ -129,7 +129,7 @@ The ``slot_mappings`` method defines how to extract slot values from user respon
 
 Here's an example for the restaurant bot:
 
-.. literalinclude:: ../examples/formbot/actions.py
+.. literalinclude:: ../../examples/formbot/actions.py
    :pyobject: RestaurantForm.slot_mappings
 
 The predefined functions work as follows:
@@ -163,13 +163,13 @@ you can do this by overwriting the ``validate()`` method.
 Here is an example which checks if the extracted cuisine slot belongs to a
 list of supported cuisines.
 
-.. literalinclude:: ../examples/formbot/actions.py
+.. literalinclude:: ../../examples/formbot/actions.py
    :pyobject: RestaurantForm.cuisine_db
 
-.. literalinclude:: ../examples/formbot/actions.py
+.. literalinclude:: ../../examples/formbot/actions.py
    :pyobject: RestaurantForm.is_int
 
-.. literalinclude:: ../examples/formbot/actions.py
+.. literalinclude:: ../../examples/formbot/actions.py
    :pyobject: RestaurantForm.validate
 
 You can also deactivate the form directly during this validation step (in case the

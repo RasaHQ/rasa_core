@@ -149,7 +149,7 @@ premise contextual AI assistants and chatbots." />
 <li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
@@ -470,14 +470,14 @@ directory:</p>
 <div class="section" id="training-the-nlu-model">
 <h3><a class="toc-backref" href="#id11">3.1 Training the NLU Model</a><a class="headerlink" href="#training-the-nlu-model" title="Permalink to this headline">¶</a></h3>
 <p>You can then train the Rasa NLU model by executing the command below.
-As output of the command the directory <code class="docutils literal notranslate"><span class="pre">models/rasa_nlu</span></code> will contain
-the trained Rasa NLU model:</p>
+As output of the command the directory <code class="docutils literal notranslate"><span class="pre">models/</span></code> will contain
+the trained Rasa model:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run <span class="se">\</span>
   -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/app/project <span class="se">\</span>
-  -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/models/rasa_nlu:/app/models <span class="se">\</span>
-  rasa/rasa_nlu:latest-spacy <span class="se">\</span>
+  -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/models/:/app/models <span class="se">\</span>
+  rasa/rasa:latest-spacy <span class="se">\</span>
   run <span class="se">\</span>
-    python3 -m rasa_nlu.train <span class="se">\</span>
+    python3 -m rasa.train <span class="se">\</span>
     -c config.yml <span class="se">\</span>
     -d project/data/nlu.md <span class="se">\</span>
     -o models <span class="se">\</span>
@@ -489,13 +489,13 @@ the trained Rasa NLU model:</p>
 <div><ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">$(pwd):/app/project</span></code>: Mounts your project directory into the Docker
 container so that the chatbot can be trained on your NLU data.</li>
-<li><code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">$(pwd)/models/rasa_nlu:/app/models</span></code>: Mounts the directory
-<code class="docutils literal notranslate"><span class="pre">models/rasa_nlu</span></code> in the container which is used to store the
-trained Rasa NLU model.</li>
-<li><code class="docutils literal notranslate"><span class="pre">rasa/rasa_nlu:latest-spacy</span></code>: Using the latest Rasa NLU which uses
+<li><code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">$(pwd)/models/:/app/models</span></code>: Mounts the directory
+<code class="docutils literal notranslate"><span class="pre">models/</span></code> in the container which is used to store the
+trained Rasa model.</li>
+<li><code class="docutils literal notranslate"><span class="pre">rasa/rasa:latest-spacy</span></code>: Using the latest Rasa together with
 the <cite>spaCy</cite> <a class="reference external" href="https://rasa.com/docs/nlu/choosing_pipeline/">pipeline</a> .</li>
 <li><code class="docutils literal notranslate"><span class="pre">run</span></code>: Entrypoint parameter to run any command within the NLU container</li>
-<li><code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">rasa_nlu.train</span></code>: Starts the NLU training with<ul>
+<li><code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">rasa.train</span></code>: Starts the NLU training with<ul>
 <li><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">config.yml</span></code>: Uses the default NLU pipeline configuration which is
 provided by the Docker image</li>
 <li><code class="docutils literal notranslate"><span class="pre">-d</span> <span class="pre">project/data/nlu.md</span></code>: Path to the NLU training data</li>
@@ -524,14 +524,14 @@ want to use, e.g.:</p>
 </pre></div>
 </div>
 <p>Each container is declared as a <code class="docutils literal notranslate"><span class="pre">service</span></code> within the docker compose file.
-The first service is the <code class="docutils literal notranslate"><span class="pre">rasa_core</span></code> service.</p>
+The first service is the <code class="docutils literal notranslate"><span class="pre">rasa</span></code> service.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">rasa_core</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rasa/rasa_core:latest</span>
+  <span class="l l-Scalar l-Scalar-Plain">rasa</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rasa/rasa:latest</span>
     <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">5005:5005</span>
     <span class="l l-Scalar l-Scalar-Plain">volumes</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./models/rasa_core:/app/models</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./models/:/app/models</span>
     <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">--core</span>
@@ -871,7 +871,7 @@ there.</p>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 

@@ -28,7 +28,7 @@ Run the following command to start interactive learning:
 
    python3 -m rasa_core_sdk.endpoint --actions actions&
 
-   python3 -m rasa_core.train \
+   python3 -m rasa.core.train \
      interactive -o models/dialogue \
      -d domain.yml -c policy_config.yml \
      -s data/stories.md \
@@ -43,7 +43,7 @@ model with the ``--core`` flag like so:
 
 .. code-block:: bash
 
-   python3 -m rasa_core.train \
+   python3 -m rasa.core.train \
      interactive --core models/dialogue \
      --nlu models/current/nlu \
      --endpoints endpoints.yml
@@ -247,9 +247,9 @@ and example:
       preferences: None, requested_slot: outdoor_seating
 
     ------
-    2018-11-05 21:36:53 DEBUG    rasa_core.tracker_store  - Recreating tracker for id 'default'
+    2018-11-05 21:36:53 DEBUG    rasa.core.tracker_store  - Recreating tracker for id 'default'
     ? The bot wants to run 'restaurant_form', correct?  Yes
-    2018-11-05 21:37:08 DEBUG    rasa_core.tracker_store  - Recreating tracker for id 'default'
+    2018-11-05 21:37:08 DEBUG    rasa.core.tracker_store  - Recreating tracker for id 'default'
     ? Should 'restaurant_form' validate user input to fill the slot 'outdoor_seating'?  (Y/n)
 
 Here the user asked to stop the form, and the bot asks the user whether they're sure

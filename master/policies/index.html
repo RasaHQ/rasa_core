@@ -149,7 +149,7 @@ for longer context or unseen utterances which require generalization." />
 <li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
@@ -245,12 +245,12 @@ for longer context or unseen utterances which require generalization." />
 <p>Rasa Core works by creating training data from your stories and
 training a model on that data.</p>
 <p>You can run training from the command line like in the <a class="reference internal" href="../quickstart/#quickstart"><span class="std std-ref">Quickstart</span></a>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.train -d domain.yml -s data/stories.md <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.train -d domain.yml -s data/stories.md <span class="se">\</span>
   -o models/current/dialogue -c config.yml
 </pre></div>
 </div>
 <p>Or by creating an agent and running the train method yourself:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">()</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;stories.md&quot;</span><span class="p">)</span>
@@ -259,7 +259,7 @@ training a model on that data.</p>
 </div>
 <div class="section" id="training-script-options">
 <h3><a class="toc-backref" href="#id9">Training Script Options</a><a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/opt/python/3.5.6/lib/python3.5/runpy.py:125: RuntimeWarning: &#39;rasa_core.train&#39; found in sys.modules after import of package &#39;rasa_core&#39;, but prior to execution of &#39;rasa_core.train&#39;; this may result in unpredictable behaviour
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/opt/python/3.5.6/lib/python3.5/runpy.py:125: RuntimeWarning: &#39;rasa.core.train&#39; found in sys.modules after import of package &#39;rasa.core&#39;, but prior to execution of &#39;rasa.core.train&#39;; this may result in unpredictable behaviour
   warn(RuntimeWarning(msg))
 usage: train.py default [-h] [--augmentation AUGMENTATION] [--dump_stories]
                         [--debug_plots] [-v] [-vv] [--quiet] [-c CONFIG] -o
@@ -316,10 +316,10 @@ what happened before.</p>
 </div>
 <div class="section" id="id1">
 <h2><a class="toc-backref" href="#id11">Policies</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="../api/policy/#rasa_core.policies.Policy" title="rasa_core.policies.Policy"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.policies.Policy</span></code></a> class decides which action to take
+<p>The <a class="reference internal" href="../api/policy/#rasa.core.policies.Policy" title="rasa.core.policies.Policy"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa.core.policies.Policy</span></code></a> class decides which action to take
 at every step in the conversation.</p>
 <p>There are different policies to choose from, and you can include
-multiple policies in a single <a class="reference internal" href="../api/agent/#rasa_core.agent.Agent" title="rasa_core.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.agent.Agent</span></code></a>. At
+multiple policies in a single <a class="reference internal" href="../api/agent/#rasa.core.agent.Agent" title="rasa.core.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa.core.agent.Agent</span></code></a>. At
 every turn, the policy which predicts the next action with the
 highest confidence will be used. If two policies predict with equal
 confidence, the policy with the higher priority will be used.</p>
@@ -406,8 +406,8 @@ slot. Slot information is always available for every featurizer.</p>
 <h4><a class="toc-backref" href="#id16">Configuring policies in code</a><a class="headerlink" href="#configuring-policies-in-code" title="Permalink to this headline">¶</a></h4>
 <p>You can load a policy configuration file named <code class="docutils literal notranslate"><span class="pre">&quot;policies.yml&quot;</span></code> from your
 code like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core</span> <span class="kn">import</span> <span class="n">config</span> <span class="k">as</span> <span class="n">policy_config</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core</span> <span class="kn">import</span> <span class="n">config</span> <span class="k">as</span> <span class="n">policy_config</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
 
 <span class="n">policies</span> <span class="o">=</span> <span class="n">policy_config</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;policies.yml&quot;</span><span class="p">)</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span> <span class="n">policies</span><span class="o">=</span><span class="n">policies</span><span class="p">)</span>
@@ -415,9 +415,9 @@ code like so:</p>
 </div>
 <p>Alternatively, you can pass a list of policies directly
 when you create an agent:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="kn">import</span> <span class="n">MemoizationPolicy</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="kn">import</span> <span class="n">KerasPolicy</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.policies.memoization</span> <span class="kn">import</span> <span class="n">MemoizationPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa.core.policies.keras_policy</span> <span class="kn">import</span> <span class="n">KerasPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span>
               <span class="n">policies</span><span class="o">=</span><span class="p">[</span><span class="n">MemoizationPolicy</span><span class="p">(),</span> <span class="n">KerasPolicy</span><span class="p">()])</span>
@@ -885,9 +885,9 @@ or action is below the respective threshold</td>
 </tbody>
 </table>
 <p>You can also configure the <code class="docutils literal notranslate"><span class="pre">FallbackPolicy</span></code> in your python code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.policies.fallback</span> <span class="kn">import</span> <span class="n">FallbackPolicy</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="kn">import</span> <span class="n">KerasPolicy</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.policies.fallback</span> <span class="kn">import</span> <span class="n">FallbackPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa.core.policies.keras_policy</span> <span class="kn">import</span> <span class="n">KerasPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
 
 <span class="n">fallback</span> <span class="o">=</span> <span class="n">FallbackPolicy</span><span class="p">(</span><span class="n">fallback_action_name</span><span class="o">=</span><span class="s2">&quot;action_default_fallback&quot;</span><span class="p">,</span>
                           <span class="n">core_threshold</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
@@ -999,7 +999,7 @@ intents</td>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 

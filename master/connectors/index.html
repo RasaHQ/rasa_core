@@ -153,7 +153,7 @@ using open source Rasa Stack." />
 <li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
@@ -285,7 +285,7 @@ custom input channel.</p>
 </li>
 </ul>
 </div>
-<p>Input channels are defined in the <code class="docutils literal notranslate"><span class="pre">rasa_core.channels</span></code> module.
+<p>Input channels are defined in the <code class="docutils literal notranslate"><span class="pre">rasa.core.channels</span></code> module.
 Currently, there is code for connecting to
 facebook, slack, telegram, mattermost and twilio. If the connection
 you want is missing, this is a great place to start contributing!</p>
@@ -344,7 +344,7 @@ your <code class="docutils literal notranslate"><span class="pre">credentials.ym
 <span id="facebook-connector"></span><h2><a class="toc-backref" href="#id25">Facebook Setup</a><a class="headerlink" href="#facebook-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials to connect to the
 Facebook Messenger. Once you have them you can
-<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
+<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa.core.run</span></code>
 script, or you can attach it in your own code.</p>
 <div class="section" id="getting-credentials">
 <h3><a class="toc-backref" href="#id26">Getting Credentials</a><a class="headerlink" href="#getting-credentials" title="Permalink to this headline">¶</a></h3>
@@ -366,7 +366,7 @@ app.</li>
 This will be your <code class="docutils literal notranslate"><span class="pre">secret</span></code>.</li>
 <li>Use the collected <code class="docutils literal notranslate"><span class="pre">secret</span></code> and <code class="docutils literal notranslate"><span class="pre">page-access-token</span></code> in your
 <code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code>, and add a field called <code class="docutils literal notranslate"><span class="pre">verify</span></code> containing
-a string of your choice. Start <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code> with the
+a string of your choice. Start <code class="docutils literal notranslate"><span class="pre">rasa.core.run</span></code> with the
 <code class="docutils literal notranslate"><span class="pre">--credentials</span> <span class="pre">credentials.yml</span></code> option.</li>
 <li>Set up a <em>Webhook</em> and select at least the <em>messaging</em> and
 <em>messaging_postback</em> subscriptions. Insert your callback URL which will
@@ -381,7 +381,7 @@ entry in your <code class="docutils literal notranslate"><span class="pre">crede
 <div class="section" id="using-the-run-script">
 <h3><a class="toc-backref" href="#id27">Using the run script</a><a class="headerlink" href="#using-the-run-script" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to facebook using the run script, e.g. using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -403,9 +403,9 @@ you should add in the configuration of the webhook.</p>
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
 <p>Code to create a Messenger-compatible webserver looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.facebook</span> <span class="k">import</span> <span class="n">FacebookInput</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.channels.facebook</span> <span class="k">import</span> <span class="n">FacebookInput</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
 
 <span class="c1"># load your trained agent</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
@@ -426,7 +426,7 @@ from your webserver creation logic.</p>
 <div class="section" id="cisco-webex-teams-setup">
 <span id="webexteams-connector"></span><h2><a class="toc-backref" href="#id29">Cisco Webex Teams Setup</a><a class="headerlink" href="#cisco-webex-teams-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials, once you have them you can
-<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
+<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa.core.run</span></code>
 script, or you can attach it in your own code.</p>
 <div class="section" id="id1">
 <h3><a class="toc-backref" href="#id30">Getting Credentials</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
@@ -445,7 +445,7 @@ be used in <code class="docutils literal notranslate"><span class="pre">room</sp
 <h3><a class="toc-backref" href="#id31">Using run script</a><a class="headerlink" href="#using-run-script" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the <code class="docutils literal notranslate"><span class="pre">webexteams</span></code> input channel using the run
 script, e.g. using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -472,9 +472,9 @@ the user who sent them.</p>
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
 <p>Code to create a WebexTeams-compatible webserver looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.webexteams</span> <span class="k">import</span> <span class="n">WebexTeamsInput</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.channels.webexteams</span> <span class="k">import</span> <span class="n">WebexTeamsInput</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
 
 <span class="c1"># load your trained agent</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
@@ -494,7 +494,7 @@ from your webserver creation logic.</p>
 <div class="section" id="slack-setup">
 <span id="slack-connector"></span><h2><a class="toc-backref" href="#id33">Slack Setup</a><a class="headerlink" href="#slack-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials, once you have them you can
-<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
+<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa.core.run</span></code>
 script, or you can attach it in your own code.</p>
 <div class="section" id="id3">
 <h3><a class="toc-backref" href="#id34">Getting Credentials</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
@@ -520,7 +520,7 @@ This can be a channel, an app or an individual person</li>
 <h3><a class="toc-backref" href="#id35">Using run script</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the slack input channel using the run
 script, e.g. using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -547,9 +547,9 @@ the user who sent them.</p>
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
 <p>Code to create a Messenger-compatible webserver looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.slack</span> <span class="k">import</span> <span class="n">SlackInput</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.channels.slack</span> <span class="k">import</span> <span class="n">SlackInput</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
 
 <span class="c1"># load your trained agent</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
@@ -569,7 +569,7 @@ from your webserver creation logic.</p>
 <div class="section" id="mattermost-setup">
 <span id="mattermost-connector"></span><h2><a class="toc-backref" href="#id37">Mattermost Setup</a><a class="headerlink" href="#mattermost-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials, once you have them you can
-<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
+<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa.core.run</span></code>
 script, or you can attach it in your own code.</p>
 <div class="section" id="id6">
 <h3><a class="toc-backref" href="#id38">Getting Credentials</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
@@ -597,7 +597,7 @@ have your webhook running in core or your public address, e.g.
 <h3><a class="toc-backref" href="#id39">Using run script</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the mattermost input channel using the
 run script, e.g. using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -616,9 +616,9 @@ run script, e.g. using:</p>
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
 <p>Code to create a Mattermost-compatible webserver looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.mattermost</span> <span class="k">import</span> <span class="n">MattermostInput</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.channels.mattermost</span> <span class="k">import</span> <span class="n">MattermostInput</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
 
 <span class="c1"># load your trained agent</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
@@ -647,7 +647,7 @@ add in the mattermost outgoing webhook.</p>
 <div class="section" id="telegram-setup">
 <span id="telegram-connector"></span><h2><a class="toc-backref" href="#id41">Telegram Setup</a><a class="headerlink" href="#telegram-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials, once you have them you can
-<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
+<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa.core.run</span></code>
 script, or you can attach it in your own code.</p>
 <div class="section" id="id9">
 <h3><a class="toc-backref" href="#id42">Getting Credentials</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
@@ -670,7 +670,7 @@ will only listen when the message is started with <em>/bot</em></li>
 <div class="section" id="id10">
 <h3><a class="toc-backref" href="#id43">Using run script</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to telegram using the run script, e.g. using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -688,9 +688,9 @@ will only listen when the message is started with <em>/bot</em></li>
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
 <p>Code to create a Messenger-compatible webserver looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.telegram</span> <span class="k">import</span> <span class="n">TelegramInput</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.channels.telegram</span> <span class="k">import</span> <span class="n">TelegramInput</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
 
 <span class="c1"># load your trained agent</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
@@ -718,7 +718,7 @@ first to set the webhook.</p>
 <div class="section" id="twilio-setup">
 <span id="twilio-connector"></span><h2><a class="toc-backref" href="#id45">Twilio Setup</a><a class="headerlink" href="#twilio-setup" title="Permalink to this headline">¶</a></h2>
 <p>You first need to retrieve some credentials, once you have them you can
-<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code>
+<strong>either</strong> attach the input channel running the provided <code class="docutils literal notranslate"><span class="pre">rasa.core.run</span></code>
 script, or you can attach it in your own code.</p>
 <div class="section" id="id12">
 <h3><a class="toc-backref" href="#id46">Getting Credentials</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
@@ -743,7 +743,7 @@ number you purchased in your credentials yml.</li>
 <h3><a class="toc-backref" href="#id47">Using run script</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the twilio input channel using the run
 script, e.g. using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -761,9 +761,9 @@ script, e.g. using:</p>
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
 <p>Code to create a Twilio-compatible webserver looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.twilio</span> <span class="k">import</span> <span class="n">TwilioInput</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.channels.twilio</span> <span class="k">import</span> <span class="n">TwilioInput</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
 
 <span class="c1"># load your trained agent</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
@@ -816,7 +816,7 @@ webhook running, in Core or your public address with
 <h3><a class="toc-backref" href="#id51">Using run script</a><a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the rocketchat input channel using the run
 script, e.g. using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -834,9 +834,9 @@ script, e.g. using:</p>
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
 <p>Code to create a RocketChat-compatible webserver looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.rocketchat</span> <span class="k">import</span> <span class="n">RocketChatInput</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.channels.rocketchat</span> <span class="k">import</span> <span class="n">RocketChatInput</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
 
 <span class="c1"># load your trained agent</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
@@ -865,7 +865,7 @@ RocketChat outgoing webhook.</p>
 <h3><a class="toc-backref" href="#id54">Using run script</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the botframework input channel using the
 run script, e.g. using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -882,9 +882,9 @@ run script, e.g. using:</p>
 a webserver. This lets you seperate the exact endpoints and implementation
 from your webserver creation logic.</p>
 <p>Code to create a Microsoft Bot Framework-compatible webserver looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.botframework</span> <span class="k">import</span> <span class="n">BotFrameworkInput</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.channels.botframework</span> <span class="k">import</span> <span class="n">BotFrameworkInput</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
 
 <span class="c1"># load your trained agent</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
@@ -908,13 +908,13 @@ add in your microsoft bot service configuration.</p>
 <div class="section" id="socketio-setup">
 <span id="socketio-connector"></span><h2><a class="toc-backref" href="#id56">SocketIO Setup</a><a class="headerlink" href="#socketio-setup" title="Permalink to this headline">¶</a></h2>
 <p>You can <strong>either</strong> attach the input channel running the provided
-<code class="docutils literal notranslate"><span class="pre">rasa_core.run</span></code> script, or you can attach the channel in your
+<code class="docutils literal notranslate"><span class="pre">rasa.core.run</span></code> script, or you can attach the channel in your
 own code.</p>
 <div class="section" id="id20">
 <h3><a class="toc-backref" href="#id57">Using run script</a><a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect the socketio input channel using the run
 script, e.g. using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -939,9 +939,9 @@ implements this session creation mechanism (version &gt;= 0.5.0).</p>
 <div class="section" id="id21">
 <h3><a class="toc-backref" href="#id58">Directly using python</a><a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
 <p>Code to create a Socket.IO-compatible webserver looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels.socketio</span> <span class="k">import</span> <span class="n">SocketIOInput</span>
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa.core.channels.socketio</span> <span class="k">import</span> <span class="n">SocketIOInput</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RegexInterpreter</span>
 
 <span class="c1"># load your trained agent</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
@@ -997,7 +997,7 @@ messages to.</p>
 to and in response to that request will send back the bots messages.
 Here is an example on how to connect the <code class="docutils literal notranslate"><span class="pre">rest</span></code> input channel
 using the run script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -1030,7 +1030,7 @@ request that sends the message, it will call a URL you can specify
 to send bot messages.</p>
 <p>Here is an example on how to connect the
 <code class="docutils literal notranslate"><span class="pre">callback</span></code> input channel using the run script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
     --port <span class="m">5002</span> --credentials credentials.yml
 </pre></div>
 </div>
@@ -1061,7 +1061,7 @@ and the following <code class="docutils literal notranslate"><span class="pre">J
 <div class="section" id="creating-a-new-channel">
 <span id="custom-channels"></span><h2><a class="toc-backref" href="#id63">Creating a new Channel</a><a class="headerlink" href="#creating-a-new-channel" title="Permalink to this headline">¶</a></h2>
 <p>You can also implement your own, custom channel. You can
-use the <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.channel.RestInput</span></code> class as a template.
+use the <code class="docutils literal notranslate"><span class="pre">rasa.core.channels.channel.RestInput</span></code> class as a template.
 The methods you need to implement are <code class="docutils literal notranslate"><span class="pre">blueprint</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code>. The method
 needs to create a sanic blueprint that can be attached to a sanic server.</p>
 <p>This allows you to add <cite>REST</cite> endpoints to the server, which the external
@@ -1090,7 +1090,7 @@ creates while the bot is processing your messages and return
 them as part of your endpoint response. This is the way the <code class="docutils literal notranslate"><span class="pre">RestInput</span></code>
 channel is implemented. For examples on how to create and use your own output
 channel, please take a look at the implementations of the other
-output channels, e.g. the <code class="docutils literal notranslate"><span class="pre">SlackBot</span></code> in <code class="docutils literal notranslate"><span class="pre">rasa_core.channels.slack</span></code>.</p>
+output channels, e.g. the <code class="docutils literal notranslate"><span class="pre">SlackBot</span></code> in <code class="docutils literal notranslate"><span class="pre">rasa.core.channels.slack</span></code>.</p>
 <p>To use a custom channel, you need to supply a credentials configuration file
 <code class="docutils literal notranslate"><span class="pre">credentials.yml</span></code> with the command line argument <code class="docutils literal notranslate"><span class="pre">--credentials</span></code>.
 This credentials file has to contain the module path of your custom channel and
@@ -1191,7 +1191,7 @@ posted this message to the channel:</p>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 

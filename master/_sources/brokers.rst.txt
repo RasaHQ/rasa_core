@@ -8,7 +8,7 @@ Event Brokers
 
 Rasa Core allows you to stream events to a message broker. The event broker
 emits events into the event queue. It becomes part of the ``TrackerStore``
-which you use when starting an ``Agent`` or launch ``rasa_core.run``.
+which you use when starting an ``Agent`` or launch ``rasa.core.run``.
 
 All events are streamed to the broker as serialised dictionaries every time
 the tracker updates it state. An example event emitted from the ``default``
@@ -42,14 +42,14 @@ You can use an endpoint configuration file to instruct Rasa Core to stream
 all events to your event broker. To do so, add the following section to your
 endpoint configuration, e.g. ``endpoints.yml``:
 
-.. literalinclude:: ../data/test_endpoints/event_brokers/pika_endpoint.yml
+.. literalinclude:: ../../data/test_endpoints/event_brokers/pika_endpoint.yml
 
 Then instruct Rasa Core to use the endpoint configuration and Pika producer by adding
 ``--event_broker pika_producer`` and ``--endpoints <path to your endpoint configuration`` as following example:
 
 .. code-block:: shell
 
-    python3 -m rasa_core.run -d models/dialogue -u models/nlu/current --event_broker pika_producer --endpoints endpoints.yml
+    python3 -m rasa.core.run -d models/dialogue -u models/nlu/current --event_broker pika_producer --endpoints endpoints.yml
 
 Adding a Pika Event Broker in Python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -58,7 +58,7 @@ Here is how you add it using Python code:
 
 .. code-block:: python
 
-    from rasa_core.event_brokers.pika_producer import PikaProducer
+    from rasa.core.event_brokers.pika_producer import PikaProducer
     from rasa_platform.core.tracker_store import InMemoryTrackerStore
 
     pika_broker = PikaProducer('localhost',
@@ -124,15 +124,15 @@ when running Rasa, and select Kafka producer with ``--kafka_broker kafka_produce
 
 .. code-block:: shell
 
-    python3 -m rasa_core.run -d models/dialogue -u models/nlu/current --event_broker kafka_producer --endpoints endpoints.yml
+    python3 -m rasa.core.run -d models/dialogue -u models/nlu/current --event_broker kafka_producer --endpoints endpoints.yml
 
 Using ``SASL_PLAINTEXT`` protocol the endpoints file must have the following entries:
 
-.. literalinclude:: ../data/test_endpoints/event_brokers/kafka_plaintext_endpoint.yml
+.. literalinclude:: ../../data/test_endpoints/event_brokers/kafka_plaintext_endpoint.yml
 
 In the case of using SSL protocol the endpoints file must looks like:
 
-.. literalinclude:: ../data/test_endpoints/event_brokers/kafka_ssl_endpoint.yml
+.. literalinclude:: ../../data/test_endpoints/event_brokers/kafka_ssl_endpoint.yml
 
 Adding a Kafka Broker in Python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -141,8 +141,8 @@ The code below shows an example on how to instantiate a Kafka producer in you sc
 
 .. code-block:: python
 
-    from rasa_core.event_brokers.kafka_producer import KafkaProducer
-    from rasa_platform.core.tracker_store import InMemoryTrackerStore
+    from rasa.core.event_brokers.kafka_producer import KafkaProducer
+    from rasa.core.tracker_store import InMemoryTrackerStore
 
     kafka_broker = KafkaProducer(host='localhost:9092',
                                  topic='rasa_core_events')

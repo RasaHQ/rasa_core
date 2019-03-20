@@ -206,29 +206,29 @@
 
 <span class="kn">import</span> <span class="nn">aiohttp</span>
 
-<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">jobs</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">InputChannel</span><span class="p">,</span> <span class="n">OutputChannel</span><span class="p">,</span> <span class="n">UserMessage</span>
-<span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="n">DEFAULT_REQUEST_TIMEOUT</span>
-<span class="kn">from</span> <span class="nn">rasa_core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
-<span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">InvalidDomain</span><span class="p">,</span> <span class="n">check_domain_sanity</span>
-<span class="kn">from</span> <span class="nn">rasa_core.exceptions</span> <span class="k">import</span> <span class="n">AgentNotReady</span>
-<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span>
-<span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">FormPolicy</span><span class="p">,</span> <span class="n">Policy</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies.ensemble</span> <span class="k">import</span> <span class="n">PolicyEnsemble</span><span class="p">,</span> <span class="n">SimplePolicyEnsemble</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
-<span class="kn">from</span> <span class="nn">rasa_core.processor</span> <span class="k">import</span> <span class="n">MessageProcessor</span>
-<span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">InMemoryTrackerStore</span>
-<span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
-<span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span><span class="p">,</span> <span class="n">LockCounter</span>
+<span class="kn">from</span> <span class="nn">rasa.core</span> <span class="k">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">jobs</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">rasa.core.channels</span> <span class="k">import</span> <span class="n">InputChannel</span><span class="p">,</span> <span class="n">OutputChannel</span><span class="p">,</span> <span class="n">UserMessage</span>
+<span class="kn">from</span> <span class="nn">rasa.core.constants</span> <span class="k">import</span> <span class="n">DEFAULT_REQUEST_TIMEOUT</span>
+<span class="kn">from</span> <span class="nn">rasa.core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
+<span class="kn">from</span> <span class="nn">rasa.core.domain</span> <span class="k">import</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">InvalidDomain</span><span class="p">,</span> <span class="n">check_domain_sanity</span>
+<span class="kn">from</span> <span class="nn">rasa.core.exceptions</span> <span class="k">import</span> <span class="n">AgentNotReady</span>
+<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span>
+<span class="kn">from</span> <span class="nn">rasa.core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span>
+<span class="kn">from</span> <span class="nn">rasa.core.policies</span> <span class="k">import</span> <span class="n">FormPolicy</span><span class="p">,</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">rasa.core.policies.ensemble</span> <span class="k">import</span> <span class="n">PolicyEnsemble</span><span class="p">,</span> <span class="n">SimplePolicyEnsemble</span>
+<span class="kn">from</span> <span class="nn">rasa.core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa.core.processor</span> <span class="k">import</span> <span class="n">MessageProcessor</span>
+<span class="kn">from</span> <span class="nn">rasa.core.tracker_store</span> <span class="k">import</span> <span class="n">InMemoryTrackerStore</span>
+<span class="kn">from</span> <span class="nn">rasa.core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+<span class="kn">from</span> <span class="nn">rasa.core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span><span class="p">,</span> <span class="n">LockCounter</span>
 <span class="kn">from</span> <span class="nn">rasa_nlu.utils</span> <span class="k">import</span> <span class="n">is_url</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="c1"># noinspection PyPep8Naming</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span> <span class="k">as</span> <span class="n">NLG</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">TrackerStore</span>
+    <span class="kn">from</span> <span class="nn">rasa.core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span> <span class="k">as</span> <span class="n">NLG</span>
+    <span class="kn">from</span> <span class="nn">rasa.core.tracker_store</span> <span class="k">import</span> <span class="n">TrackerStore</span>
     <span class="kn">from</span> <span class="nn">sanic</span> <span class="k">import</span> <span class="n">Sanic</span>
 
 
@@ -279,7 +279,7 @@
 
     <span class="n">stack_model_directory</span> <span class="o">=</span> <span class="n">_get_stack_model_directory</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">stack_model_directory</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RasaNLUInterpreter</span>
+        <span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RasaNLUInterpreter</span>
         <span class="n">nlu_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stack_model_directory</span><span class="p">,</span> <span class="s2">&quot;nlu&quot;</span><span class="p">)</span>
         <span class="n">core_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stack_model_directory</span><span class="p">,</span> <span class="s2">&quot;core&quot;</span><span class="p">)</span>
         <span class="n">interpreter</span> <span class="o">=</span> <span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="n">model_directory</span><span class="o">=</span><span class="n">nlu_model</span><span class="p">)</span>
@@ -614,8 +614,8 @@
 
 <span class="sd">        :Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; from rasa_core.agent import Agent</span>
-<span class="sd">            &gt;&gt;&gt; from rasa_core.interpreter import RasaNLUInterpreter</span>
+<span class="sd">            &gt;&gt;&gt; from rasa.core.agent import Agent</span>
+<span class="sd">            &gt;&gt;&gt; from rasa.core.interpreter import RasaNLUInterpreter</span>
 <span class="sd">            &gt;&gt;&gt; interpreter = RasaNLUInterpreter(</span>
 <span class="sd">            ... &quot;examples/restaurantbot/models/nlu/current&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; agent = Agent.load(&quot;examples/restaurantbot/models/dialogue&quot;,</span>
@@ -785,7 +785,7 @@
 <span class="sd">        If ``serve_forever`` is set to ``True``, this call will be blocking.</span>
 <span class="sd">        Otherwise the webserver will be started, and the method will</span>
 <span class="sd">        return afterwards.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">run</span>
+        <span class="kn">from</span> <span class="nn">rasa.core</span> <span class="k">import</span> <span class="n">run</span>
 
         <span class="n">app</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">configure_app</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">cors</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
                                 <span class="n">enable_api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -857,8 +857,8 @@
                         <span class="n">should_merge_nodes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                         <span class="n">fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>
                         <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.training.visualization</span> <span class="k">import</span> <span class="n">visualize_stories</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.training.dsl</span> <span class="k">import</span> <span class="n">StoryFileReader</span>
+        <span class="kn">from</span> <span class="nn">rasa.core.training.visualization</span> <span class="k">import</span> <span class="n">visualize_stories</span>
+        <span class="kn">from</span> <span class="nn">rasa.core.training.dsl</span> <span class="k">import</span> <span class="n">StoryFileReader</span>
         <span class="sd">&quot;&quot;&quot;Visualize the loaded training data from the resource.&quot;&quot;&quot;</span>
 
         <span class="c1"># if the user doesn&#39;t provide a max history, we will use the</span>

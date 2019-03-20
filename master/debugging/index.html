@@ -149,7 +149,7 @@ your contextual AI assistants and chatbots using open source libraries." />
 <li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
@@ -216,7 +216,7 @@ clear the tracker and start a new conversation by sending the message <code clas
 </div>
 <p>To debug your bot, run it on the command line with the <code class="docutils literal notranslate"><span class="pre">--debug</span></code> flag.</p>
 <p>For example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current --debug
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current --debug
 </pre></div>
 </div>
 <p>This will print lots of information to help you understand what’s going on.
@@ -234,15 +234,15 @@ For example:</p>
 11
 12</pre></div></td><td class="code"><div class="highlight"><pre><span></span> Bot loaded. Type a message and press enter:
  /greet
- rasa_core.tracker_store - Creating a new tracker <span class="k">for</span> id <span class="s1">&#39;default&#39;</span>.
- rasa_core.processor - Received user message <span class="s1">&#39;/greet&#39;</span> with intent <span class="s1">&#39;{&#39;</span>confidence<span class="s1">&#39;: 1.0, &#39;</span>name<span class="s1">&#39;: &#39;</span>greet<span class="s1">&#39;}&#39;</span> and entities <span class="s1">&#39;[]&#39;</span>
- rasa_core.processor - Logged UserUtterance - tracker now has <span class="m">2</span> events
- rasa_core.processor - Current slot values:
+ rasa.core.tracker_store - Creating a new tracker <span class="k">for</span> id <span class="s1">&#39;default&#39;</span>.
+ rasa.core.processor - Received user message <span class="s1">&#39;/greet&#39;</span> with intent <span class="s1">&#39;{&#39;</span>confidence<span class="s1">&#39;: 1.0, &#39;</span>name<span class="s1">&#39;: &#39;</span>greet<span class="s1">&#39;}&#39;</span> and entities <span class="s1">&#39;[]&#39;</span>
+ rasa.core.processor - Logged UserUtterance - tracker now has <span class="m">2</span> events
+ rasa.core.processor - Current slot values:
 
- rasa_core.policies.memoization - Current tracker state <span class="o">[</span>None, <span class="o">{}</span>, <span class="o">{</span><span class="s1">&#39;prev_action_listen&#39;</span>: <span class="m">1</span>.0, <span class="s1">&#39;intent_greet&#39;</span>: <span class="m">1</span>.0<span class="o">}]</span>
- rasa_core.policies.memoization - There is a memorised next action <span class="s1">&#39;2&#39;</span>
- rasa_core.policies.ensemble - Predicted next action using policy_0_MemoizationPolicy
- rasa_core.policies.ensemble - Predicted next action <span class="s1">&#39;utter_greet&#39;</span> with prob <span class="m">1</span>.00.
+ rasa.core.policies.memoization - Current tracker state <span class="o">[</span>None, <span class="o">{}</span>, <span class="o">{</span><span class="s1">&#39;prev_action_listen&#39;</span>: <span class="m">1</span>.0, <span class="s1">&#39;intent_greet&#39;</span>: <span class="m">1</span>.0<span class="o">}]</span>
+ rasa.core.policies.memoization - There is a memorised next action <span class="s1">&#39;2&#39;</span>
+ rasa.core.policies.ensemble - Predicted next action using policy_0_MemoizationPolicy
+ rasa.core.policies.ensemble - Predicted next action <span class="s1">&#39;utter_greet&#39;</span> with prob <span class="m">1</span>.00.
  Hey! How are you?
 </pre></div>
 </td></tr></table></div>
@@ -272,7 +272,7 @@ are described within a story file. To make debugging easier and to ease
 discussions about bot flows, you can visualize the content of a story file.</p>
 <p>You can visualize stories with this command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/concertbot/
-python3 -m rasa_core.visualize -d domain.yml -s data/stories.md -o graph.html -c config.yml
+python3 -m rasa.core.visualize -d domain.yml -s data/stories.md -o graph.html -c config.yml
 </pre></div>
 </div>
 <p>This will run through the stories of the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example in
@@ -283,9 +283,9 @@ opening <code class="docutils literal notranslate"><span class="pre">graph.html<
 create a <code class="docutils literal notranslate"><span class="pre">visualize.py</span></code> in <code class="docutils literal notranslate"><span class="pre">examples/concertbot</span></code> with the following code:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
 
-<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies.keras_policy</span> <span class="k">import</span> <span class="n">KerasPolicy</span>
-<span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa.core.agent</span> <span class="k">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa.core.policies.keras_policy</span> <span class="k">import</span> <span class="n">KerasPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa.core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="s2">&quot;domain.yml&quot;</span><span class="p">,</span>
@@ -315,7 +315,7 @@ given for the action in the domain (e.g. <code class="docutils literal notransla
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 

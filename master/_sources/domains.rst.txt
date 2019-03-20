@@ -14,7 +14,7 @@ for the things your bot can say.
 
 As an example, the ``DefaultDomain`` has the following yaml definition:
 
-.. literalinclude:: ../data/test_domains/default_with_slots.yml
+.. literalinclude:: ../../data/test_domains/default_with_slots.yml
    :language: yaml
 
 **What does this mean?**

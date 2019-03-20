@@ -21,7 +21,7 @@ Text Slot
             cuisine:
                type: text
    :Description:
-       :class:`rasa_core.slots.Slot`
+       :class:`rasa.core.slots.Slot`
        Results in the feature of the slot being set to ``1`` if any value is set.
        Otherwise the feature will be set to ``0`` (no value is set).
 
@@ -123,7 +123,7 @@ Unfeaturized Slot
 The Slot base class
 -------------------
 
-.. autoclass:: rasa_core.slots.Slot
+.. autoclass:: rasa.core.slots.Slot
 
    .. automethod:: feature_dimensionality
 

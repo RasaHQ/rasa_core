@@ -11,7 +11,7 @@ A Policy decides what action to take at every step in a dialogue
 
 
 
-.. autoclass:: rasa_core.policies.Policy
+.. autoclass:: rasa.core.policies.Policy
 
    .. automethod:: featurize_for_training
 

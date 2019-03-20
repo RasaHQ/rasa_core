@@ -27,14 +27,7 @@ The recommended way to install Rasa Core is using pip which will install the lat
 
 .. copyable::
 
-    pip install rasa_core
-
-
-If you already have `rasa_core` installed and want to update it run:
-
-.. copyable::
-
-    pip install -U rasa_core
+    pip install -U rasa
 
 Unless you've already got numpy & scipy installed, we highly recommend
 that you install and use `Anaconda <https://www.anaconda.com/download/>`_.
@@ -52,8 +45,8 @@ If you want to use the bleeding edge version of Rasa use github + setup.py:
 
 .. code-block:: bash
 
-    git clone https://github.com/RasaHQ/rasa_core.git
-    cd rasa_core
+    git clone https://github.com/RasaHQ/rasa.git
+    cd rasa
     pip install -r requirements.txt
     pip install -e .
 
@@ -76,7 +69,7 @@ We use Rasa NLU for intent classification & entity extraction. To get it, run:
 
 .. code-block:: bash
 
-    pip install rasa_nlu[tensorflow]
+    pip install rasa[tensorflow]
 
 Full instructions can be found
 `in the NLU documentation <https://rasa.com/docs/nlu/installation/>`_.
@@ -112,7 +105,7 @@ This is useful for a quick local setup or if you want to host the Rasa component
 
 Compose File Example
 ~~~~~~~~~~~~~~~~~~~~
-.. literalinclude:: ../docker/docker-compose.yml
+.. literalinclude:: ../../docker/docker-compose.yml
 
 
 .. note::
@@ -138,7 +131,7 @@ For example to train the core model:
 
     .. code-block:: bash
 
-         docker-compose run rasa_core train
+         docker-compose run rasa train
 
 Volume Explanation
 ~~~~~~~~~~~~~~~~~~

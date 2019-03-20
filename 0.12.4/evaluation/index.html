@@ -227,7 +227,9 @@ was predicted incorrectly.</p>
 your domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calling `rasa_core.evaluate` is deprecated. Please use `rasa_core.test` instead.
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/build/RasaHQ/rasa_core/rasa_core/__init__.py:10: UserWarning: The &#39;rasa_core&#39; package hase been renamed. You should change your imports to use &#39;rasa.core&#39; instead.
+  &quot;your imports to use &#39;rasa.core&#39; instead.&quot;, UserWarning)
+Calling `rasa.core.evaluate` is deprecated. Please use `rasa.core.test` instead.
 usage: evaluate.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
                            [--endpoints ENDPOINTS]
                            [--fail_on_prediction_errors] [--core CORE]

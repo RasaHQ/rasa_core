@@ -149,7 +149,7 @@ for building contextual AI assistants and chatbots." />
 <li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
@@ -423,7 +423,7 @@ leave out the <code class="docutils literal notranslate"><span class="pre">!</sp
 into <code class="docutils literal notranslate"><span class="pre">models/dialogue</span></code>.</p>
 
 
-  <pre data-executable>!python3 -m rasa_core.train -d domain.yml -s stories.md -o models/dialogue
+  <pre data-executable>!python3 -m rasa.core.train -d domain.yml -s stories.md -o models/dialogue
 
 print("Finished training!")</pre>
   <script src="https://storage.googleapis.com/docs-theme/juniper.min.js"></script>
@@ -456,7 +456,7 @@ structured data to our bot directly.</p>
 To do this, start your message with a <code class="docutils literal notranslate"><span class="pre">/</span></code>.
 Give it a try by sending the message <code class="docutils literal notranslate"><span class="pre">/greet</span></code>.</p>
 <p>If you are running these commands locally, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue
 </pre></div>
 </div>
 <p>If you are running the cells here in the docs, run this cell:</p>
@@ -465,7 +465,7 @@ Give it a try by sending the message <code class="docutils literal notranslate">
 
   <pre data-executable>import IPython
 from IPython.display import clear_output, HTML, display
-from rasa_core.agent import Agent
+from rasa.core.agent import Agent
 import time
 
 messages = ["Hi! you can chat in this window. Type 'stop' to end the conversation."]
@@ -669,7 +669,7 @@ head over to the <a class="reference external" href="https://rasa.com/docs/nlu/"
 rather than typing in structured input. Let’s start up your full bot, including
 both Rasa Core and Rasa NLU models!</p>
 <p>If you are running these commands locally, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/current/nlu
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/current/nlu
 </pre></div>
 </div>
 <p>If you are running the cells here in the docs, run this cell:</p>
@@ -678,8 +678,8 @@ both Rasa Core and Rasa NLU models!</p>
 
   <pre data-executable>import IPython
 from IPython.display import clear_output, HTML, display
-from rasa_core.agent import Agent
-from rasa_core.interpreter import RasaNLUInterpreter
+from rasa.core.agent import Agent
+from rasa.core.interpreter import RasaNLUInterpreter
 import time
 
 interpreter = RasaNLUInterpreter('models/current/nlu')
@@ -775,7 +775,7 @@ into <code class="docutils literal notranslate"><span class="pre">credentials.ym
 <p>If you are new to Facebook Messenger bots, head over to
 <a class="reference internal" href="../connectors/#facebook-connector"><span class="std std-ref">Facebook Setup</span></a> for an explanation of the different values.</p>
 <p>After setting that up, we can now run the bot using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m rasa.core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
    --port <span class="m">5002</span>--credentials credentials.yml
 </pre></div>
 </div>
@@ -798,7 +798,7 @@ this:</p>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 </div>

@@ -149,7 +149,7 @@ buttons or other structured input for contextual conversation design." />
 <li class="toctree-l1"><a class="reference internal" href="../../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../support/">Getting Support</a></li>
 </ul>
 
@@ -211,11 +211,11 @@ buttons or other structured input for contextual conversation design." />
 <span id="id1"></span><h1>Interpreters<a class="headerlink" href="#interpreters" title="Permalink to this headline">¶</a></h1>
 <p>Rasa Core itself does not interpret text. You can use <a class="reference external" href="https://rasa.com/docs/nlu/">Rasa NLU</a> for this.</p>
 <dl class="class">
-<dt id="rasa_core.interpreter.RasaNLUHttpInterpreter">
-<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RasaNLUHttpInterpreter</code><span class="sig-paren">(</span><em>model_name: str = None</em>, <em>endpoint: rasa_core.utils.EndpointConfig = None</em>, <em>project_name: str = 'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUHttpInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUHttpInterpreter" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.interpreter.RasaNLUHttpInterpreter">
+<em class="property">class </em><code class="descclassname">rasa.core.interpreter.</code><code class="descname">RasaNLUHttpInterpreter</code><span class="sig-paren">(</span><em>model_name: str = None</em>, <em>endpoint: rasa.core.utils.EndpointConfig = None</em>, <em>project_name: str = 'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa/core/interpreter/#RasaNLUHttpInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.interpreter.RasaNLUHttpInterpreter" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
-<dt id="rasa_core.interpreter.RasaNLUHttpInterpreter.parse">
-<em class="property">await </em><code class="descname">parse</code><span class="sig-paren">(</span><em>text</em>, <em>message_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUHttpInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUHttpInterpreter.parse" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.interpreter.RasaNLUHttpInterpreter.parse">
+<em class="property">await </em><code class="descname">parse</code><span class="sig-paren">(</span><em>text</em>, <em>message_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa/core/interpreter/#RasaNLUHttpInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.interpreter.RasaNLUHttpInterpreter.parse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a text message.</p>
 <p>Return a default value if the parsing of the text failed.</p>
 </dd></dl>
@@ -223,11 +223,11 @@ buttons or other structured input for contextual conversation design." />
 </dd></dl>
 
 <dl class="class">
-<dt id="rasa_core.interpreter.RasaNLUInterpreter">
-<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RasaNLUInterpreter</code><span class="sig-paren">(</span><em>model_directory</em>, <em>config_file=None</em>, <em>lazy_init=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUInterpreter" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.interpreter.RasaNLUInterpreter">
+<em class="property">class </em><code class="descclassname">rasa.core.interpreter.</code><code class="descname">RasaNLUInterpreter</code><span class="sig-paren">(</span><em>model_directory</em>, <em>config_file=None</em>, <em>lazy_init=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa/core/interpreter/#RasaNLUInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.interpreter.RasaNLUInterpreter" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
-<dt id="rasa_core.interpreter.RasaNLUInterpreter.parse">
-<em class="property">await </em><code class="descname">parse</code><span class="sig-paren">(</span><em>text</em>, <em>message_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUInterpreter.parse" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.interpreter.RasaNLUInterpreter.parse">
+<em class="property">await </em><code class="descname">parse</code><span class="sig-paren">(</span><em>text</em>, <em>message_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa/core/interpreter/#RasaNLUInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.interpreter.RasaNLUInterpreter.parse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a text message.</p>
 <p>Return a default value if the parsing of the text failed.</p>
 </dd></dl>
@@ -289,7 +289,7 @@ and entities:</p>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 

@@ -33,7 +33,7 @@ of the conversation, use an ``unfeaturized`` slot.
 How Rasa Uses Slots
 -------------------
 
-The :class:`rasa_core.policies.Policy` doesn't have access to the
+The :class:`rasa.core.policies.Policy` doesn't have access to the
 value of your slots. It receives a ``featurized`` representation.
 As mentioned above, for a ``text`` slot the value is irrelevant.
 The policy just sees a ``1`` or ``0`` depending on whether it is set.
@@ -104,7 +104,7 @@ In this case, your stories need to include the slots.
 For example, you have a custom action to fetch a user's profile, and
 you have a ``categorical`` slot called ``account_type``.
 When the ``fetch_profile`` action is run, it returns a
-:class:`rasa_core.events.SlotSet` event:
+:class:`rasa.core.events.SlotSet` event:
 
 .. code-block:: yaml
 
@@ -182,7 +182,7 @@ a vector of length ``2``.
 
 .. testcode::
 
-   from rasa_core.slots import Slot
+   from rasa.core.slots import Slot
 
    class NumberOfPeopleSlot(Slot):
 

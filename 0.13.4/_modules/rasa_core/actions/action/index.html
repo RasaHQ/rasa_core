@@ -202,21 +202,21 @@
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
-<span class="kn">import</span> <span class="nn">rasa_core</span>
-<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">events</span>
-<span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">import</span> <span class="nn">rasa.core</span>
+<span class="kn">from</span> <span class="nn">rasa.core</span> <span class="k">import</span> <span class="n">events</span>
+<span class="kn">from</span> <span class="nn">rasa.core.constants</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">DOCS_BASE_URL</span><span class="p">,</span>
     <span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">,</span>
     <span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="n">USER_INTENT_OUT_OF_SCOPE</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">rasa.core.events</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">UserUtteranceReverted</span><span class="p">,</span> <span class="n">UserUttered</span><span class="p">,</span>
     <span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">Event</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span><span class="p">,</span> <span class="n">ClientResponseError</span>
+<span class="kn">from</span> <span class="nn">rasa.core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span><span class="p">,</span> <span class="n">ClientResponseError</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
-    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+    <span class="kn">from</span> <span class="nn">rasa.core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+    <span class="kn">from</span> <span class="nn">rasa.core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
+    <span class="kn">from</span> <span class="nn">rasa.core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -318,7 +318,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            dispatcher (Dispatcher): the dispatcher which is used to send</span>
 <span class="sd">                messages back to the user. Use ``dispatcher.utter_message()``</span>
-<span class="sd">                or any other :class:`rasa_core.dispatcher.Dispatcher` method.</span>
+<span class="sd">                or any other :class:`rasa.core.dispatcher.Dispatcher` method.</span>
 <span class="sd">            tracker (DialogueStateTracker): the state tracker for the current</span>
 <span class="sd">                user. You can access slot values using</span>
 <span class="sd">                ``tracker.get_slot(slot_name)`` and the most recent user</span>
@@ -326,7 +326,7 @@
 <span class="sd">            domain (Domain): the bot&#39;s domain</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            List[Event]: A list of :class:`rasa_core.events.Event` instances</span>
+<span class="sd">            List[Event]: A list of :class:`rasa.core.events.Event` instances</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
@@ -393,7 +393,7 @@
         <span class="k">return</span> <span class="n">ACTION_RESTART_NAME</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Restarted</span>
+        <span class="kn">from</span> <span class="nn">rasa.core.events</span> <span class="k">import</span> <span class="n">Restarted</span>
 
         <span class="c1"># only utter the template if it is available</span>
         <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_restart&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
@@ -409,7 +409,7 @@
         <span class="k">return</span> <span class="n">ACTION_DEFAULT_FALLBACK_NAME</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">UserUtteranceReverted</span>
+        <span class="kn">from</span> <span class="nn">rasa.core.events</span> <span class="k">import</span> <span class="n">UserUtteranceReverted</span>
 
         <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
                                         <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -424,7 +424,7 @@
         <span class="k">return</span> <span class="n">ACTION_DEACTIVATE_FORM_NAME</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">SlotSet</span>
+        <span class="kn">from</span> <span class="nn">rasa.core.events</span> <span class="k">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">SlotSet</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Form</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">SlotSet</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
 
 
@@ -438,7 +438,7 @@
     <span class="k">def</span> <span class="nf">_action_call_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
                             <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Create the request json send to the action server.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">EventVerbosity</span>
+        <span class="kn">from</span> <span class="nn">rasa.core.trackers</span> <span class="k">import</span> <span class="n">EventVerbosity</span>
 
         <span class="n">tracker_state</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">current_state</span><span class="p">(</span><span class="n">EventVerbosity</span><span class="o">.</span><span class="n">ALL</span><span class="p">)</span>
 
@@ -447,7 +447,7 @@
             <span class="s2">&quot;sender_id&quot;</span><span class="p">:</span> <span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span>
             <span class="s2">&quot;tracker&quot;</span><span class="p">:</span> <span class="n">tracker_state</span><span class="p">,</span>
             <span class="s2">&quot;domain&quot;</span><span class="p">:</span> <span class="n">domain</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(),</span>
-            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">rasa_core</span><span class="o">.</span><span class="n">__version__</span>
+            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">rasa</span><span class="o">.</span><span class="n">__version__</span>
         <span class="p">}</span>
 
     <span class="nd">@staticmethod</span>
@@ -620,7 +620,7 @@
                   <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span>
                   <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
                   <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">rasa_core.policies.two_stage_fallback</span> <span class="k">import</span> <span class="p">(</span>
+        <span class="kn">from</span> <span class="nn">rasa.core.policies.two_stage_fallback</span> <span class="k">import</span> <span class="p">(</span>
             <span class="n">has_user_rephrased</span><span class="p">)</span>
 
         <span class="n">revert_events</span> <span class="o">=</span> <span class="p">[]</span>

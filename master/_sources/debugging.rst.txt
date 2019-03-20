@@ -18,7 +18,7 @@ For example:
 
 .. code-block:: bash
 
-  python3 -m rasa_core.run -d models/dialogue -u models/nlu/current --debug
+  python3 -m rasa.core.run -d models/dialogue -u models/nlu/current --debug
 
 
 This will print lots of information to help you understand what's going on.
@@ -29,15 +29,15 @@ For example:
 
     Bot loaded. Type a message and press enter:
     /greet
-    rasa_core.tracker_store - Creating a new tracker for id 'default'.
-    rasa_core.processor - Received user message '/greet' with intent '{'confidence': 1.0, 'name': 'greet'}' and entities '[]'
-    rasa_core.processor - Logged UserUtterance - tracker now has 2 events
-    rasa_core.processor - Current slot values:
+    rasa.core.tracker_store - Creating a new tracker for id 'default'.
+    rasa.core.processor - Received user message '/greet' with intent '{'confidence': 1.0, 'name': 'greet'}' and entities '[]'
+    rasa.core.processor - Logged UserUtterance - tracker now has 2 events
+    rasa.core.processor - Current slot values:
 
-    rasa_core.policies.memoization - Current tracker state [None, {}, {'prev_action_listen': 1.0, 'intent_greet': 1.0}]
-    rasa_core.policies.memoization - There is a memorised next action '2'
-    rasa_core.policies.ensemble - Predicted next action using policy_0_MemoizationPolicy
-    rasa_core.policies.ensemble - Predicted next action 'utter_greet' with prob 1.00.
+    rasa.core.policies.memoization - Current tracker state [None, {}, {'prev_action_listen': 1.0, 'intent_greet': 1.0}]
+    rasa.core.policies.memoization - There is a memorised next action '2'
+    rasa.core.policies.ensemble - Predicted next action using policy_0_MemoizationPolicy
+    rasa.core.policies.ensemble - Predicted next action 'utter_greet' with prob 1.00.
     Hey! How are you?
 
 
@@ -78,7 +78,7 @@ You can visualize stories with this command:
 ..  code-block:: bash
 
    cd examples/concertbot/
-   python3 -m rasa_core.visualize -d domain.yml -s data/stories.md -o graph.html -c config.yml
+   python3 -m rasa.core.visualize -d domain.yml -s data/stories.md -o graph.html -c config.yml
 
 This will run through the stories of the ``concertbot`` example in
 ``data/stories.md`` and create a graph which can be shown in your browser by
@@ -89,7 +89,7 @@ opening ``graph.html`` with browser of your choice.
 We can also run the visualisation directly from code. For this example, we can
 create a ``visualize.py`` in ``examples/concertbot`` with the following code:
 
-.. literalinclude:: ../examples/concertbot/visualize.py
+.. literalinclude:: ../../examples/concertbot/visualize.py
 
 Which will create the same image as the previous command.
 The graph we show here is still very simple, graphs can quickly get very complex.

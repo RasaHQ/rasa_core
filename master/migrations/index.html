@@ -149,7 +149,7 @@ Rasa Core and how you can migrate from one version to another." />
 <li class="toctree-l1"><a class="reference internal" href="../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support/">Getting Support</a></li>
 </ul>
 
@@ -214,6 +214,18 @@ how you can migrate from one version to another.</p>
 <p id="migration-to-0-14-0">0.13.x to 0.14.0</p>
 <div class="section" id="general">
 <h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">The python package has a new name, as does the module. You should install
+the package using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">rasa</span></code> (instead of <code class="docutils literal notranslate"><span class="pre">rasa_core</span></code>).</p>
+<p>The code moved from <code class="docutils literal notranslate"><span class="pre">rasa_core</span></code> to <code class="docutils literal notranslate"><span class="pre">rasa.core</span></code> - best way to fix is a
+search and replace for the two most common usages:
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">rasa_core</span></code> and <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">rasa_core</span></code>.</p>
+<p>We have added a backwards compatibility package to still allow you to import
+from <code class="docutils literal notranslate"><span class="pre">rasa_core</span></code>, this will emit a warning but all imports will still
+work. Nevertheless, you should do the above renaming of any access
+to <code class="docutils literal notranslate"><span class="pre">rasa_core</span></code>.</p>
+</li>
+</ul>
 <dl class="docutils">
 <dt>-The <cite>MappingPolicy</cite> is now included in <cite>default_config.yml</cite>. If you are using</dt>
 <dd>a custom policy configuration make sure to update it appropriately.</dd>
@@ -623,7 +635,7 @@ deprecated). Instead of writing:</p>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 </div>

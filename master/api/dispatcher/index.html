@@ -149,7 +149,7 @@ including buttons and other GUI elements." />
 <li class="toctree-l1"><a class="reference internal" href="../../tracker_stores/">Tracker Stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../brokers/">Event Brokers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../docker/">Using Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog/">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../old_core_changelog/">Core Change Log</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../support/">Getting Support</a></li>
 </ul>
 
@@ -212,48 +212,48 @@ including buttons and other GUI elements." />
 <p>The dispatcher is your connection to the outside world and allows you to
 send messages back to the user.</p>
 <dl class="class">
-<dt id="rasa_core.dispatcher.Dispatcher">
-<em class="property">class </em><code class="descclassname">rasa_core.dispatcher.</code><code class="descname">Dispatcher</code><span class="sig-paren">(</span><em>sender_id: str</em>, <em>output_channel: rasa_core.channels.channel.OutputChannel</em>, <em>nlg: rasa_core.nlg.generator.NaturalLanguageGenerator</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/dispatcher/#Dispatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.dispatcher.Dispatcher">
+<em class="property">class </em><code class="descclassname">rasa.core.dispatcher.</code><code class="descname">Dispatcher</code><span class="sig-paren">(</span><em>sender_id: str</em>, <em>output_channel: rasa.core.channels.channel.OutputChannel</em>, <em>nlg: rasa.core.nlg.generator.NaturalLanguageGenerator</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa/core/dispatcher/#Dispatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.dispatcher.Dispatcher" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send messages back to user</p>
 <dl class="method">
-<dt id="rasa_core.dispatcher.Dispatcher.utter_attachment">
-<em class="property">await </em><code class="descname">utter_attachment</code><span class="sig-paren">(</span><em>attachment: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/dispatcher/#Dispatcher.utter_attachment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_attachment" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.dispatcher.Dispatcher.utter_attachment">
+<em class="property">await </em><code class="descname">utter_attachment</code><span class="sig-paren">(</span><em>attachment: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa/core/dispatcher/#Dispatcher.utter_attachment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.dispatcher.Dispatcher.utter_attachment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send a message to the client with attachments.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rasa_core.dispatcher.Dispatcher.utter_button_message">
-<em class="property">await </em><code class="descname">utter_button_message</code><span class="sig-paren">(</span><em>text: str, buttons: List[Dict[str, Any]], **kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/dispatcher/#Dispatcher.utter_button_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_button_message" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.dispatcher.Dispatcher.utter_button_message">
+<em class="property">await </em><code class="descname">utter_button_message</code><span class="sig-paren">(</span><em>text: str, buttons: List[Dict[str, Any]], **kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa/core/dispatcher/#Dispatcher.utter_button_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.dispatcher.Dispatcher.utter_button_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a message with buttons to the output channel.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rasa_core.dispatcher.Dispatcher.utter_button_template">
-<em class="property">await </em><code class="descname">utter_button_template</code><span class="sig-paren">(</span><em>template: str, buttons: List[Dict[str, Any]], tracker: DialogueStateTracker, silent_fail: bool = False, **kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/dispatcher/#Dispatcher.utter_button_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_button_template" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.dispatcher.Dispatcher.utter_button_template">
+<em class="property">await </em><code class="descname">utter_button_template</code><span class="sig-paren">(</span><em>template: str, buttons: List[Dict[str, Any]], tracker: DialogueStateTracker, silent_fail: bool = False, **kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa/core/dispatcher/#Dispatcher.utter_button_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.dispatcher.Dispatcher.utter_button_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a message template with buttons to the output channel.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rasa_core.dispatcher.Dispatcher.utter_custom_message">
-<em class="property">await </em><code class="descname">utter_custom_message</code><span class="sig-paren">(</span><em>*elements</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/dispatcher/#Dispatcher.utter_custom_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_custom_message" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.dispatcher.Dispatcher.utter_custom_message">
+<em class="property">await </em><code class="descname">utter_custom_message</code><span class="sig-paren">(</span><em>*elements</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa/core/dispatcher/#Dispatcher.utter_custom_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.dispatcher.Dispatcher.utter_custom_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a message with custom elements to the output channel.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rasa_core.dispatcher.Dispatcher.utter_message">
-<em class="property">await </em><code class="descname">utter_message</code><span class="sig-paren">(</span><em>text: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/dispatcher/#Dispatcher.utter_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_message" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.dispatcher.Dispatcher.utter_message">
+<em class="property">await </em><code class="descname">utter_message</code><span class="sig-paren">(</span><em>text: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa/core/dispatcher/#Dispatcher.utter_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.dispatcher.Dispatcher.utter_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Send a text to the output channel</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rasa_core.dispatcher.Dispatcher.utter_response">
-<em class="property">await </em><code class="descname">utter_response</code><span class="sig-paren">(</span><em>message: Dict[str, Any]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/dispatcher/#Dispatcher.utter_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_response" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.dispatcher.Dispatcher.utter_response">
+<em class="property">await </em><code class="descname">utter_response</code><span class="sig-paren">(</span><em>message: Dict[str, Any]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa/core/dispatcher/#Dispatcher.utter_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.dispatcher.Dispatcher.utter_response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send a message to the client.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rasa_core.dispatcher.Dispatcher.utter_template">
-<em class="property">await </em><code class="descname">utter_template</code><span class="sig-paren">(</span><em>template: str</em>, <em>tracker: DialogueStateTracker</em>, <em>silent_fail: bool = False</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/dispatcher/#Dispatcher.utter_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.dispatcher.Dispatcher.utter_template" title="Permalink to this definition">¶</a></dt>
+<dt id="rasa.core.dispatcher.Dispatcher.utter_template">
+<em class="property">await </em><code class="descname">utter_template</code><span class="sig-paren">(</span><em>template: str</em>, <em>tracker: DialogueStateTracker</em>, <em>silent_fail: bool = False</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa/core/dispatcher/#Dispatcher.utter_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa.core.dispatcher.Dispatcher.utter_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Send a message to the client based on a template.</p>
 </dd></dl>
 
@@ -264,7 +264,7 @@ send messages back to the user.</p>
 <p>We have a very active support community on <a class="reference external" href="https://forum.rasa.com">Rasa Community Forum</a>
 that is happy to help you with your questions. If you have any feedback for us or a specific
 suggestion for improving the docs, feel free to share it by creating an issue on Rasa Core
-<a class="reference external" href="https://github.com/RasaHQ/rasa_core/issues">GitHub repository</a>.</p>
+<a class="reference external" href="https://github.com/RasaHQ/rasa_nlu/issues">GitHub repository</a>.</p>
 </div>
 </div>
 
