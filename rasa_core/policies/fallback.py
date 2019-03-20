@@ -47,7 +47,7 @@ class FallbackPolicy(Policy):
         self.nlu_threshold = nlu_threshold
         self.core_threshold = core_threshold
         self.fallback_action_name = fallback_action_name
-        self.core_threshold_set = False
+        self.should_core_fallback = False
 
     def train(self,
               training_trackers: List[DialogueStateTracker],
@@ -88,7 +88,7 @@ class FallbackPolicy(Policy):
         The fallback action is predicted if the NLU confidence is low
         or no other policy has a high-confidence prediction.
         """
-        self.core_threshold_set = False
+        self.should_core_fallback = False
         nlu_data = tracker.latest_message.parse_data
 
         # if NLU interpreter does not provide confidence score,
@@ -113,7 +113,7 @@ class FallbackPolicy(Policy):
             # predict fallback action with confidence `core_threshold`
             # if this is the highest confidence in the ensemble,
             # the fallback action will be executed.
-            self.core_threshold_set = True
+            self.should_core_fallback = True
             result = self.fallback_scores(domain, self.core_threshold)
 
         return result

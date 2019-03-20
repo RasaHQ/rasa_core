@@ -362,7 +362,7 @@ class SimplePolicyEnsemble(PolicyEnsemble):
             if fallback_idx_policy:
                 fallback_idx, fallback_policy = fallback_idx_policy[0]
                 if fallback_idx == best_policy_index and \
-                        fallback_policy.core_threshold_set:
+                        fallback_policy.should_core_fallback:
                     logger.debug("Fallback policy was invoked because of "
                                  "core_threshold ({})"
                                  .format(fallback_policy.core_threshold))
