@@ -335,7 +335,6 @@ class SimplePolicyEnsemble(PolicyEnsemble):
         max_confidence = -1
         best_policy_name = None
         best_policy_priority = -1
-        best_policy_index = -1
 
         for i, p in enumerate(self.policies):
             probabilities = p.predict_action_probabilities(tracker, domain)
@@ -351,21 +350,6 @@ class SimplePolicyEnsemble(PolicyEnsemble):
                 result = probabilities
                 best_policy_name = 'policy_{}_{}'.format(i, type(p).__name__)
                 best_policy_priority = p.priority
-                best_policy_index = i
-
-        if logger.level == logging.DEBUG:
-            # When fallback was invoked because of low core_threshold,
-            # log the information so that people know it was the action
-            # prediction and not the intent classification that messed up.
-            fallback_idx_policy = [(i, p) for i, p in enumerate(self.policies)
-                                   if isinstance(p, FallbackPolicy)]
-            if fallback_idx_policy:
-                fallback_idx, fallback_policy = fallback_idx_policy[0]
-                if fallback_idx == best_policy_index and \
-                        fallback_policy.should_core_fallback:
-                    logger.debug("Fallback policy was invoked because of "
-                                 "core_threshold ({})"
-                                 .format(fallback_policy.core_threshold))
 
         if (result.index(max_confidence) ==
                 domain.index_for_action(ACTION_LISTEN_NAME) and
