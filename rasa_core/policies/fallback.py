@@ -28,7 +28,7 @@ class FallbackPolicy(Policy):
                  priority: int = 3,
                  nlu_threshold: float = 0.3,
                  core_threshold: float = 0.3,
-                 fallback_action_name: Text = "action_default_fallback",
+                 fallback_action_name: Text = "action_default_fallback"
                  ) -> None:
         """Create a new Fallback policy.
 

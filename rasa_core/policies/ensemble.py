@@ -354,9 +354,8 @@ class SimplePolicyEnsemble(PolicyEnsemble):
                 best_policy_index = i
 
         if logging.getLogger().level == logging.DEBUG:
-            # Logger should inform you when fallback was invoked because of low core_threshold,
-            # so people know it was the action prediction and not the intent classification that
-            # messed up.
+            # When fallback was invoked because of low core_threshold, log the information so that people know it was
+            # the action prediction and not the intent classification that messed up.
             fallback_idx_policy = [(i, p) for i, p in enumerate(self.policies)
                                     if isinstance(p, FallbackPolicy)]
             if fallback_idx_policy:
