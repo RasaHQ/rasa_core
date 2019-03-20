@@ -331,10 +331,24 @@ class SimplePolicyEnsemble(PolicyEnsemble):
                                         tracker: DialogueStateTracker,
                                         domain: Domain
                                         ) -> Tuple[List[float], Text]:
+
+        fallback_idx_policy = [(i, p) for i, p in enumerate(self.policies)
+                               if isinstance(p, FallbackPolicy)]
+
+        fallback_idx, fallback_policy = -1, None
+        if fallback_idx_policy:
+            fallback_idx, fallback_policy = fallback_idx_policy[0]
+            # evaluate the fallback policy last, so that we are able to
+            # determine that there is no other policy with higher action
+            # prediction confidence than the core threshold
+            self.policies.append(self.policies.pop(fallback_idx))
+            fallback_idx = self.policies.index(fallback_policy)
+
         result = None
         max_confidence = -1
-        best_policy_name = None
+        best_policy = None
         best_policy_priority = -1
+        best_policy_name = None
 
         for i, p in enumerate(self.policies):
             probabilities = p.predict_action_probabilities(tracker, domain)
@@ -348,8 +362,16 @@ class SimplePolicyEnsemble(PolicyEnsemble):
                                            best_policy_priority):
                 max_confidence = confidence
                 result = probabilities
-                best_policy_name = 'policy_{}_{}'.format(i, type(p).__name__)
+                best_policy = p
                 best_policy_priority = p.priority
+                best_policy_name = self._get_policy_name(i, best_policy)
+
+        if logging.getLogger().level == logging.DEBUG and fallback_policy is \
+                not None and best_policy == fallback_policy and \
+                max_confidence == fallback_policy.core_threshold:
+            logger.debug("Highest action prediction confidence is lower than "
+                         "core threshold {}."
+                         .format(fallback_policy.core_threshold))
 
         if (result.index(max_confidence) ==
                 domain.index_for_action(ACTION_LISTEN_NAME) and
@@ -362,12 +384,7 @@ class SimplePolicyEnsemble(PolicyEnsemble):
             #   action is action_listen by a policy
             #   other than the MemoizationPolicy
 
-            fallback_idx_policy = [(i, p) for i, p in enumerate(self.policies)
-                                   if isinstance(p, FallbackPolicy)]
-
-            if fallback_idx_policy:
-                fallback_idx, fallback_policy = fallback_idx_policy[0]
-
+            if fallback_policy is not None:
                 logger.debug("Action 'action_listen' was predicted after "
                              "a user message using {}. "
                              "Predicting fallback action: {}"
@@ -375,9 +392,8 @@ class SimplePolicyEnsemble(PolicyEnsemble):
                                        fallback_policy.fallback_action_name))
 
                 result = fallback_policy.fallback_scores(domain)
-                best_policy_name = 'policy_{}_{}'.format(
-                    fallback_idx,
-                    type(fallback_policy).__name__)
+                best_policy_name = self._get_policy_name(
+                    fallback_idx, fallback_policy)
 
         # normalize probabilities
         if np.sum(result) != 0:
@@ -386,6 +402,10 @@ class SimplePolicyEnsemble(PolicyEnsemble):
         logger.debug("Predicted next action using {}"
                      "".format(best_policy_name))
         return result, best_policy_name
+
+    @staticmethod
+    def _get_policy_name(idx: int, policy: Policy) -> str:
+        return 'policy_{}_{}'.format(idx, type(policy).__name__)
 
 
 class InvalidPolicyConfig(Exception):
