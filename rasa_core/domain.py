@@ -511,7 +511,7 @@ class Domain(object):
 
             prev_action_name = PREV_PREFIX + action_name
             if prev_action_name in self.input_state_map:
-                return {prev_action_name: 1.0, "prev_topic_{0}".format(topic_name): 1.0, "prev_flag_{0}".format(flag_name): 1.0}
+                return {prev_action_name: 1.0} #, "prev_topic_{0}".format(topic_name): 1.0, "prev_flag_{0}".format(flag_name): 1.0}
             else:
                 logger.warning(
                     "Failed to use action '{}' in history. "
