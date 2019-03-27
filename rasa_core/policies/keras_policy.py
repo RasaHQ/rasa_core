@@ -149,7 +149,7 @@ class KerasPolicy(Policy):
                                                     domain,
                                                     **kwargs)
         # noinspection PyPep8Naming
-        shuffled_X, shuffled_y = training_data.shuffled_X_y()
+        shuffled_X, shuffled_y, _, _ = training_data.shuffled_X_y()
 
         self.graph = tf.Graph()
         with self.graph.as_default():

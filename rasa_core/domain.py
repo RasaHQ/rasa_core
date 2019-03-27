@@ -107,6 +107,7 @@ class Domain(object):
             utter_templates,
             data.get("actions", []),
             data.get("forms", []),
+            data.get("flags", []),
             **additional_arguments
         )
 
@@ -231,6 +232,7 @@ class Domain(object):
                  templates: Dict[Text, Any],
                  action_names: List[Text],
                  form_names: List[Text],
+                 flag_names: List[Optional[Text]],
                  store_entities_as_slots: bool = True,
                  restart_intent="restart"  # type: Text
                  ) -> None:
@@ -240,6 +242,7 @@ class Domain(object):
         self.form_names = form_names
         self.slots = slots
         self.templates = templates
+        self.flag_names = flag_names if None in flag_names else [None] + flag_names
 
         # only includes custom actions and utterance actions
         self.user_actions = action_names
@@ -265,6 +268,13 @@ class Domain(object):
         return len(self.action_names)
 
     @utils.lazyproperty
+    def num_flags(self):
+        """Returns the number of available flags."""
+
+        # noinspection PyTypeChecker
+        return len(self.flag_names)
+
+    @utils.lazyproperty
     def num_states(self):
         """Number of used input states for the action prediction."""
 
@@ -282,7 +292,7 @@ class Domain(object):
         """Looks up which action corresponds to this action name."""
 
         if action_name not in self.action_names:
-            self._raise_action_not_found_exception(action_name)
+            self._raise_not_found_exception('action', action_name, self.action_names)
 
         return action.action_from_name(action_name,
                                        action_endpoint,
@@ -314,16 +324,25 @@ class Domain(object):
         try:
             return self.action_names.index(action_name)
         except ValueError:
-            self._raise_action_not_found_exception(action_name)
+            self._raise_not_found_exception('action', action_name, self.action_names)
 
-    def _raise_action_not_found_exception(self, action_name):
-        action_names = "\n".join(["\t - {}".format(a)
-                                  for a in self.action_names])
-        raise NameError("Cannot access action '{}', "
+    def index_for_flag(self, flag_name: Optional[Text]) -> Optional[int]:
+        """Looks up which flag index corresponds to this flag name"""
+
+        try:
+            return self.flag_names.index(flag_name)
+        except ValueError:
+            self._raise_not_found_exception('flag', flag_name, self.flag_names)
+
+    @staticmethod
+    def _raise_not_found_exception(type_of_name, name, names):
+        names = "\n".join(["\t - {}".format(t)
+                           for t in names if t is not None])
+        raise NameError("Cannot access {0} '{1}', "
                         "as that name is not a registered "
-                        "action for this domain. "
-                        "Available actions are: \n{}"
-                        "".format(action_name, action_names))
+                        "{0} for this domain. "
+                        "Available {0}s are: \n{2}"
+                        "".format(type_of_name, name, names))
 
     def random_template_for(self, utter_action):
         if utter_action in self.templates:
