@@ -31,7 +31,20 @@ class KerasFlagPolicy(KerasPolicy):
                                                     **kwargs)
         shuffled_X, shuffled_y, shuffled_flags, _ = training_data.shuffled_X_y()
         print(shuffled_X.shape)
-        shuffled_X = np.concatenate([shuffled_X, shuffled_y], axis=2)
+        print(shuffled_y.shape)
+        exit()
+        featurizer = self.featurizer.state_featurizer
+        slot_start = featurizer.user_feature_len
+        previous_start = slot_start + featurizer.slot_feature_len
+        form_start = previous_start + featurizer.prev_act_feature_len
+
+        shuffled_y = np.concatenate([shuffled_X[:, :, previous_start:form_start], shuffled_y[:, np.newaxis, :]], axis=1)[:, 1:, :]
+        shuffled_forms = shuffled_X[:, :, form_start:]
+
+        shuffled_flags = shuffled_X[:, :, flag_start:]
+        shuffled_X = shuffled_X[:, :, :previous_start]
+
+        shuffled_X = np.concatenate([shuffled_X, shuffled_y, shuffled_forms], axis=2)
         print(shuffled_X.shape)
         exit()
         # old X and FullDialogueFeaturizer
