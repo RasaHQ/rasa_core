@@ -47,6 +47,14 @@ class SingleStateFeaturizer(object):
         y[domain.index_for_action(action)] = 1
         return y
 
+    @staticmethod
+    def flag_as_one_hot(flag: Text, domain: Domain) -> np.ndarray:
+
+        y = np.zeros(domain.num_flags, dtype=int)
+
+        y[domain.index_for_flag(flag)] = 1
+        return y
+
     def create_encoded_all_actions(self, domain: Domain) -> np.ndarray:
         """Create matrix with all actions from domain
             encoded in rows."""
@@ -350,16 +358,44 @@ class TrackerFeaturizer(object):
 
             labels.append(story_labels)
 
+        y = np.array(labels)
         # if it is MaxHistoryFeaturizer, squeeze out time axis
-        y = np.array(labels).squeeze()
+        if y.shape[1] == 1 and isinstance(self, MaxHistoryTrackerFeaturizer):
+            y = y[:, 0, :]
 
         return y
+
+    def _featurize_flags(
+            self,
+            trackers_as_flags: List[List[Optional[Text]]],
+            domain: Domain
+    ) -> np.ndarray:
+        """Create flag array for training"""
+
+        flags = []
+        for tracker_flags in trackers_as_flags:
+
+            if len(trackers_as_flags) > 1:
+                tracker_flags = self._pad_states(tracker_flags)
+
+            story_labels = [self.state_featurizer.flag_as_one_hot(flag,
+                                                                  domain)
+                            for flag in tracker_flags]
+
+            flags.append(story_labels)
+
+        # if it is MaxHistoryFeaturizer, squeeze out time axis
+        flags = np.array(flags)
+        if flags.shape[1] == 1 and isinstance(self, MaxHistoryTrackerFeaturizer):
+            flags = flags[:, 0, :]
+
+        return flags
 
     def training_states_and_actions(
         self,
         trackers: List[DialogueStateTracker],
         domain: Domain
-    ) -> Tuple[List[List[Dict]], List[List[Text]]]:
+    ) -> Tuple[List[List[Dict]], List[List[Text]], List[List[Optional[Text]]]]:
         """Transforms list of trackers to lists of states and actions"""
         raise NotImplementedError("Featurizer must have the capacity to "
                                   "encode trackers to feature vectors")
@@ -372,14 +408,16 @@ class TrackerFeaturizer(object):
         self.state_featurizer.prepare_from_domain(domain)
 
         (trackers_as_states,
-         trackers_as_actions) = self.training_states_and_actions(trackers,
-                                                                 domain)
+         trackers_as_actions,
+         trackers_as_flags) = self.training_states_and_actions(trackers,
+                                                               domain)
 
         # noinspection PyPep8Naming
         X, true_lengths = self._featurize_states(trackers_as_states)
         y = self._featurize_labels(trackers_as_actions, domain)
+        flags = self._featurize_flags(trackers_as_flags, domain)
 
-        return DialogueTrainingData(X, y, true_lengths)
+        return DialogueTrainingData(X, y, flags, true_lengths)
 
     def prediction_states(self,
                           trackers: List[DialogueStateTracker],
@@ -452,10 +490,11 @@ class FullDialogueTrackerFeaturizer(TrackerFeaturizer):
         self,
         trackers: List[DialogueStateTracker],
         domain: Domain
-    ) -> Tuple[List[List[Dict]], List[List[Text]]]:
+    ) -> Tuple[List[List[Dict]], List[List[Text]], List[List[Optional[Text]]]]:
 
         trackers_as_states = []
         trackers_as_actions = []
+        trackers_as_flags = []
 
         logger.debug("Creating states and action examples from "
                      "collected trackers (by {}({}))..."
@@ -470,12 +509,14 @@ class FullDialogueTrackerFeaturizer(TrackerFeaturizer):
 
             delete_first_state = False
             actions = []
+            flags = []
             for event in tracker.applied_events():
                 if isinstance(event, ActionExecuted):
                     if not event.unpredictable:
                         # only actions which can be
                         # predicted at a stories start
                         actions.append(event.action_name)
+                        flags.append(event.flag)
                     else:
                         # unpredictable actions can be
                         # only the first in the story
@@ -491,12 +532,13 @@ class FullDialogueTrackerFeaturizer(TrackerFeaturizer):
 
             trackers_as_states.append(states[:-1])
             trackers_as_actions.append(actions)
+            trackers_as_flags.append(flags)
 
         self.max_len = self._calculate_max_len(trackers_as_actions)
         logger.debug("The longest dialogue has {} actions."
                      "".format(self.max_len))
 
-        return trackers_as_states, trackers_as_actions
+        return trackers_as_states, trackers_as_actions, trackers_as_flags
 
     def prediction_states(self,
                           trackers: List[DialogueStateTracker],
@@ -558,10 +600,11 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
         self,
         trackers: List[DialogueStateTracker],
         domain: Domain
-    ) -> Tuple[List[List[Dict]], List[List[Text]]]:
+    ) -> Tuple[List[List[Dict]], List[List[Text]], List[List[Optional[Text]]]]:
 
         trackers_as_states = []
         trackers_as_actions = []
+        trackers_as_flags = []
 
         # from multiple states that create equal featurizations
         # we only need to keep one.
@@ -595,9 +638,11 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
                                 hashed_examples.add(hashed)
                                 trackers_as_states.append(sliced_states)
                                 trackers_as_actions.append([event.action_name])
+                                trackers_as_flags.append([event.flag])
                         else:
                             trackers_as_states.append(sliced_states)
                             trackers_as_actions.append([event.action_name])
+                            trackers_as_flags.append([event.flag])
 
                         pbar.set_postfix({"# actions": "{:d}".format(
                             len(trackers_as_actions))})
@@ -606,7 +651,7 @@ class MaxHistoryTrackerFeaturizer(TrackerFeaturizer):
         logger.debug("Created {} action examples."
                      "".format(len(trackers_as_actions)))
 
-        return trackers_as_states, trackers_as_actions
+        return trackers_as_states, trackers_as_actions, trackers_as_flags
 
     def prediction_states(self,
                           trackers: List[DialogueStateTracker],
