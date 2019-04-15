@@ -1127,9 +1127,10 @@ class EmbeddingPolicy(Policy):
             # construct loss
             loss = self._tf_loss(self.sim_op, sim_act, sims_rnn_to_max, mask)
             if self.use_topics:
-                loss += tf.losses.softmax_cross_entropy(self._true_topics,
-                                                        topics_logits,
-                                                        self._loss_scales)
+                # loss += tf.losses.softmax_cross_entropy(self._true_topics,
+                #                                         topics_logits,
+                #                                         self._loss_scales)
+                loss += -tf.reduce_sum(self.topics * tf.log(self.topics))
 
             # define which optimizer to use
             self._train_op = tf.train.AdamOptimizer(
