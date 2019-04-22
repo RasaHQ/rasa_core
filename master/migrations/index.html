@@ -164,6 +164,7 @@ Rasa Core and how you can migrate from one version to another." />
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.13.8/migrations/">0.13.8</a>
               <a href="../../0.13.7/migrations/">0.13.7</a>
               <a href="../../0.13.6/migrations/">0.13.6</a>
               <a href="../../0.13.5/migrations/">0.13.5</a>
@@ -209,7 +210,7 @@ Rasa Core and how you can migrate from one version to another." />
 
 
 
-    <p class="scv-banner"><a href="../../0.13.7/migrations/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.13.7.</a></p>
+    <p class="scv-banner"><a href="../../0.13.8/migrations/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.13.8.</a></p>
 <div class="section" id="migration-guide">
 <span id="migration"></span><h1>Migration Guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h1>
 <p>This page contains information about changes between major versions and
@@ -278,6 +279,20 @@ And all internal calls to these methods need to be awaited.</p>
 <p>For inspiration, feel free to check the code of the existing channels.</p>
 </li>
 </ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is a release <strong>breaking backwards compatibility</strong>.
+<code class="docutils literal notranslate"><span class="pre">action_restart</span></code> will not work with your old models, as this is now
+part of the <code class="docutils literal notranslate"><span class="pre">MappingPolicy</span></code>. Please make sure to retrain a
+model before trying to use it with this improved version.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>The <cite>MappingPolicy</cite> is now included in <cite>default_config.yml</cite>. If you are using
+a custom policy configuration make sure to update it appropriately.</li>
+</ul>
 </div>
 <div class="section" id="function-naming">
 <h2>Function Naming<a class="headerlink" href="#function-naming" title="Permalink to this headline">¶</a></h2>
@@ -297,8 +312,8 @@ this version you <strong>must use Python 3</strong>.  As always, <strong>make su
 </div>
 </div>
 </div>
-<div class="section" id="id1">
-<h2>General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>General<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Support for Python 2 has now been completely removed from Rasa Core, please
 upgrade to Python 3.5 or 3.6 to continue using the software</li>
@@ -380,8 +395,8 @@ before updating. Please make sure to
 </div>
 </div>
 </div>
-<div class="section" id="id2">
-<h2>General<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>General<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">TL;DR these are the most important surface changes. But if you have

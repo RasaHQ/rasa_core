@@ -154,12 +154,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.13.7
+          viewing: 0.13.8
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.13.8/slotfilling/">0.13.8</a>
               <a href=".././0.13.7/slotfilling/">0.13.7</a>
               <a href=".././0.13.6/slotfilling/">0.13.6</a>
               <a href=".././0.13.5/slotfilling/">0.13.5</a>
@@ -210,7 +211,7 @@
 <ul class="simple">
 <li><a class="reference internal" href="#slot-filling" id="id1">Slot Filling</a><ul>
 <li><a class="reference internal" href="#domain-format" id="id2">Domain Format</a></li>
-<li><a class="reference internal" href="#basics" id="id3">Basics</a></li>
+<li><a class="reference internal" href="#forms-basics" id="id3">Forms Basics</a></li>
 <li><a class="reference internal" href="#custom-slot-mappings" id="id4">Custom slot mappings</a></li>
 <li><a class="reference internal" href="#validating-user-input" id="id5">Validating user input</a></li>
 <li><a class="reference internal" href="#handling-unhappy-paths" id="id6">Handling unhappy paths</a></li>
@@ -247,8 +248,8 @@ under <code class="docutils literal notranslate"><span class="pre">forms:</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="basics">
-<span id="section-form-basics"></span><h2><a class="toc-backref" href="#id3">Basics</a><a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="forms-basics">
+<span id="section-form-basics"></span><h2><a class="toc-backref" href="#id3">Forms Basics</a><a class="headerlink" href="#forms-basics" title="Permalink to this headline">¶</a></h2>
 <p>Using a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code>, you can describe <em>all</em> of the happy paths with a single
 story. By “happy path”, we mean that whenever you ask a user for some information,
 they respond with what you asked for.</p>
@@ -261,6 +262,13 @@ happy paths.</p>
     - form{&quot;name&quot;: null}
 </pre></div>
 </div>
+<p>In this story the user intent is <code class="docutils literal notranslate"><span class="pre">request_restaurant</span></code>, which is followed by
+the form action <code class="docutils literal notranslate"><span class="pre">restaurant_form</span></code>. With <code class="docutils literal notranslate"><span class="pre">form{&quot;name&quot;:</span> <span class="pre">&quot;restaurant_form&quot;}</span></code> the
+form is activated and with <code class="docutils literal notranslate"><span class="pre">form{&quot;name&quot;:</span> <span class="pre">null}</span></code> the form is deactivated again.
+As shown in the section <a class="reference internal" href="#section-unhappy"><span class="std std-ref">Handling unhappy paths</span></a> the the bot can execute any kind of
+actions outside the form while the form is still active. On the “happy path”,
+where the user is cooperating well and the system understands the user input correctly,
+the form is filling all requested slots without interruption.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> will only requests slots which haven’t already been set.
 If a user says
 “I’d like a vegetarian Chinese restaurant for 8 people”, they won’t be
@@ -373,7 +381,7 @@ example above</li>
 <p>After extracting a slot value from user input, the form will try to validate the
 value of the slot. By default, this only checks if the requested slot was extracted.
 If you want to add custom validation, for example to check a value against a database,
-you can do this by overwriting the <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method.
+you can do this by writing <code class="docutils literal notranslate"><span class="pre">validate_{slot}()</span></code> method.
 Here is an example which checks if the extracted cuisine slot belongs to a
 list of supported cuisines.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="nd">@staticmethod</span>
@@ -389,76 +397,26 @@ list of supported cuisines.</p>
                 <span class="s2">&quot;mexican&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_int</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Check if a string is an integer&quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="nb">int</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">validate_cuisine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">value</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                         <span class="n">dispatcher</span><span class="p">:</span> <span class="n">CollectingDispatcher</span><span class="p">,</span>
+                         <span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span><span class="p">,</span>
+                         <span class="n">domain</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Validate cuisine value.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cuisine_db</span><span class="p">():</span>
+            <span class="c1"># validation succeeded</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s1">&#39;utter_wrong_cuisine&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">)</span>
+            <span class="c1"># validation failed, set this slot to None, meaning the</span>
+            <span class="c1"># user will be asked for the slot again</span>
+            <span class="k">return</span> <span class="kc">None</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">dispatcher</span><span class="p">:</span> <span class="n">CollectingDispatcher</span><span class="p">,</span>
-                 <span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span><span class="p">,</span>
-                 <span class="n">domain</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Validate extracted requested slot</span>
-<span class="sd">            else reject the execution of the form action</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># extract other slots that were not requested</span>
-        <span class="c1"># but set by corresponding entity</span>
-        <span class="n">slot_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_other_slots</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
-
-        <span class="c1"># extract requested slot</span>
-        <span class="n">slot_to_fill</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_slot</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">slot_to_fill</span><span class="p">:</span>
-            <span class="n">slot_values</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extract_requested_slot</span><span class="p">(</span><span class="n">dispatcher</span><span class="p">,</span>
-                                                           <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">slot_values</span><span class="p">:</span>
-                <span class="c1"># reject form action execution</span>
-                <span class="c1"># if some slot was requested but nothing was extracted</span>
-                <span class="c1"># it will allow other policies to predict another action</span>
-                <span class="k">raise</span> <span class="n">ActionExecutionRejection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
-                                               <span class="s2">&quot;Failed to validate slot </span><span class="si">{0}</span><span class="s2"> &quot;</span>
-                                               <span class="s2">&quot;with action </span><span class="si">{1}</span><span class="s2">&quot;</span>
-                                               <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slot_to_fill</span><span class="p">,</span>
-                                                         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
-
-        <span class="c1"># we&#39;ll check when validation failed in order</span>
-        <span class="c1"># to add appropriate utterances</span>
-        <span class="k">for</span> <span class="n">slot</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">slot_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">slot</span> <span class="o">==</span> <span class="s1">&#39;cuisine&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cuisine_db</span><span class="p">():</span>
-                    <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s1">&#39;utter_wrong_cuisine&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">)</span>
-                    <span class="c1"># validation failed, set slot to None</span>
-                    <span class="n">slot_values</span><span class="p">[</span><span class="n">slot</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
-            <span class="k">elif</span> <span class="n">slot</span> <span class="o">==</span> <span class="s1">&#39;num_people&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s1">&#39;utter_wrong_num_people&#39;</span><span class="p">,</span>
-                                              <span class="n">tracker</span><span class="p">)</span>
-                    <span class="c1"># validation failed, set slot to None</span>
-                    <span class="n">slot_values</span><span class="p">[</span><span class="n">slot</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
-            <span class="k">elif</span> <span class="n">slot</span> <span class="o">==</span> <span class="s1">&#39;outdoor_seating&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="s1">&#39;out&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-                        <span class="c1"># convert &quot;out...&quot; to True</span>
-                        <span class="n">slot_values</span><span class="p">[</span><span class="n">slot</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="k">elif</span> <span class="s1">&#39;in&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-                        <span class="c1"># convert &quot;in...&quot; to False</span>
-                        <span class="n">slot_values</span><span class="p">[</span><span class="n">slot</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s1">&#39;utter_wrong_outdoor_seating&#39;</span><span class="p">,</span>
-                                                  <span class="n">tracker</span><span class="p">)</span>
-                        <span class="c1"># validation failed, set slot to None</span>
-                        <span class="n">slot_values</span><span class="p">[</span><span class="n">slot</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="c1"># validation succeed, set the slots values to the extracted values</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">SlotSet</span><span class="p">(</span><span class="n">slot</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">slot_values</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
-</pre></div>
-</div>
+<p>You can also deactivate the form directly during this validation step (in case the
+slot is filled with something that you are certain can’t be handled) by returning
+<code class="docutils literal notranslate"><span class="pre">self.deactivate()</span></code></p>
 <p>If nothing is extracted from the user’s utterance for any of the required slots, an
 <code class="docutils literal notranslate"><span class="pre">ActionExecutionRejection</span></code> error will be raised, meaning the action execution
 was rejected and therefore Core will fall back onto a different policy to
@@ -571,7 +529,7 @@ kinds of logic into your forms.</p>
 <div class="section" id="configuration">
 <h2><a class="toc-backref" href="#id9">Configuration</a><a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
 <p>To use forms, make sure to include the <code class="docutils literal notranslate"><span class="pre">FormPolicy</span></code> in your policy
-configuration file. For exmple:</p>
+configuration file. For example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;FormPolicy&quot;</span>
 </pre></div>

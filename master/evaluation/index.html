@@ -168,6 +168,7 @@ AI Assistant." />
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.13.8/evaluation/">0.13.8</a>
               <a href="../../0.13.7/evaluation/">0.13.7</a>
               <a href="../../0.13.6/evaluation/">0.13.6</a>
               <a href="../../0.13.5/evaluation/">0.13.5</a>
@@ -213,7 +214,7 @@ AI Assistant." />
 
 
 
-    <p class="scv-banner"><a href="../../0.13.7/evaluation/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.13.7.</a></p>
+    <p class="scv-banner"><a href="../../0.13.8/evaluation/"><b>Warning:</b> This document is for the development version of Rasa Core. The latest version is 0.13.8.</a></p>
 <div class="section" id="evaluating-and-testing">
 <span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
@@ -240,6 +241,13 @@ incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/opt/python/3.5.6/lib/python3.5/runpy.py:125: RuntimeWarning: &#39;rasa.core.test&#39; found in sys.modules after import of package &#39;rasa.core&#39;, but prior to execution of &#39;rasa.core.test&#39;; this may result in unpredictable behaviour
   warn(RuntimeWarning(msg))
+
+WARNING: The TensorFlow contrib module will not be included in TensorFlow 2.0.
+For more information, please see:
+  * https://github.com/tensorflow/community/blob/master/rfcs/20180907-contrib-sunset.md
+  * https://github.com/tensorflow/addons
+If you depend on functionality not listed there, please file an issue.
+
 usage: test.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
                        [--endpoints ENDPOINTS] [--fail_on_prediction_errors]
                        [--core CORE] (-s STORIES | --url URL) [-v] [-vv]

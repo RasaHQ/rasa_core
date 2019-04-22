@@ -156,6 +156,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.13.8/evaluation/">0.13.8</a>
               <a href="../../0.13.7/evaluation/">0.13.7</a>
               <a href="../../0.13.6/evaluation/">0.13.6</a>
               <a href="../../0.13.5/evaluation/">0.13.5</a>
@@ -201,7 +202,7 @@
 
 
 
-    <p class="scv-banner"><a href="../../0.13.7/evaluation/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.13.7.</a></p>
+    <p class="scv-banner"><a href="../../0.13.8/evaluation/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.13.8.</a></p>
 <div class="section" id="evaluating-and-testing">
 <span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="evaluating-a-trained-model">
@@ -223,6 +224,13 @@ incorrect action was predicted instead.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/build/RasaHQ/rasa_core/rasa_core/__init__.py:10: UserWarning: The &#39;rasa_core&#39; package hase been renamed. You should change your imports to use &#39;rasa.core&#39; instead.
   &quot;your imports to use &#39;rasa.core&#39; instead.&quot;, UserWarning)
 Calling `rasa.core.evaluate` is deprecated. Please use `rasa.core.test` instead.
+
+WARNING: The TensorFlow contrib module will not be included in TensorFlow 2.0.
+For more information, please see:
+  * https://github.com/tensorflow/community/blob/master/rfcs/20180907-contrib-sunset.md
+  * https://github.com/tensorflow/addons
+If you depend on functionality not listed there, please file an issue.
+
 usage: evaluate.py [-h] {default,compare} ...
 
 evaluates a dialogue model
