@@ -36,10 +36,18 @@
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
   <meta property="og:url" content="https://rasa.com/docs/core/evaluation" />
   
-    <meta name="description" content="How to evaluate a Rasa Core model" />
-    <meta itemprop="description" content="How to evaluate a Rasa Core model">
-    <meta name="twitter:description" content="How to evaluate a Rasa Core model" />
-    <meta property="og:description" content="How to evaluate a Rasa Core model" />
+    <meta name="description" content="Evaluate and validate your machine learning models for open source
+library Rasa Core to improve the dialogue management of your contextual
+AI Assistant." />
+    <meta itemprop="description" content="Evaluate and validate your machine learning models for open source
+library Rasa Core to improve the dialogue management of your contextual
+AI Assistant.">
+    <meta name="twitter:description" content="Evaluate and validate your machine learning models for open source
+library Rasa Core to improve the dialogue management of your contextual
+AI Assistant." />
+    <meta property="og:description" content="Evaluate and validate your machine learning models for open source
+library Rasa Core to improve the dialogue management of your contextual
+AI Assistant." />
   
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@Rasa_HQ">
@@ -114,7 +122,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-code-in-custom-actions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -154,12 +162,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.13.8
+          viewing: 0.14.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.14.0/evaluation/">0.14.0</a>
               <a href=".././0.13.8/evaluation/">0.13.8</a>
               <a href=".././0.13.7/evaluation/">0.13.7</a>
               <a href=".././0.13.6/evaluation/">0.13.6</a>
@@ -230,7 +239,6 @@ incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/build/RasaHQ/rasa_core/rasa_core/__init__.py:10: UserWarning: The &#39;rasa_core&#39; package hase been renamed. You should change your imports to use &#39;rasa.core&#39; instead.
   &quot;your imports to use &#39;rasa.core&#39; instead.&quot;, UserWarning)
-Calling `rasa.core.evaluate` is deprecated. Please use `rasa.core.test` instead.
 
 WARNING: The TensorFlow contrib module will not be included in TensorFlow 2.0.
 For more information, please see:
@@ -238,10 +246,10 @@ For more information, please see:
   * https://github.com/tensorflow/addons
 If you depend on functionality not listed there, please file an issue.
 
-usage: evaluate.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
-                           [--endpoints ENDPOINTS]
-                           [--fail_on_prediction_errors] [--core CORE]
-                           (-s STORIES | --url URL) [-v] [-vv] [--quiet]
+usage: test.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
+                       [--endpoints ENDPOINTS] [--fail_on_prediction_errors]
+                       [--core CORE] (-s STORIES | --url URL) [-v] [-vv]
+                       [--quiet]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -403,7 +411,7 @@ suggestion for improving the docs, feel free to share it by creating an issue on
             </div>
 
             <div class="copyright small">
-            &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
+            &copy;2019, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
             
             </div>
 

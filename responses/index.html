@@ -36,10 +36,14 @@
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
   <meta property="og:url" content="https://rasa.com/docs/core/responses" />
   
-    <meta name="description" content="None" />
-    <meta itemprop="description" content="None">
-    <meta name="twitter:description" content="None" />
-    <meta property="og:description" content="None" />
+    <meta name="description" content="Read more how to define bot utterances or use a service to generate the
+responses using Rasa Stack as an open source chatbot platform." />
+    <meta itemprop="description" content="Read more how to define bot utterances or use a service to generate the
+responses using Rasa Stack as an open source chatbot platform.">
+    <meta name="twitter:description" content="Read more how to define bot utterances or use a service to generate the
+responses using Rasa Stack as an open source chatbot platform." />
+    <meta property="og:description" content="Read more how to define bot utterances or use a service to generate the
+responses using Rasa Stack as an open source chatbot platform." />
   
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@Rasa_HQ">
@@ -114,7 +118,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-code-in-custom-actions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Bot Responses</a></li>
@@ -154,12 +158,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.13.8
+          viewing: 0.14.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.14.0/responses/">0.14.0</a>
               <a href=".././0.13.8/responses/">0.13.8</a>
               <a href=".././0.13.7/responses/">0.13.7</a>
               <a href=".././0.13.6/responses/">0.13.6</a>
@@ -286,7 +291,7 @@ or <code class="docutils literal notranslate"><span class="pre">server</span></c
   <span class="c1">#   password: pass</span>
 <span class="c1"># example of redis external tracker store config</span>
 <span class="l l-Scalar l-Scalar-Plain">tracker_store</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">store_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">redis</span>
+  <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">redis</span>
   <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
   <span class="l l-Scalar l-Scalar-Plain">port</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">6379</span>
   <span class="l l-Scalar l-Scalar-Plain">db</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
@@ -294,7 +299,7 @@ or <code class="docutils literal notranslate"><span class="pre">server</span></c
   <span class="l l-Scalar l-Scalar-Plain">record_exp</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">30000</span>
 <span class="c1"># example of mongoDB external tracker store config</span>
 <span class="c1">#tracker_store:</span>
-  <span class="c1">#store_type: mongod</span>
+  <span class="c1">#type: mongod</span>
   <span class="c1">#url: mongodb://localhost:27017</span>
   <span class="c1">#db: rasa</span>
   <span class="c1">#user: username</span>
@@ -412,7 +417,7 @@ suggestion for improving the docs, feel free to share it by creating an issue on
             </div>
 
             <div class="copyright small">
-            &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
+            &copy;2019, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
             
             </div>
 

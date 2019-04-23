@@ -36,10 +36,14 @@
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
   <meta property="og:url" content="https://rasa.com/docs/core/migrations" />
   
-    <meta name="description" content="Upgrading your Rasa Core Project" />
-    <meta itemprop="description" content="Upgrading your Rasa Core Project">
-    <meta name="twitter:description" content="Upgrading your Rasa Core Project" />
-    <meta property="og:description" content="Upgrading your Rasa Core Project" />
+    <meta name="description" content="Information about changes between major versions of chatbot framework
+Rasa Core and how you can migrate from one version to another." />
+    <meta itemprop="description" content="Information about changes between major versions of chatbot framework
+Rasa Core and how you can migrate from one version to another.">
+    <meta name="twitter:description" content="Information about changes between major versions of chatbot framework
+Rasa Core and how you can migrate from one version to another." />
+    <meta property="og:description" content="Information about changes between major versions of chatbot framework
+Rasa Core and how you can migrate from one version to another." />
   
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@Rasa_HQ">
@@ -114,7 +118,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-code-in-custom-actions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -154,12 +158,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.13.8
+          viewing: 0.14.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.14.0/migrations/">0.14.0</a>
               <a href=".././0.13.8/migrations/">0.13.8</a>
               <a href=".././0.13.7/migrations/">0.13.7</a>
               <a href=".././0.13.6/migrations/">0.13.6</a>
@@ -208,6 +213,32 @@
 <span id="migration"></span><h1>Migration Guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h1>
 <p>This page contains information about changes between major versions and
 how you can migrate from one version to another.</p>
+<div class="section" id="x-to-0-14-0">
+<span id="migration-to-0-14-0"></span><h2>0.13.x to 0.14.0<a class="headerlink" href="#x-to-0-14-0" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is a release <strong>breaking backwards compatibility</strong>.
+<code class="docutils literal notranslate"><span class="pre">action_restart</span></code> will not work with your old models, as this is now
+part of the <code class="docutils literal notranslate"><span class="pre">MappingPolicy</span></code>. Please make sure to retrain a
+model before trying to use it with this improved version.</p>
+</div>
+<div class="section" id="general">
+<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>The <cite>MappingPolicy</cite> is now included in <cite>default_config.yml</cite>. If you are using
+a custom policy configuration make sure to update it appropriately.</li>
+</ul>
+</div>
+<div class="section" id="function-naming">
+<h3>Function Naming<a class="headerlink" href="#function-naming" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>renamed <code class="docutils literal notranslate"><span class="pre">train_dialogue_model</span></code> to <code class="docutils literal notranslate"><span class="pre">train</span></code>. Please use <code class="docutils literal notranslate"><span class="pre">train</span></code> from
+now on.</li>
+<li>renamed <code class="docutils literal notranslate"><span class="pre">rasa_core.evaluate</span></code> to <code class="docutils literal notranslate"><span class="pre">rasa_core.test</span></code>. Please use <code class="docutils literal notranslate"><span class="pre">test</span></code>
+from now on.</li>
+</ul>
+</div>
+</div>
 <div class="section" id="x-to-0-13-0">
 <span id="migration-to-0-13-0"></span><h2>0.12.x to 0.13.0<a class="headerlink" href="#x-to-0-13-0" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
@@ -216,8 +247,8 @@ how you can migrate from one version to another.</p>
 this version you <strong>must use Python 3</strong>.  As always, <strong>make sure</strong>
 <strong>you retrain your models when switching to this version</strong></p>
 </div>
-<div class="section" id="general">
-<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Support for Python 2 has now been completely removed from Rasa Core, please
 upgrade to Python 3.5 or 3.6 to continue using the software</li>
@@ -299,8 +330,8 @@ as on the API level. Please take a careful look at the mentioned
 before updating. Please make sure to
 <strong>retrain your models when switching to this version</strong>.</p>
 </div>
-<div class="section" id="id1">
-<h3>General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>General<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">TL;DR these are the most important surface changes. But if you have
@@ -311,7 +342,7 @@ a second please take a minute to read all of them.</p>
 them. If your actions are written in python (in a file called actions.py) you
 can do this by running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">rasa_core_sdk.endpoint</span> <span class="pre">--actions</span> <span class="pre">actions</span></code>
 and specifying the action endpoint in the <code class="docutils literal notranslate"><span class="pre">endpoints.yml</span></code>
-For more information please read <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>.</li>
+For more information please read <a class="reference internal" href="../run-code-in-custom-actions/#customactions"><span class="std std-ref">Actions</span></a>.</li>
 <li>For your custom actions, the imports have changed from
 <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">rasa_core.actions</span> <span class="pre">import</span> <span class="pre">Action</span></code> to <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">rasa_core_sdk</span> <span class="pre">import</span> <span class="pre">Action</span></code> and
 from <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">rasa_core.events</span> <span class="pre">import</span> <span class="pre">*</span></code> to <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">rasa_core_sdk.events</span> <span class="pre">import</span> <span class="pre">*</span></code></li>
@@ -330,7 +361,7 @@ to run your action code in any language. There are no replacement endpoints
 for these two, as the flow of information has been changed: Instead of you
 calling Rasa Core to update the tracker and receive the next action to be
 executed, Rasa Core will call your action server once it predicted an action.
-More information can be found in the updated docs for <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>.</li>
+More information can be found in the updated docs for <a class="reference internal" href="../run-code-in-custom-actions/#customactions"><span class="std std-ref">Actions</span></a>.</li>
 </ul>
 </div>
 <div class="section" id="webhooks">
@@ -584,7 +615,7 @@ suggestion for improving the docs, feel free to share it by creating an issue on
             </div>
 
             <div class="copyright small">
-            &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
+            &copy;2019, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
             
             </div>
 

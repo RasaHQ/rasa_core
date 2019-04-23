@@ -36,10 +36,18 @@
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
   <meta property="og:url" content="https://rasa.com/docs/core/interactive_learning" />
   
-    <meta name="description" content="Interactive Learning with Rasa Core" />
-    <meta itemprop="description" content="Interactive Learning with Rasa Core">
-    <meta name="twitter:description" content="Interactive Learning with Rasa Core" />
-    <meta property="og:description" content="Interactive Learning with Rasa Core" />
+    <meta name="description" content="Use Interactive learning to continuously validate and improve the
+performance of your AI Assistant using machine learning based
+open source dialogue management." />
+    <meta itemprop="description" content="Use Interactive learning to continuously validate and improve the
+performance of your AI Assistant using machine learning based
+open source dialogue management.">
+    <meta name="twitter:description" content="Use Interactive learning to continuously validate and improve the
+performance of your AI Assistant using machine learning based
+open source dialogue management." />
+    <meta property="og:description" content="Use Interactive learning to continuously validate and improve the
+performance of your AI Assistant using machine learning based
+open source dialogue management." />
   
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@Rasa_HQ">
@@ -114,7 +122,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../architecture/">High-Level Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../connectors/">Chat &amp; Voice platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../customactions/">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-code-in-custom-actions/">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slots/">Using Slots</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../slotfilling/">Slot Filling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../responses/">Bot Responses</a></li>
@@ -154,12 +162,13 @@
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.13.8
+          viewing: 0.14.0
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.14.0/interactive_learning/">0.14.0</a>
               <a href=".././0.13.8/interactive_learning/">0.13.8</a>
               <a href=".././0.13.7/interactive_learning/">0.13.7</a>
               <a href=".././0.13.6/interactive_learning/">0.13.6</a>
@@ -227,7 +236,7 @@ python -m rasa_core.train <span class="se">\</span>
   --endpoints endpoints.yml
 </pre></div>
 </div>
-<p>The first command starts the action server (see <a class="reference internal" href="../customactions/#customactions"><span class="std std-ref">Actions</span></a>).</p>
+<p>The first command starts the action server (see <a class="reference internal" href="../run-code-in-custom-actions/#customactions"><span class="std std-ref">Actions</span></a>).</p>
 <p>The second command trains the bot from your stories and then starts it
 in interactive mode.  Alternatively, you can load an existing core
 model with the <code class="docutils literal notranslate"><span class="pre">--core</span></code> flag like so:</p>
@@ -273,7 +282,7 @@ until the bot chooses the wrong action.</p>
 <h2>Providing feedback on errors<a class="headerlink" href="#providing-feedback-on-errors" title="Permalink to this headline">¶</a></h2>
 <p>For this example we are going to use the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example,
 so make sure you have the domain &amp; data for it. You can download
-the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/0.13.8/examples/concertbot">github examples/concertbot</a>.</p>
+the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/0.14.0/examples/concertbot">github examples/concertbot</a>.</p>
 <p>If you ask <code class="docutils literal notranslate"><span class="pre">/search_concerts</span></code>, the bot should suggest
 <code class="docutils literal notranslate"><span class="pre">action_search_concerts</span></code> and then <code class="docutils literal notranslate"><span class="pre">action_listen</span></code> (the confidence at which
 the policy selected its next action will be displayed next to the action name).
@@ -464,7 +473,7 @@ suggestion for improving the docs, feel free to share it by creating an issue on
             </div>
 
             <div class="copyright small">
-            &copy;2018, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
+            &copy;2019, Rasa Technologies GmbH | <a href="https://rasa.com/imprint/" target="_blank">Imprint</a> | <a href="https://rasa.com/privacy-policy/" target="_blank">Privacy Policy</a>
             
             </div>
 
