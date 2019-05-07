@@ -40,6 +40,13 @@ Fixed
 -----
 - in interactive learning: only updates entity values if user changes annotation
 
+[0.14.2] - 2019-05-07
+^^^^^^^^^^^^^^^^^^^^^
+
+Fixed
+-----
+- fixed required version of ``rasa_core_sdk`` during installation
+
 
 [0.14.1] - 2019-05-02
 ^^^^^^^^^^^^^^^^^^^^^
