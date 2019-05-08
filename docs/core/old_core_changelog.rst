@@ -40,6 +40,14 @@ Fixed
 -----
 - in interactive learning: only updates entity values if user changes annotation
 
+[0.14.3] - 2019-05-07
+^^^^^^^^^^^^^^^^^^^^^
+
+Fixed
+-----
+- fixed interactive learning history printing
+
+
 [0.14.2] - 2019-05-07
 ^^^^^^^^^^^^^^^^^^^^^
 
