@@ -40,6 +40,13 @@ Fixed
 -----
 - in interactive learning: only updates entity values if user changes annotation
 
+[0.14.4] - 2019-05-13
+^^^^^^^^^^^^^^^^^^^^^
+
+Fixed
+-----
+- correctly process form actions in core evaluations
+
 [0.14.3] - 2019-05-07
 ^^^^^^^^^^^^^^^^^^^^^
 
