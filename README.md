@@ -1,4 +1,4 @@
-# Rasa Stack 
+# Rasa Core (Now part of Rasa repo: https://github.com/RasaHQ/rasa) 
 
 [![Join the chat on Rasa Community Forum](https://img.shields.io/badge/forum-join%20discussions-brightgreen.svg)](https://forum.rasa.com/?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![PyPI version](https://img.shields.io/pypi/v/rasa_core.svg)](https://pypi.python.org/pypi/rasa-core)
@@ -9,7 +9,7 @@
 
 <img align="right" height="244" src="https://www.rasa.com/assets/img/sara/sara-open-source-lg.png">
 
-⚠️👷‍♀️ The code is now part of https://github.com/RasaHQ/rasa_nlu. Please create any Pull Requests or Issues there. 👷‍♂️⚠️
+⚠️👷‍♀️ The code is now part of the Rasa repo https://github.com/RasaHQ/rasa. Please create any Pull Requests or Issues there. 👷‍♂️⚠️
 
 Rasa Core is a framework for building conversational software, which includes
 chatbots on:
