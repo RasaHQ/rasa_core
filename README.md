@@ -1,4 +1,4 @@
-# Rasa Core (Now part of Rasa repo: https://github.com/RasaHQ/rasa) 
+# Rasa Core (DEPRECATED)
 
 ⚠️👷‍♀️ The code is now part of the Rasa repo https://github.com/RasaHQ/rasa. Please create any Pull Requests or Issues there. 👷‍♂️⚠️
 
