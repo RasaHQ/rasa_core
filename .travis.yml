@@ -43,7 +43,7 @@ jobs:
   - stage: test
     name: "Test CLI"
     script:
-    - timeout 2 time rasa --help
+    - timeout 3 time rasa --help
   - stage: integration
     name: "Test Docs"
     install:
