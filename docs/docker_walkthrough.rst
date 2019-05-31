@@ -267,7 +267,7 @@ Command Description:
     ``models/rasa_nlu`` in the container which is used to store the
     trained Rasa NLU model.
   - ``rasa/rasa_nlu:latest-spacy``: Using the latest Rasa NLU which uses
-    the `spaCy` `pipeline <https://rasa.com/docs/nlu/choosing_pipeline/>`_ .
+    the `spaCy` `pipeline <https://legacy-docs.rasa.com/docs/nlu/choosing_pipeline/>`_ .
   - ``run``: Entrypoint parameter to run any command within the NLU container
   - ``python -m rasa_nlu.train``: Starts the NLU training with
 
@@ -447,7 +447,7 @@ If the chatbot cannot understand you, the answer is ``[]``.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you want to configure the components of your
-`NLU Pipeline <https://rasa.com/docs/nlu/choosing_pipeline/>`_, start by
+`NLU Pipeline <https://legacy-docs.rasa.com/docs/nlu/choosing_pipeline/>`_, start by
 creating a file ``nlu_config.yml`` in your ``config`` directory:
 
 .. code-block:: bash
@@ -506,7 +506,7 @@ The configuration of the ``rasa_nlu`` server might then look similar to this:
         - config/nlu_config.yml
 
 Depending on the selected
-`NLU Pipeline <https://rasa.com/docs/nlu/choosing_pipeline/>`_ you might
+`NLU Pipeline <https://legacy-docs.rasa.com/docs/nlu/choosing_pipeline/>`_ you might
 have to use a different Rasa NLU image:
 
   - ``rasa/rasa_nlu:latest-spacy``: To use the ``spaCy`` pipeline

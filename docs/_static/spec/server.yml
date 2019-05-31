@@ -493,7 +493,7 @@ paths:
         the prediction loop. It will log the message
         on the tracker and return, no actions will be
         predicted or run. This is often used together with the
-        [predict endpoint](https://rasa.com/docs/core/server.html#operation/predictAction).
+        [predict endpoint](https://legacy-docs.rasa.com/docs/core/server.html#operation/predictAction).
       operationId: addMessage
       parameters:
       - $ref: '#/components/parameters/senderId'
@@ -991,7 +991,7 @@ components:
 
             * greet: hello
              - utter_ask_howcanhelp
-            * inform: I'm looking for a [moderately priced](price:moderate) 
+            * inform: I'm looking for a [moderately priced](price:moderate)
             [Indian](cuisine) restaurant for [two](people) people
              - utter_on_it
              - utter_ask_location

@@ -56,7 +56,7 @@ the standard Rasa Core stories, as you'll have to include the user
 messages in natural language instead of just their intent. The format for the
 user messages is ``* <intent>:<Rasa NLU example>``. The NLU part follows the
 `markdown syntax for Rasa NLU training data
-<https://rasa.com/docs/nlu/dataformat/#markdown-format>`_.
+<https://legacy-docs.rasa.com/docs/nlu/dataformat/#markdown-format>`_.
 
 Here's an example of what an end-to-end story file may look like:
 

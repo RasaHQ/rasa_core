@@ -6,7 +6,7 @@ DEFAULT_SERVER_URL = DEFAULT_SERVER_FORMAT.format(DEFAULT_SERVER_PORT)
 
 MINIMUM_COMPATIBLE_VERSION = "0.14.0a3"
 
-DOCS_BASE_URL = "https://rasa.com/docs/core"
+DOCS_BASE_URL = "https://legacy-docs.rasa.com/docs/core"
 
 DEFAULT_NLU_FALLBACK_THRESHOLD = 0.0
 

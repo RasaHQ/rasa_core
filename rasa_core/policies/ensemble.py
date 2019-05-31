@@ -71,7 +71,7 @@ class PolicyEnsemble(object):
                                 "in PolicyEnsemble. When personalizing "
                                 "priorities, be sure to give all policies "
                                 "different priorities. More information: "
-                                "https://rasa.com/docs/core/"
+                                "https://legacy-docs.rasa.com/docs/core/"
                                 "policies/").format(v, k))
 
     def train(self,
