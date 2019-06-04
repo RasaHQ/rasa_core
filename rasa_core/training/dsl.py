@@ -32,7 +32,7 @@ class EndToEndReader(MarkdownReader):
 
         Matches expressions of the form `<intent>:<example>. For the
         syntax of <example> see the Rasa NLU docs on training data:
-        https://rasa.com/docs/nlu/dataformat/#markdown-format"""
+        https://legacy-docs.rasa.com/docs/nlu/dataformat/#markdown-format"""
 
         item_regex = re.compile(r'\s*(.+?):\s*(.*)')
         match = re.match(item_regex, line)
@@ -46,7 +46,8 @@ class EndToEndReader(MarkdownReader):
 
         raise ValueError("Encountered invalid end-to-end format for message "
                          "`{}`. Please visit the documentation page on "
-                         "end-to-end evaluation at https://rasa.com/docs/core/"
+                         "end-to-end evaluation at https://"
+                         "legacy-docs.rasa.com/docs/core/"
                          "evaluation#end-to-end-evaluation-of-rasa-nlu-and-"
                          "core".format(line))
 
