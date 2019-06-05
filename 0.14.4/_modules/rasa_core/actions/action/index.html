@@ -153,6 +153,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../../../../0.14.5/index/">0.14.5</a>
               <a href="../../../../../0.14.4/_modules/rasa_core/actions/action/">0.14.4</a>
               <a href="../../../../../0.14.3/index/">0.14.3</a>
               <a href="../../../../../0.14.2/index/">0.14.2</a>
@@ -179,10 +180,6 @@
               <a href="../../../../../0.7.9/index/">0.7.9</a>
               <a href="../../../../../0.6.9/index/">0.6.9</a>
           </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href="../../../../../master/index/">master</a>
-          </div>
       </div>
     </div>
 </div>
@@ -199,33 +196,34 @@
   
 
 
+    
+    
 
 
 
+    <p class="scv-banner"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.actions.action</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">aiohttp</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">json</span>
-
-<span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
-<span class="kn">import</span> <span class="nn">rasa.core</span>
-<span class="kn">from</span> <span class="nn">rasa.core</span> <span class="k">import</span> <span class="n">events</span>
-<span class="kn">from</span> <span class="nn">rasa.core.constants</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">import</span> <span class="nn">rasa_core</span>
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">events</span>
+<span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">DOCS_BASE_URL</span><span class="p">,</span>
     <span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">,</span>
     <span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="n">USER_INTENT_OUT_OF_SCOPE</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">rasa.core.events</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">UserUtteranceReverted</span><span class="p">,</span> <span class="n">UserUttered</span><span class="p">,</span>
-    <span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">Event</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">rasa.core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span><span class="p">,</span> <span class="n">ClientResponseError</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="p">(</span><span class="n">UserUtteranceReverted</span><span class="p">,</span> <span class="n">UserUttered</span><span class="p">,</span>
+                              <span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">Event</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">rasa.core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
-    <span class="kn">from</span> <span class="nn">rasa.core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
-    <span class="kn">from</span> <span class="nn">rasa.core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -317,17 +315,15 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                  <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span>
-                  <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
-                  <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;Event&#39;</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+            <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;Event&#39;</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the side effects of this action.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            dispatcher (Dispatcher): the dispatcher which is used to send</span>
 <span class="sd">                messages back to the user. Use ``dispatcher.utter_message()``</span>
-<span class="sd">                or any other :class:`rasa.core.dispatcher.Dispatcher` method.</span>
+<span class="sd">                or any other :class:`rasa_core.dispatcher.Dispatcher` method.</span>
 <span class="sd">            tracker (DialogueStateTracker): the state tracker for the current</span>
 <span class="sd">                user. You can access slot values using</span>
 <span class="sd">                ``tracker.get_slot(slot_name)`` and the most recent user</span>
@@ -335,7 +331,7 @@
 <span class="sd">            domain (Domain): the bot&#39;s domain</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            List[Event]: A list of :class:`rasa.core.events.Event` instances</span>
+<span class="sd">            List[Event]: A list of :class:`rasa_core.events.Event` instances</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
@@ -353,11 +349,12 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Simple run implementation uttering a (hopefully defined) template.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Simple run implementation uttering a (hopefully defined)</span>
+<span class="sd">           template.&quot;&quot;&quot;</span>
 
-        <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
-                                        <span class="n">tracker</span><span class="p">)</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                                  <span class="n">tracker</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[]</span>
 
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
@@ -389,7 +386,7 @@
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_LISTEN_NAME</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[]</span>
 
 
@@ -401,12 +398,12 @@
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_RESTART_NAME</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.events</span> <span class="k">import</span> <span class="n">Restarted</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Restarted</span>
 
         <span class="c1"># only utter the template if it is available</span>
-        <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_restart&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
-                                        <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_restart&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
+                                  <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Restarted</span><span class="p">()]</span>
 
 
@@ -417,11 +414,11 @@
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_DEFAULT_FALLBACK_NAME</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.events</span> <span class="k">import</span> <span class="n">UserUtteranceReverted</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">UserUtteranceReverted</span>
 
-        <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
-                                        <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_default&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
+                                  <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">UserUtteranceReverted</span><span class="p">()]</span></div>
 
@@ -432,8 +429,8 @@
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_DEACTIVATE_FORM_NAME</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.events</span> <span class="k">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">SlotSet</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">SlotSet</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Form</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">SlotSet</span><span class="p">(</span><span class="n">REQUESTED_SLOT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
 
 
@@ -447,7 +444,7 @@
     <span class="k">def</span> <span class="nf">_action_call_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
                             <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Create the request json send to the action server.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.trackers</span> <span class="k">import</span> <span class="n">EventVerbosity</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">EventVerbosity</span>
 
         <span class="n">tracker_state</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">current_state</span><span class="p">(</span><span class="n">EventVerbosity</span><span class="o">.</span><span class="n">ALL</span><span class="p">)</span>
 
@@ -456,7 +453,7 @@
             <span class="s2">&quot;sender_id&quot;</span><span class="p">:</span> <span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span>
             <span class="s2">&quot;tracker&quot;</span><span class="p">:</span> <span class="n">tracker_state</span><span class="p">,</span>
             <span class="s2">&quot;domain&quot;</span><span class="p">:</span> <span class="n">domain</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(),</span>
-            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">rasa</span><span class="o">.</span><span class="n">__version__</span>
+            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">rasa_core</span><span class="o">.</span><span class="n">__version__</span>
         <span class="p">}</span>
 
     <span class="nd">@staticmethod</span>
@@ -503,10 +500,10 @@
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_utter_responses</span><span class="p">(</span><span class="n">responses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
-                               <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span>
-                               <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span>
-                               <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_utter_responses</span><span class="p">(</span><span class="n">responses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+                         <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span>
+                         <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span>
+                         <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Use the responses generated by the action endpoint and utter them.</span>
 
 <span class="sd">        Uses the normal dispatcher to utter the responses from the action</span>
@@ -516,7 +513,7 @@
             <span class="k">if</span> <span class="s2">&quot;template&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
                 <span class="n">kwargs</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">]</span>
-                <span class="n">draft</span> <span class="o">=</span> <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">nlg</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
+                <span class="n">draft</span> <span class="o">=</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">nlg</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
                     <span class="n">response</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">],</span>
                     <span class="n">tracker</span><span class="p">,</span>
                     <span class="n">dispatcher</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
@@ -535,10 +532,10 @@
                 <span class="k">del</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;buttons&quot;</span><span class="p">]</span>
 
             <span class="n">draft</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_response</span><span class="p">(</span><span class="n">draft</span><span class="p">)</span>
+            <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_response</span><span class="p">(</span><span class="n">draft</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
-        <span class="n">json_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_call_format</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="n">json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_call_format</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_endpoint</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The model predicted the custom action &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
@@ -551,49 +548,48 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Calling action endpoint to run action &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span>
                          <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_endpoint</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
-                <span class="n">json</span><span class="o">=</span><span class="n">json_body</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_action_result</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_endpoint</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+                <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">)</span>
 
-            <span class="n">events_json</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="n">responses</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;responses&quot;</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_utter_responses</span><span class="p">(</span><span class="n">responses</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">)</span>
-
-            <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">events_json</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">evts</span>
-
-        <span class="k">except</span> <span class="n">ClientResponseError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">400</span><span class="p">:</span>
-                <span class="n">response_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">400</span><span class="p">:</span>
+                <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
                 <span class="n">exception</span> <span class="o">=</span> <span class="n">ActionExecutionRejection</span><span class="p">(</span>
                     <span class="n">response_data</span><span class="p">[</span><span class="s2">&quot;action_name&quot;</span><span class="p">],</span>
                     <span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
                 <span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="n">exception</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to execute custom action.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
-        <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_action_result</span><span class="p">(</span><span class="n">response_data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to run custom action &#39;</span><span class="si">{}</span><span class="s2">&#39;. Couldn&#39;t connect &quot;</span>
                          <span class="s2">&quot;to the server at &#39;</span><span class="si">{}</span><span class="s2">&#39;. Is the server running? &quot;</span>
                          <span class="s2">&quot;Error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">action_endpoint</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
                                             <span class="n">e</span><span class="p">))</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to execute custom action.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 
-        <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="c1"># not all errors have a status attribute, but</span>
-            <span class="c1"># helpful to log if they got it</span>
-
-            <span class="c1"># noinspection PyUnresolvedReferences</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to run custom action &#39;</span><span class="si">{}</span><span class="s2">&#39;. Action server &quot;</span>
                          <span class="s2">&quot;responded with a non 200 status code of </span><span class="si">{}</span><span class="s2">. &quot;</span>
                          <span class="s2">&quot;Make sure your action server properly runs actions &quot;</span>
                          <span class="s2">&quot;and returns a 200 once the action is executed. &quot;</span>
-                         <span class="s2">&quot;Error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+                         <span class="s2">&quot;Error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                                            <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                                            <span class="n">e</span><span class="p">))</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to execute custom action.&quot;</span><span class="p">)</span>
+
+        <span class="n">events_json</span> <span class="o">=</span> <span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">responses</span> <span class="o">=</span> <span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;responses&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_utter_responses</span><span class="p">(</span><span class="n">responses</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">tracker</span><span class="p">)</span>
+
+        <span class="n">evts</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">deserialise_events</span><span class="p">(</span><span class="n">events_json</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">evts</span>
 
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
@@ -625,13 +621,9 @@
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_REVERT_FALLBACK_EVENTS_NAME</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                  <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span>
-                  <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
-                  <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.policies.two_stage_fallback</span> <span class="k">import</span> <span class="p">(</span>
-            <span class="n">has_user_rephrased</span><span class="p">)</span>
-
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+            <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.policies.two_stage_fallback</span> <span class="k">import</span> <span class="n">has_user_rephrased</span>
         <span class="n">revert_events</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># User rephrased</span>
@@ -701,19 +693,19 @@
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_DEFAULT_ASK_AFFIRMATION_NAME</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                  <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span>
-                  <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
-                  <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+            <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
         <span class="n">intent_to_affirm</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">latest_message</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
         <span class="n">affirmation_message</span> <span class="o">=</span> <span class="s2">&quot;Did you mean &#39;</span><span class="si">{}</span><span class="s2">&#39;?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">intent_to_affirm</span><span class="p">)</span>
 
-        <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_button_message</span><span class="p">(</span>
-            <span class="n">text</span><span class="o">=</span><span class="n">affirmation_message</span><span class="p">,</span>
-            <span class="n">buttons</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Yes&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;payload&#39;</span><span class="p">:</span> <span class="s1">&#39;/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">intent_to_affirm</span><span class="p">)},</span>
-                     <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;No&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;payload&#39;</span><span class="p">:</span> <span class="s1">&#39;/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">USER_INTENT_OUT_OF_SCOPE</span><span class="p">)}])</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_button_message</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">affirmation_message</span><span class="p">,</span>
+                                        <span class="n">buttons</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Yes&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;payload&#39;</span><span class="p">:</span> <span class="s1">&#39;/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                                      <span class="n">intent_to_affirm</span><span class="p">)},</span>
+                                                 <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;No&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;payload&#39;</span><span class="p">:</span> <span class="s1">&#39;/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                                      <span class="n">USER_INTENT_OUT_OF_SCOPE</span><span class="p">)}</span>
+                                                 <span class="p">])</span>
 
         <span class="k">return</span> <span class="p">[]</span>
 
@@ -724,12 +716,10 @@
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ACTION_DEFAULT_ASK_REPHRASE_NAME</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                  <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span>
-                  <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
-                  <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
-        <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_ask_rephrase&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
-                                        <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="s1">&#39;Dispatcher&#39;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="s1">&#39;DialogueStateTracker&#39;</span><span class="p">,</span>
+            <span class="n">domain</span><span class="p">:</span> <span class="s1">&#39;Domain&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+        <span class="n">dispatcher</span><span class="o">.</span><span class="n">utter_template</span><span class="p">(</span><span class="s2">&quot;utter_ask_rephrase&quot;</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span>
+                                  <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[]</span>
 </pre></div>

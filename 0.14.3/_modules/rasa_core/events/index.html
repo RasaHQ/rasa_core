@@ -153,6 +153,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../../../0.14.5/index/">0.14.5</a>
               <a href="../../../../0.14.4/index/">0.14.4</a>
               <a href="../../../../0.14.3/_modules/rasa_core/events/">0.14.3</a>
               <a href="../../../../0.14.2/index/">0.14.2</a>
@@ -178,10 +179,6 @@
               <a href="../../../../0.8.6/index/">0.8.6</a>
               <a href="../../../../0.7.9/index/">0.7.9</a>
               <a href="../../../../0.6.9/index/">0.6.9</a>
-          </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href="../../../../master/index/">master</a>
           </div>
       </div>
     </div>
@@ -216,8 +213,10 @@
 <span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Optional</span>
 
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">utils</span>
+
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">rasa.core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -278,7 +277,7 @@
 <span class="c1"># noinspection PyProtectedMember</span>
 <div class="viewcode-block" id="Event"><a class="viewcode-back" href="../../../api/events/#rasa_core.events.Event">[docs]</a><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Events describe everything that occurs in</span>
-<span class="sd">    a conversation and tell the :class:`rasa.core.trackers.DialogueStateTracker`</span>
+<span class="sd">    a conversation and tell the :class:`rasa_core.trackers.DialogueStateTracker`</span>
 <span class="sd">    how to update its state.&quot;&quot;&quot;</span>
 
     <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;event&quot;</span>
@@ -361,7 +360,6 @@
         <span class="n">default</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="s1">&#39;Event&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="s1">&#39;Event&#39;</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Returns a slots class by its type name.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">rasa.core</span> <span class="k">import</span> <span class="n">utils</span>
 
         <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">all_subclasses</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">type_name</span> <span class="o">==</span> <span class="n">type_name</span><span class="p">:</span>
@@ -411,12 +409,8 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_from_parse_data</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">parse_data</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_channel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">UserUttered</span><span class="p">(</span><span class="n">text</span><span class="p">,</span>
-                           <span class="n">parse_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;intent&quot;</span><span class="p">),</span>
-                           <span class="n">parse_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entities&quot;</span><span class="p">,</span> <span class="p">[]),</span>
-                           <span class="n">parse_data</span><span class="p">,</span>
-                           <span class="n">timestamp</span><span class="p">,</span>
-                           <span class="n">input_channel</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">UserUttered</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">parse_data</span><span class="p">[</span><span class="s2">&quot;intent&quot;</span><span class="p">],</span> <span class="n">parse_data</span><span class="p">[</span><span class="s2">&quot;entities&quot;</span><span class="p">],</span>
+                           <span class="n">parse_data</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
@@ -640,7 +634,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
 
     <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">trigger_followup_action</span><span class="p">(</span><span class="n">ACTION_LISTEN_NAME</span><span class="p">)</span></div>
 
@@ -773,44 +767,6 @@
                                   <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                                   <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kill_on_user_msg&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
                                   <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))]</span></div>
-
-
-<span class="c1"># noinspection PyProtectedMember</span>
-<span class="k">class</span> <span class="nc">ReminderCancelled</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Cancel all jobs with a specific name.&quot;&quot;&quot;</span>
-
-    <span class="n">type_name</span> <span class="o">=</span> <span class="s2">&quot;cancel_reminder&quot;</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            action_name: name of the scheduled action to be cancelled</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">=</span> <span class="n">action_name</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ReminderCancelled</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ReminderCancelled</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;ReminderCancelled(action: </span><span class="si">{}</span><span class="s2">)&quot;</span>
-                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_name</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">as_story_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">props</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_obj</span><span class="p">())</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{name}{props}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">props</span><span class="o">=</span><span class="n">props</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_story_string</span><span class="p">(</span>
-            <span class="bp">cls</span><span class="p">,</span>
-            <span class="n">parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Event</span><span class="p">]]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">ReminderCancelled</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">),</span>
-                                  <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))]</span>
 
 
 <span class="c1"># noinspection PyProtectedMember</span>

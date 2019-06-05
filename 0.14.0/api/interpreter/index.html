@@ -164,6 +164,7 @@ buttons or other structured input for contextual conversation design." />
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../../0.14.5/api/interpreter/">0.14.5</a>
               <a href="../../../0.14.4/api/interpreter/">0.14.4</a>
               <a href="../../../0.14.3/api/interpreter/">0.14.3</a>
               <a href="../../../0.14.2/api/interpreter/">0.14.2</a>
@@ -190,10 +191,6 @@ buttons or other structured input for contextual conversation design." />
               <a href="../../../0.7.9/index/">0.7.9</a>
               <a href="../../../0.6.9/index/">0.6.9</a>
           </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href="../../../master/api/interpreter/">master</a>
-          </div>
       </div>
     </div>
 </div>
@@ -215,13 +212,13 @@ buttons or other structured input for contextual conversation design." />
 
 
 
-    <p class="scv-banner"><a href="../../../0.14.4/api/interpreter/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.4.</a></p>
+    <p class="scv-banner"><a href="../../../0.14.5/api/interpreter/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.5.</a></p>
 <div class="section" id="interpreters">
 <span id="id1"></span><h1>Interpreters<a class="headerlink" href="#interpreters" title="Permalink to this headline">¶</a></h1>
 <p>Rasa Core itself does not interpret text. You can use <a class="reference external" href="https://rasa.com/docs/nlu/">Rasa NLU</a> for this.</p>
 <dl class="class">
 <dt id="rasa_core.interpreter.RasaNLUHttpInterpreter">
-<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RasaNLUHttpInterpreter</code><span class="sig-paren">(</span><em>model_name: str = None</em>, <em>endpoint: rasa.core.utils.EndpointConfig = None</em>, <em>project_name: str = 'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUHttpInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUHttpInterpreter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RasaNLUHttpInterpreter</code><span class="sig-paren">(</span><em>model_name: str = None</em>, <em>endpoint: rasa_core.utils.EndpointConfig = None</em>, <em>project_name: str = 'default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUHttpInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUHttpInterpreter" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="rasa_core.interpreter.RasaNLUHttpInterpreter.parse">
 <code class="descname">parse</code><span class="sig-paren">(</span><em>text</em>, <em>message_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUHttpInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUHttpInterpreter.parse" title="Permalink to this definition">¶</a></dt>
@@ -236,7 +233,7 @@ buttons or other structured input for contextual conversation design." />
 <em class="property">class </em><code class="descclassname">rasa_core.interpreter.</code><code class="descname">RasaNLUInterpreter</code><span class="sig-paren">(</span><em>model_directory</em>, <em>config_file=None</em>, <em>lazy_init=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUInterpreter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUInterpreter" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="rasa_core.interpreter.RasaNLUInterpreter.parse">
-<code class="descname">parse</code><span class="sig-paren">(</span><em>text</em>, <em>message_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUInterpreter.parse" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parse</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/interpreter/#RasaNLUInterpreter.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.interpreter.RasaNLUInterpreter.parse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a text message.</p>
 <p>Return a default value if the parsing of the text failed.</p>
 </dd></dl>

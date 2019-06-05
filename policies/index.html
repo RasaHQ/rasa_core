@@ -34,7 +34,7 @@
   <meta property="og:title" content="Training and Policies" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
-  <meta property="og:url" content="https://rasa.com/docs/core/policies" />
+  <meta property="og:url" content="https://legacy-docs.rasa.com/docs/core/policies" />
   
     <meta name="description" content="Define and train custom policies to optimise your contextual assistant
 for longer context or unseen utterances which require generalisation." />
@@ -158,12 +158,13 @@ for longer context or unseen utterances which require generalisation." />
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.14.4
+          viewing: 0.14.5
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.14.5/policies/">0.14.5</a>
               <a href=".././0.14.4/policies/">0.14.4</a>
               <a href=".././0.14.3/policies/">0.14.3</a>
               <a href=".././0.14.2/policies/">0.14.2</a>
@@ -189,10 +190,6 @@ for longer context or unseen utterances which require generalisation." />
               <a href=".././0.8.6/policies/">0.8.6</a>
               <a href=".././0.7.9/policies/">0.7.9</a>
               <a href=".././0.6.9/policies/">0.6.9</a>
-          </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href=".././master/policies/">master</a>
           </div>
       </div>
     </div>
@@ -337,8 +334,8 @@ slot. Slot information is always available for every featurizer.</p>
 </div>
 <div class="section" id="training-script-options">
 <h3><a class="toc-backref" href="#id10">Training Script Options</a><a class="headerlink" href="#training-script-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/build/RasaHQ/rasa_core/rasa_core/__init__.py:10: UserWarning: The &#39;rasa_core&#39; package hase been renamed. You should change your imports to use &#39;rasa.core&#39; instead.
-  &quot;your imports to use &#39;rasa.core&#39; instead.&quot;, UserWarning)
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/opt/python/3.5.6/lib/python3.5/runpy.py:125: RuntimeWarning: &#39;rasa_core.train&#39; found in sys.modules after import of package &#39;rasa_core&#39;, but prior to execution of &#39;rasa_core.train&#39;; this may result in unpredictable behaviour
+  warn(RuntimeWarning(msg))
 usage: train.py default [-h] [--augmentation AUGMENTATION] [--dump_stories]
                         [--debug_plots] [-v] [-vv] [--quiet] [-c CONFIG] -o
                         OUT (-s STORIES | --url URL) -d DOMAIN
@@ -817,7 +814,7 @@ the original starspace algorithm in the case
 <p>The <code class="docutils literal notranslate"><span class="pre">FormPolicy</span></code> is an extension of the <code class="docutils literal notranslate"><span class="pre">MemoizationPolicy</span></code> which
 handles the filling of forms. Once a <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> is called, the
 <code class="docutils literal notranslate"><span class="pre">FormPolicy</span></code> will continually predict the <code class="docutils literal notranslate"><span class="pre">FormAction</span></code> until all slots
-in the form are filled. For more information, see <a class="reference external" href="https://rasa.com/docs/core/slotfilling/">Slot Filling</a>.</p>
+in the form are filled. For more information, see <a class="reference external" href="https://legacy-docs.rasa.com/docs/core/slotfilling/">Slot Filling</a>.</p>
 </div>
 <div class="section" id="mapping-policy">
 <h3><a class="toc-backref" href="#id18">Mapping Policy</a><a class="headerlink" href="#mapping-policy" title="Permalink to this headline">¶</a></h3>
@@ -849,7 +846,7 @@ the dialouge history.</p>
 </div>
 <div class="section" id="fallback-policy">
 <span id="id3"></span><h3><a class="toc-backref" href="#id19">Fallback Policy</a><a class="headerlink" href="#fallback-policy" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">FallbackPolicy</span></code> invokes a <a class="reference external" href="https://rasa.com/docs/core/fallbacks/">fallback action</a> if the intent recognition
+<p>The <code class="docutils literal notranslate"><span class="pre">FallbackPolicy</span></code> invokes a <a class="reference external" href="https://legacy-docs.rasa.com/docs/core/fallbacks/">fallback action</a> if the intent recognition
 has a confidence below <code class="docutils literal notranslate"><span class="pre">nlu_threshold</span></code> or if none of the dialogue
 policies predict an action with confidence higher than <code class="docutils literal notranslate"><span class="pre">core_threshold</span></code>.</p>
 <p><strong>Configuration:</strong></p>
@@ -865,8 +862,8 @@ file as parameters of the <code class="docutils literal notranslate"><span class
 </div>
 <table border="1" class="docutils">
 <colgroup>
-<col width="38%" />
-<col width="62%" />
+<col width="34%" />
+<col width="66%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">nlu_threshold</span></code></td>
@@ -878,7 +875,7 @@ prediction</td>
 prediction from Rasa Core</td>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">fallback_action_name</span></code></td>
-<td>Name of the <a class="reference external" href="https://rasa.com/docs/core/fallbacks/">fallback action</a>
+<td>Name of the <a class="reference external" href="https://legacy-docs.rasa.com/docs/core/fallbacks/">fallback action</a>
 to be called if the confidence of intent
 or action is below the respective threshold</td>
 </tr>

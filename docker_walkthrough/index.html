@@ -34,7 +34,7 @@
   <meta property="og:title" content="Building Rasa with Docker" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
-  <meta property="og:url" content="https://rasa.com/docs/core/docker_walkthrough" />
+  <meta property="og:url" content="https://legacy-docs.rasa.com/docs/core/docker_walkthrough" />
   
     <meta name="description" content="Setup open source Rasa Core with Docker in your own infrastructure for on
 premise contextual AI assistants and chatbots." />
@@ -158,12 +158,13 @@ premise contextual AI assistants and chatbots." />
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.14.4
+          viewing: 0.14.5
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.14.5/docker_walkthrough/">0.14.5</a>
               <a href=".././0.14.4/docker_walkthrough/">0.14.4</a>
               <a href=".././0.14.3/docker_walkthrough/">0.14.3</a>
               <a href=".././0.14.2/docker_walkthrough/">0.14.2</a>
@@ -189,10 +190,6 @@ premise contextual AI assistants and chatbots." />
               <a href=".././0.8.6/index/">0.8.6</a>
               <a href=".././0.7.9/index/">0.7.9</a>
               <a href=".././0.6.9/index/">0.6.9</a>
-          </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href=".././master/docker_walkthrough/">master</a>
           </div>
       </div>
     </div>
@@ -499,7 +496,7 @@ container so that the chatbot can be trained on your NLU data.</li>
 <code class="docutils literal notranslate"><span class="pre">models/rasa_nlu</span></code> in the container which is used to store the
 trained Rasa NLU model.</li>
 <li><code class="docutils literal notranslate"><span class="pre">rasa/rasa_nlu:latest-spacy</span></code>: Using the latest Rasa NLU which uses
-the <cite>spaCy</cite> <a class="reference external" href="https://rasa.com/docs/nlu/choosing_pipeline/">pipeline</a> .</li>
+the <cite>spaCy</cite> <a class="reference external" href="https://legacy-docs.rasa.com/docs/nlu/choosing_pipeline/">pipeline</a> .</li>
 <li><code class="docutils literal notranslate"><span class="pre">run</span></code>: Entrypoint parameter to run any command within the NLU container</li>
 <li><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">rasa_nlu.train</span></code>: Starts the NLU training with<ul>
 <li><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">config.yml</span></code>: Uses the default NLU pipeline configuration which is
@@ -654,7 +651,7 @@ To send messages to your chatbot:</p>
 <div class="section" id="adding-a-custom-nlu-pipeline">
 <h3><a class="toc-backref" href="#id14">3.4 Adding a Custom NLU Pipeline</a><a class="headerlink" href="#adding-a-custom-nlu-pipeline" title="Permalink to this headline">¶</a></h3>
 <p>If you want to configure the components of your
-<a class="reference external" href="https://rasa.com/docs/nlu/choosing_pipeline/">NLU Pipeline</a>, start by
+<a class="reference external" href="https://legacy-docs.rasa.com/docs/nlu/choosing_pipeline/">NLU Pipeline</a>, start by
 creating a file <code class="docutils literal notranslate"><span class="pre">nlu_config.yml</span></code> in your <code class="docutils literal notranslate"><span class="pre">config</span></code> directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch config/nlu_config.yml
 </pre></div>
@@ -704,7 +701,7 @@ The configuration of the <code class="docutils literal notranslate"><span class=
 </pre></div>
 </div>
 <p>Depending on the selected
-<a class="reference external" href="https://rasa.com/docs/nlu/choosing_pipeline/">NLU Pipeline</a> you might
+<a class="reference external" href="https://legacy-docs.rasa.com/docs/nlu/choosing_pipeline/">NLU Pipeline</a> you might
 have to use a different Rasa NLU image:</p>
 <blockquote>
 <div><ul class="simple">

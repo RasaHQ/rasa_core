@@ -198,7 +198,7 @@
 
 
 
-    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../../0.14.4/api/tracker/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.4.</a></p>
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../../0.14.5/api/tracker/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.5.</a></p>
 
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -248,7 +248,7 @@ conversation are received and updated after actions have been executed</p>
 it can be set in the tracker_store</p>
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.applied_events">
-<code class="descname">applied_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[rasa.core.events.Event]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.applied_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.applied_events" title="Permalink to this definition">¶</a></dt>
+<code class="descname">applied_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[rasa_core.events.Event]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.applied_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.applied_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all actions that should be applied - w/o reverted events.</p>
 </dd></dl>
 
@@ -311,7 +311,7 @@ of this tracker exactly.</p>
 
 <dl class="classmethod">
 <dt id="rasa_core.trackers.DialogueStateTracker.from_dict">
-<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>sender_id: str, events_as_dict: List[Dict[str, Any]], slots: List[rasa.core.slots.Slot], max_event_history: Optional[int] = None</em><span class="sig-paren">)</span> &#x2192; rasa_core.trackers.DialogueStateTracker<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>sender_id: str, events_as_dict: List[Dict[str, Any]], slots: List[rasa_core.slots.Slot], max_event_history: Optional[int] = None</em><span class="sig-paren">)</span> &#x2192; rasa_core.trackers.DialogueStateTracker<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a tracker from dump.</p>
 <p>The dump should be an array of dumped events. When restoring
 the tracker, these events will be replayed to recreate the state.</p>
@@ -319,7 +319,7 @@ the tracker, these events will be replayed to recreate the state.</p>
 
 <dl class="classmethod">
 <dt id="rasa_core.trackers.DialogueStateTracker.from_events">
-<em class="property">classmethod </em><code class="descname">from_events</code><span class="sig-paren">(</span><em>sender_id: str, evts: List[rasa.core.events.Event], slots: List[rasa.core.slots.Slot], max_event_history: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.from_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.from_events" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_events</code><span class="sig-paren">(</span><em>sender_id: str, evts: List[rasa_core.events.Event], slots: List[rasa_core.slots.Slot], max_event_history: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.from_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.from_events" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -332,7 +332,7 @@ the trackers before each action.</p>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.get_last_event_for">
-<code class="descname">get_last_event_for</code><span class="sig-paren">(</span><em>event_type: Type[rasa.core.events.Event], action_names_to_exclude: List[str] = None, skip: int = 0</em><span class="sig-paren">)</span> &#x2192; Optional[rasa.core.events.Event]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_last_event_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_last_event_for" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_last_event_for</code><span class="sig-paren">(</span><em>event_type: Type[rasa_core.events.Event], action_names_to_exclude: List[str] = None, skip: int = 0</em><span class="sig-paren">)</span> &#x2192; Optional[rasa_core.events.Event]<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.get_last_event_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.get_last_event_for" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the last event of a given type which was actually applied.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -409,7 +409,7 @@ skip: Skips n possible results in between.</dd>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue">
-<code class="descname">recreate_from_dialogue</code><span class="sig-paren">(</span><em>dialogue: rasa.core.conversation.Dialogue</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.recreate_from_dialogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">recreate_from_dialogue</code><span class="sig-paren">(</span><em>dialogue: rasa_core.conversation.Dialogue</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.recreate_from_dialogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.recreate_from_dialogue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use a serialised <cite>Dialogue</cite> to update the trackers state.</p>
 <p>This uses the state as is persisted in a <code class="docutils literal notranslate"><span class="pre">TrackerStore</span></code>. If the
 tracker is blank before calling this method, the final state will be
@@ -458,7 +458,7 @@ at the target time will be included.</p>
 
 <dl class="method">
 <dt id="rasa_core.trackers.DialogueStateTracker.update">
-<code class="descname">update</code><span class="sig-paren">(</span><em>event: rasa.core.events.Event</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update</code><span class="sig-paren">(</span><em>event: rasa_core.events.Event</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/trackers/#DialogueStateTracker.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.trackers.DialogueStateTracker.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify the state of the tracker according to an <code class="docutils literal notranslate"><span class="pre">Event</span></code>.</p>
 </dd></dl>
 
@@ -537,6 +537,7 @@ at the target time will be included.</p>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../../0.14.5/api/tracker/">0.14.5</a></dd>
             <dd><a href="../../../0.14.4/api/tracker/">0.14.4</a></dd>
             <dd><a href="../../../0.14.3/api/tracker/">0.14.3</a></dd>
             <dd><a href="../../../0.14.2/api/tracker/">0.14.2</a></dd>
@@ -562,10 +563,6 @@ at the target time will be included.</p>
             <dd><a href="../../../0.8.6/index/">0.8.6</a></dd>
             <dd><a href="../../../0.7.9/index/">0.7.9</a></dd>
             <dd><a href="../../../0.6.9/index/">0.6.9</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="../../../master/api/tracker/">master</a></dd>
         </dl>
     </div>
 </div>

@@ -153,6 +153,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../../../0.14.5/index/">0.14.5</a>
               <a href="../../../../0.14.4/index/">0.14.4</a>
               <a href="../../../../0.14.3/index/">0.14.3</a>
               <a href="../../../../0.14.2/_modules/rasa_core/tracker_store/">0.14.2</a>
@@ -179,10 +180,6 @@
               <a href="../../../../0.7.9/index/">0.7.9</a>
               <a href="../../../../0.6.9/index/">0.6.9</a>
           </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href="../../../../master/index/">master</a>
-          </div>
       </div>
     </div>
 </div>
@@ -207,18 +204,20 @@
     <p class="scv-banner"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.tracker_store</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">itertools</span>
+
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="c1"># noinspection PyPep8Naming</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">KeysView</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">KeysView</span>
 
-<span class="kn">from</span> <span class="nn">rasa.core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
-<span class="kn">from</span> <span class="nn">rasa.core.broker</span> <span class="k">import</span> <span class="n">EventChannel</span>
-<span class="kn">from</span> <span class="nn">rasa.core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
-<span class="kn">from</span> <span class="nn">rasa.core.trackers</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">ActionExecuted</span><span class="p">,</span> <span class="n">DialogueStateTracker</span><span class="p">,</span> <span class="n">EventVerbosity</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">rasa.core.utils</span> <span class="k">import</span> <span class="n">class_from_module_path</span>
+<span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
+<span class="kn">from</span> <span class="nn">rasa_core.broker</span> <span class="k">import</span> <span class="n">EventChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+<span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">DialogueStateTracker</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">,</span>
+    <span class="n">EventVerbosity</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">class_from_module_path</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -245,11 +244,6 @@
                                      <span class="n">host</span><span class="o">=</span><span class="n">store</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
                                      <span class="n">event_broker</span><span class="o">=</span><span class="n">event_broker</span><span class="p">,</span>
                                      <span class="o">**</span><span class="n">store</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">store</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;sql&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SQLTrackerStore</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
-                                   <span class="n">url</span><span class="o">=</span><span class="n">store</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
-                                   <span class="n">event_broker</span><span class="o">=</span><span class="n">event_broker</span><span class="p">,</span>
-                                   <span class="o">**</span><span class="n">store</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TrackerStore</span><span class="o">.</span><span class="n">load_tracker_from_module_string</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">store</span><span class="p">)</span>
 
@@ -461,125 +455,6 @@
 
     <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;sender_id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">find</span><span class="p">()]</span>
-
-
-<span class="k">class</span> <span class="nc">SQLTrackerStore</span><span class="p">(</span><span class="n">TrackerStore</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Store which can save and retrieve trackers from an SQL database.&quot;&quot;&quot;</span>
-
-    <span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
-
-    <span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
-
-    <span class="k">class</span> <span class="nc">SQLEvent</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">Float</span>
-
-        <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;events&#39;</span>
-
-        <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">sender_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">type_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
-        <span class="n">intent_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
-        <span class="n">action_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">dialect</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="s1">&#39;sqlite&#39;</span><span class="p">,</span>
-                 <span class="n">url</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">db</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="s1">&#39;rasa.db&#39;</span><span class="p">,</span>
-                 <span class="n">username</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">password</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">event_broker</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EventChannel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">sessionmaker</span>
-        <span class="kn">from</span> <span class="nn">sqlalchemy.engine.url</span> <span class="k">import</span> <span class="n">URL</span>
-        <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">create_engine</span>
-
-        <span class="n">engine_url</span> <span class="o">=</span> <span class="n">URL</span><span class="p">(</span><span class="n">dialect</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Attempting to connect to database &#39;</span>
-                     <span class="s1">&#39;via &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">engine_url</span><span class="o">.</span><span class="n">__to_string__</span><span class="p">()))</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="n">engine_url</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Connection to SQL database &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
-                     <span class="s2">&quot;successful&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
-
-        <span class="nb">super</span><span class="p">(</span><span class="n">SQLTrackerStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">event_broker</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Collect all keys of the items stored in the database.&quot;&quot;&quot;</span>
-        <span class="c1"># noinspection PyUnresolvedReferences</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">SQLEvent</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DialogueStateTracker</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Create a tracker from all previously stored events.&quot;&quot;&quot;</span>
-
-        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SQLEvent</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">sender_id</span><span class="o">=</span><span class="n">sender_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Recreating tracker &quot;</span>
-                         <span class="s2">&quot;from sender id &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sender_id</span><span class="p">))</span>
-
-            <span class="k">return</span> <span class="n">DialogueStateTracker</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span>
-                                                  <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">slots</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Can&#39;t retrieve tracker matching&quot;</span>
-                         <span class="s2">&quot;sender id &#39;</span><span class="si">{}</span><span class="s2">&#39; from SQL storage.  &quot;</span>
-                         <span class="s2">&quot;Returning `None` instead.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sender_id</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="n">DialogueStateTracker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Update database with events from the current conversation.&quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_broker</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stream_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
-
-        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_additional_events</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>  <span class="c1"># only store recent events</span>
-
-        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
-
-            <span class="n">data</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
-
-            <span class="n">intent</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parse_data&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;intent&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-            <span class="n">action</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)</span>
-
-            <span class="c1"># noinspection PyArgumentList</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SQLEvent</span><span class="p">(</span><span class="n">sender_id</span><span class="o">=</span><span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">,</span>
-                                           <span class="n">type_name</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span>
-                                           <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span>
-                                           <span class="n">intent_name</span><span class="o">=</span><span class="n">intent</span><span class="p">,</span>
-                                           <span class="n">action_name</span><span class="o">=</span><span class="n">action</span><span class="p">,</span>
-                                           <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Tracker with sender_id &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
-                     <span class="s2">&quot;stored to database&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">_additional_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracker</span><span class="p">:</span> <span class="n">DialogueStateTracker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return events from the tracker which aren&#39;t currently stored.&quot;&quot;&quot;</span>
-
-        <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">func</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SQLEvent</span><span class="o">.</span><span class="n">timestamp</span><span class="p">))</span>
-        <span class="n">max_timestamp</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">sender_id</span><span class="o">=</span><span class="n">tracker</span><span class="o">.</span><span class="n">sender_id</span><span class="p">)</span><span class="o">.</span><span class="n">scalar</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">max_timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">max_timestamp</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="n">latest_events</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">events</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">max_timestamp</span><span class="p">:</span>
-                <span class="n">latest_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">break</span>
-
-        <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">latest_events</span><span class="p">)</span>
 </pre></div>
 
 	    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>

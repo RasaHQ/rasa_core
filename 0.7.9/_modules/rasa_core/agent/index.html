@@ -196,79 +196,95 @@
 
     <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for an old version of Rasa Core.</p>
 <h1>Source code for rasa_core.agent</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">from</span> <span class="nn">asyncio</span> <span class="k">import</span> <span class="n">CancelledError</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">gevent.pywsgi</span> <span class="k">import</span> <span class="n">WSGIServer</span>
+<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="k">import</span> <span class="n">InvalidURL</span><span class="p">,</span> <span class="n">RequestException</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">aiohttp</span>
-
-<span class="kn">from</span> <span class="nn">rasa.core</span> <span class="k">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">jobs</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">rasa.core.channels</span> <span class="k">import</span> <span class="n">InputChannel</span><span class="p">,</span> <span class="n">OutputChannel</span><span class="p">,</span> <span class="n">UserMessage</span>
-<span class="kn">from</span> <span class="nn">rasa.core.constants</span> <span class="k">import</span> <span class="n">DEFAULT_REQUEST_TIMEOUT</span>
-<span class="kn">from</span> <span class="nn">rasa.core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
-<span class="kn">from</span> <span class="nn">rasa.core.domain</span> <span class="k">import</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">InvalidDomain</span><span class="p">,</span> <span class="n">check_domain_sanity</span>
-<span class="kn">from</span> <span class="nn">rasa.core.exceptions</span> <span class="k">import</span> <span class="n">AgentNotReady</span>
-<span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span>
-<span class="kn">from</span> <span class="nn">rasa.core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span>
-<span class="kn">from</span> <span class="nn">rasa.core.policies</span> <span class="k">import</span> <span class="n">FormPolicy</span><span class="p">,</span> <span class="n">Policy</span>
-<span class="kn">from</span> <span class="nn">rasa.core.policies.ensemble</span> <span class="k">import</span> <span class="n">PolicyEnsemble</span><span class="p">,</span> <span class="n">SimplePolicyEnsemble</span>
-<span class="kn">from</span> <span class="nn">rasa.core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
-<span class="kn">from</span> <span class="nn">rasa.core.processor</span> <span class="k">import</span> <span class="n">MessageProcessor</span>
-<span class="kn">from</span> <span class="nn">rasa.core.tracker_store</span> <span class="k">import</span> <span class="n">InMemoryTrackerStore</span>
-<span class="kn">from</span> <span class="nn">rasa.core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
-<span class="kn">from</span> <span class="nn">rasa.core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span><span class="p">,</span> <span class="n">LockCounter</span>
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">training</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span><span class="p">,</span> <span class="n">OutputChannel</span><span class="p">,</span> <span class="n">InputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.constants</span> <span class="k">import</span> <span class="n">DEFAULT_REQUEST_TIMEOUT</span>
+<span class="kn">from</span> <span class="nn">rasa_core.dispatcher</span> <span class="k">import</span> <span class="n">Dispatcher</span>
+<span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">check_domain_sanity</span><span class="p">,</span> <span class="n">InvalidDomain</span>
+<span class="kn">from</span> <span class="nn">rasa_core.exceptions</span> <span class="k">import</span> <span class="n">AgentNotReady</span>
+<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">NaturalLanguageInterpreter</span>
+<span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies</span> <span class="k">import</span> <span class="n">Policy</span><span class="p">,</span> <span class="n">FormPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies.ensemble</span> <span class="k">import</span> <span class="n">SimplePolicyEnsemble</span><span class="p">,</span> <span class="n">PolicyEnsemble</span>
+<span class="kn">from</span> <span class="nn">rasa_core.policies.memoization</span> <span class="k">import</span> <span class="n">MemoizationPolicy</span>
+<span class="kn">from</span> <span class="nn">rasa_core.processor</span> <span class="k">import</span> <span class="n">MessageProcessor</span>
+<span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">InMemoryTrackerStore</span>
+<span class="kn">from</span> <span class="nn">rasa_core.trackers</span> <span class="k">import</span> <span class="n">DialogueStateTracker</span>
+<span class="kn">from</span> <span class="nn">rasa_core.utils</span> <span class="k">import</span> <span class="n">EndpointConfig</span>
 <span class="kn">from</span> <span class="nn">rasa_nlu.utils</span> <span class="k">import</span> <span class="n">is_url</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="c1"># noinspection PyPep8Naming</span>
-    <span class="kn">from</span> <span class="nn">rasa.core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span> <span class="k">as</span> <span class="n">NLG</span>
-    <span class="kn">from</span> <span class="nn">rasa.core.tracker_store</span> <span class="k">import</span> <span class="n">TrackerStore</span>
-    <span class="kn">from</span> <span class="nn">sanic</span> <span class="k">import</span> <span class="n">Sanic</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.nlg</span> <span class="k">import</span> <span class="n">NaturalLanguageGenerator</span> <span class="k">as</span> <span class="n">NLG</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.tracker_store</span> <span class="k">import</span> <span class="n">TrackerStore</span>
 
 
-<div class="viewcode-block" id="load_from_server"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.load_from_server">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">load_from_server</span><span class="p">(</span>
-    <span class="n">agent</span><span class="p">,</span>
-    <span class="n">model_server</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Agent&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="load_from_server"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.load_from_server">[docs]</a><span class="k">def</span> <span class="nf">load_from_server</span><span class="p">(</span><span class="n">interpreter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NaturalLanguageInterpreter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">generator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">,</span> <span class="s1">&#39;NLG&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">tracker_store</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;TrackerStore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">model_server</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Agent&#39;</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Load a persisted model from a server.&quot;&quot;&quot;</span>
 
-    <span class="c1"># We are going to pull the model once first, and then schedule a recurring</span>
-    <span class="c1"># job. the benefit of this approach is that we can be sure that there</span>
-    <span class="c1"># is a model after this function completes -&gt; allows to do proper</span>
-    <span class="c1"># &quot;is alive&quot; check on a startup server&#39;s `/status` endpoint. If the server</span>
-    <span class="c1"># is started, we can be sure that it also already loaded (or tried to)</span>
-    <span class="c1"># a model.</span>
-    <span class="k">await</span> <span class="n">_update_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">interpreter</span><span class="o">=</span><span class="n">interpreter</span><span class="p">,</span>
+                  <span class="n">generator</span><span class="o">=</span><span class="n">generator</span><span class="p">,</span>
+                  <span class="n">tracker_store</span><span class="o">=</span><span class="n">tracker_store</span><span class="p">,</span>
+                  <span class="n">action_endpoint</span><span class="o">=</span><span class="n">action_endpoint</span><span class="p">)</span>
 
-    <span class="n">wait_time_between_pulls</span> <span class="o">=</span> <span class="n">model_server</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wait_time_between_pulls&#39;</span><span class="p">,</span>
-                                                      <span class="mi">100</span><span class="p">)</span>
+    <span class="n">wait_time_between_pulls</span> <span class="o">=</span> <span class="n">model_server</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s1">&#39;wait_time_between_pulls&#39;</span><span class="p">,</span>
+        <span class="mi">100</span>
+    <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">wait_time_between_pulls</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">wait_time_between_pulls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">,</span>
+                       <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">wait_time_between_pulls</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
         <span class="c1"># continuously pull the model every `wait_time_between_pulls` seconds</span>
-        <span class="k">await</span> <span class="n">schedule_model_pulling</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span>
-                                     <span class="nb">int</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">),</span>
-                                     <span class="n">agent</span><span class="p">)</span>
+        <span class="n">start_model_pulling_in_worker</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span>
+                                      <span class="nb">int</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">),</span>
+                                      <span class="n">agent</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># just pull the model once</span>
+        <span class="n">_update_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">agent</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_stack_model_directory</span><span class="p">(</span><span class="n">model_directory</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Decide whether a persisted model is a stack or a core model.</span>
+<span class="k">def</span> <span class="nf">_init_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span>
+                            <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Text</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;Initialise a Rasa Core model from a URL.&quot;&quot;&quot;</span>
 
-<span class="sd">    Return the root stack model directory if it&#39;s a stack model.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_url</span><span class="p">(</span><span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">InvalidURL</span><span class="p">(</span><span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">model_directory</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;fingerprint.json&quot;</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">root</span>
+    <span class="n">model_directory</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
+
+    <span class="n">fingerprint</span> <span class="o">=</span> <span class="n">_pull_model_and_fingerprint</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span>
+                                              <span class="n">model_directory</span><span class="p">,</span>
+                                              <span class="n">fingerprint</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fingerprint</span><span class="p">,</span> <span class="n">model_directory</span>
+
+
+<span class="k">def</span> <span class="nf">_is_stack_model</span><span class="p">(</span><span class="n">model_directory</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Decide whether a persisted model is a stack or a core model.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;fingerprint.json&quot;</span><span class="p">))</span>
 
 
 <span class="k">def</span> <span class="nf">_load_and_set_updated_model</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span><span class="p">,</span>
@@ -276,14 +292,10 @@
                                 <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Text</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load the persisted model into memory and set the model on the agent.&quot;&quot;&quot;</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found new model with fingerprint </span><span class="si">{}</span><span class="s2">. Loading...&quot;</span>
-                 <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fingerprint</span><span class="p">))</span>
-
-    <span class="n">stack_model_directory</span> <span class="o">=</span> <span class="n">_get_stack_model_directory</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">stack_model_directory</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.interpreter</span> <span class="k">import</span> <span class="n">RasaNLUInterpreter</span>
-        <span class="n">nlu_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stack_model_directory</span><span class="p">,</span> <span class="s2">&quot;nlu&quot;</span><span class="p">)</span>
-        <span class="n">core_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stack_model_directory</span><span class="p">,</span> <span class="s2">&quot;core&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_is_stack_model</span><span class="p">(</span><span class="n">model_directory</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="k">import</span> <span class="n">RasaNLUInterpreter</span>
+        <span class="n">nlu_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;nlu&quot;</span><span class="p">)</span>
+        <span class="n">core_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;core&quot;</span><span class="p">)</span>
         <span class="n">interpreter</span> <span class="o">=</span> <span class="n">RasaNLUInterpreter</span><span class="p">(</span><span class="n">model_directory</span><span class="o">=</span><span class="n">nlu_model</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">interpreter</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">interpreter</span>
@@ -296,22 +308,22 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">policy_ensemble</span> <span class="o">=</span> <span class="n">PolicyEnsemble</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">core_model</span><span class="p">)</span>
         <span class="n">agent</span><span class="o">.</span><span class="n">update_model</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">policy_ensemble</span><span class="p">,</span> <span class="n">fingerprint</span><span class="p">,</span> <span class="n">interpreter</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Finished updating agent to new model.&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to load policy and update agent. &quot;</span>
                          <span class="s2">&quot;The previous model will stay loaded instead.&quot;</span><span class="p">)</span>
 
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">_update_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span><span class="p">,</span>
-                                    <span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_update_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span><span class="p">,</span>
+                              <span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span>
+                              <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Load a zipped Rasa Core model from a URL and update the passed agent.&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_url</span><span class="p">(</span><span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">InvalidURL</span><span class="p">(</span><span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">InvalidURL</span><span class="p">(</span><span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
 
     <span class="n">model_directory</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
 
-    <span class="n">new_model_fingerprint</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_pull_model_and_fingerprint</span><span class="p">(</span>
+    <span class="n">new_model_fingerprint</span> <span class="o">=</span> <span class="n">_pull_model_and_fingerprint</span><span class="p">(</span>
         <span class="n">model_server</span><span class="p">,</span> <span class="n">model_directory</span><span class="p">,</span> <span class="n">agent</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">new_model_fingerprint</span><span class="p">:</span>
         <span class="n">_load_and_set_updated_model</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">model_directory</span><span class="p">,</span>
@@ -321,86 +333,66 @@
                      <span class="s2">&quot;URL </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
 
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">_pull_model_and_fingerprint</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span><span class="p">,</span>
-                                      <span class="n">model_directory</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-                                      <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span>
-                                      <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_pull_model_and_fingerprint</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span><span class="p">,</span>
+                                <span class="n">model_directory</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                                <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span>
+                                <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Queries the model server and returns the value of the response&#39;s</span>
 
-<span class="sd">     &lt;ETag&gt; header which contains the model hash.</span>
-<span class="sd">     &quot;&quot;&quot;</span>
+<span class="sd">    &lt;ETag&gt; header which contains the model hash.&quot;&quot;&quot;</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;If-None-Match&quot;</span><span class="p">:</span> <span class="n">fingerprint</span><span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Requesting model from server </span><span class="si">{}</span><span class="s2">...&quot;</span>
+                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">model_server</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+                                        <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+                                        <span class="n">timeout</span><span class="o">=</span><span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Tried to fetch model from server, but couldn&#39;t reach &quot;</span>
+                       <span class="s2">&quot;server. We&#39;ll retry later... Error: </span><span class="si">{}</span><span class="s2">.&quot;</span>
+                       <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;If-None-Match&quot;</span><span class="p">:</span> <span class="n">fingerprint</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">204</span><span class="p">,</span> <span class="mi">304</span><span class="p">]:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model server returned </span><span class="si">{}</span><span class="s2"> status code, indicating &quot;</span>
+                     <span class="s2">&quot;that no new model is available. &quot;</span>
+                     <span class="s2">&quot;Current fingerprint: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">fingerprint</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ETag&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model server didn&#39;t find a model for our request. &quot;</span>
+                     <span class="s2">&quot;Probably no one did train a model for the project &quot;</span>
+                     <span class="s2">&quot;and tag combination yet.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Tried to fetch model from server, but server response &quot;</span>
+                       <span class="s2">&quot;status code is </span><span class="si">{}</span><span class="s2">. We&#39;ll retry later...&quot;</span>
+                       <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Requesting model from server </span><span class="si">{}</span><span class="s2">...&quot;</span>
-                 <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">unarchive</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">model_directory</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unzipped model to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
+                 <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)))</span>
 
-    <span class="k">async</span> <span class="k">with</span> <span class="n">model_server</span><span class="o">.</span><span class="n">session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="n">model_server</span><span class="o">.</span><span class="n">combine_parameters</span><span class="p">()</span>
-            <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-                                       <span class="n">model_server</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
-                                       <span class="n">timeout</span><span class="o">=</span><span class="n">DEFAULT_REQUEST_TIMEOUT</span><span class="p">,</span>
-                                       <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
-                                       <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
-
-                <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">204</span><span class="p">,</span> <span class="mi">304</span><span class="p">]:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model server returned </span><span class="si">{}</span><span class="s2"> status code, &quot;</span>
-                                 <span class="s2">&quot;indicating that no new model is available. &quot;</span>
-                                 <span class="s2">&quot;Current fingerprint: </span><span class="si">{}</span><span class="s2">&quot;</span>
-                                 <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">fingerprint</span><span class="p">))</span>
-                    <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ETag&quot;</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                        <span class="s2">&quot;Model server didn&#39;t find a model for our request. &quot;</span>
-                        <span class="s2">&quot;Probably no one did train a model for the project &quot;</span>
-                        <span class="s2">&quot;and tag combination yet.&quot;</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="kc">None</span>
-                <span class="k">elif</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s2">&quot;Tried to fetch model from server, but server response &quot;</span>
-                        <span class="s2">&quot;status code is </span><span class="si">{}</span><span class="s2">. We&#39;ll retry later...&quot;</span>
-                        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">))</span>
-                    <span class="k">return</span> <span class="kc">None</span>
-
-                <span class="n">utils</span><span class="o">.</span><span class="n">unarchive</span><span class="p">(</span><span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">model_directory</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unzipped model to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
-                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)))</span>
-
-                <span class="c1"># get the new fingerprint</span>
-                <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ETag&quot;</span><span class="p">)</span>
-
-        <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientResponseError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Tried to fetch model from server, but &quot;</span>
-                           <span class="s2">&quot;couldn&#39;t reach server. We&#39;ll retry later... &quot;</span>
-                           <span class="s2">&quot;Error: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-            <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># get the new fingerprint</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ETag&quot;</span><span class="p">)</span>
 
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">_run_model_pulling_worker</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span><span class="p">,</span>
-                                    <span class="n">wait_time_between_pulls</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                                    <span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_run_model_pulling_worker</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span><span class="p">,</span>
+                              <span class="n">wait_time_between_pulls</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                              <span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="c1"># noinspection PyBroadException</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">_update_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">CancelledError</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Stopping model pulling (cancelled).&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;An exception was raised while fetching &quot;</span>
-                             <span class="s2">&quot;a model. Continuing anyways...&quot;</span><span class="p">)</span>
+        <span class="n">_update_model_from_server</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">wait_time_between_pulls</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="schedule_model_pulling"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.schedule_model_pulling">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">schedule_model_pulling</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span><span class="p">,</span>
-                                 <span class="n">wait_time_between_pulls</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                                 <span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span><span class="p">):</span>
-    <span class="p">(</span><span class="k">await</span> <span class="n">jobs</span><span class="o">.</span><span class="n">scheduler</span><span class="p">())</span><span class="o">.</span><span class="n">add_job</span><span class="p">(</span>
-        <span class="n">_run_model_pulling_worker</span><span class="p">,</span> <span class="s2">&quot;interval&quot;</span><span class="p">,</span>
-        <span class="n">seconds</span><span class="o">=</span><span class="n">wait_time_between_pulls</span><span class="p">,</span>
-        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">model_server</span><span class="p">,</span> <span class="n">wait_time_between_pulls</span><span class="p">,</span> <span class="n">agent</span><span class="p">],</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;pull-model-from-server&quot;</span><span class="p">,</span>
-        <span class="n">replace_existing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+<div class="viewcode-block" id="start_model_pulling_in_worker"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.start_model_pulling_in_worker">[docs]</a><span class="k">def</span> <span class="nf">start_model_pulling_in_worker</span><span class="p">(</span><span class="n">model_server</span><span class="p">:</span> <span class="n">EndpointConfig</span><span class="p">,</span>
+                                  <span class="n">wait_time_between_pulls</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                  <span class="n">agent</span><span class="p">:</span> <span class="s1">&#39;Agent&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">worker</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">_run_model_pulling_worker</span><span class="p">,</span>
+                    <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">model_server</span><span class="p">,</span> <span class="n">wait_time_between_pulls</span><span class="p">,</span> <span class="n">agent</span><span class="p">))</span>
+    <span class="n">worker</span><span class="o">.</span><span class="n">setDaemon</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">worker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Agent"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent">[docs]</a><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -411,21 +403,21 @@
 <span class="sd">     getting the next action, and handling a channel.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">domain</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">policies</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PolicyEnsemble</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Policy</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">interpreter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NaturalLanguageInterpreter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">,</span> <span class="s1">&#39;NLG&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">tracker_store</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;TrackerStore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">policies</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PolicyEnsemble</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Policy</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">interpreter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NaturalLanguageInterpreter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">,</span> <span class="s1">&#39;NLG&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tracker_store</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;TrackerStore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="c1"># Initializing variables with the passed parameters.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">add_requested_slot</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_ensemble</span><span class="p">(</span><span class="n">policies</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_form_policy_present</span><span class="p">():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_form_policy_not_present</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">InvalidDomain</span><span class="p">(</span>
                 <span class="s2">&quot;You have defined a form action, but haven&#39;t added the &quot;</span>
                 <span class="s2">&quot;FormPolicy to your policy ensemble.&quot;</span>
@@ -437,7 +429,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_tracker_store</span><span class="p">(</span>
             <span class="n">tracker_store</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_endpoint</span> <span class="o">=</span> <span class="n">action_endpoint</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conversations_in_processing</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_fingerprint</span><span class="p">(</span><span class="n">fingerprint</span><span class="p">)</span>
 
@@ -466,7 +457,7 @@
              <span class="n">interpreter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NaturalLanguageInterpreter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
              <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">,</span> <span class="s1">&#39;NLG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
              <span class="n">tracker_store</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;TrackerStore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-             <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+             <span class="n">action_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EndpointConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
              <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Agent&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Load a persisted model from the passed path.&quot;&quot;&quot;</span>
 
@@ -503,7 +494,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">tracker_store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Agent.handle_message"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_message">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span>
+<div class="viewcode-block" id="Agent.handle_message"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_message">[docs]</a>    <span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">message</span><span class="p">:</span> <span class="n">UserMessage</span><span class="p">,</span>
         <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -514,52 +505,25 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">UserMessage</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Passing a text to `agent.handle_message(...)` is &quot;</span>
                            <span class="s2">&quot;deprecated. Rather use `agent.handle_text(...)`.&quot;</span><span class="p">)</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_text</span><span class="p">(</span>
-                <span class="n">message</span><span class="p">,</span>
-                <span class="n">message_preprocessor</span><span class="o">=</span><span class="n">message_preprocessor</span><span class="p">,</span>
-                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_text</span><span class="p">(</span><span class="n">message</span><span class="p">,</span>
+                                    <span class="n">message_preprocessor</span><span class="o">=</span><span class="n">message_preprocessor</span><span class="p">,</span>
+                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">noop</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Ignoring message as there is no agent to handle it.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">noop</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">noop</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>  <span class="c1">#</span>
 
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_processor</span><span class="p">(</span><span class="n">message_preprocessor</span><span class="p">)</span>
-
-        <span class="c1"># get the lock for the current conversation</span>
-        <span class="n">lock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversations_in_processing</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">sender_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">lock</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;created a new lock for conversation &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
-                         <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">sender_id</span><span class="p">))</span>
-            <span class="n">lock</span> <span class="o">=</span> <span class="n">LockCounter</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">conversations_in_processing</span><span class="p">[</span><span class="n">message</span><span class="o">.</span><span class="n">sender_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">lock</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">async</span> <span class="k">with</span> <span class="n">lock</span><span class="p">:</span>
-                <span class="c1"># this makes sure that there can always only be one coroutine</span>
-                <span class="c1"># handling a conversation at any point in time</span>
-                <span class="c1"># Note: this doesn&#39;t support multi-processing, it just works</span>
-                <span class="c1"># for coroutines. If there are multiple processes handling</span>
-                <span class="c1"># messages, an external system needs to make sure messages</span>
-                <span class="c1"># for the same conversation are always processed by the same</span>
-                <span class="c1"># process.</span>
-                <span class="k">return</span> <span class="k">await</span> <span class="n">processor</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">lock</span><span class="o">.</span><span class="n">is_someone_waiting</span><span class="p">():</span>
-                <span class="c1"># dispose of the lock if no one needs it to avoid</span>
-                <span class="c1"># accumulating locks</span>
-                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversations_in_processing</span><span class="p">[</span><span class="n">message</span><span class="o">.</span><span class="n">sender_id</span><span class="p">]</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;deleted lock for conversation &#39;</span><span class="si">{}</span><span class="s2">&#39; (unused)&quot;</span>
-                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">sender_id</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
     <span class="c1"># noinspection PyUnusedLocal</span>
 <div class="viewcode-block" id="Agent.predict_next"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.predict_next">[docs]</a>    <span class="k">def</span> <span class="nf">predict_next</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Handle a single message.&quot;&quot;&quot;</span>
 
@@ -567,7 +531,7 @@
         <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">predict_next</span><span class="p">(</span><span class="n">sender_id</span><span class="p">)</span></div>
 
     <span class="c1"># noinspection PyUnusedLocal</span>
-<div class="viewcode-block" id="Agent.log_message"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.log_message">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">log_message</span><span class="p">(</span>
+<div class="viewcode-block" id="Agent.log_message"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.log_message">[docs]</a>    <span class="k">def</span> <span class="nf">log_message</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">message</span><span class="p">:</span> <span class="n">UserMessage</span><span class="p">,</span>
         <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -576,9 +540,9 @@
         <span class="sd">&quot;&quot;&quot;Append a message to a dialogue - does not predict actions.&quot;&quot;&quot;</span>
 
         <span class="n">processor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_processor</span><span class="p">(</span><span class="n">message_preprocessor</span><span class="p">)</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="n">processor</span><span class="o">.</span><span class="n">log_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">log_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Agent.execute_action"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.execute_action">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">execute_action</span><span class="p">(</span>
+<div class="viewcode-block" id="Agent.execute_action"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.execute_action">[docs]</a>    <span class="k">def</span> <span class="nf">execute_action</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender_id</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
         <span class="n">action</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
@@ -592,11 +556,10 @@
         <span class="n">dispatcher</span> <span class="o">=</span> <span class="n">Dispatcher</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span>
                                 <span class="n">output_channel</span><span class="p">,</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">nlg</span><span class="p">)</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="n">processor</span><span class="o">.</span><span class="n">execute_action</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span>
-                                              <span class="n">policy</span><span class="p">,</span>
-                                              <span class="n">confidence</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">execute_action</span><span class="p">(</span><span class="n">sender_id</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span>
+                                        <span class="n">confidence</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Agent.handle_text"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_text">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_text</span><span class="p">(</span>
+<div class="viewcode-block" id="Agent.handle_text"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_text">[docs]</a>    <span class="k">def</span> <span class="nf">handle_text</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">text_message</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
         <span class="n">message_preprocessor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Text</span><span class="p">],</span> <span class="n">Text</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -616,13 +579,13 @@
 
 <span class="sd">        :Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; from rasa.core.agent import Agent</span>
-<span class="sd">            &gt;&gt;&gt; from rasa.core.interpreter import RasaNLUInterpreter</span>
+<span class="sd">            &gt;&gt;&gt; from rasa_core.agent import Agent</span>
+<span class="sd">            &gt;&gt;&gt; from rasa_core.interpreter import RasaNLUInterpreter</span>
 <span class="sd">            &gt;&gt;&gt; interpreter = RasaNLUInterpreter(</span>
 <span class="sd">            ... &quot;examples/restaurantbot/models/nlu/current&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; agent = Agent.load(&quot;examples/restaurantbot/models/dialogue&quot;,</span>
 <span class="sd">            ... interpreter=interpreter)</span>
-<span class="sd">            &gt;&gt;&gt; await agent.handle_text(&quot;hello&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; agent.handle_text(&quot;hello&quot;)</span>
 <span class="sd">            [u&#39;how can I help you?&#39;]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -634,11 +597,11 @@
                           <span class="n">output_channel</span><span class="p">,</span>
                           <span class="n">sender_id</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">message_preprocessor</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">message_preprocessor</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.toggle_memoization"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.toggle_memoization">[docs]</a>    <span class="k">def</span> <span class="nf">toggle_memoization</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">activate</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">activate</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Toggles the memoization on and off.</span>
 
@@ -685,25 +648,22 @@
     <span class="k">def</span> <span class="nf">_are_all_featurizers_using_a_max_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if all featurizers are MaxHistoryTrackerFeaturizer.&quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">has_max_history_featurizer</span><span class="p">(</span><span class="n">policy</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">and</span>
-                    <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">))</span>
-
-        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">has_max_history_featurizer</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span> <span class="ow">and</span> <span class="ow">not</span>
+                    <span class="nb">hasattr</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="s1">&#39;max_history&#39;</span><span class="p">)):</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="Agent.load_data"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.load_data">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                        <span class="n">resource_name</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-                        <span class="n">remove_duplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                        <span class="n">unique_last_num_states</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">augmentation_factor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-                        <span class="n">tracker_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">use_story_concatenation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                        <span class="n">debug_plots</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                        <span class="n">exclusion_percentage</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
-                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">]:</span>
+<div class="viewcode-block" id="Agent.load_data"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">resource_name</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                  <span class="n">remove_duplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                  <span class="n">unique_last_num_states</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">augmentation_factor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+                  <span class="n">tracker_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">use_story_concatenation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                  <span class="n">debug_plots</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                  <span class="n">exclusion_percentage</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+                  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Load training data from a resource.&quot;&quot;&quot;</span>
 
         <span class="n">max_history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_history</span><span class="p">()</span>
@@ -725,13 +685,12 @@
                            <span class="s2">&quot;at least maximum max_history.&quot;</span>
                            <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unique_last_num_states</span><span class="p">,</span> <span class="n">max_history</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="k">await</span> <span class="n">training</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span>
-            <span class="n">resource_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
-            <span class="n">remove_duplicates</span><span class="p">,</span> <span class="n">unique_last_num_states</span><span class="p">,</span>
-            <span class="n">augmentation_factor</span><span class="p">,</span>
-            <span class="n">tracker_limit</span><span class="p">,</span> <span class="n">use_story_concatenation</span><span class="p">,</span>
-            <span class="n">debug_plots</span><span class="p">,</span>
-            <span class="n">exclusion_percentage</span><span class="o">=</span><span class="n">exclusion_percentage</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">training</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
+                                  <span class="n">remove_duplicates</span><span class="p">,</span> <span class="n">unique_last_num_states</span><span class="p">,</span>
+                                  <span class="n">augmentation_factor</span><span class="p">,</span>
+                                  <span class="n">tracker_limit</span><span class="p">,</span> <span class="n">use_story_concatenation</span><span class="p">,</span>
+                                  <span class="n">debug_plots</span><span class="p">,</span>
+                                  <span class="n">exclusion_percentage</span><span class="o">=</span><span class="n">exclusion_percentage</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.train"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
               <span class="n">training_trackers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DialogueStateTracker</span><span class="p">],</span>
@@ -753,14 +712,16 @@
                             <span class="s2">&quot;to `agent.train(...)` is not supported anymore. &quot;</span>
                             <span class="s2">&quot;Pass appropriate featurizer directly &quot;</span>
                             <span class="s2">&quot;to the policy configuration instead. More info &quot;</span>
-                            <span class="s2">&quot;https://rasa.com/docs/core/migrations.html&quot;</span><span class="p">)</span>
+                            <span class="s2">&quot;https://legacy-docs.rasa.com/docs/core &quot;</span>
+                            <span class="s2">&quot; /migrations.html&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;epochs&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_history&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                 <span class="s1">&#39;batch_size&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Passing policy configuration parameters &quot;</span>
                             <span class="s2">&quot;to `agent.train(...)` is not supported &quot;</span>
                             <span class="s2">&quot;anymore. Specify parameters directly in the &quot;</span>
                             <span class="s2">&quot;policy configuration instead. More info &quot;</span>
-                            <span class="s2">&quot;https://rasa.com/docs/core/migrations.html&quot;</span><span class="p">)</span>
+                            <span class="s2">&quot;https://legacy-docs.rasa.com/docs/core &quot;</span>
+                            <span class="s2">&quot; /migrations.html&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">training_trackers</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="c1"># the user most likely passed in a file name to load training</span>
@@ -780,29 +741,28 @@
 
 <div class="viewcode-block" id="Agent.handle_channels"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.handle_channels">[docs]</a>    <span class="k">def</span> <span class="nf">handle_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">InputChannel</span><span class="p">],</span>
                         <span class="n">http_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">DEFAULT_SERVER_PORT</span><span class="p">,</span>
-                        <span class="n">route</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="s2">&quot;/webhooks/&quot;</span><span class="p">,</span>
-                        <span class="n">cors</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Sanic&#39;</span><span class="p">:</span>
+                        <span class="n">serve_forever</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="n">route</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="s2">&quot;/webhooks/&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WSGIServer</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Start a webserver attaching the input channels and handling msgs.</span>
 
 <span class="sd">        If ``serve_forever`` is set to ``True``, this call will be blocking.</span>
 <span class="sd">        Otherwise the webserver will be started, and the method will</span>
 <span class="sd">        return afterwards.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">rasa.core</span> <span class="k">import</span> <span class="n">run</span>
+        <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Flask</span>
+        <span class="kn">import</span> <span class="nn">rasa_core</span>
 
-        <span class="n">app</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">configure_app</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">cors</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                                <span class="n">enable_api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                <span class="n">route</span><span class="o">=</span><span class="n">route</span><span class="p">)</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">rasa_core</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span>
+                                            <span class="n">app</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">handle_message</span><span class="p">,</span>
+                                            <span class="n">route</span><span class="o">=</span><span class="n">route</span><span class="p">)</span>
 
-        <span class="n">app</span><span class="o">.</span><span class="n">agent</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">http_server</span> <span class="o">=</span> <span class="n">WSGIServer</span><span class="p">((</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">http_port</span><span class="p">),</span> <span class="n">app</span><span class="p">)</span>
+        <span class="n">http_server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-        <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">http_port</span><span class="p">,</span>
-                <span class="n">access_log</span><span class="o">=</span><span class="n">logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">))</span>
-
-        <span class="c1"># this might seem unnecessary (as run does not return until the server</span>
-        <span class="c1"># is killed) - but we use it for tests where we mock `.run` to directly</span>
-        <span class="c1"># return and need the app to inspect if we created a properly</span>
-        <span class="c1"># configured server</span>
-        <span class="k">return</span> <span class="n">app</span></div>
+        <span class="k">if</span> <span class="n">serve_forever</span><span class="p">:</span>
+            <span class="n">http_server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">http_server</span></div>
 
     <span class="k">def</span> <span class="nf">_set_fingerprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
@@ -851,28 +811,27 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Persisted model to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
                     <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_path</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="Agent.visualize"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.visualize">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                        <span class="n">resource_name</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-                        <span class="n">output_file</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-                        <span class="n">max_history</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">nlu_training_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">should_merge_nodes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                        <span class="n">fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>
-                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.training.visualization</span> <span class="k">import</span> <span class="n">visualize_stories</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.training.dsl</span> <span class="k">import</span> <span class="n">StoryFileReader</span>
+<div class="viewcode-block" id="Agent.visualize"><a class="viewcode-back" href="../../../api/agent/#rasa_core.agent.Agent.visualize">[docs]</a>    <span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">resource_name</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                  <span class="n">output_file</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                  <span class="n">max_history</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">nlu_training_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Text</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">should_merge_nodes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                  <span class="n">fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>
+                  <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.training.visualization</span> <span class="k">import</span> <span class="n">visualize_stories</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.training.dsl</span> <span class="k">import</span> <span class="n">StoryFileReader</span>
         <span class="sd">&quot;&quot;&quot;Visualize the loaded training data from the resource.&quot;&quot;&quot;</span>
 
         <span class="c1"># if the user doesn&#39;t provide a max history, we will use the</span>
         <span class="c1"># largest value from any policy</span>
         <span class="n">max_history</span> <span class="o">=</span> <span class="n">max_history</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_history</span><span class="p">()</span>
 
-        <span class="n">story_steps</span> <span class="o">=</span> <span class="k">await</span> <span class="n">StoryFileReader</span><span class="o">.</span><span class="n">read_from_folder</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span>
-                                                             <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
-        <span class="k">await</span> <span class="n">visualize_stories</span><span class="p">(</span><span class="n">story_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
-                                <span class="n">max_history</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span>
-                                <span class="n">nlu_training_data</span><span class="p">,</span> <span class="n">should_merge_nodes</span><span class="p">,</span>
-                                <span class="n">fontsize</span><span class="p">)</span></div>
+        <span class="n">story_steps</span> <span class="o">=</span> <span class="n">StoryFileReader</span><span class="o">.</span><span class="n">read_from_folder</span><span class="p">(</span><span class="n">resource_name</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
+        <span class="n">visualize_stories</span><span class="p">(</span><span class="n">story_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
+                          <span class="n">max_history</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreter</span><span class="p">,</span>
+                          <span class="n">nlu_training_data</span><span class="p">,</span> <span class="n">should_merge_nodes</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_ensure_agent_is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks that an interpreter and a tracker store are set.</span>
@@ -940,15 +899,13 @@
                 <span class="s2">&quot;of type &#39;</span><span class="si">{}</span><span class="s2">&#39;, but should be policy, an array of &quot;</span>
                 <span class="s2">&quot;policies, or a policy ensemble&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">passed_type</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_is_form_policy_present</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Check whether form policy is present and used.&quot;&quot;&quot;</span>
-
-        <span class="n">has_form_policy</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span> <span class="ow">and</span>
-            <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">FormPolicy</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">))</span>
-
-        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">form_names</span> <span class="ow">or</span> <span class="n">has_form_policy</span></div>
+    <span class="k">def</span> <span class="nf">_form_policy_not_present</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Check whether form policy is not present</span>
+<span class="sd">            if there is a form action in the domain</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">form_names</span> <span class="ow">and</span> <span class="ow">not</span>
+                <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">FormPolicy</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_ensemble</span><span class="o">.</span><span class="n">policies</span><span class="p">))</span></div>
 </pre></div>
 
            </div>
@@ -984,6 +941,7 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../../../0.14.5/index/">0.14.5</a></dd>
             <dd><a href="../../../../0.14.4/index/">0.14.4</a></dd>
             <dd><a href="../../../../0.14.3/index/">0.14.3</a></dd>
             <dd><a href="../../../../0.14.2/index/">0.14.2</a></dd>
@@ -1009,10 +967,6 @@
             <dd><a href="../../../../0.8.6/index/">0.8.6</a></dd>
             <dd><a href="../../../../0.7.9/_modules/rasa_core/agent/">0.7.9</a></dd>
             <dd><a href="../../../../0.6.9/index/">0.6.9</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="../../../../master/index/">master</a></dd>
         </dl>
     </div>
 </div>

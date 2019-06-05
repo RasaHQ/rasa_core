@@ -168,6 +168,7 @@ libraries from Rasa Stack." />
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../../0.14.5/api/policy/">0.14.5</a>
               <a href="../../../0.14.4/api/policy/">0.14.4</a>
               <a href="../../../0.14.3/api/policy/">0.14.3</a>
               <a href="../../../0.14.2/api/policy/">0.14.2</a>
@@ -194,10 +195,6 @@ libraries from Rasa Stack." />
               <a href="../../../0.7.9/index/">0.7.9</a>
               <a href="../../../0.6.9/index/">0.6.9</a>
           </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href="../../../master/api/policy/">master</a>
-          </div>
       </div>
     </div>
 </div>
@@ -219,16 +216,16 @@ libraries from Rasa Stack." />
 
 
 
-    <p class="scv-banner"><a href="../../../0.14.4/api/policy/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.4.</a></p>
+    <p class="scv-banner"><a href="../../../0.14.5/api/policy/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.5.</a></p>
 <div class="section" id="policy">
 <h1>Policy<a class="headerlink" href="#policy" title="Permalink to this headline">¶</a></h1>
 <p>A Policy decides what action to take at every step in a dialogue</p>
 <dl class="class">
 <dt id="rasa_core.policies.Policy">
-<em class="property">class </em><code class="descclassname">rasa_core.policies.</code><code class="descname">Policy</code><span class="sig-paren">(</span><em>featurizer: Optional[rasa.core.featurizers.TrackerFeaturizer] = None</em>, <em>priority: Optional[int] = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa/core/policies/policy/#Policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">rasa_core.policies.</code><code class="descname">Policy</code><span class="sig-paren">(</span><em>featurizer: Optional[rasa_core.featurizers.TrackerFeaturizer] = None</em>, <em>priority: Optional[int] = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/policies/policy/#Policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="rasa_core.policies.Policy.featurize_for_training">
-<code class="descname">featurize_for_training</code><span class="sig-paren">(</span><em>training_trackers: List[rasa.core.trackers.DialogueStateTracker], domain: rasa.core.domain.Domain, **kwargs</em><span class="sig-paren">)</span> &#x2192; rasa.core.training.data.DialogueTrainingData<a class="reference internal" href="../../_modules/rasa/core/policies/policy/#Policy.featurize_for_training"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.featurize_for_training" title="Permalink to this definition">¶</a></dt>
+<code class="descname">featurize_for_training</code><span class="sig-paren">(</span><em>training_trackers: List[rasa_core.trackers.DialogueStateTracker], domain: rasa_core.domain.Domain, **kwargs</em><span class="sig-paren">)</span> &#x2192; rasa_core.training.data.DialogueTrainingData<a class="reference internal" href="../../_modules/rasa_core/policies/policy/#Policy.featurize_for_training"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.featurize_for_training" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform training trackers into a vector representation.
 The trackers, consisting of multiple turns, will be transformed
 into a float vector which can be used by a ML model.</p>
@@ -236,13 +233,13 @@ into a float vector which can be used by a ML model.</p>
 
 <dl class="method">
 <dt id="rasa_core.policies.Policy.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>training_trackers: List[rasa.core.trackers.DialogueStateTracker], domain: rasa.core.domain.Domain, **kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa/core/policies/policy/#Policy.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.train" title="Permalink to this definition">¶</a></dt>
+<code class="descname">train</code><span class="sig-paren">(</span><em>training_trackers: List[rasa_core.trackers.DialogueStateTracker], domain: rasa_core.domain.Domain, **kwargs</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/policies/policy/#Policy.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trains the policy on given training trackers.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.policies.Policy.predict_action_probabilities">
-<code class="descname">predict_action_probabilities</code><span class="sig-paren">(</span><em>tracker: rasa.core.trackers.DialogueStateTracker</em>, <em>domain: rasa.core.domain.Domain</em><span class="sig-paren">)</span> &#x2192; List[float]<a class="reference internal" href="../../_modules/rasa/core/policies/policy/#Policy.predict_action_probabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.predict_action_probabilities" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict_action_probabilities</code><span class="sig-paren">(</span><em>tracker: rasa_core.trackers.DialogueStateTracker</em>, <em>domain: rasa_core.domain.Domain</em><span class="sig-paren">)</span> &#x2192; List[float]<a class="reference internal" href="../../_modules/rasa_core/policies/policy/#Policy.predict_action_probabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.predict_action_probabilities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predicts the next action the bot should take
 after seeing the tracker.</p>
 <p>Returns the list of probabilities for the next actions</p>
@@ -250,14 +247,14 @@ after seeing the tracker.</p>
 
 <dl class="classmethod">
 <dt id="rasa_core.policies.Policy.load">
-<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; rasa.core.policies.policy.Policy<a class="reference internal" href="../../_modules/rasa/core/policies/policy/#Policy.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.load" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; rasa_core.policies.policy.Policy<a class="reference internal" href="../../_modules/rasa_core/policies/policy/#Policy.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads a policy from the storage.
 Needs to load its featurizer</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rasa_core.policies.Policy.persist">
-<code class="descname">persist</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa/core/policies/policy/#Policy.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.persist" title="Permalink to this definition">¶</a></dt>
+<code class="descname">persist</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/rasa_core/policies/policy/#Policy.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.policies.Policy.persist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Persists the policy to a storage.</p>
 </dd></dl>
 

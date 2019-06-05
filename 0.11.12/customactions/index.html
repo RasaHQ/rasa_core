@@ -156,6 +156,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.14.5/index/">0.14.5</a>
               <a href="../../0.14.4/index/">0.14.4</a>
               <a href="../../0.14.3/index/">0.14.3</a>
               <a href="../../0.14.2/index/">0.14.2</a>
@@ -181,10 +182,6 @@
               <a href="../../0.8.6/index/">0.8.6</a>
               <a href="../../0.7.9/index/">0.7.9</a>
               <a href="../../0.6.9/index/">0.6.9</a>
-          </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href="../../master/index/">master</a>
           </div>
       </div>
     </div>
@@ -309,7 +306,7 @@ back to the user with the <code class="docutils literal notranslate"><span class
 <p>Details of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method:</p>
 <dl class="method">
 <dt id="rasa_core.actions.Action.run">
-<code class="descclassname">Action.</code><code class="descname">run</code><span class="sig-paren">(</span><em>dispatcher: Dispatcher</em>, <em>tracker: DialogueStateTracker</em>, <em>domain: Domain</em><span class="sig-paren">)</span> &#x2192; List[Event]<a class="reference internal" href="../_modules/rasa/core/actions/action/#Action.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.actions.Action.run" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Action.</code><code class="descname">run</code><span class="sig-paren">(</span><em>dispatcher: Dispatcher</em>, <em>tracker: DialogueStateTracker</em>, <em>domain: Domain</em><span class="sig-paren">)</span> &#x2192; List[Event]<a class="reference internal" href="../_modules/rasa_core/actions/action/#Action.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.actions.Action.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute the side effects of this action.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -318,7 +315,7 @@ back to the user with the <code class="docutils literal notranslate"><span class
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>dispatcher</strong> (<em>Dispatcher</em>) – the dispatcher which is used to send
 messages back to the user. Use <code class="docutils literal notranslate"><span class="pre">dispatcher.utter_message()</span></code>
-or any other <code class="xref py py-class docutils literal notranslate"><span class="pre">rasa.core.dispatcher.Dispatcher</span></code> method.</li>
+or any other <code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.dispatcher.Dispatcher</span></code> method.</li>
 <li><strong>tracker</strong> (<a class="reference internal" href="../api/tracker/#rasa_core.trackers.DialogueStateTracker" title="rasa_core.trackers.DialogueStateTracker"><em>DialogueStateTracker</em></a>) – the state tracker for the current
 user. You can access slot values using
 <code class="docutils literal notranslate"><span class="pre">tracker.get_slot(slot_name)</span></code> and the most recent user
@@ -327,7 +324,7 @@ message is <code class="docutils literal notranslate"><span class="pre">tracker.
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">rasa.core.events.Event</span></code> instances</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of <a class="reference internal" href="../api/events/#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a> instances</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List[<a class="reference internal" href="../api/events/#rasa_core.events.Event" title="rasa_core.events.Event">Event</a>]</p>

@@ -153,6 +153,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../../../0.14.5/index/">0.14.5</a>
               <a href="../../../../0.14.4/index/">0.14.4</a>
               <a href="../../../../0.14.3/_modules/rasa_core/trackers/">0.14.3</a>
               <a href="../../../../0.14.2/index/">0.14.2</a>
@@ -178,10 +179,6 @@
               <a href="../../../../0.8.6/index/">0.8.6</a>
               <a href="../../../../0.7.9/index/">0.7.9</a>
               <a href="../../../../0.6.9/index/">0.6.9</a>
-          </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href="../../../../master/index/">master</a>
           </div>
       </div>
     </div>
@@ -216,19 +213,19 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Type</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
 
-<span class="kn">from</span> <span class="nn">rasa.core</span> <span class="k">import</span> <span class="n">events</span>
-<span class="kn">from</span> <span class="nn">rasa.core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
-<span class="kn">from</span> <span class="nn">rasa.core.conversation</span> <span class="k">import</span> <span class="n">Dialogue</span>
-<span class="kn">from</span> <span class="nn">rasa.core.events</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">events</span>
+<span class="kn">from</span> <span class="nn">rasa_core.actions.action</span> <span class="k">import</span> <span class="n">ACTION_LISTEN_NAME</span>
+<span class="kn">from</span> <span class="nn">rasa_core.conversation</span> <span class="k">import</span> <span class="n">Dialogue</span>
+<span class="kn">from</span> <span class="nn">rasa_core.events</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">UserUttered</span><span class="p">,</span> <span class="n">ActionExecuted</span><span class="p">,</span>
     <span class="n">Event</span><span class="p">,</span> <span class="n">SlotSet</span><span class="p">,</span> <span class="n">Restarted</span><span class="p">,</span> <span class="n">ActionReverted</span><span class="p">,</span> <span class="n">UserUtteranceReverted</span><span class="p">,</span>
     <span class="n">BotUttered</span><span class="p">,</span> <span class="n">Form</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">rasa.core.slots</span> <span class="k">import</span> <span class="n">Slot</span>
+<span class="kn">from</span> <span class="nn">rasa_core.slots</span> <span class="k">import</span> <span class="n">Slot</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">rasa.core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
+    <span class="kn">from</span> <span class="nn">rasa_core.domain</span> <span class="k">import</span> <span class="n">Domain</span>
 
 
 <span class="k">class</span> <span class="nc">EventVerbosity</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -445,7 +442,7 @@
     <span class="k">def</span> <span class="nf">init_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; DialogueStateTracker</span>
         <span class="sd">&quot;&quot;&quot;Creates a new state tracker with the same initial values.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="k">import</span> <span class="n">UserMessage</span>
 
         <span class="k">return</span> <span class="n">DialogueStateTracker</span><span class="p">(</span><span class="n">UserMessage</span><span class="o">.</span><span class="n">DEFAULT_SENDER_ID</span><span class="p">,</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">slots</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
@@ -617,7 +614,7 @@
         <span class="sd">&quot;&quot;&quot;Dump the tracker as a story in the Rasa Core story format.</span>
 
 <span class="sd">        Returns the dumped tracker as a string.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">rasa.core.training.structures</span> <span class="k">import</span> <span class="n">Story</span>
+        <span class="kn">from</span> <span class="nn">rasa_core.training.structures</span> <span class="k">import</span> <span class="n">Story</span>
 
         <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_events</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">story</span><span class="o">.</span><span class="n">as_story_string</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">e2e</span><span class="o">=</span><span class="n">e2e</span><span class="p">)</span>
@@ -625,7 +622,7 @@
     <span class="k">def</span> <span class="nf">export_stories_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">export_path</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="s2">&quot;debug.md&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Dump the tracker as a story to a file.&quot;&quot;&quot;</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">export_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">export_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_stories</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_last_event_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>

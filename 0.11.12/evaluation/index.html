@@ -156,6 +156,7 @@
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href="../../0.14.5/evaluation/">0.14.5</a>
               <a href="../../0.14.4/evaluation/">0.14.4</a>
               <a href="../../0.14.3/evaluation/">0.14.3</a>
               <a href="../../0.14.2/evaluation/">0.14.2</a>
@@ -182,10 +183,6 @@
               <a href="../../0.7.9/index/">0.7.9</a>
               <a href="../../0.6.9/index/">0.6.9</a>
           </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href="../../master/evaluation/">master</a>
-          </div>
       </div>
     </div>
 </div>
@@ -207,7 +204,7 @@
 
 
 
-    <p class="scv-banner"><a href="../../0.14.4/evaluation/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.4.</a></p>
+    <p class="scv-banner"><a href="../../0.14.5/evaluation/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.5.</a></p>
 <div class="section" id="evaluating-and-testing">
 <span id="evaluation"></span><h1>Evaluating and Testing<a class="headerlink" href="#evaluating-and-testing" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="evaluating-a-trained-model">
@@ -226,16 +223,7 @@ was predicted incorrectly.</p>
 domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/build/RasaHQ/rasa_core/rasa_core/__init__.py:10: UserWarning: The &#39;rasa_core&#39; package hase been renamed. You should change your imports to use &#39;rasa.core&#39; instead.
-  &quot;your imports to use &#39;rasa.core&#39; instead.&quot;, UserWarning)
-Calling `rasa.core.evaluate` is deprecated. Please use `rasa.core.test` instead.
-
-WARNING: The TensorFlow contrib module will not be included in TensorFlow 2.0.
-For more information, please see:
-  * https://github.com/tensorflow/community/blob/master/rfcs/20180907-contrib-sunset.md
-  * https://github.com/tensorflow/addons
-If you depend on functionality not listed there, please file an issue.
-
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calling `rasa_core.evaluate` is deprecated. Please use `rasa_core.test` instead.
 usage: evaluate.py [-h] {default,compare} ...
 
 evaluates a dialogue model
@@ -269,15 +257,11 @@ the stories in that file removed from the training data. By evaluating
 on the full set of stories, you can measure how well Rasa Core is
 predicting the held-out stories.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/build/RasaHQ/rasa_core/rasa_core/__init__.py:10: UserWarning: The &#39;rasa_core&#39; package hase been renamed. You should change your imports to use &#39;rasa.core&#39; instead.
-  &quot;your imports to use &#39;rasa.core&#39; instead.&quot;, UserWarning)
-/home/travis/virtualenv/python3.5.6/bin/python: No module named rasa_core.train_paper
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python3.5.6/bin/python: No module named rasa_core.train_paper
 </pre></div>
 </div>
 <p>The full list of options for the evaluation script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/build/RasaHQ/rasa_core/rasa_core/__init__.py:10: UserWarning: The &#39;rasa_core&#39; package hase been renamed. You should change your imports to use &#39;rasa.core&#39; instead.
-  &quot;your imports to use &#39;rasa.core&#39; instead.&quot;, UserWarning)
-/home/travis/virtualenv/python3.5.6/bin/python: No module named rasa_core.evaluate_paper
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/virtualenv/python3.5.6/bin/python: No module named rasa_core.evaluate_paper
 </pre></div>
 </div>
 </div>

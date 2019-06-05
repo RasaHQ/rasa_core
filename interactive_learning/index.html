@@ -34,7 +34,7 @@
   <meta property="og:title" content="Interactive Learning" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
-  <meta property="og:url" content="https://rasa.com/docs/core/interactive_learning" />
+  <meta property="og:url" content="https://legacy-docs.rasa.com/docs/core/interactive_learning" />
   
     <meta name="description" content="Use Interactive learning to continuously validate and improve the
 performance of your AI Assistant using machine learning based
@@ -162,12 +162,13 @@ open source dialogue management." />
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.14.4
+          viewing: 0.14.5
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.14.5/interactive_learning/">0.14.5</a>
               <a href=".././0.14.4/interactive_learning/">0.14.4</a>
               <a href=".././0.14.3/interactive_learning/">0.14.3</a>
               <a href=".././0.14.2/interactive_learning/">0.14.2</a>
@@ -193,10 +194,6 @@ open source dialogue management." />
               <a href=".././0.8.6/index/">0.8.6</a>
               <a href=".././0.7.9/index/">0.7.9</a>
               <a href=".././0.6.9/index/">0.6.9</a>
-          </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href=".././master/interactive_learning/">master</a>
           </div>
       </div>
     </div>
@@ -286,7 +283,7 @@ until the bot chooses the wrong action.</p>
 <h2>Providing feedback on errors<a class="headerlink" href="#providing-feedback-on-errors" title="Permalink to this headline">¶</a></h2>
 <p>For this example we are going to use the <code class="docutils literal notranslate"><span class="pre">concertbot</span></code> example,
 so make sure you have the domain &amp; data for it. You can download
-the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/0.14.4/examples/concertbot">github examples/concertbot</a>.</p>
+the data from <a class="reference external" href="https://github.com/RasaHQ/rasa_core/tree/0.14.5/examples/concertbot">github examples/concertbot</a>.</p>
 <p>If you ask <code class="docutils literal notranslate"><span class="pre">/search_concerts</span></code>, the bot should suggest
 <code class="docutils literal notranslate"><span class="pre">action_search_concerts</span></code> and then <code class="docutils literal notranslate"><span class="pre">action_listen</span></code> (the confidence at which
 the policy selected its next action will be displayed next to the action name).

@@ -198,7 +198,7 @@
 
 
 
-    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../../0.14.4/api/events/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.4.</a></p>
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../../0.14.5/api/events/"><b>Warning:</b> This document is for an old version of Rasa Core. The latest version is 0.14.5.</a></p>
 
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -467,7 +467,7 @@ be set to <code class="docutils literal notranslate"><span class="pre">True</spa
 <em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">Event</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.Event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Events describe everything that occurs in
-a conversation and tell the <code class="xref py py-class docutils literal notranslate"><span class="pre">rasa.core.trackers.DialogueStateTracker</span></code>
+a conversation and tell the <a class="reference internal" href="../tracker/#rasa_core.trackers.DialogueStateTracker" title="rasa_core.trackers.DialogueStateTracker"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.trackers.DialogueStateTracker</span></code></a>
 how to update its state.</p>
 <dl class="method">
 <dt id="rasa_core.events.Event.apply_to">
@@ -586,23 +586,6 @@ whether or not to validate the user input</p>
 <dl class="attribute">
 <dt id="rasa_core.events.FormValidation.type_name">
 <code class="descname">type_name</code><em class="property"> = 'form_validation'</em><a class="headerlink" href="#rasa_core.events.FormValidation.type_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="rasa_core.events.ReminderCancelled">
-<em class="property">class </em><code class="descclassname">rasa_core.events.</code><code class="descname">ReminderCancelled</code><span class="sig-paren">(</span><em>action_name</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ReminderCancelled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ReminderCancelled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#rasa_core.events.Event" title="rasa_core.events.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">rasa_core.events.Event</span></code></a></p>
-<p>Cancel all jobs with a specific name.</p>
-<dl class="method">
-<dt id="rasa_core.events.ReminderCancelled.as_story_string">
-<code class="descname">as_story_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/rasa_core/events/#ReminderCancelled.as_story_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rasa_core.events.ReminderCancelled.as_story_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="rasa_core.events.ReminderCancelled.type_name">
-<code class="descname">type_name</code><em class="property"> = 'cancel_reminder'</em><a class="headerlink" href="#rasa_core.events.ReminderCancelled.type_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -838,6 +821,7 @@ and the bot is waiting for a new user message.</p>
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
+            <dd><a href="../../../0.14.5/api/events/">0.14.5</a></dd>
             <dd><a href="../../../0.14.4/api/events/">0.14.4</a></dd>
             <dd><a href="../../../0.14.3/api/events/">0.14.3</a></dd>
             <dd><a href="../../../0.14.2/api/events/">0.14.2</a></dd>
@@ -863,10 +847,6 @@ and the bot is waiting for a new user message.</p>
             <dd><a href="../../../0.8.6/api/events/">0.8.6</a></dd>
             <dd><a href="../../../0.7.9/api/events/">0.7.9</a></dd>
             <dd><a href="../../../0.6.9/api/events/">0.6.9</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="../../../master/api/events/">master</a></dd>
         </dl>
     </div>
 </div>

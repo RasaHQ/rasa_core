@@ -34,7 +34,7 @@
   <meta property="og:title" content="Evaluating and Testing" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://rasa.com/assets/img/facebook-og.png" />
-  <meta property="og:url" content="https://rasa.com/docs/core/evaluation" />
+  <meta property="og:url" content="https://legacy-docs.rasa.com/docs/core/evaluation" />
   
     <meta name="description" content="Evaluate and validate your machine learning models for open source
 library Rasa Core to improve the dialogue management of your contextual
@@ -162,12 +162,13 @@ AI Assistant." />
     <div class="versions-content">
       <div>
         <span class="current-version">
-          viewing: 0.14.4
+          viewing: 0.14.5
         </span>
       </div>
       <div class="other-versions">
           <p>tags</p>
           <div class="dropdown-content">
+              <a href=".././0.14.5/evaluation/">0.14.5</a>
               <a href=".././0.14.4/evaluation/">0.14.4</a>
               <a href=".././0.14.3/evaluation/">0.14.3</a>
               <a href=".././0.14.2/evaluation/">0.14.2</a>
@@ -193,10 +194,6 @@ AI Assistant." />
               <a href=".././0.8.6/index/">0.8.6</a>
               <a href=".././0.7.9/index/">0.7.9</a>
               <a href=".././0.6.9/index/">0.6.9</a>
-          </div>
-          <p>branches</p>
-          <div class="dropdown-content">
-              <a href=".././master/evaluation/">master</a>
           </div>
       </div>
     </div>
@@ -241,15 +238,8 @@ was predicted incorrectly.</p>
 your domain, how often that action was predicted, and how often an
 incorrect action was predicted instead.</p>
 <p>The full list of options for the script is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/home/travis/build/RasaHQ/rasa_core/rasa_core/__init__.py:10: UserWarning: The &#39;rasa_core&#39; package hase been renamed. You should change your imports to use &#39;rasa.core&#39; instead.
-  &quot;your imports to use &#39;rasa.core&#39; instead.&quot;, UserWarning)
-
-WARNING: The TensorFlow contrib module will not be included in TensorFlow 2.0.
-For more information, please see:
-  * https://github.com/tensorflow/community/blob/master/rfcs/20180907-contrib-sunset.md
-  * https://github.com/tensorflow/addons
-If you depend on functionality not listed there, please file an issue.
-
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/opt/python/3.5.6/lib/python3.5/runpy.py:125: RuntimeWarning: &#39;rasa_core.test&#39; found in sys.modules after import of package &#39;rasa_core&#39;, but prior to execution of &#39;rasa_core.test&#39;; this may result in unpredictable behaviour
+  warn(RuntimeWarning(msg))
 usage: test.py default [-h] [-m MAX_STORIES] [-u NLU] [-o OUTPUT] [--e2e]
                        [--endpoints ENDPOINTS] [--fail_on_prediction_errors]
                        [--core CORE] (-s STORIES | --url URL) [-v] [-vv]
@@ -301,7 +291,7 @@ You can activate this feature with the <code class="docutils literal notranslate
 the standard Rasa Core stories, as you’ll have to include the user
 messages in natural language instead of just their intent. The format for the
 user messages is <code class="docutils literal notranslate"><span class="pre">*</span> <span class="pre">&lt;intent&gt;:&lt;Rasa</span> <span class="pre">NLU</span> <span class="pre">example&gt;</span></code>. The NLU part follows the
-<a class="reference external" href="https://rasa.com/docs/nlu/dataformat/#markdown-format">markdown syntax for Rasa NLU training data</a>.</p>
+<a class="reference external" href="https://legacy-docs.rasa.com/docs/nlu/dataformat/#markdown-format">markdown syntax for Rasa NLU training data</a>.</p>
 <p>Here’s an example of what an end-to-end story file may look like:</p>
 <div class="highlight-story notranslate"><div class="highlight"><pre><span></span><span class="gh">## end-to-end story 1</span>
 <span class="vm">* greet: </span>hello
